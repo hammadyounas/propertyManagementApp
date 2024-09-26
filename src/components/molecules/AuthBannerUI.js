@@ -9,15 +9,6 @@ const AuthBannerUI = () => {
       }}
     >
       <div className="flex flex-col h-full justify-center">
-        <div className="flex-1 flex flex-col justify-center items-center">
-          <Link href="/">
-            <img
-              src="assets/images/logo/logo-white.svg"
-              alt=""
-              className="mb-10"
-            />
-          </Link>
-        </div>
         <div>
           <div className="black-500-title  mx-auto pb-20 text-center">
             Maximize your

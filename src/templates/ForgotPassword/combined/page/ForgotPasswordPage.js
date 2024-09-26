@@ -9,7 +9,7 @@ const ForgotPasswordPage = () => {
         <div className="right-column relative">
           <div className="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
             <div className="auth-box2 flex flex-col justify-center h-full">
-              <div className="mobile-logo text-center mb-6 lg:hidden block">
+              {/* <div className="mobile-logo text-center mb-6 lg:hidden block">
                 <Link href="/">
                   <img
                     src={"/assets/images/logo/logo.svg"}
@@ -17,11 +17,12 @@ const ForgotPasswordPage = () => {
                     className="mx-auto"
                   />
                 </Link>
-              </div>
+              </div> */}
               <div className="text-center 2xl:mb-10 mb-5">
                 <h4 className="font-medium mb-4">Forgot Your Password?</h4>
                 <div className="text-slate-500 dark:text-slate-400 text-base">
-                  Reset Password with Dashcode.
+                  Reset Password with{" "}
+                  <span className="font-bold">Property Management System</span>.
                 </div>
               </div>
               <div className="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">
