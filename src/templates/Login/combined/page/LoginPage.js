@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { FormContainer } from "../organisms/FormContainer";
-import AuthBannerUI from "../../../../components/molecules/AuthBannerUI";
+import AuthBannerUI from "../../../../components/ui/molecules/AuthBannerUI";
 
 const LoginPage = () => {
   return (

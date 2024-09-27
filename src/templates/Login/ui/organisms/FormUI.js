@@ -1,7 +1,7 @@
 import React from "react";
-import Textinput from "@/components/atoms/TextInput";
+import Textinput from "@/components/ui/atoms/TextInput";
 import Link from "next/link";
-import Button from "@/components/atoms/Button";
+import Button from "@/components/ui/atoms/Button";
 
 const FormUI = ({ handleSubmit, onSubmit, register, errors, loading }) => {
   return (

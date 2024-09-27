@@ -1,5 +1,5 @@
 import Link from "next/link";
-import AuthBannerUI from "../../../../components/molecules/AuthBannerUI";
+import AuthBannerUI from "../../../../components/ui/molecules/AuthBannerUI";
 import ForgotPasswordFormContainer from "../organisms/ForgotPasswordFormContainer";
 
 const ForgotPasswordPage = () => {

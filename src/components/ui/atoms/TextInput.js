@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Icon from "@/components/atoms/Icon";
+import Icon from "@/components/ui/atoms/Icon";
 import Cleave from "cleave.js/react";
 import "cleave.js/dist/addons/cleave-phone.us";
 const Textinput = ({

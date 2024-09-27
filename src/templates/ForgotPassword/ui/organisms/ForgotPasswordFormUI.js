@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "@/components/atoms/Button";
-import Textinput from "../../../../components/atoms/TextInput";
+import Button from "@/components/ui/atoms/Button";
+import Textinput from "../../../../components/ui/atoms/TextInput";
 
 const ForgotPasswordFormUI = ({
   handleSubmit,

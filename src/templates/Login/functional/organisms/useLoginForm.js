@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useProfile from "../../../../hooks/useProfile";
+import { useRouter } from "next/navigation";
 
 const schema = yup
   .object({
@@ -23,11 +24,13 @@ export const useLoginForm = () => {
   });
   const [_, setAuth] = useProfile();
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
   const onSubmit = (data) => {
     setLoading(true);
     setTimeout(() => {
-      alert(`Form Submitted ${JSON.stringify(data)}`);
+      // alert(`Form Submitted ${JSON.stringify(data)}`);
       setLoading(false);
+      router.push("/dashboard")
     }, 1500);
   };
 
