@@ -1,4 +1,3 @@
-import PageLayout from "../../../../components/combined/organisms/PageLayoutUIContainer";
 import useProperty from "../../functionality/page/useProperty";
 import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
@@ -12,11 +11,11 @@ const PropertiesListingPage = () => {
     pageSize,
     handlePageChange,
     currentPage,
-    properties
+    properties,
   } = useProperty();
 
   return (
-    <PageLayout>
+    <>
       <Table
         rows={paginatedProperties} // Pass paginated properties to the Table
         globalFilter={globalFilter}
@@ -37,7 +36,7 @@ const PropertiesListingPage = () => {
           initialPage={currentPage - 1}
         />
       </div>
-    </PageLayout>
+    </>
   );
 };
 

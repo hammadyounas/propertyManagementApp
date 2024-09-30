@@ -32,6 +32,7 @@ export default function PageLayout({
   router
 }) {
   return (
+    (location == "/" || location == "/forgot-password") ? <div>{children}</div> :
     <div
       dir={isRtl ? "rtl" : "ltr"}
       className={`app-warp    ${isDark ? "dark" : "light"} ${

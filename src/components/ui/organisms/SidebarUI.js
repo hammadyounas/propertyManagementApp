@@ -7,7 +7,7 @@ const SidebarUI = ({scroll, collapsed, setMenuHover, menuHover, isSemiDark, skin
   return (
     <div className={isSemiDark ? "dark" : ""}>
       <div
-        className={`sidebar-wrapper bg-white dark:bg-slate-800     ${
+        className={`sidebar-wrapper bg-black-default dark:bg-slate-800     ${
           collapsed ? "w-[72px] close_sidebar" : "w-[248px]"
         }
       ${menuHover ? "sidebar-hovered" : ""}
@@ -32,8 +32,9 @@ const SidebarUI = ({scroll, collapsed, setMenuHover, menuHover, isSemiDark, skin
         ></div>
 
         <SimpleBar
-          className="sidebar-menu px-4 h-[calc(100%-80px)]"
+          className="sidebar-menu h-[calc(100%-80px)]"
           scrollableNodeProps={{ ref: scrollableNodeRef }}
+          
         >
           <NavmenuUIContainer menus={menuItems} />
           {/* {!collapsed && (

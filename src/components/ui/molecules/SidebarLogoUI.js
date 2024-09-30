@@ -11,7 +11,7 @@ const SidebarLogoUI = ({
 }) => {
   return (
     <div
-      className={` logo-segment flex justify-between items-center bg-white dark:bg-slate-800 z-[9] py-6  px-4 
+      className={` logo-segment flex justify-between items-center bg-primary-default dark:bg-slate-800 z-[9] py-6  px-4 
       ${menuHover ? "logo-hovered" : ""}
       ${
         skin === "bordered"

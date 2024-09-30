@@ -6,10 +6,6 @@ const useDarkmode = () => {
   const dispatch = useDispatch();
   const isDark = useSelector((state) => state.layout.darkMode);
 
-  const appstate = useSelector((state) => state);
-
-  console.log("app state", appstate);
-
   const setDarkMode = (mode) => {
     dispatch(handleDarkMode(mode));
     localStorage.setItem("darkMode", JSON.stringify(mode));

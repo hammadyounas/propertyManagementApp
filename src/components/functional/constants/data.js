@@ -1,9 +1,39 @@
 export const menuItems = [
   {
+    title: "Dashboard",
+    isHide: false,
+    icon: "heroicons:chart-pie",
+    link: "dashboard",
+  },
+  {
     title: "Properties",
-    isHide: true,
+    isHide: false,
     icon: "heroicons:building-office-2",
     link: "properties",
+  },
+  {
+    title: "Sales Team",
+    isHide: false,
+    icon: "heroicons:users",
+    link: "sales-team",
+  },
+  {
+    title: "Clients",
+    isHide: false,
+    icon: "heroicons:user-group",
+    link: "clients",
+  },
+  {
+    title: "Invoices",
+    isHide: false,
+    icon: "heroicons:document",
+    link: "invoices",
+  },
+  {
+    title: "Marketing Emails",
+    isHide: false,
+    icon: "heroicons:at-symbol",
+    link: "marketing-emails",
   },
 ];
 
