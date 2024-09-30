@@ -3,16 +3,16 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter }) => {
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal }) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center">
-            <div className="flex items-center mr-3 p-3 cursor-pointer">
+            <div onClick={openModal} className="flex items-center mr-3 p-3 cursor-pointer">
               <Icon
-                onClick={() => {}}
+                // onClick={() => {}}
                 className="cursor-pointer text-[20px] mr-2"
                 icon={"heroicons:funnel"}
               />

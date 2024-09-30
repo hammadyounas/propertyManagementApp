@@ -7,6 +7,16 @@ const useProperty = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
+  const [activeModal, setActiveModal] = useState(false)
+
+  const closeModal = () => {
+    setActiveModal(false);
+  };
+
+  const openModal = () => {
+    setActiveModal(!activeModal);
+  };
+
   useEffect(() => {
     setProperties(rows);
   }, []);
@@ -30,6 +40,9 @@ const useProperty = () => {
     pageSize,
     handlePageChange,
     currentPage,
+    activeModal,
+    closeModal,
+    openModal
   };
 };
 

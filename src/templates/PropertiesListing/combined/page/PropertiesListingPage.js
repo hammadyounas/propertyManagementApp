@@ -1,3 +1,5 @@
+import Modal from "../../../../components/combined/organisms/ModalUIContainer";
+import Button from "../../../../components/ui/molecules/Button";
 import useProperty from "../../functionality/page/useProperty";
 import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
@@ -12,6 +14,9 @@ const PropertiesListingPage = () => {
     handlePageChange,
     currentPage,
     properties,
+    activeModal,
+    closeModal,
+    openModal,
   } = useProperty();
 
   return (
@@ -20,6 +25,7 @@ const PropertiesListingPage = () => {
         rows={paginatedProperties} // Pass paginated properties to the Table
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
+        openModal={openModal}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate
@@ -36,6 +42,41 @@ const PropertiesListingPage = () => {
           initialPage={currentPage - 1}
         />
       </div>
+      <Modal
+        title="Filters"
+        label="Filters"
+        labelClass="btn-outline-dark"
+        // uncontrol
+        activeModal={activeModal}
+        onClose={closeModal}
+        centered
+        footerContent={
+          <Button
+            text="Apply"
+            className="btn-primary bg-primary-default"
+            onClick={closeModal}
+          />
+        }
+      >
+        <h4 className="font-medium text-lg mb-3 text-slate-900">
+          Filters will come here i.e
+        </h4>
+        <div className="text-base text-slate-600 dark:text-slate-300">
+          Price Range (Range Slider)
+          <br />
+          Property Type (Dropdown)
+          <br />
+          Size (Range Slider)
+          <br />
+          No of Bedrooms (Dropdown)
+          <br />
+          No of Bathrooms (Dropdown)
+          <br />
+          Property Status (Dropdown)
+          <br />
+          Assigned Salesperson (Dropdown)
+        </div>
+      </Modal>
     </>
   );
 };
