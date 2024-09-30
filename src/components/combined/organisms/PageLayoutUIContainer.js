@@ -1,7 +1,7 @@
 import usePageLayout from "../../functional/organisms/usePageLayout";
-import PageLayout from "../../ui/organisms/PageLayoutUI";
+import PageLayoutUI from "../../ui/organisms/PageLayoutUI";
 
-const PageLayoutUIContainer = ({ children }) => {
+const PageLayout = ({ children }) => {
   const {
     width,
     breakpoints,
@@ -21,7 +21,7 @@ const PageLayoutUIContainer = ({ children }) => {
     router,
   } = usePageLayout();
   return (
-    <PageLayout
+    <PageLayoutUI
       width={width}
       breakpoints={breakpoints}
       collapsed={collapsed}
@@ -43,4 +43,4 @@ const PageLayoutUIContainer = ({ children }) => {
   );
 };
 
-export default PageLayoutUIContainer;
+export default PageLayout;

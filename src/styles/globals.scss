@@ -105,6 +105,64 @@
   }
 }
 
+::-webkit-scrollbar {
+  display: block;
+}
+// ::-webkit-scrollbar {
+//   display: none;
+// }
+
+::-webkit-scrollbar {
+  width: 4px !important;
+  height: 4px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999; 
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+
+/* Pagination Container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Pagination Item */
+.pagination li {
+  display: inline-block;
+  padding: 5px 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Active Page */
+.pagination li.active a {
+  background-color: #F1B62E;
+  color: white;
+}
+
+/* Hover Effect */
+.pagination li:hover a {
+  background-color: #F1B62E;
+  color: #fff;
+}
+
+/* Previous and Next Buttons */
+
+/* Disabled Previous and Next Buttons */
+.pagination .previous.disabled,
+.pagination .next.disabled {
+  cursor: not-allowed;
+}
+
 @layer components {
   @import "components/table.scss";
   @import "components/map.scss";

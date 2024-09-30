@@ -1,9 +1,9 @@
 export const menuItems = [
   {
-    title: "Dashboard",
+    title: "Properties",
     isHide: true,
-    icon: "heroicons:document-minus",
-    link: "dashboard",
+    icon: "heroicons:building-office-2",
+    link: "properties",
   },
 ];
 

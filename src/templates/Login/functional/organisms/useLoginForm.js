@@ -30,7 +30,7 @@ export const useLoginForm = () => {
     setTimeout(() => {
       // alert(`Form Submitted ${JSON.stringify(data)}`);
       setLoading(false);
-      router.push("/dashboard")
+      router.push("/properties")
     }, 1500);
   };
 
