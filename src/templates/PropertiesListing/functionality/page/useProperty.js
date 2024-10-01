@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
+import { useRouter } from "next/navigation";
 
 const useProperty = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [properties, setProperties] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  const {push} = useRouter()
 
   const [activeModal, setActiveModal] = useState(false)
 
@@ -42,7 +44,8 @@ const useProperty = () => {
     currentPage,
     activeModal,
     closeModal,
-    openModal
+    openModal,
+    push
   };
 };
 

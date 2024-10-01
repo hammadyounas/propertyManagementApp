@@ -14,13 +14,13 @@ const MobileMenuUI = ({
   setMobileMenu,
   menuItems,
   className,
-  scrollableNodeRef
+  scrollableNodeRef,
 }) => {
   return (
     <div
       className={`${className} fixed  top-0 bg-black-default dark:bg-slate-800 shadow-lg  h-full   w-[248px]`}
     >
-      <div className="logo-segment flex justify-between items-center bg-primary-default dark:bg-slate-800 z-[9] h-[85px]  px-4 ">
+      <div className="logo-segment flex justify-between items-center bg-black-default dark:bg-slate-800 z-[9] h-[85px]  px-4 ">
         {/* <Link href="/">
           <div className="flex items-center space-x-4">
             <div className="logo-icon">
@@ -37,11 +37,11 @@ const MobileMenuUI = ({
             </div>
           </div>
         </Link> */}
-        <h6>LOGO</h6>
+        <h6 className="text-white">LOGO</h6>
         <button
           type="button"
           onClick={() => setMobileMenu(!mobileMenu)}
-          className="cursor-pointer text-slate-900 dark:text-white text-2xl"
+          className="cursor-pointer text-white dark:text-white text-2xl"
         >
           <Icon icon="heroicons:x-mark" />
         </button>

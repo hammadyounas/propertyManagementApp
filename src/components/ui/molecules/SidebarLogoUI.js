@@ -11,7 +11,7 @@ const SidebarLogoUI = ({
 }) => {
   return (
     <div
-      className={` logo-segment flex justify-between items-center bg-primary-default dark:bg-slate-800 z-[9] py-6  px-4 
+      className={` logo-segment flex justify-between items-center bg-black-default dark:bg-slate-800 z-[9] py-6  px-4 
       ${menuHover ? "logo-hovered" : ""}
       ${
         skin === "bordered"
@@ -41,9 +41,9 @@ const SidebarLogoUI = ({
         </div>
       </Link> */}
 
-      <h6>LOGO</h6>
+      <h6 className="text-white">LOGO</h6>
 
-      {(!collapsed || menuHover) && (
+      {/* {(!collapsed || menuHover) && (
         <div
           onClick={() => setMenuCollapsed(!collapsed)}
           className={`h-4 w-4 border-[1.5px] border-slate-900 dark:border-slate-700 rounded-full transition-all duration-150
@@ -54,7 +54,7 @@ const SidebarLogoUI = ({
           }
           `}
         ></div>
-      )}
+      )} */}
     </div>
   );
 };

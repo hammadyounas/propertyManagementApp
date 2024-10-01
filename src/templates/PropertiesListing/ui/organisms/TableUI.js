@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal }) => {
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal, push }) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
@@ -21,7 +21,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal }) =>
             <span className="w-full">
               <Button
                 text="Add Property"
-                onClick={() => {}}
+                onClick={() => push("/properties/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>

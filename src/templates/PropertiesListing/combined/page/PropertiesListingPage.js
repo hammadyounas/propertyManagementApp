@@ -17,6 +17,7 @@ const PropertiesListingPage = () => {
     activeModal,
     closeModal,
     openModal,
+    push
   } = useProperty();
 
   return (
@@ -26,6 +27,7 @@ const PropertiesListingPage = () => {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         openModal={openModal}
+        push={push}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate

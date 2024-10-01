@@ -19,12 +19,12 @@ const HeaderUI = ({
   breakpoints,
   menuType,
   isRtl,
-  className
+  className,
 }) => {
   return (
     <header className={className + " " + navbarTypeClass()}>
       <div
-        className={` app-header md:px-6 px-[15px]  dark:bg-slate-800 shadow-base dark:shadow-base3 bg-primary-default
+        className={` app-header md:px-6 px-[15px]  dark:bg-slate-800 shadow-base dark:shadow-base3 bg-white
         ${borderSwicthClass()}
              ${
                menuType === "horizontal" && width > breakpoints.xl

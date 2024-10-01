@@ -3,7 +3,13 @@ import Link from "next/link";
 import { Collapse } from "react-collapse";
 import Icon from "@/components/ui/atoms/Icon";
 import SubmenuUIContainer from "../../combined/organisms/SubmenuUIContainer";
-const NavmenuUI = ({ menus, activeSubmenu, toggleSubmenu, locationName }) => {
+const NavmenuUI = ({
+  menus,
+  activeSubmenu,
+  toggleSubmenu,
+  locationName,
+  location,
+}) => {
   return (
     <>
       <ul>
@@ -13,7 +19,12 @@ const NavmenuUI = ({ menus, activeSubmenu, toggleSubmenu, locationName }) => {
             className={` single-sidebar-menu 
               ${item.child ? "item-has-children" : ""}
               ${activeSubmenu === i ? "open" : ""}
-              ${locationName === item.link ? "menu-item-active" : ""}`}
+              ${
+                locationName === item.link ||
+                location.startsWith(`/${item.link}`)
+                  ? "menu-item-active"
+                  : ""
+              }`}
           >
             {/* single menu with no childred*/}
             {!item.child && !item.isHeadr && (

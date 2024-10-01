@@ -1,11 +1,10 @@
-
 import { useRouter, usePathname } from "next/navigation";
 import { toggleActiveChat } from "@/components/partials/app/chat/store";
 import { useDispatch } from "react-redux";
 import useMobileMenu from "@/hooks/useMobileMenu";
 import { useEffect, useState } from "react";
 
-const useNavmenu = ({menus}) => {
+const useNavmenu = ({ menus }) => {
   const router = useRouter();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
 
@@ -49,8 +48,9 @@ const useNavmenu = ({menus}) => {
   return {
     toggleSubmenu,
     activeSubmenu,
-    locationName
-  }
+    locationName,
+    location,
+  };
 };
 
 export default useNavmenu;
