@@ -9,6 +9,14 @@ const GeneralInformation = ({
   furnishingStatus,
   errors,
   loading,
+  type,
+  status,
+  ownership,
+  furnishing,
+  handleSelectType,
+  handleSelectStatus,
+  handleSelectOwnershipStatus,
+  handleSelectFurnishingStatus,
 }) => {
   return (
     <GeneralInformationUI
@@ -20,6 +28,14 @@ const GeneralInformation = ({
       furnishingStatus={furnishingStatus}
       errors={errors}
       loading={loading}
+      type={type}
+      status={status}
+      ownership={ownership}
+      furnishing={furnishing}
+      handleSelectType={handleSelectType}
+      handleSelectStatus={handleSelectStatus}
+      handleSelectOwnershipStatus={handleSelectOwnershipStatus}
+      handleSelectFurnishingStatus={handleSelectFurnishingStatus}
     />
   );
 };

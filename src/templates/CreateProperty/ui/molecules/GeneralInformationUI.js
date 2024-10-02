@@ -2,6 +2,7 @@ import Select from "../../../../components/combined/molecules/SelectUIContainer"
 import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 import Textinput from "../../../../components/ui/atoms/TextInput";
 import { Controller } from "react-hook-form";
+import ReactSelect from "react-select";
 const GeneralInformationUI = ({
   register,
   control,
@@ -11,6 +12,14 @@ const GeneralInformationUI = ({
   furnishingStatus,
   errors,
   loading,
+  type,
+  status,
+  ownership,
+  furnishing,
+  handleSelectType,
+  handleSelectStatus,
+  handleSelectOwnershipStatus,
+  handleSelectFurnishingStatus,
 }) => {
   return (
     <div>
@@ -44,78 +53,70 @@ const GeneralInformationUI = ({
         {/* <div className="mt-2"></div> */}
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Type*</div>
+            <ReactSelect
               name="type"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Type*"}
-                  options={propertyTypes}
-                  isSearchable
-                  placeholder="Type"
-                  register={register}
-                  disabled={loading}
-                  error={errors.type}
-                />
-              )}
+              value={type}
+              onChange={handleSelectType}
+              options={propertyTypes}
+              placeholder="Type*"
+              isDisabled={loading}
             />
+            {errors?.type && !type && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.type?.message}
+              </p>
+            )}
           </div>
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Status*</div>
+            <ReactSelect
               name="status"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Status*"}
-                  options={propertyStatus}
-                  isSearchable
-                  placeholder="Status"
-                  register={register}
-                  disabled={loading}
-                  error={errors.status}
-                />
-              )}
+              value={status}
+              onChange={handleSelectStatus}
+              options={propertyStatus}
+              placeholder="Status*"
+              isDisabled={loading}
             />
+            {errors?.status && !status && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.status?.message}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Ownership Status*</div>
+            <ReactSelect
               name="ownership_status"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Ownership Status*"}
-                  options={ownershipStatus}
-                  isSearchable
-                  placeholder="Ownership Status"
-                  register={register}
-                  disabled={loading}
-                  error={errors.ownership_status}
-                />
-              )}
+              value={ownership}
+              onChange={handleSelectOwnershipStatus}
+              options={ownershipStatus}
+              placeholder="Ownership Status*"
+              isDisabled={loading}
             />
+            {errors?.ownership_status && !ownership && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.ownership_status?.message}
+              </p>
+            )}
           </div>
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Furnishing Status*</div>
+            <ReactSelect
               name="furnishing_status"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Furnishing Status*"}
-                  options={furnishingStatus}
-                  isSearchable
-                  placeholder="Furnishing Status"
-                  register={register}
-                  disabled={loading}
-                  error={errors.furnishing_status}
-                />
-              )}
+              value={furnishing}
+              onChange={handleSelectFurnishingStatus}
+              options={furnishingStatus}
+              placeholder="Furnishing Status*"
+              isDisabled={loading}
             />
+            {errors?.furnishing_status && !furnishing && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.furnishing_status?.message}
+              </p>
+            )}
           </div>
         </div>
       </div>

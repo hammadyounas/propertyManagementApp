@@ -32,6 +32,18 @@ const CreatePropertyPage = () => {
     loading,
     push,
     getValues,
+    type,
+    status,
+    ownership,
+    furnishing,
+    selectedSalesperson,
+    selectedClient,
+    handleSelectType,
+    handleSelectStatus,
+    handleSelectOwnershipStatus,
+    handleSelectFurnishingStatus,
+    handleSelectSalesperson,
+    handleSelectClient,
   } = useForm();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
@@ -44,6 +56,14 @@ const CreatePropertyPage = () => {
         furnishingStatus={furnishingStatus}
         errors={errors}
         loading={loading}
+        type={type}
+        status={status}
+        ownership={ownership}
+        furnishing={furnishing}
+        handleSelectType={handleSelectType}
+        handleSelectStatus={handleSelectStatus}
+        handleSelectOwnershipStatus={handleSelectOwnershipStatus}
+        handleSelectFurnishingStatus={handleSelectFurnishingStatus}
       />
       <Location register={register} errors={errors} loading={loading} />
       <PricingAndSize register={register} errors={errors} loading={loading} />
@@ -71,6 +91,10 @@ const CreatePropertyPage = () => {
         errors={errors}
         loading={loading}
         getValues={getValues}
+        selectedSalesperson={selectedSalesperson}
+        selectedClient={selectedClient}
+        handleSelectSalesperson={handleSelectSalesperson}
+        handleSelectClient={handleSelectClient}
       />
       <div className="flex justify-center md:justify-end mt-12">
         <Button

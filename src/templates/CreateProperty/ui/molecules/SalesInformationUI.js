@@ -1,5 +1,6 @@
 import Select from "../../../../components/combined/molecules/SelectUIContainer";
 import { Controller } from "react-hook-form";
+import ReactSelect from "react-select";
 const SalesInformationUI = ({
   register,
   control,
@@ -7,6 +8,10 @@ const SalesInformationUI = ({
   clients,
   errors,
   loading,
+  selectedSalesperson,
+  selectedClient,
+  handleSelectSalesperson,
+  handleSelectClient,
 }) => {
   return (
     <div className="mt-8">
@@ -14,62 +19,62 @@ const SalesInformationUI = ({
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Assigned To*</div>
+            <ReactSelect
               name="assigned_to"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Assigned To*"}
-                  options={salesPerson}
-                  isSearchable
-                  placeholder="Select Salesperson"
-                  register={register}
-                  disabled={loading}
-                  error={errors.assigned_to}
-                />
-              )}
+              value={selectedSalesperson}
+              onChange={handleSelectSalesperson}
+              options={salesPerson}
+              placeholder="Assigned To*"
+              isDisabled={loading}
             />
-            <div className="mt-4">
-              <h6 className="text-sm font-semibold mb-4">
-                Salesperson Contact Information:
-              </h6>
-              <p className="text-sm">
-                <span className="font-semibold">Phone: 123456789</span>
+            {errors?.assigned_to && !selectedSalesperson && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.assigned_to?.message}
               </p>
-              <p className="text-sm">
-                <span className="font-semibold">Email: test@gmail.com</span>
-              </p>
-            </div>
+            )}
+            {selectedSalesperson && (
+              <div className="mt-4">
+                <h6 className="text-sm font-semibold mb-4">
+                  Salesperson Contact Information:
+                </h6>
+                <p className="text-sm">
+                  <span className="font-semibold">Phone: 123456789</span>
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold">Email: test@gmail.com</span>
+                </p>
+              </div>
+            )}
           </div>
           <div className="w-full md:w-[49%]">
-            <Controller
+            <div className="my-2 text-sm font-medium">Client*</div>
+            <ReactSelect
               name="client"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label={"Client*"}
-                  options={clients}
-                  isSearchable
-                  placeholder="Select Client"
-                  register={register}
-                  disabled={loading}
-                  error={errors.client}
-                />
-              )}
+              value={selectedClient}
+              onChange={handleSelectClient}
+              options={clients}
+              placeholder="Client*"
+              isDisabled={loading}
             />
-            <div className="mt-4">
-              <h6 className="text-sm font-semibold mb-4">
-                Client Contact Information:
-              </h6>
-              <p className="text-sm">
-                <span className="font-semibold">Phone: 123456789</span>
+            {errors?.client && !selectedClient && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.client?.message}
               </p>
-              <p className="text-sm">
-                <span className="font-semibold">Email: test@gmail.com</span>
-              </p>
-            </div>
+            )}
+            {selectedClient && (
+              <div className="mt-4">
+                <h6 className="text-sm font-semibold mb-4">
+                  Client Contact Information:
+                </h6>
+                <p className="text-sm">
+                  <span className="font-semibold">Phone: 123456789</span>
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold">Email: test@gmail.com</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

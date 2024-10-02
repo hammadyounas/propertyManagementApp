@@ -54,7 +54,7 @@ const useCreateForm = () => {
     //   .array()
     //   .min(1, "At least one document must be uploaded")
     //   .required("Documents are required"),
-    assigned_to: yup.string().required("Assigned to is required"),
+    assigned_to: yup.string().required("Assignee is required"),
     client: yup.string().required("Client is required"),
   });
 
@@ -79,6 +79,12 @@ const useCreateForm = () => {
   });
 
   const [amenities, setAmenities] = useState([]);
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
+  const [ownership, setOwnership] = useState("");
+  const [furnishing, setFurnishing] = useState("");
+  const [selectedSalesperson, setSelectedSalesperson] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,7 +95,24 @@ const useCreateForm = () => {
     setValue("amenities", amenities);
     setValue("images", selectedImages);
     setValue("documents", selectedDocs);
-  }, [amenities, selectedImages, selectedDocs, setValue]);
+    setValue("type", type?.value);
+    setValue("status", status?.value);
+    setValue("ownership_status", ownership?.value || "");
+    setValue("furnishing_status", furnishing?.value || "");
+    setValue("assigned_to", selectedSalesperson?.value || "");
+    setValue("client", selectedClient?.value || "");
+  }, [
+    amenities,
+    selectedImages,
+    selectedDocs,
+    type,
+    status,
+    ownership,
+    furnishing,
+    selectedSalesperson,
+    selectedClient,
+    setValue,
+  ]);
 
   // Helper function to validate file types
   const validateFileType = (file, type) => {
@@ -160,6 +183,25 @@ const useCreateForm = () => {
     setAmenities(selectedValues);
   };
 
+  const handleSelectType = (e) => {
+    setType(e);
+  };
+  const handleSelectStatus = (e) => {
+    setStatus(e);
+  };
+  const handleSelectOwnershipStatus = (e) => {
+    setOwnership(e);
+  };
+  const handleSelectFurnishingStatus = (e) => {
+    setFurnishing(e);
+  };
+  const handleSelectSalesperson = (e) => {
+    setSelectedSalesperson(e);
+  };
+  const handleSelectClient = (e) => {
+    setSelectedClient(e);
+  };
+
   const onSubmit = (data) => {
     setLoading(true);
     {
@@ -189,13 +231,25 @@ const useCreateForm = () => {
     handleImagesChange,
     handleDocsChange,
     handleFileRemove,
-    handleSubmit, // Return handleSubmit to trigger form submission
-    onSubmit, // onSubmit handler to be used with handleSubmit
+    handleSubmit,
+    onSubmit,
     errors,
     getValues,
     setValue,
     loading,
     push,
+    type,
+    status,
+    ownership,
+    furnishing,
+    selectedSalesperson,
+    selectedClient,
+    handleSelectType,
+    handleSelectStatus,
+    handleSelectOwnershipStatus,
+    handleSelectFurnishingStatus,
+    handleSelectSalesperson,
+    handleSelectClient,
   };
 };
 

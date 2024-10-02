@@ -8,6 +8,10 @@ const SalesInformation = ({
   errors,
   loading,
   getValues,
+  selectedSalesperson,
+  selectedClient,
+  handleSelectSalesperson,
+  handleSelectClient,
 }) => {
   return (
     <SalesInformationUI
@@ -18,6 +22,10 @@ const SalesInformation = ({
       errors={errors}
       loading={loading}
       getValues={getValues}
+      selectedSalesperson={selectedSalesperson}
+      selectedClient={selectedClient}
+      handleSelectSalesperson={handleSelectSalesperson}
+      handleSelectClient={handleSelectClient}
     />
   );
 };
