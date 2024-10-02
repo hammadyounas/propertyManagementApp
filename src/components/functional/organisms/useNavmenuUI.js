@@ -17,7 +17,7 @@ const useNavmenu = ({ menus }) => {
   };
 
   const location = usePathname();
-  const locationName = location.replace("/", "");
+  const locationName = location;
 
   const [mobileMenu, setMobileMenu] = useMobileMenu();
   const dispatch = useDispatch();

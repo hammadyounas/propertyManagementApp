@@ -7,6 +7,8 @@ const GeneralInformation = ({
   propertyStatus,
   ownershipStatus,
   furnishingStatus,
+  errors,
+  loading,
 }) => {
   return (
     <GeneralInformationUI
@@ -16,6 +18,8 @@ const GeneralInformation = ({
       propertyStatus={propertyStatus}
       ownershipStatus={ownershipStatus}
       furnishingStatus={furnishingStatus}
+      errors={errors}
+      loading={loading}
     />
   );
 };

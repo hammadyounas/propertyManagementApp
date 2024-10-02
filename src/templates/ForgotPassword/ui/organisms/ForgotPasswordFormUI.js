@@ -21,7 +21,7 @@ const ForgotPasswordFormUI = ({
         className="px-6"
         disabled={loading}
       />
-      <Button loading={loading} text={"Send recovery email"} />
+      <Button loading={loading} text={"Send recovery email"} type="submit" />
     </form>
   );
 };

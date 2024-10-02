@@ -1,12 +1,25 @@
 import React from "react";
+import { clsx } from "@/libs/utils/helper";
 
-const Button = ({ loading, text }) => {
+const Button = ({
+  loading,
+  text,
+  className = "",
+  type = "button",
+  onClick = () => {},
+}) => {
+  const classes = clsx(
+    "btn bg-primary-default block w-full text-center text-white",
+    className
+  );
   return (
     <button
+      type={type}
       disabled={loading}
-      className="btn bg-primary-default block w-full text-center text-white"
+      className={classes}
+      onClick={onClick}
     >
-      {loading ? (
+      {loading && type == "submit" ? (
         <>
           <svg
             aria-hidden="true"

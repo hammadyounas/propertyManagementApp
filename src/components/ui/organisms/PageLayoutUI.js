@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import HeaderUIContainer from "../../combined/organisms/HeaderUIContainer";
 import SidebarUIContainer from "../../combined/organisms/SidebarUIContainer";
 // import Settings from "@/components/partials/settings";
@@ -29,10 +30,11 @@ export default function PageLayout({
   menuType,
   menuHidden,
   children,
-  router
+  router,
 }) {
-  return (
-    (location == "/" || location == "/forgot-password") ? <div>{children}</div> :
+  return location == "/" || location == "/forgot-password" ? (
+    <div>{children}</div>
+  ) : (
     <div
       dir={isRtl ? "rtl" : "ltr"}
       className={`app-warp    ${isDark ? "dark" : "light"} ${
@@ -108,7 +110,7 @@ export default function PageLayout({
           </div>
         </div>
       </div>
-      {width < breakpoints.md && <MobileFooterUIContainer router={router}/>}
+      {width < breakpoints.md && <MobileFooterUIContainer router={router} />}
       {width > breakpoints.md && (
         <FooterUIContainer
           className={width > breakpoints.xl ? switchHeaderClass() : ""}

@@ -1,7 +1,9 @@
+import Button from "../../../../components/ui/atoms/Button";
 import useForm from "../../functionality/organisms/useForm";
 import FormUI from "../../ui/organisms/FormUI";
 import Amenities from "../molecules/AmenitiesUIContainer";
 import GeneralInformation from "../molecules/GeneralInformationUIContainer";
+import ImagesAndDocuments from "../molecules/ImagesAndDocumentsUIContainer";
 import Location from "../molecules/LocationUIContainer";
 import PricingAndSize from "../molecules/PricingAndSizeUIContainer";
 import SalesInformation from "../molecules/SalesInformationUIContainer";
@@ -19,9 +21,20 @@ const CreatePropertyPage = () => {
     availableFacilities,
     salesPerson,
     clients,
+    selectedImages,
+    selectedDocs,
+    handleImagesChange,
+    handleDocsChange,
+    handleFileRemove,
+    handleSubmit,
+    onSubmit,
+    errors,
+    loading,
+    push,
+    getValues,
   } = useForm();
   return (
-    <FormUI>
+    <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <GeneralInformation
         register={register}
         control={control}
@@ -29,20 +42,52 @@ const CreatePropertyPage = () => {
         propertyStatus={propertyStatus}
         ownershipStatus={ownershipStatus}
         furnishingStatus={furnishingStatus}
+        errors={errors}
+        loading={loading}
       />
-      <Location register={register} />
-      <PricingAndSize register={register} />
+      <Location register={register} errors={errors} loading={loading} />
+      <PricingAndSize register={register} errors={errors} loading={loading} />
       <Amenities
         amenities={amenities}
         handleSelectAmenities={handleSelectAmenities}
         availableFacilities={availableFacilities}
+        errors={errors}
+        loading={loading}
+      />
+      <ImagesAndDocuments
+        selectedImages={selectedImages}
+        selectedDocs={selectedDocs}
+        handleImagesChange={handleImagesChange}
+        handleDocsChange={handleDocsChange}
+        handleFileRemove={handleFileRemove}
+        errors={errors}
+        loading={loading}
       />
       <SalesInformation
         register={register}
         control={control}
         salesPerson={salesPerson}
         clients={clients}
+        errors={errors}
+        loading={loading}
+        getValues={getValues}
       />
+      <div className="flex justify-center md:justify-end mt-12">
+        <Button
+          text={"Discard"}
+          className={
+            "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
+          }
+          onClick={() => push("/properties")}
+          loading={loading}
+        />
+        <Button
+          text={"Submit"}
+          className={"md:!w-36"}
+          type="submit"
+          loading={loading}
+        />
+      </div>
     </FormUI>
   );
 };

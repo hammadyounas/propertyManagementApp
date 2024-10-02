@@ -1,59 +1,55 @@
 import Textinput from "@/components/ui/atoms/TextInput";
 
-const LocationUI = ({ register }) => {
+const LocationUI = ({ register, errors, loading }) => {
   return (
     <div className="mt-8">
       <h6>Location</h6>
       <div className="my-4">
-        <div className="flex">
-          <div className="w-6/12 mr-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full md:w-[49%]">
             <Textinput
               name="address"
-              label="Address"
+              label="Address*"
               type="text"
               register={register}
-              //   error={errors.email}
+              error={errors.address}
               placeholder="Address"
-              //   className="px-6"
-              //   disabled={loading}
+              disabled={loading}
             />
           </div>
-          <div className="w-6/12">
+          <div className="w-full md:w-[49%]">
             <Textinput
               name="city"
-              label="City"
+              label="City*"
               type="text"
               register={register}
-              //   error={errors.email}
+              error={errors.city}
               placeholder="City"
-              //   className="px-6"
-              //   disabled={loading}
+              disabled={loading}
             />
           </div>
         </div>
-        <div className="flex">
-          <div className="w-6/12 mr-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full md:w-[49%]">
             <Textinput
               name="area"
-              label="Area"
+              label="Area*"
               type="text"
               register={register}
-              //   error={errors.email}
+              error={errors.area}
               placeholder="Area"
-              //   className="px-6"
-              //   disabled={loading}
+              disabled={loading}
             />
           </div>
-          <div className="w-6/12">
+          <div className="w-full md:w-[49%]">
             <Textinput
               name="neighborhood"
-              label="Neighborhood"
+              label="Neighborhood*"
               type="text"
               register={register}
-              //   error={errors.email}
+              error={errors.neighborhood}
               placeholder="Neighborhood"
-              //   className="px-6"
-              //   disabled={loading}
+              disabled={loading}
             />
           </div>
         </div>

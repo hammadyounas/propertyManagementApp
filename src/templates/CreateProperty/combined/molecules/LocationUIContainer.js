@@ -1,7 +1,7 @@
 import LocationUI from "../../ui/molecules/LocationUI";
 
-const Location = ({ register }) => {
-  return <LocationUI register={register} />;
+const Location = ({ register, errors, loading }) => {
+  return <LocationUI register={register} errors={errors} loading={loading} />;
 };
 
 export default Location;

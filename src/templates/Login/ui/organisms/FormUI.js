@@ -34,7 +34,7 @@ const FormUI = ({ handleSubmit, onSubmit, register, errors, loading }) => {
           Forgot Password?{" "}
         </Link>
       </div>
-      <Button loading={loading} text={"Sign In"} />
+      <Button loading={loading} text={"Sign In"} type="submit" />
     </form>
   );
 };

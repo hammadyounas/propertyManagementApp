@@ -21,7 +21,7 @@ const NavmenuUI = ({
               ${activeSubmenu === i ? "open" : ""}
               ${
                 locationName === item.link ||
-                location.startsWith(`/${item.link}`)
+                location.startsWith(`${item.link}`)
                   ? "menu-item-active"
                   : ""
               }`}

@@ -1,25 +1,32 @@
 import Select from "../../../../components/combined/molecules/SelectUIContainer";
 import { Controller } from "react-hook-form";
-const SalesInformationUI = ({ register, control, salesPerson, clients }) => {
+const SalesInformationUI = ({
+  register,
+  control,
+  salesPerson,
+  clients,
+  errors,
+  loading,
+}) => {
   return (
     <div className="mt-8">
       <h6>Sales Information</h6>
       <div className="my-4">
-        <div className="flex">
-          <div className="w-6/12 mr-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full md:w-[49%]">
             <Controller
               name="assigned_to"
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
-                  label={"Assigned To"}
+                  label={"Assigned To*"}
                   options={salesPerson}
                   isSearchable
-                  placeholder="Assigned To"
+                  placeholder="Select Salesperson"
                   register={register}
-                  // disabled={loading}
-                  // error={errors.manager}
+                  disabled={loading}
+                  error={errors.assigned_to}
                 />
               )}
             />
@@ -35,20 +42,20 @@ const SalesInformationUI = ({ register, control, salesPerson, clients }) => {
               </p>
             </div>
           </div>
-          <div className="w-6/12">
+          <div className="w-full md:w-[49%]">
             <Controller
               name="client"
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
-                  label={"Client"}
+                  label={"Client*"}
                   options={clients}
                   isSearchable
-                  placeholder="Client"
+                  placeholder="Select Client"
                   register={register}
-                  // disabled={loading}
-                  // error={errors.manager}
+                  disabled={loading}
+                  error={errors.client}
                 />
               )}
             />
