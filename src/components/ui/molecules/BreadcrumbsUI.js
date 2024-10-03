@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/atoms/Icon";
 
-const BreadcrumbsUI = ({locationName, isHide, groupTitle}) => {
+const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
   return (
     <>
       {!isHide ? (
@@ -27,7 +27,9 @@ const BreadcrumbsUI = ({locationName, isHide, groupTitle}) => {
               </li>
             )}
             <li className="capitalize text-slate-500 dark:text-slate-400">
-              {locationName}
+              {locationName?.split("/")?.length > 2
+                ? locationName?.split("/")?.slice(0, 2)?.join(" / ")
+                : locationName?.split("/")?.slice(0, 1)?.join(" / ")}
             </li>
           </ul>
         </div>

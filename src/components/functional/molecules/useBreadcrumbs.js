@@ -3,7 +3,7 @@ import { menuItems } from "../constants/data";
 import { useEffect, useState } from "react";
 const useBreadcrumbs = () => {
   const location = usePathname();
-  const locationName = location.replace("/", "");
+  const locationName = location?.replace("/", "");
 
   const [isHide, setIsHide] = useState(null);
   const [groupTitle, setGroupTitle] = useState("");
@@ -29,7 +29,7 @@ const useBreadcrumbs = () => {
     locationName,
     isHide,
     groupTitle,
-  }
+  };
 };
 
 export default useBreadcrumbs;

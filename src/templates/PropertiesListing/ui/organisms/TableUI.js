@@ -3,14 +3,24 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal, push }) => {
+const TableUI = ({
+  columns,
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  openModal,
+  push,
+}) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center">
-            <div onClick={openModal} className="flex items-center mr-3 p-3 cursor-pointer">
+            <div
+              onClick={openModal}
+              className="flex items-center mr-3 p-3 cursor-pointer"
+            >
               <Icon
                 // onClick={() => {}}
                 className="cursor-pointer text-[20px] mr-2"
@@ -53,7 +63,12 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal, push
                         className="w-20 h-16"
                       />
                     </td>
-                    <td className="table-td text-primary-default font-bold cursor-pointer">{row.title}</td>
+                    <td
+                      className="table-td text-primary-default font-bold cursor-pointer"
+                      onClick={() => push(`/properties/view/${row?.id}`)}
+                    >
+                      {row.title}
+                    </td>
                     <td className="table-td ">{row.location}</td>
                     <td className="table-td ">{row.price}</td>
                     <td className="table-td ">{row.property_type}</td>
@@ -101,7 +116,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, openModal, push
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => push(`/properties/view/${row?.id}`)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
