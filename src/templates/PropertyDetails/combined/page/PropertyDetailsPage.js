@@ -6,7 +6,7 @@ import Details from "../molecules/DetailsUIContainer";
 import Overview from "../molecules/OverviewUIContainer";
 import UserDetails from "../molecules/UserDetailsUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
-import usePropertyDetails from "../../functionality/organisms/usePropertyDetails";
+import usePropertyDetails from "../../functionality/page/usePropertyDetails";
 import Loading from "../../../../components/combined/atoms/LoadingUIContainer";
 
 const PropertyDetailsPage = () => {
