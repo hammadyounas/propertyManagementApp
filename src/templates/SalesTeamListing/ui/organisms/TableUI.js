@@ -13,7 +13,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
             <span className="w-full">
               <Button
                 text="Add User"
-                onClick={() => {}}
+                onClick={() => push("/sales-team/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>
