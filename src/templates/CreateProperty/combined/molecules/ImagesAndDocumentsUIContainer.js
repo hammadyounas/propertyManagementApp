@@ -8,6 +8,11 @@ const ImagesAndDocuments = ({
   handleFileRemove,
   errors,
   loading,
+  imageInputRef,
+  docInputRef,
+  triggerImageFileInput,
+  triggerDocFileInput,
+  renderPreview,
 }) => {
   return (
     <ImagesAndDocumentsUI
@@ -18,6 +23,11 @@ const ImagesAndDocuments = ({
       handleFileRemove={handleFileRemove}
       errors={errors}
       loading={loading}
+      imageInputRef={imageInputRef}
+      docInputRef={docInputRef}
+      triggerImageFileInput={triggerImageFileInput}
+      triggerDocFileInput={triggerDocFileInput}
+      renderPreview={renderPreview}
     />
   );
 };

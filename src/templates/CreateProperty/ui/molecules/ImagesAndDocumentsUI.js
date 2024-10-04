@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import FileInput from "../../../../components/combined/atoms/FileInputUIContainer";
+import { File, Plus } from "lucide-react";
 
 const ImagesAndDocumentsUI = ({
   selectedImages,
@@ -8,47 +10,69 @@ const ImagesAndDocumentsUI = ({
   handleFileRemove,
   errors,
   loading,
+  imageInputRef,
+  docInputRef,
+  triggerImageFileInput,
+  triggerDocFileInput,
+  renderPreview,
 }) => {
   return (
     <div className="mt-8">
       <h6>Images & Documents</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
-          <div className="w-full md:w-[49%]">
-            <h6 className="text-sm font-semibold mb-4">Images*</h6>
-            <FileInput
-              name="images"
-              selectedFiles={selectedImages}
-              onChange={handleImagesChange}
-              multiple
-              preview
-              handleFileRemove={handleFileRemove}
-              type="image"
+          <div className="w-full">
+            <h6 className="text-sm font-semibold mb-4">
+              Images* (jpg, png, or gif format supported)
+            </h6>
+            <input
               disabled={loading}
+              type="file"
+              ref={imageInputRef}
+              name="images"
+              multiple
+              onChange={handleImagesChange}
+              className="hidden"
             />
-            {errors?.images && selectedImages.length == 0 && (
+            <div className="mt-4 flex flex-wrap items-center">
+              {renderPreview(selectedImages, "image")}
+              <div className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4">
+                <Plus
+                  size={50}
+                  onClick={() => triggerImageFileInput(imageInputRef)}
+                />
+                <p className="font-bold mt-2">Images</p>
+              </div>
+            </div>
+            {errors?.images && selectedImages.length === 0 && (
               <p className="text-sm text-danger-500 mt-2">
                 {errors?.images?.message}
               </p>
             )}
           </div>
-          <div className="w-full md:w-[49%] mt-4 md:mt-0">
-            <h6 className="text-sm font-semibold mb-4">Documents (optional)</h6>
-            <FileInput
-              name="documents"
-              selectedFiles={selectedDocs}
-              onChange={handleDocsChange}
-              multiple
-              preview
-              handleFileRemove={handleFileRemove}
-              type="doc"
+          <div className="w-full mt-8">
+            <h6 className="text-sm font-semibold mb-4">
+              Documents (Optional - pdf, doc, or docx format supported)
+            </h6>
+            <input
               disabled={loading}
+              type="file"
+              ref={docInputRef}
+              name="documents"
+              multiple
+              onChange={handleDocsChange}
+              className="hidden"
             />
-            {errors?.documents && selectedDocs.length == 0 && (
-              <p className="text-sm text-danger-500 mt-2">
-                {errors?.documents?.message}
-              </p>
-            )}
+            <div className="mt-4 flex flex-wrap items-center">
+              {renderPreview(selectedDocs, "doc")}
+              <div className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4">
+                <Plus
+                  size={50}
+                  onClick={() => triggerDocFileInput(docInputRef)}
+                />
+                <p className="font-bold mt-2">Documents</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

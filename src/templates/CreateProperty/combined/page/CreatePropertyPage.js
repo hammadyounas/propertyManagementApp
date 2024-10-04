@@ -36,15 +36,22 @@ const CreatePropertyPage = () => {
     status,
     ownership,
     furnishing,
-    selectedSalesperson,
     selectedClient,
     handleSelectType,
     handleSelectStatus,
     handleSelectOwnershipStatus,
     handleSelectFurnishingStatus,
-    handleSelectSalesperson,
     handleSelectClient,
+    imageInputRef,
+    docInputRef,
+    triggerImageFileInput,
+    triggerDocFileInput,
+    renderPreview,
+    selectedSalespersons,
+    handleSelectSalesperson,
   } = useForm();
+  console.log("errors", errors);
+
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <GeneralInformation
@@ -70,6 +77,9 @@ const CreatePropertyPage = () => {
       <Amenities
         amenities={amenities}
         handleSelectAmenities={handleSelectAmenities}
+        selectedSalespersons={selectedSalespersons}
+        handleSelectSalesperson={handleSelectSalesperson}
+        salesPerson={salesPerson}
         availableFacilities={availableFacilities}
         errors={errors}
         loading={loading}
@@ -82,8 +92,13 @@ const CreatePropertyPage = () => {
         handleFileRemove={handleFileRemove}
         errors={errors}
         loading={loading}
+        imageInputRef={imageInputRef}
+        docInputRef={docInputRef}
+        triggerImageFileInput={triggerImageFileInput}
+        triggerDocFileInput={triggerDocFileInput}
+        renderPreview={renderPreview}
       />
-      <SalesInformation
+      {/* <SalesInformation
         register={register}
         control={control}
         salesPerson={salesPerson}
@@ -95,7 +110,7 @@ const CreatePropertyPage = () => {
         selectedClient={selectedClient}
         handleSelectSalesperson={handleSelectSalesperson}
         handleSelectClient={handleSelectClient}
-      />
+      /> */}
       <div className="flex justify-center md:justify-end mt-12">
         <Button
           text={"Discard"}

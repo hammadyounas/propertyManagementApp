@@ -9,19 +9,20 @@ import {
   propertyTypes,
   salesPerson,
 } from "../constants/data";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import { File } from "lucide-react";
 
 const useCreateForm = () => {
   const schema = yup.object({
-    title: yup.string().required("Title is required"),
-    description: yup.string().required("Description is required"),
-    type: yup.string().required("Type is required"),
-    status: yup.string().required("Status is required"),
-    ownership_status: yup.string().required("Ownership status is required"),
-    furnishing_status: yup.string().required("Furnishing status is required"),
+    title: yup.string().required("Property Title is required"),
+    description: yup.string().required("Property Description is required"),
+    type: yup.string().required("Property Type is required"),
+    status: yup.string().required("Property Status is required"),
+    ownership_status: yup.string().required("Ownership Status is required"),
+    furnishing_status: yup.string().required("Furnishing Status is required"),
     address: yup.string().required("Address is required"),
     city: yup.string().required("City is required"),
     area: yup.string().required("Area is required"),
@@ -42,10 +43,10 @@ const useCreateForm = () => {
       .number()
       .required("Bathrooms are required")
       .moreThan(0, "There must be at least 1 bathroom"),
-    // amenities: yup
-    //   .array()
-    //   .min(1, "At least one amenity must be selected")
-    //   .required("Amenities are required"),
+    assigned_to: yup
+      .array()
+      .min(1, "At least one salesperson must be selected")
+      .required("Salesperson is required"),
     images: yup
       .array()
       .min(1, "At least one image must be uploaded")
@@ -54,8 +55,8 @@ const useCreateForm = () => {
     //   .array()
     //   .min(1, "At least one document must be uploaded")
     //   .required("Documents are required"),
-    assigned_to: yup.string().required("Assignee is required"),
-    client: yup.string().required("Client is required"),
+    // assigned_to: yup.string().required("Assignee is required"),
+    // client: yup.string().required("Client is required"),
   });
 
   const {
@@ -79,16 +80,67 @@ const useCreateForm = () => {
   });
 
   const [amenities, setAmenities] = useState([]);
+  const [selectedSalespersons, setSelectedSalespersons] = useState([]);
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
   const [furnishing, setFurnishing] = useState("");
-  const [selectedSalesperson, setSelectedSalesperson] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
+
+  const imageInputRef = useRef(null);
+  const docInputRef = useRef(null);
+
+  const triggerImageFileInput = (inputRef) => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
+
+  const triggerDocFileInput = (docRef) => {
+    if (docRef.current) {
+      docRef.current.click();
+    }
+  };
+
+  // Helper function to render file previews
+  const renderPreview = (files, type) => {
+    return files?.map((file, index) => {
+      const fileURL = type == "image" ? URL.createObjectURL(file) : null;
+      return (
+        <div className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
+          {type == "image" ? (
+            <img
+              src={fileURL}
+              alt="Preview"
+              className="object-cover w-36 h-28"
+            />
+          ) : (
+            <div className="flex flex-col justify-center items-center w-36 h-28">
+              <File size={50} />
+              <p className="font-bold mt-2 text-center">
+                {" "}
+                {file.name.length > 16
+                  ? `${file.name.slice(0, 8)}...${file.name.slice(-8)}`
+                  : file.name}
+              </p>
+            </div>
+          )}
+          <button
+            disabled={loading}
+            type="button"
+            onClick={() => handleFileRemove(index, type)}
+            className=" text-danger-500 mt-4"
+          >
+            Remove
+          </button>
+        </div>
+      );
+    });
+  };
 
   // Sync external state with form values using setValue
   useEffect(() => {
@@ -99,7 +151,7 @@ const useCreateForm = () => {
     setValue("status", status?.value);
     setValue("ownership_status", ownership?.value || "");
     setValue("furnishing_status", furnishing?.value || "");
-    setValue("assigned_to", selectedSalesperson?.value || "");
+    setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
   }, [
     amenities,
@@ -109,7 +161,7 @@ const useCreateForm = () => {
     status,
     ownership,
     furnishing,
-    selectedSalesperson,
+    selectedSalespersons,
     selectedClient,
     setValue,
   ]);
@@ -183,6 +235,10 @@ const useCreateForm = () => {
     setAmenities(selectedValues);
   };
 
+  const handleSelectSalesperson = (selectedValues) => {
+    setSelectedSalespersons(selectedValues);
+  };
+
   const handleSelectType = (e) => {
     setType(e);
   };
@@ -194,9 +250,6 @@ const useCreateForm = () => {
   };
   const handleSelectFurnishingStatus = (e) => {
     setFurnishing(e);
-  };
-  const handleSelectSalesperson = (e) => {
-    setSelectedSalesperson(e);
   };
   const handleSelectClient = (e) => {
     setSelectedClient(e);
@@ -242,14 +295,19 @@ const useCreateForm = () => {
     status,
     ownership,
     furnishing,
-    selectedSalesperson,
     selectedClient,
     handleSelectType,
     handleSelectStatus,
     handleSelectOwnershipStatus,
     handleSelectFurnishingStatus,
-    handleSelectSalesperson,
     handleSelectClient,
+    imageInputRef,
+    docInputRef,
+    triggerImageFileInput,
+    triggerDocFileInput,
+    renderPreview,
+    selectedSalespersons,
+    handleSelectSalesperson,
   };
 };
 

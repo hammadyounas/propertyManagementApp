@@ -6,6 +6,9 @@ const Amenities = ({
   availableFacilities,
   errors,
   loading,
+  selectedSalespersons,
+  handleSelectSalesperson,
+  salesPerson,
 }) => {
   return (
     <AmenitiesUI
@@ -14,6 +17,9 @@ const Amenities = ({
       availableFacilities={availableFacilities}
       errors={errors}
       loading={loading}
+      selectedSalespersons={selectedSalespersons}
+      handleSelectSalesperson={handleSelectSalesperson}
+      salesPerson={salesPerson}
     />
   );
 };
