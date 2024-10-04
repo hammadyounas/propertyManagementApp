@@ -46,6 +46,7 @@ const GeneralInformationUI = ({
               options={furnishingStatus}
               placeholder="Furnishing Status"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.furnishing_status && !furnishing && (
               <p className="text-sm text-danger-500 mt-2">
@@ -77,6 +78,7 @@ const GeneralInformationUI = ({
               options={propertyTypes}
               placeholder="Property Type"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.type && !type && (
               <p className="text-sm text-danger-500 mt-2">
@@ -93,6 +95,7 @@ const GeneralInformationUI = ({
               options={propertyStatus}
               placeholder="Property Status"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.status && !status && (
               <p className="text-sm text-danger-500 mt-2">
@@ -111,6 +114,7 @@ const GeneralInformationUI = ({
               options={ownershipStatus}
               placeholder="Ownership Status"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.ownership_status && !ownership && (
               <p className="text-sm text-danger-500 mt-2">

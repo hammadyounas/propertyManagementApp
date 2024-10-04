@@ -25,6 +25,7 @@ const AmenitiesUI = ({
               options={availableFacilities}
               placeholder="Amenities"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.amenities && amenities.length == 0 && (
               <p className="text-sm text-danger-500 mt-2">
@@ -44,6 +45,7 @@ const AmenitiesUI = ({
               options={salesPerson}
               placeholder="Salesperson"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.assigned_to && selectedSalespersons.length == 0 && (
               <p className="text-sm text-danger-500 mt-2">

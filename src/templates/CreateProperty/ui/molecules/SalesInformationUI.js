@@ -27,6 +27,7 @@ const SalesInformationUI = ({
               options={salesPerson}
               placeholder="Assigned To*"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.assigned_to && !selectedSalesperson && (
               <p className="text-sm text-danger-500 mt-2">
@@ -56,6 +57,7 @@ const SalesInformationUI = ({
               options={clients}
               placeholder="Client*"
               isDisabled={loading}
+              className="text-sm"
             />
             {errors?.client && !selectedClient && (
               <p className="text-sm text-danger-500 mt-2">
