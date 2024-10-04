@@ -36,11 +36,11 @@ const ImagesAndDocumentsUI = ({
             />
             <div className="mt-4 flex flex-wrap items-center">
               {renderPreview(selectedImages, "image")}
-              <div className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4">
-                <Plus
-                  size={50}
-                  onClick={() => triggerImageFileInput(imageInputRef)}
-                />
+              <div
+                onClick={() => triggerImageFileInput(imageInputRef)}
+                className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4"
+              >
+                <Plus size={50} />
                 <p className="font-bold mt-2">Images</p>
               </div>
             </div>
@@ -65,11 +65,11 @@ const ImagesAndDocumentsUI = ({
             />
             <div className="mt-4 flex flex-wrap items-center">
               {renderPreview(selectedDocs, "doc")}
-              <div className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4">
-                <Plus
-                  size={50}
-                  onClick={() => triggerDocFileInput(docInputRef)}
-                />
+              <div
+                onClick={() => triggerDocFileInput(docInputRef)}
+                className="h-[185px] w-44 flex flex-col justify-center items-center border border-1 border-dashed mt-4 mr-4 p-4"
+              >
+                <Plus size={50} />
                 <p className="font-bold mt-2">Documents</p>
               </div>
             </div>
