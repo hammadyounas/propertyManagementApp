@@ -53,6 +53,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     </td>
                     <td className="table-td ">{row.phone}</td>
                     <td className="table-td ">{row.email}</td>
+                    <td className="table-td ">{row.joining_date}</td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span

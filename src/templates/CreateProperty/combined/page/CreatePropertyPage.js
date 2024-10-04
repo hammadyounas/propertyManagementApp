@@ -50,8 +50,6 @@ const CreatePropertyPage = () => {
     selectedSalespersons,
     handleSelectSalesperson,
   } = useForm();
-  console.log("errors", errors);
-
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <GeneralInformation

@@ -12,6 +12,10 @@ export const columns = [
     field: "Email",
   },
   {
+    label: "Joining Date",
+    field: "Joining Date",
+  },
+  {
     label: "Status",
     field: "Status",
   },
@@ -28,6 +32,7 @@ export const tableData = [
     phone: "123456789",
     email: "johndoe@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 2,
@@ -35,6 +40,7 @@ export const tableData = [
     phone: "123456789",
     email: "patric@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 3,
@@ -42,6 +48,7 @@ export const tableData = [
     phone: "123456789",
     email: "Janny@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 4,
@@ -49,6 +56,7 @@ export const tableData = [
     phone: "123456789",
     email: "aroun@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 5,
@@ -56,6 +64,7 @@ export const tableData = [
     phone: "123456789",
     email: "vivek@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 6,
@@ -63,6 +72,7 @@ export const tableData = [
     phone: "123456789",
     email: "bla@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 7,
@@ -70,6 +80,7 @@ export const tableData = [
     phone: "123456789",
     email: "johndoe@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 8,
@@ -77,6 +88,7 @@ export const tableData = [
     phone: "123456789",
     email: "patric@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 9,
@@ -84,6 +96,7 @@ export const tableData = [
     phone: "123456789",
     email: "Janny@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 10,
@@ -91,6 +104,7 @@ export const tableData = [
     phone: "123456789",
     email: "aroun@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 11,
@@ -98,6 +112,7 @@ export const tableData = [
     phone: "123456789",
     email: "vivek@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 12,
@@ -105,6 +120,7 @@ export const tableData = [
     phone: "123456789",
     email: "bla@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
 
   {
@@ -113,6 +129,7 @@ export const tableData = [
     phone: "123456789",
     email: "johndoe@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 14,
@@ -120,6 +137,7 @@ export const tableData = [
     phone: "123456789",
     email: "patric@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 15,
@@ -127,6 +145,7 @@ export const tableData = [
     phone: "123456789",
     email: "Janny@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 16,
@@ -134,6 +153,7 @@ export const tableData = [
     phone: "123456789",
     email: "aroun@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 17,
@@ -141,6 +161,7 @@ export const tableData = [
     phone: "123456789",
     email: "vivek@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 18,
@@ -148,6 +169,7 @@ export const tableData = [
     phone: "123456789",
     email: "bla@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 19,
@@ -155,6 +177,7 @@ export const tableData = [
     phone: "123456789",
     email: "johndoe@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 20,
@@ -162,6 +185,7 @@ export const tableData = [
     phone: "123456789",
     email: "patric@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 21,
@@ -169,6 +193,7 @@ export const tableData = [
     phone: "123456789",
     email: "Janny@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 22,
@@ -176,6 +201,7 @@ export const tableData = [
     phone: "123456789",
     email: "aroun@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 23,
@@ -183,6 +209,7 @@ export const tableData = [
     phone: "123456789",
     email: "vivek@gmail.com",
     status: "active",
+    joining_date: "5 Oct, 2004",
   },
   {
     id: 24,
@@ -190,6 +217,7 @@ export const tableData = [
     phone: "123456789",
     email: "bla@gmail.com",
     status: "in active",
+    joining_date: "5 Oct, 2004",
   },
 ];
 

@@ -2,6 +2,7 @@
 import Textinput from "@/components/ui/atoms/TextInput";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
+import ReactSelect from "react-select";
 
 const FormUI = ({
   handleSubmit,
@@ -10,6 +11,12 @@ const FormUI = ({
   register,
   errors,
   push,
+  status,
+  handleSelectStatus,
+  propertiesAssigned,
+  handleSelectAssignedProperties,
+  salespersonStatus,
+  availableProperties,
 }) => {
   return (
     <div className="w-full lg:w-[75%]">
@@ -30,30 +37,6 @@ const FormUI = ({
               </div>
               <div className="w-full md:w-[49%]">
                 <Textinput
-                  name="address"
-                  label="Address*"
-                  type="text"
-                  register={register}
-                  error={errors.address}
-                  placeholder="Address"
-                  disabled={loading}
-                />
-              </div>
-            </div>
-            <div className="flex flex-wrap justify-between">
-              <div className="w-full md:w-[49%]">
-                <Textinput
-                  name="phone"
-                  label="Phone*"
-                  type="number"
-                  register={register}
-                  error={errors.phone}
-                  placeholder="Phone"
-                  disabled={loading}
-                />
-              </div>
-              <div className="w-full md:w-[49%]">
-                <Textinput
                   name="email"
                   label="Email*"
                   type="text"
@@ -67,6 +50,81 @@ const FormUI = ({
             <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
+                  name="phone"
+                  label="Phone Number*"
+                  type="number"
+                  register={register}
+                  error={errors.phone}
+                  placeholder="Phone Number"
+                  disabled={loading}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="address"
+                  label="Address*"
+                  type="text"
+                  register={register}
+                  error={errors.address}
+                  placeholder="Address"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <div className="mt-4">
+                  <div className="my-2 text-sm font-medium">
+                    Assigned Properties
+                  </div>
+                  <ReactSelect
+                    name="assigned_properties"
+                    isMulti
+                    value={propertiesAssigned}
+                    onChange={handleSelectAssignedProperties}
+                    options={availableProperties}
+                    placeholder="Assigned Properties"
+                    isDisabled={loading}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+              <div className="w-full md:w-[49%]">
+                <div className="mt-4">
+                  <div className="my-2 text-sm font-medium">Status*</div>
+                  <ReactSelect
+                    name="status"
+                    value={status}
+                    onChange={handleSelectStatus}
+                    options={salespersonStatus}
+                    placeholder="Status"
+                    isDisabled={loading}
+                    className="text-sm"
+                  />
+                  {errors?.status && !status && (
+                    <p className="text-sm text-danger-500 mt-2">
+                      {errors?.status?.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="joining_date"
+                  label="Joining Date*"
+                  type="date"
+                  register={register}
+                  error={errors.joining_date}
+                  placeholder="Joining Date"
+                  disabled={loading}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <Textinput
                   name="password"
                   label="Password*"
                   type="password"
@@ -76,6 +134,8 @@ const FormUI = ({
                   disabled={loading}
                 />
               </div>
+            </div>
+            <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
                   name="confirm_password"
@@ -88,6 +148,7 @@ const FormUI = ({
                 />
               </div>
             </div>
+
             <div className="flex justify-center md:justify-end mt-12">
               <Button
                 text={"Discard"}
