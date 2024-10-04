@@ -1,8 +1,8 @@
 import React from "react";
-import CreateClientPage from "../../templates/CreateClient/combined/page/CreateClientPage";
+import ClientsListingPage from "../../templates/ClientsListing/combined/page/ClientsListingPage";
 
-const CreateClient = () => {
-  return <CreateClientPage />;
+const Clients = () => {
+  return <ClientsListingPage />;
 };
 
-export default CreateClient;
+export default Clients;

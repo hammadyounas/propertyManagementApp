@@ -134,22 +134,6 @@ const GeneralInformationUI = ({
               disabled={loading}
             />
           </div>
-          {/* <div className="w-full md:w-[49%]">
-            <div className="my-2 text-sm font-medium">Furnishing Status*</div>
-            <ReactSelect
-              name="furnishing_status"
-              value={furnishing}
-              onChange={handleSelectFurnishingStatus}
-              options={furnishingStatus}
-              placeholder="Furnishing Status*"
-              isDisabled={loading}
-            />
-            {errors?.furnishing_status && !furnishing && (
-              <p className="text-sm text-danger-500 mt-2">
-                {errors?.furnishing_status?.message}
-              </p>
-            )}
-          </div> */}
         </div>
       </div>
     </div>

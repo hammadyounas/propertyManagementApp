@@ -3,6 +3,7 @@ import Textinput from "@/components/ui/atoms/TextInput";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
 import ReactSelect from "react-select";
+import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 
 const FormUI = ({
   handleSubmit,
@@ -24,11 +25,9 @@ const FormUI = ({
   preferredCommunicationChannels,
   salesPersons,
 }) => {
-  console.log('err', errors);
-  
   return (
     <div className="w-full lg:w-[75%]">
-      <Card title="Create User">
+      <Card title="Create Client">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
             <div className="flex flex-wrap justify-between">
@@ -161,6 +160,20 @@ const FormUI = ({
                     className="text-sm"
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%] mt-1">
+                <Textarea
+                  name="notes"
+                  label="Notes"
+                  type="text"
+                  register={register}
+                  placeholder="Notes"
+                  row={5}
+                  disabled={loading}
+                />
               </div>
             </div>
 

@@ -27,7 +27,7 @@ const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
               </li>
             )}
             <li className="capitalize text-slate-500 dark:text-slate-400">
-              {locationName?.split("/")?.length > 2
+              {locationName?.split("/")?.length > 1
                 ? locationName?.split("/")?.slice(0, 2)?.join(" / ")
                 : locationName?.split("/")?.slice(0, 1)?.join(" / ")}
             </li>
