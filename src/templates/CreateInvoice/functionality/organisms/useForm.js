@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 const useCreateInvoice = () => {
   const itemSchema = yup.object({
@@ -70,6 +71,10 @@ const useCreateInvoice = () => {
   const [selectedProperty, setSelectedProperty] = useState("");
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
+
+  useEffect(() => {
+    setValue("invoice_id", uuidv4());
+  }, []);
 
   // Sync external state with form values using setValue
   useEffect(() => {

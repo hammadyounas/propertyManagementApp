@@ -1,0 +1,143 @@
+export const columns = [
+  {
+    label: "Client",
+    field: "Client",
+  },
+  {
+    label: "Invoice Date",
+    field: "Invoice Date",
+  },
+  {
+    label: "Due Date",
+    field: "Due Date",
+  },
+  {
+    label: "Amount",
+    field: "Amount",
+  },
+  {
+    label: "Status",
+    field: "Status",
+  },
+  {
+    label: "Action",
+    field: "Action",
+  },
+];
+
+export const tableData = [
+  {
+    id: 1,
+    client: "John doe",
+    invoice_date: "12/10/2024",
+    due_date: "12/12/2024",
+    amount: "195000",
+    invoice_status: "pending",
+  },
+  {
+    id: 2,
+    client: "St patric",
+    invoice_date: "11/09/2023",
+    due_date: "12/12/2023",
+    amount: "240000",
+    invoice_status: "sent",
+  },
+  {
+    id: 3,
+    client: "Harry",
+    invoice_date: "12/04/2024",
+    due_date: "12/12/2024",
+    amount: "1600000",
+    invoice_status: "paid",
+  },
+  {
+    id: 4,
+    client: "Aroun",
+    invoice_date: "08/08/2022",
+    due_date: "11/12/2022",
+    amount: "19000400",
+    invoice_status: "overdue",
+  },
+  {
+    id: 5,
+    client: "vivek",
+    invoice_date: "08/08/2022",
+    due_date: "11/12/2022",
+    amount: "19000400",
+    invoice_status: "cancelled",
+  },
+  {
+    id: 6,
+    client: "Aroun",
+    invoice_date: "03/02/2025",
+    due_date: "23/12/2027",
+    amount: "190400",
+    invoice_status: "refunded",
+  },
+  {
+    id: 7,
+    client: "bla bla",
+    invoice_date: "03/02/2025",
+    due_date: "23/12/2027",
+    amount: "190400",
+    invoice_status: "partially paid",
+  },
+  {
+    id: 8,
+    client: "John doe",
+    invoice_date: "12/10/2024",
+    due_date: "12/12/2024",
+    amount: "195000",
+    invoice_status: "pending",
+  },
+  {
+    id: 9,
+    client: "St patric",
+    invoice_date: "11/09/2023",
+    due_date: "12/12/2023",
+    amount: "240000",
+    invoice_status: "sent",
+  },
+  {
+    id: 10,
+    client: "Harry",
+    invoice_date: "12/04/2024",
+    due_date: "12/12/2024",
+    amount: "1600000",
+    invoice_status: "paid",
+  },
+  {
+    id: 11,
+    client: "Aroun",
+    invoice_date: "08/08/2022",
+    due_date: "11/12/2022",
+    amount: "19000400",
+    invoice_status: "overdue",
+  },
+  {
+    id: 12,
+    client: "vivek",
+    invoice_date: "08/08/2022",
+    due_date: "11/12/2022",
+    amount: "19000400",
+    invoice_status: "cancelled",
+  },
+  {
+    id: 13,
+    client: "Aroun",
+    invoice_date: "03/02/2025",
+    due_date: "23/12/2027",
+    amount: "190400",
+    invoice_status: "refunded",
+  },
+  {
+    id: 14,
+    client: "bla bla",
+    invoice_date: "03/02/2025",
+    due_date: "23/12/2027",
+    amount: "190400",
+    invoice_status: "partially paid",
+  },
+];
+
+export const rows = tableData;

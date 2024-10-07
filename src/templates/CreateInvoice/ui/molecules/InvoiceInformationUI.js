@@ -22,7 +22,7 @@ const InvoiceInformationUI = ({
               register={register}
               error={errors.invoice_id}
               placeholder="Invoice ID"
-              disabled={loading}
+              disabled={true}
             />
           </div>
           <div className="w-full md:w-[49%]">
