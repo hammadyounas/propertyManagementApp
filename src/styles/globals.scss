@@ -163,6 +163,10 @@
   cursor: not-allowed;
 }
 
+#editor-2 > iframe {
+  min-width: 600px !important
+}
+
 @layer components {
   @import "components/table.scss";
   @import "components/map.scss";

@@ -4,7 +4,14 @@ import Link from "next/link";
 import Icon from "@/components/ui/atoms/Icon";
 import MultilevelUIContainer from "../../combined/molecules/MultilevelUIContainer";
 
-const SubmenuUI = ({activeMultiMenu,toggleMultiMenu, activeSubmenu, item, i, locationName}) => {
+const SubmenuUI = ({
+  activeMultiMenu,
+  toggleMultiMenu,
+  activeSubmenu,
+  item,
+  i,
+  locationName,
+}) => {
   return (
     <Collapse isOpened={activeSubmenu === i}>
       <ul className="sub-menu  space-y-4  ">
@@ -50,14 +57,14 @@ const SubmenuUI = ({activeMultiMenu,toggleMultiMenu, activeSubmenu, item, i, loc
                 <span
                   className={`${
                     locationName === subItem.childlink
-                      ? " text-black dark:text-white font-medium"
-                      : "text-slate-600 dark:text-slate-300"
+                      ? " text-primary-default dark:text-white font-medium"
+                      : "text-white dark:text-slate-300"
                   } text-sm flex space-x-3 items-center transition-all duration-150`}
                 >
                   <span
                     className={`${
                       locationName === subItem.childlink
-                        ? " bg-slate-900 dark:bg-slate-300 ring-4 ring-opacity-[15%] ring-black-500 dark:ring-slate-300 dark:ring-opacity-20"
+                        ? " bg-primary-default dark:bg-slate-300 ring-4 ring-opacity-[15%] ring-black-500 dark:ring-slate-300 dark:ring-opacity-20"
                         : ""
                     } h-2 w-2 rounded-full border border-slate-600 dark:border-white inline-block flex-none`}
                   ></span>

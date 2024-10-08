@@ -44,10 +44,12 @@ const NavmenuUI = ({
             {item.child && (
               <div
                 className={`menu-link ${
-                  activeSubmenu === i
-                    ? "parent_active not-collapsed"
-                    : "collapsed"
-                }`}
+                  item?.child
+                    ?.map((k) => {
+                      return k.childlink;
+                    })
+                    .includes(locationName) && "bg-primary-default"
+                } ${activeSubmenu === i ? `not-collapsed` : "collapsed"}`}
                 onClick={() => toggleSubmenu(i)}
               >
                 <div className="flex-1 flex items-start">
@@ -68,12 +70,12 @@ const NavmenuUI = ({
               </div>
             )}
 
-            {/* <SubmenuUIContainer
+            <SubmenuUIContainer
               activeSubmenu={activeSubmenu}
               item={item}
               i={i}
               locationName={locationName}
-            /> */}
+            />
           </li>
         ))}
         {/* <li className="single-sidebar-menu">

@@ -29,11 +29,27 @@ export const menuItems = [
     icon: "heroicons:document",
     link: "/invoices",
   },
+  // {
+  //   title: "Marketing Emails",
+  //   isHide: false,
+  //   icon: "heroicons:at-symbol",
+  //   link: "/marketing-emails",
+  // },
   {
     title: "Marketing Emails",
-    isHide: false,
     icon: "heroicons:at-symbol",
-    link: "/marketing-emails",
+    isOpen: true,
+    isHide: false,
+    child: [
+      {
+        childtitle: "Email Templates",
+        childlink: "/email-templates",
+      },
+      {
+        childtitle: "Send Email",
+        childlink: "/send-email",
+      },
+    ],
   },
 ];
 
