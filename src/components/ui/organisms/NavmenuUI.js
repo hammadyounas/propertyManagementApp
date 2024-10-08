@@ -44,11 +44,13 @@ const NavmenuUI = ({
             {item.child && (
               <div
                 className={`menu-link ${
-                  item?.child
+                  (item?.child
                     ?.map((k) => {
                       return k.childlink;
                     })
-                    .includes(locationName) && "bg-primary-default"
+                    .includes(locationName) ||
+                    locationName?.startsWith("/email-templates")) &&
+                  "bg-primary-default"
                 } ${activeSubmenu === i ? `not-collapsed` : "collapsed"}`}
                 onClick={() => toggleSubmenu(i)}
               >

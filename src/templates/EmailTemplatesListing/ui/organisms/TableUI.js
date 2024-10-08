@@ -13,7 +13,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
             <span className="w-full">
               <Button
                 text="Create Template"
-                onClick={() => {}}
+                onClick={() => push("/email-templates/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>

@@ -12,8 +12,8 @@ const EmailTemplateManager = () => {
   useEffect(() => {
     // Get all template keys from localStorage
     const savedTemplates = Object.keys(localStorage)
-      .filter((key) => key.startsWith("template-"))
-      .map((key) => key.replace("template-", ""));
+      .filter((key) => key?.startsWith("template-"))
+      .map((key) => key?.replace("template-", ""));
 
     setTemplates(savedTemplates);
   }, []);
