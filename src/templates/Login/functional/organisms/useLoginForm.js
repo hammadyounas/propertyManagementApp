@@ -20,7 +20,7 @@ export const useLoginForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
     //
-    mode: "all",
+    mode: "all"
   });
   const [_, setAuth] = useProfile();
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export const useLoginForm = () => {
     setTimeout(() => {
       // alert(`Form Submitted ${JSON.stringify(data)}`);
       setLoading(false);
-      router.push("/properties")
+      router.push("/meetings")
     }, 1500);
   };
 

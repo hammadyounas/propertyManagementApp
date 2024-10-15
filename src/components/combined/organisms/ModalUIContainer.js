@@ -10,7 +10,7 @@ const Modal = ({
   footerContent,
   centered,
   scrollContent,
-  themeClass = "bg-primary-default dark:bg-slate-800 dark:border-b dark:border-slate-700",
+  themeClass = "bg-black-default dark:bg-slate-800 dark:border-b dark:border-slate-700",
   title = "Basic Modal",
   uncontrol,
   label = "Basic Modal",

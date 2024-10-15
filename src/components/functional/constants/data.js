@@ -6,6 +6,12 @@ export const menuItems = [
     link: "/dashboard",
   },
   {
+    title: "Meetings",
+    isHide: false,
+    icon: "heroicons:calendar",
+    link: "/meetings",
+  },
+  {
     title: "Properties",
     isHide: false,
     icon: "heroicons:building-office-2",
