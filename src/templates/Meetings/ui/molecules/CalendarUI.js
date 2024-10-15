@@ -17,6 +17,7 @@ const CalendarUI = ({
   scrollToDiv,
   loading,
   openModal,
+  closeModal,
 }) => {
   return (
     <Card className=" bg-white w-full 2xl:w-[62%]">
@@ -26,7 +27,10 @@ const CalendarUI = ({
         </p>
         <Button
           text="New Meeting"
-          onClick={() => openModal()}
+          onClick={() => {
+            closeModal();
+            openModal();
+          }}
           className="btn-primary bg-primary-default"
         />
       </div>
@@ -39,12 +43,12 @@ const CalendarUI = ({
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
         }}
-        events={meetings?.map((task, index) => ({
-          start: moment().add(index, "days").toISOString(), // Schedule events on different days
-          end: moment().add(index, "days").add(1, "hours").toISOString(),
-          title: task.title,
-          id: `${index}`,
-          backgroundColor: getBackgroundColor(task.status), // Set background color based on status
+        events={meetings?.map((meeting, index) => ({
+          start: moment(meeting?.start_time).toISOString(), // Schedule events on different days
+          end: moment(meeting?.end_time).toISOString(),
+          title: meeting.title,
+          id: meeting.meeting_id,
+          backgroundColor: getBackgroundColor(meeting.status), // Set background color based on status
         }))}
         // contentHeight={window.innerWidth <= 1440 ? undefined : "auto"}
         // height={window.innerWidth <= 1440 ? undefined : 800}
@@ -52,7 +56,7 @@ const CalendarUI = ({
           // const task = clickInfo.event.id;
           // const selectedTask = getTask.find((task) => task.task_id === taskId);
           setCurrentMeetingId(clickInfo.event.id);
-          setModalOpen(true);
+          // setModalOpen(true);
           setTimeout(() => {
             scrollToDiv();
           }, 0);

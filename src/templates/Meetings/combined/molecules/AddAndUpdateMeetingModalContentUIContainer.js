@@ -16,6 +16,7 @@ const AddAndUpdateMeetingModalContent = ({
   handleSelectClients,
   closeModal,
   loading,
+  currentMeetingId,
 }) => {
   return (
     <AddAndUpdateMeetingModalContentUI
@@ -34,6 +35,7 @@ const AddAndUpdateMeetingModalContent = ({
       handleSelectClients={handleSelectClients}
       closeModal={closeModal}
       loading={loading}
+      currentMeetingId={currentMeetingId}
     />
   );
 };

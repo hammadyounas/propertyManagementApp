@@ -3,7 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { clients, salespersons, statuses } from "../constants/data";
+import {
+  clients,
+  dummyMeetings,
+  salespersons,
+  statuses,
+} from "../constants/data";
+import { v4 as uuidv4 } from "uuid";
 
 const useMeetings = () => {
   const schema = yup.object({
@@ -34,6 +40,16 @@ const useMeetings = () => {
       setTimeout(() => {
         alert(`Form Submitted`);
         console.log("Form Data: ", data);
+        if (currentMeetingId) {
+          setMeetings((prevMeetings) =>
+            prevMeetings.map((meeting) =>
+              meeting.meeting_id === currentMeetingId ? data : meeting
+            )
+          );
+        } else {
+          setMeetings((prev) => [...prev, { meeting_id: uuidv4(), ...data }]);
+        }
+
         closeModal();
         setLoading(false);
       }, 1500);
@@ -51,6 +67,41 @@ const useMeetings = () => {
   const [currentMeeting, setCurrentMeeting] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [meetings, setMeetings] = useState(null);
+  const [meetingsLoading, setMeetingsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMeetings(dummyMeetings);
+      setMeetingsLoading(false);
+    }, 1200);
+  }, []);
+
+  useEffect(() => {
+    if (currentMeetingId) {
+      const current = meetings?.find((m) => m.meeting_id == currentMeetingId);
+      setCurrentMeeting(current);
+      for (const key in current) {
+        if (key == "status") {
+          setStatus({ value: current[key], label: current[key] });
+        } else if (key == "salespersons") {
+          setSelectedSalespersons(current[key]);
+        } else if (key == "clients") {
+          setSelectedClients(current[key]);
+        } else if (key == "start_time") {
+          setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
+        } else if (key == "end_time") {
+          setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
+        } else {
+          setValue(key, current[key]);
+        }
+      }
+      // setValue("salespersons", current?.salespersons);
+      // setValue("clients", current?.clients);
+      setModalOpen(true);
+    }
+  }, [currentMeetingId]);
 
   // Sync external state with form values using setValue
   useEffect(() => {
@@ -74,7 +125,13 @@ const useMeetings = () => {
   const [activeModal, setActiveModal] = useState(false);
 
   const closeModal = () => {
+    setModalOpen(false);
     setActiveModal(false);
+    setCurrentMeeting(null);
+    setCurrentMeetingId(null);
+    setStatus("");
+    setSelectedSalespersons([]);
+    setSelectedClients([]);
     reset();
   };
 
@@ -130,6 +187,8 @@ const useMeetings = () => {
     selectedClients,
     handleSelectClients,
     loading,
+    meetings,
+    meetingsLoading,
   };
 };
 

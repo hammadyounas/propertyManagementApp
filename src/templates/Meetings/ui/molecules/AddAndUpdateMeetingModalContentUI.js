@@ -19,6 +19,7 @@ const AddAndUpdateMeetingModalContentUI = ({
   handleSelectClients,
   closeModal,
   loading,
+  currentMeetingId,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -156,7 +157,7 @@ const AddAndUpdateMeetingModalContentUI = ({
           loading={loading}
         />
         <Button
-          text={"Create"}
+          text={currentMeetingId ? "Update" : "Create"}
           className={"md:!w-36"}
           type="submit"
           loading={loading}

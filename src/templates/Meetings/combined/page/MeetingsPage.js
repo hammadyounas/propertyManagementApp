@@ -34,6 +34,8 @@ const MeetingsPage = () => {
     selectedClients,
     handleSelectClients,
     loading,
+    meetings,
+    meetingsLoading,
   } = useMeetings();
   return (
     <div className="flex flex-col 2xl:flex-row 2xl:justify-between w-full">
@@ -44,16 +46,22 @@ const MeetingsPage = () => {
         setModalOpen={setModalOpen}
         scrollToDiv={scrollToDiv}
         openModal={openModal}
+        meetings={meetings}
+        loading={meetingsLoading}
+        closeModal={closeModal}
       />
       {modalOpen && (
         <MeetingDetails
           setModalOpen={setModalOpen}
           targetDivRef={targetDivRef}
+          currentMeeting={currentMeeting}
+          openModal={openModal}
+          closeModal={closeModal}
         />
       )}
       <Modal
-        title="New Meeting"
-        label="New Meeting"
+        title={currentMeetingId ? "Update Meeting" : "New Meeting"}
+        label={currentMeetingId ? "Update Meeting" : "New Meeting"}
         labelClass="btn-outline-dark"
         // uncontrol
         activeModal={activeModal}
@@ -78,6 +86,7 @@ const MeetingsPage = () => {
             handleSelectClients={handleSelectClients}
             closeModal={closeModal}
             loading={loading}
+            currentMeetingId={currentMeetingId}
           />
         }
       </Modal>

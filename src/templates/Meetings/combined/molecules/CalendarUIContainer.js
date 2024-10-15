@@ -8,19 +8,17 @@ const Calendar = ({
   setModalOpen,
   scrollToDiv,
   openModal,
+  meetings,
+  loading,
+  closeModal,
 }) => {
-  const {
-    renderEventContent,
-    handleMonthChange,
-    meetings,
-    getBackgroundColor,
-    loading,
-  } = useCalendar({
-    setStarAndEndDate,
-    setCurrentMeeting,
-    setCurrentMeetingId,
-    setModalOpen,
-  });
+  const { renderEventContent, handleMonthChange, getBackgroundColor } =
+    useCalendar({
+      setStarAndEndDate,
+      setCurrentMeeting,
+      setCurrentMeetingId,
+      setModalOpen,
+    });
   return (
     <CalendarUI
       setCurrentMeetingId={setCurrentMeetingId}
@@ -32,6 +30,7 @@ const Calendar = ({
       scrollToDiv={scrollToDiv}
       loading={loading}
       openModal={openModal}
+      closeModal={closeModal}
     />
   );
 };

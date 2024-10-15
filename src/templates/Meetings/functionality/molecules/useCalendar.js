@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { dummyMeetings } from "../constants/data";
 
 const useCalendar = ({
   setStarAndEndDate,
@@ -7,15 +8,6 @@ const useCalendar = ({
   setCurrentMeetingId,
   setModalOpen,
 }) => {
-  // Sample tasks with statuses
-  const dummyMeetings = [
-    { status: "Scheduled", title: "Team Strategy Meeting" },
-    { status: "Completed", title: "Client Follow-up" },
-    { status: "Canceled", title: "Project Kick-off Canceled" },
-    { status: "Pending", title: "Budget Review - Awaiting Confirmation" },
-    { status: "Rescheduled", title: "Sales Demo Rescheduled" },
-  ];
-
   // Function to assign colors based on status
   const getBackgroundColor = (status) => {
     switch (status) {
@@ -33,16 +25,6 @@ const useCalendar = ({
         return "#6C757D"; // Gray as fallback
     }
   };
-
-  const [meetings, setMeetings] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMeetings(dummyMeetings);
-      setLoading(false);
-    }, 1200);
-  }, []);
 
   const renderEventContent = (eventInfo, e) => {
     return (
@@ -82,9 +64,7 @@ const useCalendar = ({
   return {
     renderEventContent,
     handleMonthChange,
-    meetings,
     getBackgroundColor,
-    loading,
   };
 };
 
