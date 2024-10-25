@@ -5,6 +5,8 @@ import {
   invoiceStatuses,
   properties,
   salesPersons,
+  listingBrokers,
+  sellingBrokers,
 } from "../constants/data";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
@@ -68,6 +70,8 @@ const useCreateInvoice = () => {
   const [invoiceStatus, setInvoiceStatus] = useState("");
   const [clientName, setClientName] = useState("");
   const [salesPersonName, setSalespersonName] = useState("");
+  const [listingBroker, setListingBroker] = useState("");
+  const [sellingBroker, setSellingBroker] = useState("");
   const [selectedProperty, setSelectedProperty] = useState("");
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
@@ -88,6 +92,10 @@ const useCreateInvoice = () => {
     setValue("salesperson_address", salesPersonName?.address || "");
     setValue("salesperson_email", salesPersonName?.email || "");
     setValue("salesperson_phone", salesPersonName?.phone || "");
+
+    setValue("listing_broker_id", listingBroker?.value || "");
+    setValue("selling_broker_id", sellingBroker?.value || "");
+
     setValue("property_id", selectedProperty?.value || "");
     setValue("property_address", selectedProperty?.address || "");
     setValue("property_type", selectedProperty?.type || "");
@@ -132,6 +140,14 @@ const useCreateInvoice = () => {
     setSalespersonName(e);
   };
 
+  const handleSelectListingBroker = (e) => {
+    setListingBroker(e)
+  }
+
+  const handleSelectSellingBroker = (e) => {
+    setSellingBroker(e)
+  }
+
   const handleSelectProperty = (e) => {
     setSelectedProperty(e);
   };
@@ -166,7 +182,11 @@ const useCreateInvoice = () => {
     clients,
     salesPersonName,
     handleSelectSalespersonName,
+    handleSelectListingBroker,
+    handleSelectSellingBroker,
     salesPersons,
+    listingBrokers,
+    sellingBrokers,
     selectedProperty,
     handleSelectProperty,
     properties,

@@ -83,6 +83,34 @@ export const salesPersons = [
     phone: 123456789,
   },
 ];
+export const listingBrokers = [
+  {
+    value: "1",
+    label: "John Doe",
+  },
+  {
+    value: "2",
+    label: "Jerry",
+  },
+  {
+    value: "3",
+    label: "Tom",
+  },
+];
+export const sellingBrokers = [
+  {
+    value: "1",
+    label: "Alaska",
+  },
+  {
+    value: "2",
+    label: "Harry",
+  },
+  {
+    value: "3",
+    label: "Maya",
+  },
+];
 
 export const properties = [
   {

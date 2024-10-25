@@ -19,6 +19,39 @@ const LocationUI = ({ register, errors, loading }) => {
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
+              name="street_number"
+              label="Street Number*"
+              type="text"
+              register={register}
+              error={errors.street_number}
+              placeholder="Street Number"
+              disabled={loading}
+            />
+          </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="street_name"
+              label="Steet Name*"
+              type="text"
+              register={register}
+              error={errors.street_name}
+              placeholder="Street Name"
+              disabled={loading}
+            />
+          </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="cadstre number"
+              label="Cadstre Number*"
+              type="text"
+              register={register}
+              error={errors.cadstre_number}
+              placeholder="Cadstre Number"
+              disabled={loading}
+            />
+          </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
               name="city"
               label="City*"
               type="text"
@@ -28,8 +61,6 @@ const LocationUI = ({ register, errors, loading }) => {
               disabled={loading}
             />
           </div>
-        </div>
-        <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
               name="area"
@@ -52,7 +83,20 @@ const LocationUI = ({ register, errors, loading }) => {
               disabled={loading}
             />
           </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="location_map_url"
+              label="Location Map Url*"
+              type="text"
+              register={register}
+              error={errors.location_map_url}
+              placeholder="Location Map Url"
+              disabled={loading}
+            />
+          </div>
         </div>
+        {/* <div className="flex flex-wrap justify-between">
+        </div> */}
       </div>
     </div>
   );

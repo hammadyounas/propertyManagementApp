@@ -13,11 +13,11 @@ const ClientInformationUI = ({
 
   return (
     <div className="mt-8">
-      <h6>Client Information</h6>
+      <h6>Buyer Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
           <div className="mt-2 w-full md:w-[49%]">
-            <div className="my-2 text-sm font-medium">Client Name*</div>
+            <div className="my-2 text-sm font-medium">Buyer Name*</div>
             <ReactSelect
               name="client_id"
               value={clientName}
@@ -36,7 +36,7 @@ const ClientInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="client_address"
-              label="Client Address"
+              label="Buyer Address"
               type="text"
               register={register}
               error={errors.client_address}
@@ -49,7 +49,7 @@ const ClientInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="client_email"
-              label="Client Email"
+              label="Buyer Email"
               type="text"
               register={register}
               error={errors.client_email}
@@ -60,7 +60,7 @@ const ClientInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="client_phone"
-              label="Client Phone Number"
+              label="Buyer Phone Number"
               type="text"
               register={register}
               error={errors.client_phone}

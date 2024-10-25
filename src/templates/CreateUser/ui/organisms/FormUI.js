@@ -3,6 +3,7 @@ import Textinput from "@/components/ui/atoms/TextInput";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
 import ReactSelect from "react-select";
+import RadioButton from "../../../../components/ui/atoms/RadioButtin";
 
 const FormUI = ({
   handleSubmit,
@@ -70,6 +71,50 @@ const FormUI = ({
                   disabled={loading}
                 />
               </div>
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="licence_number"
+                  label="Licence Number*"
+                  type="text"
+                  register={register}
+                  error={errors.address}
+                  placeholder="Licence Number"
+                  disabled={loading}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <RadioButton
+                  name="licence"
+                  label="Licence*"
+                  type="radio"
+                  register={register}
+                  error={errors.licence}
+                  placeholder="Licence"
+                  disabled={loading}
+                  radioOptions={[
+                    { label: "Residential", value: "Residential" },
+                    { label: "Commercial", value: "Commercial" },
+                    { label: "Director", value: "Director" },
+                  ]}
+                  className="text-sm"
+                />
+              </div>
+              {/* <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="licence_status"
+                  label="Licence Status*"
+                  type="radio"
+                  register={register}
+                  error={errors.licence_status}
+                  placeholder="Licence"
+                  disabled={loading}
+                  radioOptions={[
+                    { label: "Active", value: "active" },
+                    { label: "In Active", value: "inactive" },
+                  ]}
+                  className="text-sm"
+                />
+              </div> */}
             </div>
 
             <div className="flex flex-wrap justify-between">

@@ -8,14 +8,20 @@ const SalespersonInformationUI = ({
   salesPersonName,
   handleSelectSalespersonName,
   salesPersons,
+  listingBrokerName,
+  handleSelectListingBroker,
+  listingBrokers,
+  sellingBrokerName,
+  handleSelectSellingBroker,
+  sellingBrokers,
 }) => {
   return (
     <div className="mt-8">
-      <h6>Salesperson Information</h6>
+      <h6>Seller Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
           <div className="mt-2 w-full md:w-[49%]">
-            <div className="my-2 text-sm font-medium">Salesperson Name*</div>
+            <div className="my-2 text-sm font-medium">Seller Name*</div>
             <ReactSelect
               name="salesperson_id"
               value={salesPersonName}
@@ -31,10 +37,49 @@ const SalespersonInformationUI = ({
               </p>
             )}
           </div>
+
+          {/* listing broker */}
+          <div className="mt-2 w-full md:w-[49%]">
+            <div className="my-2 text-sm font-medium">Listing Broker*</div>
+            <ReactSelect
+              name="listing_broker_id"
+              value={listingBrokerName}
+              onChange={handleSelectListingBroker}
+              options={listingBrokers}
+              placeholder="Listing Broker"
+              isDisabled={loading}
+              className="text-sm"
+            />
+            {errors?.salesperson_id && !salesPersonName && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.salesperson_id?.message}
+              </p>
+            )}
+          </div>
+
+          {/* selling broker */}
+          <div className="mt-2 w-full md:w-[49%]">
+            <div className="my-2 text-sm font-medium">Selling Broker*</div>
+            <ReactSelect
+              name="selling_broker_id"
+              value={sellingBrokerName}
+              onChange={handleSelectSellingBroker}
+              options={sellingBrokers}
+              placeholder="Selling Broker Name"
+              isDisabled={loading}
+              className="text-sm"
+            />
+            {errors?.salesperson_id && !salesPersonName && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.salesperson_id?.message}
+              </p>
+            )}
+          </div>
+
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_address"
-              label="Salesperson Address"
+              label="Seller Address"
               type="text"
               register={register}
               error={errors.salesperson_address}
@@ -47,7 +92,7 @@ const SalespersonInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_email"
-              label="Salesperson Email"
+              label="Seller Email"
               type="text"
               register={register}
               error={errors.salesperson_email}
@@ -58,7 +103,7 @@ const SalespersonInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_phone"
-              label="Salesperson Phone Number"
+              label="Seller Phone Number"
               type="text"
               register={register}
               error={errors.salesperson_phone}

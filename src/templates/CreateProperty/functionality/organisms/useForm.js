@@ -8,6 +8,7 @@ import {
   propertyStatus,
   propertyTypes,
   salesPerson,
+  ownerDetailsStatus
 } from "../constants/data";
 import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
@@ -76,6 +77,7 @@ const useCreateForm = () => {
       size: "100",
       bedrooms: "1",
       bathrooms: "1",
+      // ownerDetailsStatus: ""
     },
   });
 
@@ -84,6 +86,8 @@ const useCreateForm = () => {
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
+  const [ownerDetails, setOwnerDetails] = useState(ownerDetailsStatus[0] || null);
+
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
@@ -150,6 +154,7 @@ const useCreateForm = () => {
     setValue("type", type?.value);
     setValue("status", status?.value);
     setValue("ownership_status", ownership?.value || "");
+    setValue("ownerStatus" , ownerDetailsStatus?.value || "");
     setValue("furnishing_status", furnishing?.value || "");
     setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
@@ -164,6 +169,7 @@ const useCreateForm = () => {
     selectedSalespersons,
     selectedClient,
     setValue,
+    ownerDetails,
   ]);
 
   // Helper function to validate file types
@@ -245,6 +251,9 @@ const useCreateForm = () => {
   const handleSelectStatus = (e) => {
     setStatus(e);
   };
+  const handleSelectOwnersDetailsStatus = (e) => {
+    setOwnerDetails(e);
+  };
   const handleSelectOwnershipStatus = (e) => {
     setOwnership(e);
   };
@@ -300,6 +309,7 @@ const useCreateForm = () => {
     handleSelectStatus,
     handleSelectOwnershipStatus,
     handleSelectFurnishingStatus,
+    handleSelectOwnersDetailsStatus,
     handleSelectClient,
     imageInputRef,
     docInputRef,
@@ -308,6 +318,7 @@ const useCreateForm = () => {
     renderPreview,
     selectedSalespersons,
     handleSelectSalesperson,
+    ownerDetailsStatus,
   };
 };
 

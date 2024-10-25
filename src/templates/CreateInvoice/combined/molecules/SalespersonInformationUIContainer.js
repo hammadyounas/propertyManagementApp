@@ -7,6 +7,12 @@ const SalespersonInformation = ({
   salesPersonName,
   handleSelectSalespersonName,
   salesPersons,
+  listingBrokerName,
+  handleSelectListingBroker,
+  listingBrokers,
+  sellingBrokerName,
+  handleSelectSellingBroker,
+  sellingBrokers,
 }) => {
   return (
     <SalespersonInformationUI
@@ -16,6 +22,12 @@ const SalespersonInformation = ({
       salesPersonName={salesPersonName}
       handleSelectSalespersonName={handleSelectSalespersonName}
       salesPersons={salesPersons}
+      listingBrokerName = {listingBrokerName}
+      handleSelectListingBroker = {handleSelectListingBroker}
+      listingBrokers = {listingBrokers}
+      sellingBrokerName = {sellingBrokerName}
+      handleSelectSellingBroker = {handleSelectSellingBroker}
+      sellingBrokers = {sellingBrokers}
     />
   );
 };

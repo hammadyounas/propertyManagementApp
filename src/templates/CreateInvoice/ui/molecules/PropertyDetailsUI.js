@@ -56,6 +56,16 @@ const PropertyDetailsUI = ({
               disabled={true}
             />
           </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="instrumental_notary"
+              label="Instrumental Notary"
+              type="text"
+              register={register}
+              error={errors.instrumental_notary}
+              placeholder="Instrumental Notary"
+            />
+          </div>
           <div className="w-full md:w-[49%] mt-2">
             <Textarea
               name="property_description"
@@ -68,6 +78,7 @@ const PropertyDetailsUI = ({
               disabled={true}
             />
           </div>
+       
         </div>
       </div>
     </div>

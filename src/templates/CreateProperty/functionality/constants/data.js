@@ -55,6 +55,25 @@ export const ownershipStatus = [
   },
 ];
 
+  export const ownerDetailsStatus = [
+    {
+      value: "under_contract",
+      label: "Under Contract",
+    },
+    {
+      value: "available",
+      label: "Available",
+    },
+    {
+      value: "sold",
+      label: "Sold",
+    },
+    {
+      value: "expired",
+      label: "Expired",
+    },
+  ];
+
 export const furnishingStatus = [
   {
     value: "furnished",

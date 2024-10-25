@@ -122,6 +122,22 @@ const GeneralInformationUI = ({
               </p>
             )}
           </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="title"
+              label="No of Units*"
+              type="text"
+              register={register}
+              error={errors.title}
+              placeholder="No of Units"
+              disabled={loading}
+            />
+            {errors?.no_of_units && !status && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.no_of_units?.message}
+              </p>
+            )}
+          </div>
           <div className="w-full md:w-[49%] mt-1">
             <Textarea
               name="description"

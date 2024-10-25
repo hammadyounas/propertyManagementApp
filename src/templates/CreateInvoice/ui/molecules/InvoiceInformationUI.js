@@ -17,7 +17,7 @@ const InvoiceInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="invoice_id"
-              label="Invoice ID"
+              label="Invoice Number"
               type="text"
               register={register}
               error={errors.invoice_id}

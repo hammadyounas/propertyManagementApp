@@ -6,6 +6,7 @@ import GeneralInformation from "../molecules/GeneralInformationUIContainer";
 import ImagesAndDocuments from "../molecules/ImagesAndDocumentsUIContainer";
 import Location from "../molecules/LocationUIContainer";
 import PricingAndSize from "../molecules/PricingAndSizeUIContainer";
+import OwnerDetails from "../molecules/OwnersDetailsUIContainer";
 import SalesInformation from "../molecules/SalesInformationUIContainer";
 
 const CreatePropertyPage = () => {
@@ -49,6 +50,9 @@ const CreatePropertyPage = () => {
     renderPreview,
     selectedSalespersons,
     handleSelectSalesperson,
+    ownersDetailstatus,
+    handleSelectOwnersDetailsStatus,
+    ownerDetailsStatus
   } = useForm();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
@@ -82,6 +86,15 @@ const CreatePropertyPage = () => {
         errors={errors}
         loading={loading}
       />
+      <OwnerDetails 
+      register={register}
+      errors={errors}
+      loading={loading}
+      handleSelectOwnersDetailsStatus={handleSelectOwnersDetailsStatus}
+      ownersDetailstatus={ownersDetailstatus}
+      ownerDetailsStatus={ownerDetailsStatus}
+      />
+      
       <ImagesAndDocuments
         selectedImages={selectedImages}
         selectedDocs={selectedDocs}

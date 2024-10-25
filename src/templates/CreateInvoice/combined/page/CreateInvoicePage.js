@@ -27,6 +27,12 @@ const CreateInvoicePage = () => {
     salesPersonName,
     handleSelectSalespersonName,
     salesPersons,
+    listingBrokerName,
+    handleSelectListingBroker,
+    listingBrokers,
+    sellingBrokerName,
+    handleSelectSellingBroker,
+    sellingBrokers,
     selectedProperty,
     handleSelectProperty,
     properties,
@@ -59,6 +65,12 @@ const CreateInvoicePage = () => {
         salesPersonName={salesPersonName}
         handleSelectSalespersonName={handleSelectSalespersonName}
         salesPersons={salesPersons}
+        listingBrokerName = {listingBrokerName}
+        handleSelectListingBroker = {handleSelectListingBroker}
+        listingBrokers = {listingBrokers}
+        sellingBrokerName = {sellingBrokerName}
+        handleSelectSellingBroker = {handleSelectSellingBroker}
+        sellingBrokers = {sellingBrokers}
       />
       <PropertyDetails
         register={register}
