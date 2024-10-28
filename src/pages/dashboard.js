@@ -1,5 +1,7 @@
+import DashboardPage from "../templates/Dashboard/combined/page/DashboardPage";
+
 const Dashboard = () => {
-  return <h6>Dashboard</h6>;
+  return <DashboardPage />;
 };
 
 export default Dashboard;
