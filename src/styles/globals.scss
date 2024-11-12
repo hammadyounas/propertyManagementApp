@@ -167,6 +167,11 @@
   min-width: 600px !important
 }
 
+#map iframe {
+  height: 400px !important;
+  width: 100% !important;
+}
+
 @layer components {
   @import "components/table.scss";
   @import "components/map.scss";

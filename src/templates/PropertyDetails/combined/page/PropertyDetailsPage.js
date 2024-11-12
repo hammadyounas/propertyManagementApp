@@ -41,7 +41,8 @@ const PropertyDetailsPage = () => {
           <h2 className="text-lg">Location</h2>
           <div className="flex flex-wrap my-4 w-full">
             <div
-              style={{ textAlign: "center" }}
+              id="map"
+              style={{ textAlign: "center", width:'100%' }}
               dangerouslySetInnerHTML={{ __html: iframeHtml }}
             />
           </div>
