@@ -39,6 +39,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     key={i}
                     className=" even:bg-slate-200 dark:even:bg-slate-700"
                   >
+                    <td className="table-td ">{i+1}</td>
                     <td className="table-td ">{row.unit_no}</td>
                     <td className="table-td ">{row.built}</td>
                     <td className="table-td ">{row.gross_rev}</td>
@@ -72,8 +73,8 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                   {columns.map((column, i) => (
                     <td key={i} className="table-td font-semibold">
                       {i == 0 ? <p>Average</p> : ""}
-                      {i == 2 ? <p>2000</p> : ""}
-                      {i == 3 ? <p>4.1%</p> : ""}
+                      {i == 3 ? <p>2000</p> : ""}
+                      {i == 4 ? <p>4.1%</p> : ""}
                       {/* {tableFooterData[i]?.label || ""} */}
                     </td>
                   ))}

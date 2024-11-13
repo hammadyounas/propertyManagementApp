@@ -1,5 +1,9 @@
 export const columns = [
   {
+    label: "S.No",
+    field: "S.No",
+  },
+  {
     label: "Unit #",
     field: "Unit #",
   },
