@@ -57,6 +57,12 @@ export const menuItems = [
       },
     ],
   },
+  {
+    title: "Market Analysis (ACM)",
+    isHide: false,
+    icon: "heroicons:arrow-trending-up",
+    link: "/acms",
+  },
 ];
 
 export const topMenu = [
