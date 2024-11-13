@@ -33,9 +33,9 @@ export const tableData = [
   {
     id: 1,
     unit_no: "18 (Subject)",
-    built: "- -",
-    gross_rev: "- -",
-    cap_rate: "- -",
+    built: "1966",
+    gross_rev: "2004",
+    cap_rate: "4.9%",
     date_sold: "- -",
   },
   {
