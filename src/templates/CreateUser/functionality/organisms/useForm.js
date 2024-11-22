@@ -15,8 +15,8 @@ const useCreateForm = () => {
     status: yup.string().required("Status is required"),
     propertiesAssigned: yup
     .array()
-    .min(1, "At least one property must be selected")
-    .required("Assigned Properties are required"),
+    .min(1, "At least one property must be selected"),
+    // .required("Assigned Properties are required"),
     licence_number: yup.string().required("Licence Number is required"),
     licence_type: yup.string().required("Licence Type is required"),
     licence_type: yup.string().required("Licence Type is required"),
