@@ -1,44 +1,92 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import useProfile from "../../../../hooks/useProfile";
+import * as Yup from "yup";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../store/authSlice";
+import { API_URL, API_PREFIX } from "../../../../configs/index";
 
-const schema = yup
-  .object({
-    username: yup.string().required("Username or Email is Required"),
-    password: yup.string().required("Password is Required"),
-  })
-  .required();
+// Define validation schema using Yup
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email address").required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 
-export const useLoginForm = () => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(schema),
-    //
-    mode: "all"
-  });
-  const [_, setAuth] = useProfile();
+export const useForm = () => {
+  const initialFormValues = {
+    email: "",
+    password: "",
+  };
+
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
-  const onSubmit = (data) => {
-    setLoading(true);
-    setTimeout(() => {
-      // alert(`Form Submitted ${JSON.stringify(data)}`);
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((form) => ({ ...form, [name]: value }));
+
+    // Use Yup schema to validate a specific field
+    validationSchema
+      .validateAt(name, { [name]: value })
+      .then(() => setErrors((errors) => ({ ...errors, [name]: "" })))
+      .catch((error) => setErrors((errors) => ({ ...errors, [name]: error.message })));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await validationSchema.validate(formValues, { abortEarly: false });
+
+      setLoading(true);
+      const response = await axios.post(`${API_URL}/${API_PREFIX}/login`, formValues);
+      console.log("Axios response:", response);
+
+      if (response.data.status) {
+        const { data } = response.data;
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("auth_token", data.token);
+        dispatch(setUser(data));
+        setFormValues(initialFormValues);
+        toast.success("Login Successfully");
+        router.push("/dashboard");
+      }
+    } catch (error) {
       setLoading(false);
-      router.push("/meetings")
-    }, 1500);
+
+      if (error.response) {
+        // Handle server errors and show error toast messages
+        const { data } = error.response;
+        console.error("Server error:", data);
+        toast.error(data.message || "Something went wrong");
+      } else if (error.name === "ValidationError") {
+        // Handle Yup validation errors and show toast
+        const formattedErrors = error.inner.reduce(
+          (acc, err) => ({ ...acc, [err.path]: err.message }),
+          {}
+        );
+        setErrors(formattedErrors);
+
+        toast.error("Please fix the validation errors.");
+      } else {
+        // Handle other errors (e.g., network issues)
+        console.error("Unexpected error:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
-    register,
-    errors,
+    handleInputChange,
     handleSubmit,
-    onSubmit,
+    errors,
+    formValues,
     loading,
   };
 };

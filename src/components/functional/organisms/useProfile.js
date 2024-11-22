@@ -87,8 +87,10 @@ const useProfile = () => {
       label: "Logout",
       icon: "heroicons-outline:login",
       action: () => {
-        // dispatch(handleLogout(false));
-        router.push("/");
+        window.localStorage.removeItem("user_id"); // Remove only user_id
+        window.localStorage.removeItem("auth_token");
+        // dispatch(handleLogout()); // This should work to trigger the logout
+        router.push("/"); // Redirect to the home page
       },
     },
   ];

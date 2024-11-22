@@ -1,17 +1,25 @@
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { postRequest } from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
     name: yup.string().required("Name is required"),
-    phone: yup.string().required("Phone Number is required"),
+    contact_number: yup.string().required("Contact Number is required"),
     email: yup.string().required("Email is required").email("Invalid email"),
     address: yup.string().required("Address is required"),
     status: yup.string().required("Status is required"),
+    propertiesAssigned: yup
+    .array()
+    .min(1, "At least one property must be selected")
+    .required("Assigned Properties are required"),
+    licence_number: yup.string().required("Licence Number is required"),
+    licence_type: yup.string().required("Licence Type is required"),
+    licence_type: yup.string().required("Licence Type is required"),
     joining_date: yup.string().required("Joining Date is required"),
     password: yup
       .string()
@@ -79,15 +87,44 @@ const useCreateForm = () => {
     setPropertiesAssigned(selectedValues);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
-    setTimeout(() => {
-      alert(`Form Submitted`);
-      console.log("Form Data: ", data);
+    try {
+      // Prepare data for the API
+      const formData = {
+        name: data.name,
+        email: data.email,
+        contact_number: data.contact_number,
+        address: data.address,
+        licence_number: data.licence_number,
+        licence_type: data.licence_type,
+        assigned_properties: propertiesAssigned.map((property) => property.value), // Send only the property values
+        status: data.status,
+        joining_date: data.joining_date,
+        password: data.password,
+        confirm_password: data.confirm_password,
+      };
+  
+      // API call to register the user
+      const response = postRequest('register', formData)
+      console.log(response.code >= 200 && response.data.status <= 300);
+      if (response) {
+        toast.success("User registered successfully!");
+        console.log(response.data); // Log the API response if needed
+        push("/sales-team"); // Redirect after successful registration
+      } else {
+        toast.error("Registration failed");
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
       setLoading(false);
-      push("/sales-team");
-    }, 1500);
+      toast.error(error.message || "An error occurred while registering.");
+    } finally {
+      setLoading(false); // Ensure loading state is turned off regardless of success or error
+    }
   };
+  
+  
 
   return {
     register,

@@ -29,11 +29,11 @@ export const authSlice = createSlice({
       // });
     },
     handleLogout: (state, action) => {
-      state.isAuth = false;
-      state.user = null;
+      // state.isAuth = false;
+      // state.user = null;
       if (typeof window !== "undefined") {
-        window?.localStorage.removeItem("username");
-        window?.localStorage.clear();
+        window.localStorage.removeItem("user_id"); // Remove only user_id
+        window.localStorage.removeItem("auth_token"); // Remove only auth_token
       }
     },
   },

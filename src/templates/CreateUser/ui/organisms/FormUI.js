@@ -51,11 +51,11 @@ const FormUI = ({
             <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
-                  name="phone"
+                  name="contact_number"
                   label="Phone Number*"
                   type="number"
                   register={register}
-                  error={errors.phone}
+                  error={errors.contact_number}
                   placeholder="Phone Number"
                   disabled={loading}
                 />
@@ -77,18 +77,18 @@ const FormUI = ({
                   label="Licence Number*"
                   type="text"
                   register={register}
-                  error={errors.address}
+                  error={errors.licence_number}
                   placeholder="Licence Number"
                   disabled={loading}
                 />
               </div>
               <div className="w-full md:w-[49%]">
                 <RadioButton
-                  name="licence"
+                  name="licence_type"
                   label="Licence*"
                   type="radio"
                   register={register}
-                  error={errors.licence}
+                  error={errors.licence_type}
                   placeholder="Licence"
                   disabled={loading}
                   radioOptions={[
@@ -133,6 +133,12 @@ const FormUI = ({
                     isDisabled={loading}
                     className="text-sm"
                   />
+                  {errors?.propertiesAssigned && !propertiesAssigned.length && (
+                    <p className="text-sm text-danger-500 mt-2">
+                      {errors?.propertiesAssigned?.message}
+                    </p>
+                  )}
+
                 </div>
               </div>
               <div className="w-full md:w-[49%]">
@@ -205,7 +211,7 @@ const FormUI = ({
               />
               <Button
                 text={"Submit"}
-                className={"md:!w-36"}
+                className={"md:!w-36 z-50"}
                 type="submit"
                 loading={loading}
               />
