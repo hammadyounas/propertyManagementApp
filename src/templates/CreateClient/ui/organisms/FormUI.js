@@ -46,7 +46,7 @@ const FormUI = ({
                 <Textinput
                   name="email"
                   label="Email*"
-                  type="text"
+                  type="email"
                   register={register}
                   error={errors.email}
                   placeholder="Email"
@@ -57,11 +57,11 @@ const FormUI = ({
             <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
-                  name="phone"
+                  name="phoneNumber"
                   label="Phone Number*"
-                  type="number"
+                  type="text"
                   register={register}
-                  error={errors.phone}
+                  error={errors.phoneNumber}
                   placeholder="Phone Number"
                   disabled={loading}
                 />

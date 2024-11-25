@@ -9,7 +9,6 @@ const CreateClientPage = () => {
     errors,
     loading,
     push,
-
     status,
     handleSelectStatus,
     clientType,

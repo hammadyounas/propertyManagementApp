@@ -10,19 +10,17 @@ import {
   preferredCommunicationChannels,
   salesPersons,
 } from "../constants/data";
+import { postRequest } from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
     name: yup.string().required("Name is required"),
-    phone: yup.string().required("Phone Number is required"),
+    phoneNumber: yup.string().required("Phone Number is required"),
     email: yup.string().required("Email is required").email("Invalid email"),
     address: yup.string().required("Address is required"),
     status: yup.string().required("Client Status is required"),
-    client_type: yup.string().required("Client Type is required"),
-    communication_channel: yup
-      .array()
-      .min(1, "At least one communication channel is required")
-      .required("Communication Channel is required"),
+    type: yup.string().required("Client Type is required"),
+    preferredCommunicationChannel: yup.array().required("Communication Channel is required"),
   });
 
   const {
@@ -34,7 +32,7 @@ const useCreateForm = () => {
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "all",
+    // mode: "all",
   });
 
   const [loading, setLoading] = useState(false);
@@ -47,8 +45,8 @@ const useCreateForm = () => {
   useEffect(() => {
     setValue("assigned_salesperson", salesPersonAssigned);
     setValue("status", status?.value || "");
-    setValue("client_type", clientType?.value || "");
-    setValue("communication_channel", communicationChannels);
+    setValue("type", clientType?.value || "");
+    setValue("preferredCommunicationChannel", communicationChannels);
   }, [salesPersonAssigned, status, clientType, communicationChannels]);
 
   const handleSelectStatus = (e) => {
@@ -67,15 +65,46 @@ const useCreateForm = () => {
     setCommunicationChannels(selectedValues);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
-    setTimeout(() => {
-      alert(`Form Submitted`);
-      console.log("Form Data: ", data);
+    debugger;
+    try {
+      // Prepare data for the API
+      const formData = {
+        name: data.name,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+        type: clientType?.value || "",
+        status: status?.value || "",
+        preferredCommunicationChannel: communicationChannels.map(
+          (channel) => channel.value
+        ),
+        assignedSalesperson: salesPersonAssigned.map((salesPerson) => salesPerson.value),
+        notes: data.notes,
+      };
+  
+      console.log("Form Data:", formData); // Debug form data
+  
+      // API call to register the user
+      const response = await postRequest("clients", formData);
+      console.log("API Response:", response); // Debug API response
+  
+      if (response) {
+        toast.success("Client registered successfully!");
+        push("/clients"); // Redirect after successful registration
+      } else {
+        toast.error("Registration failed");
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Error:", error); // Log errors
+      toast.error(error.message || "An error occurred while registering.");
+    } finally {
       setLoading(false);
-      push("/clients");
-    }, 1500);
+    }
   };
+  
 
   return {
     register,

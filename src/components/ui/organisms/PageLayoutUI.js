@@ -32,7 +32,8 @@ export default function PageLayout({
   children,
   router,
 }) {
-  return location == "/" || location == "/forgot-password" ? (
+  
+  return location == "/" || location == "/forgot-password" || location?.startsWith("/reset-password") ? (
     <div>{children}</div>
   ) : (
     <div

@@ -1,11 +1,13 @@
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"; 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { postRequest } from "../../../../libs/utils/request_handler";
 
 const schema = yup
   .object({
-    email: yup.string().email("Invalid email").required("Email is Required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
   })
   .required();
 
@@ -18,12 +20,17 @@ const useForgotPasswordForm = () => {
     resolver: yupResolver(schema),
   });
   const [loading, setLoading] = useState(false);
-  const onSubmit = (data) => {
+
+  const onSubmit = async (data) => {
     setLoading(true);
-    setTimeout(() => {
-      alert(`Form Submitted ${JSON.stringify(data)}`);
+    try {
+      const response = await postRequest("user/forget-password", { email: data.email }); // Replace with the correct endpoint
+      toast.success(response.message || "Reset password link sent to your email.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred. Please try again.");
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return {

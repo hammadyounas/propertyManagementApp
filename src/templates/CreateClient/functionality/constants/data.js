@@ -1,11 +1,15 @@
 export const clientStatus = [
   {
-    value: "active",
+    value: "Active",
     label: "Active",
   },
   {
-    value: "in active",
-    label: "In Active",
+    value: "Inactive",
+    label: "Inactive",
+  },
+  {
+    value: "Pending",
+    label: "Pending",
   },
 ];
 

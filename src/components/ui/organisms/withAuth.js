@@ -30,7 +30,7 @@ const withAuth = (Component) => {
       // Redirect based on user_id and path
       if (!userId && isProtectedPath) {
         router.push("/");
-      } else if (userId && (pathname === "/" || pathname === "/forget_password")) {
+      } else if (userId && (pathname === "/" || pathname === "/forget-password" || pathname === "/reset-password")) {
         router.push("/dashboard");
       }
     }, [pathname, router]);
