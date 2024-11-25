@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
+import { getRequest } from "../../../../libs/utils/request_handler";
 
 const useClients = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -10,7 +11,17 @@ const useClients = () => {
   const { push } = useRouter();
 
   useEffect(() => {
-    setUsers(rows);
+    const fetchClients = async () => {
+      try {
+        const response = await getRequest('clients');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching clients:', error);
+      }
+      
+    }
+    fetchClients();
+    // setUsers(rows);
   }, []);
 
   // Calculate the paginated users

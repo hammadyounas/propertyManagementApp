@@ -51,15 +51,15 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                         </span>
                       </div>
                     </td>
-                    <td className="table-td ">{row.phone}</td>
+                    <td className="table-td ">{row.phoneNumber}</td>
                     <td className="table-td ">{row.email}</td>
-                    <td className="table-td ">{row.client_type}</td>
+                    <td className="table-td ">{row.type}</td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-      ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
-      ${row.status === "in active" ? "text-red-600 bg-red-200" : ""}
+      ${row.status === "Active" ? "text-green-600 bg-green-200" : ""}
+      ${row.status === "Inactive" ? "text-red-600 bg-red-200" : ""}
     `}
                         >
                           {row.status}
@@ -69,18 +69,18 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
 
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />
