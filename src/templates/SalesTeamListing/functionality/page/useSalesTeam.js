@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
+import { getRequest } from "../../../../libs/utils/request_handler";
 
 const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -10,6 +11,17 @@ const useSalesTeam = () => {
   const { push } = useRouter();
 
   useEffect(() => {
+    // const fetchClients = async () => {
+    //   try {
+    //     const response = await getRequest('users');
+    //     setUsers(response.data);
+    //   } catch (error) {
+    //     console.error('Error fetching clients:', error);
+    //   }
+      
+    // }
+    // fetchClients();
+
     setUsers(rows);
   }, []);
 

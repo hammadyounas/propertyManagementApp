@@ -13,6 +13,7 @@ const ClientsListingPage = () => {
     currentPage,
     push,
     users,
+    deleteClientById,
   } = useClients();
 
   return (
@@ -22,6 +23,7 @@ const ClientsListingPage = () => {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
+        deleteClientById={deleteClientById}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate

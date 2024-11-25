@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
-import { getRequest } from "../../../../libs/utils/request_handler";
+import { deleteRequest, getRequest } from "../../../../libs/utils/request_handler";
+import toast from "react-hot-toast";
 
 const useClients = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -10,16 +11,16 @@ const useClients = () => {
   const pageSize = 10;
   const { push } = useRouter();
 
+  const fetchClients = async () => {
+    try {
+      const response = await getRequest('clients');
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }   
+  }
+  
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await getRequest('clients');
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching clients:', error);
-      }
-      
-    }
     fetchClients();
     // setUsers(rows);
   }, []);
@@ -34,6 +35,23 @@ const useClients = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
+  const deleteClientById = async (id) => {
+    try {
+      const response = await deleteRequest(`clients/${id}`);
+      if(response){
+        setUsers(users.filter((user) => user.id !== id));
+        fetchClients();
+        console.log(response);
+        toast.success("Client deleted successfully!");
+      } else{
+        toast.error("Failed to delete client!");
+      }
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      toast.error("Error deleting client!");
+    }
+  }
+
   return {
     globalFilter,
     setGlobalFilter,
@@ -44,6 +62,7 @@ const useClients = () => {
     handlePageChange,
     currentPage,
     push,
+    deleteClientById
   };
 };
 
