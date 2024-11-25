@@ -67,7 +67,6 @@ const useCreateForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    debugger;
     try {
       // Prepare data for the API
       const formData = {
@@ -83,8 +82,6 @@ const useCreateForm = () => {
         assignedSalesperson: salesPersonAssigned.map((salesPerson) => salesPerson.value),
         notes: data.notes,
       };
-  
-      console.log("Form Data:", formData); // Debug form data
   
       // API call to register the user
       const response = await postRequest("clients", formData);
