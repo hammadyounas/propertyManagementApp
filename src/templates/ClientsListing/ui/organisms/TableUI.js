@@ -34,61 +34,72 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, deleteCli
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {rows.map((row, i) => (
-                  <tr
-                    key={i}
-                    className=" even:bg-slate-200 dark:even:bg-slate-700"
-                  >
-                    <td className="table-td ">
-                      <div className="flex items-center">
-                        <img
-                          src={"/assets/images/users/user-1.jpg"}
-                          alt=""
-                          className="block w-8 h-8 object-cover rounded-full mr-2"
-                        />
-                        <span className="text-primary-default font-bold cursor-pointer">
-                          {row.name}
+                {rows && rows.length > 0 ? (
+                  rows.map((row, i) => (
+                    <tr
+                      key={i}
+                      className="even:bg-slate-200 dark:even:bg-slate-700"
+                    >
+                      <td className="table-td">
+                        <div className="flex items-center">
+                          <img
+                            src={"/assets/images/users/user-1.jpg"}
+                            alt=""
+                            className="block w-8 h-8 object-cover rounded-full mr-2"
+                          />
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {row.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="table-td">{row.phoneNumber}</td>
+                      <td className="table-td">{row.email}</td>
+                      <td className="table-td">{row.type}</td>
+                      <td className="table-td">
+                        <span className="block w-full">
+                          <span
+                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
+              ${row.status === "Active" ? "text-green-600 bg-green-200" : ""}
+              ${row.status === "Inactive" ? "text-red-600 bg-red-200" : ""}
+              `}
+                          >
+                            {row.status}
+                          </span>
                         </span>
-                      </div>
-                    </td>
-                    <td className="table-td ">{row.phoneNumber}</td>
-                    <td className="table-td ">{row.email}</td>
-                    <td className="table-td ">{row.type}</td>
-                    <td className="table-td ">
-                      <span className="block w-full">
-                        <span
-                          className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-      ${row.status === "Active" ? "text-green-600 bg-green-200" : ""}
-      ${row.status === "Inactive" ? "text-red-600 bg-red-200" : ""}
-    `}
-                        >
-                          {row.status}
-                        </span>
-                      </span>
-                    </td>
-                    <td className="table-td ">
-                      <div className="flex">
-                        <Icon
-                          onClick={() => { }}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons:eye"}
-                        />
-                        <Icon
-                          onClick={() => { }}
-                          className="cursor-pointer text-[20px] mx-4"
-                          icon={"heroicons:pencil-square"}
-                        />
-
-                        <Icon
-                          onClick={() => {deleteClientById(row._id) }}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons-outline:trash"}
-                        />
-                      </div>
+                      </td>
+                      <td className="table-td">
+                        <div className="flex">
+                          <Icon
+                            onClick={() =>  push(`/clients/view/${row._id}`)}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons:eye"}
+                          />
+                          <Icon
+                            onClick={() => push(`/clients/edit/${row._id}`)}
+                            className="cursor-pointer text-[20px] mx-4"
+                            icon={"heroicons:pencil-square"}
+                          />
+                          <Icon
+                            onClick={() => { deleteClientById(row._id); }}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons-outline:trash"}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="table-td text-center text-gray-500 dark:text-gray-400 pt-10"
+                    >
+                      No Data Found
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
+
             </table>
           </div>
         </div>

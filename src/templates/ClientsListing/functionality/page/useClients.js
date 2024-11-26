@@ -14,7 +14,10 @@ const useClients = () => {
   const fetchClients = async () => {
     try {
       const response = await getRequest('clients');
-      setUsers(response.data);
+      console.log(response);
+      const filteredUsers = response.data.filter((user) => !user.isDeleted);
+      console.log(filteredUsers);
+      setUsers(filteredUsers);
     } catch (error) {
       console.error('Error fetching clients:', error);
     }   
@@ -28,7 +31,7 @@ const useClients = () => {
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
-    return users.slice(startIndex, startIndex + pageSize);
+    return users?.slice(startIndex, startIndex + pageSize);
   }, [users, currentPage, pageSize]);
 
   const handlePageChange = (page) => {
