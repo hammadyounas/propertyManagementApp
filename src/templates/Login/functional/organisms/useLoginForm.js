@@ -62,7 +62,7 @@ export const useForm = () => {
         // Handle server errors and show error toast messages
         const { data } = error.response;
         console.error("Server error:", data);
-        toast.error(data.message || "Something went wrong");
+        toast.error(data.message || "Invalid credentials. Please try again.");
       } else if (error.name === "ValidationError") {
         // Handle Yup validation errors and show toast
         const formattedErrors = error.inner.reduce(
