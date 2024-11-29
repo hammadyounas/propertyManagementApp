@@ -1,11 +1,13 @@
 import Icon from "@/components/ui/atoms/Icon";
 const BannerUI = ({ title, address, updatedAt }) => {
   return (
-    <div>
+    <div className="">
+      <div className="flex w-full">
       <img
         src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"
-        className="w-full h-[350px]"
+        className="w-full h-[450px]"
       />
+      </div>
       <h1 className="text-2xl mt-4">{title}</h1>
       <div className="flex items-center">
         <Icon

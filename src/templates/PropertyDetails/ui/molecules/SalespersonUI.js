@@ -4,7 +4,7 @@ function SalespersonUI({salesperosonDataRows,salespersonColumns}) {
     return (
         <div className="my-4">
           <div className="flex justify-start items-center my-2">
-            <h2 className="text-lg">Salespersons</h2>
+            <h2 className="text-lg ">Salespersons</h2>
             {/* <button className="bg-primary-default text-white px-4 py-2">
               Upload Documents
             </button> */}
@@ -29,7 +29,7 @@ function SalespersonUI({salesperosonDataRows,salespersonColumns}) {
                         key={i}
                         className=" even:bg-slate-200 dark:even:bg-slate-700"
                       >
-                        <td className="table-td ">{row.name}</td>
+                        <td className="table-td text-primary-default font-semibold">{row.name}</td>
                         <td className="table-td lowercase">{row.email}</td>
                         <td className="table-td ">{row.phone}</td>
                       </tr>
