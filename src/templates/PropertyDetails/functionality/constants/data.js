@@ -23,3 +23,123 @@ export const dummyPropertyDetails = {
     email: "gaston@gmail.com",
   },
 };
+
+export const columns = [
+  {
+    label: "Sender Name",
+    field: "salesperson_name",
+  },
+  {
+    label: "Notes",
+    field: "notes",
+  },
+  {
+    label: "Date",
+    field: "date",
+  },
+  {
+    label: "Time",
+    field: "time",
+  },
+]
+
+export const documentColumns = [
+  {
+    label: "Document",
+    field: "document",
+  },
+  {
+    label: "Document Name",
+    field: "document_name",
+  },
+  {
+    label: "Uploaded By",
+    field: "uploaded_by",
+  },
+  {
+    label: "Uploaded Date",
+    field: "uploaded_date",
+  },
+]
+
+export const salespersonColumns = [
+  {
+    label: "Name",
+    field: "name",
+  },
+  {
+    label: "Email",
+    field: "email",
+  },
+  {
+    label: "Phone No",
+    field: "phone",
+  },
+]
+
+export const rows = [
+  {
+    id: 1,
+    salesperson_name: "John Doe",
+    notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    date: "12-09-2024",
+    time: '12:00 PM',
+  },
+  {
+    id: 2,
+    salesperson_name: "Luwis",
+    notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    date: "15-11-2024",
+    time: '1:40 PM'
+  },
+  {
+    id: 3,
+    salesperson_name: "Herry",
+    notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    date: "22-11-2024",
+    time: '4:23 PM'
+  },
+]
+
+export const documentDataRows = [
+  {
+    id: 1,
+    document_name: "Lease Agreement",
+    uploaded_by: "John Doe",
+    uploaded_date: "12-09-2024",
+  },
+  {
+    id: 2,
+    document_name: "Lease Agreement",
+    uploaded_by: "Luwis",
+    uploaded_date: "15-11-2024",
+  },
+  {
+    id: 3,
+    document_name: "Lease Agreement",
+    uploaded_by: "Lorem Ipsum",
+    uploaded_date: "22-11-2024",
+  },
+]
+
+export const salesperosonDataRows = [
+  {
+    id: 1,
+    name: "Jerry Emard",
+    phone: "123456789",
+    email: "jerryemard@gmail.com",
+  },
+  {
+    id: 2,
+    name: "Jerry Emard",
+    phone: "123456789",
+    email: "jerryemard@gmail.com",
+  },
+  {
+    id: 3,
+    name: "Jerry Emard",
+    phone: "123456789",
+    email: "jerryemard@gmail.com",
+  },
+]
+

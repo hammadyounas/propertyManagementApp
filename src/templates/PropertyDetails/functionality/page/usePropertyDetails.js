@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dummyPropertyDetails } from "../constants/data";
+import { dummyPropertyDetails, rows, documentDataRows, salesperosonDataRows } from "../constants/data";
 import { useRouter } from "next/router";
 
 const usePropertyDetails = () => {
@@ -18,7 +18,10 @@ const usePropertyDetails = () => {
   return {
     loading,
     propertyDetails,
+    documentDataRows,
+    salesperosonDataRows,
     push,
+    rows
   };
 };
 
