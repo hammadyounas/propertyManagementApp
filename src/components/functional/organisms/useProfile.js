@@ -38,7 +38,7 @@ const useProfile = () => {
       icon: "heroicons-outline:user",
 
       action: () => {
-        router.push("");
+        router.push("/profile");
       },
     },
     // {

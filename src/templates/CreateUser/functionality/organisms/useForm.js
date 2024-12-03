@@ -46,11 +46,11 @@ const useCreateForm = () => {
 
   const salespersonStatus = [
     {
-      value: "Active",
+      value: "active",
       label: "Active",
     },
     {
-      value: "In active",
+      value: "inactive",
       label: "In Active",
     },
   ];
