@@ -1,25 +1,25 @@
 export const clientStatus = [
     {
-      value: "Active",
+      value: "active",
       label: "Active",
     },
     {
-      value: "Inactive",
+      value: "inactive",
       label: "Inactive",
     },
     {
-      value: "Pending",
+      value: "pending",
       label: "Pending",
     },
   ];
   
   export const clientTypes = [
     {
-      value: "Buyer",
+      value: "buyer",
       label: "Buyer",
     },
     {
-      value: "Seller",
+      value: "seller",
       label: "Seller",
     },
   ];
