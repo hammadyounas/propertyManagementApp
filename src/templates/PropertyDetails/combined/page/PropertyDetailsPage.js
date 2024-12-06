@@ -57,6 +57,16 @@ const PropertyDetailsPage = () => {
         <Salesperson salesperosonDataRows={salesperosonDataRows} />
         <Notes rows={rows} />
         <Location locationMapUrl={propertyDetails?.location_map_url} />
+        {/* <div className="my-4">
+          <h2 className="text-lg">Location</h2>
+          <div className="flex flex-wrap my-4 w-full">
+            <div
+              id="map"
+              style={{ textAlign: "center", width:'100%' }}
+              dangerouslySetInnerHTML={{ __html: iframeHtml }}
+            />
+          </div>
+        </div> */}
         <div className="flex justify-center md:justify-end mt-12">
           <Button
             onClick={() => push("/properties")}
