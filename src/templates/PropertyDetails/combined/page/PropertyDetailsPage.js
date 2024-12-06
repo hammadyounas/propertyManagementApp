@@ -13,7 +13,7 @@ import Documents from "../molecules/DocumentsUIContainer";
 import Salesperson from "../molecules/SalespersonUIContainer";
 
 const PropertyDetailsPage = () => {
-  const iframeHtml = `<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28968.491278753427!2d67.02223737519975!3d24.827573438137424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e84755a83d3%3A0xf49fbe49c4a0095e!2sibex.%20Pakistan!5e0!3m2!1sen!2s!4v1731342989428!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  const iframeHtml = `<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7525.905795380178!2d-118.38832956002594!3d33.840584871953496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b380b790577f%3A0xe9d3cc8f1be074b0!2sHypnotherapy%20Focus%20%26%20Best%20Life%20Coaching!5e0!3m2!1sen!2s!4v1733520167482!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   const { loading, propertyDetails, push, rows, documentDataRows, salesperosonDataRows } = usePropertyDetails();
   return loading ? (
     <Loading />
