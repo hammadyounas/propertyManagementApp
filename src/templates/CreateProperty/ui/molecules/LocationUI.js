@@ -41,7 +41,7 @@ const LocationUI = ({ register, errors, loading }) => {
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="cadstre number"
+              name="cadstre_number"
               label="Cadstre Number*"
               type="text"
               register={register}

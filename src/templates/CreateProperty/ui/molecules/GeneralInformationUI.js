@@ -124,7 +124,7 @@ const GeneralInformationUI = ({
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="title"
+              name="no_of_units"
               label="No of Units*"
               type="text"
               register={register}

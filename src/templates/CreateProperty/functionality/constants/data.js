@@ -27,7 +27,7 @@ export const propertyStatus = [
     label: "Available",
   },
   {
-    value: "under contract",
+    value: "under_contract",
     label: "Under Contract",
   },
   {
@@ -35,7 +35,7 @@ export const propertyStatus = [
     label: "Leased",
   },
   {
-    value: "coming soon",
+    value: "coming_soon",
     label: "Coming Soon",
   },
   {
@@ -80,7 +80,7 @@ export const furnishingStatus = [
     label: "Furnished",
   },
   {
-    value: "semi furnished",
+    value: "semi-furnished",
     label: "Semi Furnished",
   },
   {
@@ -114,15 +114,15 @@ export const availableFacilities = [
 
 export const salesPerson = [
   {
-    value: "Salesperson 1",
+    value: "6751c0fbacb35ae00dd7d485",
     label: "Salesperson 1",
   },
   {
-    value: "Salesperson 2",
+    value: "6751c0fbacb35ae00dd7d485",
     label: "Salesperson 2",
   },
   {
-    value: "Salesperson 3",
+    value: "6751c0fbacb35ae00dd7d485",
     label: "Salesperson 3",
   },
 ];

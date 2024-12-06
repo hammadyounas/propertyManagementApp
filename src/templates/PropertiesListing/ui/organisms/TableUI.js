@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
+import { ToastContainer } from "react-toastify";
 const TableUI = ({
   columns,
   rows,
@@ -10,9 +11,11 @@ const TableUI = ({
   setGlobalFilter,
   openModal,
   push,
+  handleDelete
 }) => {
   return (
     <Card noborder>
+      <ToastContainer />
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
@@ -59,17 +62,17 @@ const TableUI = ({
                   >
                     <td className="table-td">
                       <img
-                        src="/assets/images/all-img/property.jpeg"
+                        src={row.images[0]}
                         className="w-20 h-16"
                       />
                     </td>
                     <td
                       className="table-td text-primary-default font-bold cursor-pointer"
-                      onClick={() => push(`/properties/view/${row?.id}`)}
+                      onClick={() => push(`/properties/view/${row?._id}`)}
                     >
                       {row.title}
                     </td>
-                    <td className="table-td ">{row.location}</td>
+                    <td className="table-td ">{row.address}</td>
                     <td className="table-td ">{row.price}</td>
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
@@ -79,15 +82,15 @@ const TableUI = ({
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-      ${row.status === "available" ? "text-green-600 bg-green-200" : ""}
-      ${row.status === "under contract" ? "text-yellow-600 bg-yellow-200" : ""}
-      ${row.status === "sold" ? "text-blue-600 bg-blue-200" : ""}
-      ${row.status === "leased" ? "text-purple-600 bg-purple-200" : ""}
-      ${row.status === "coming soon" ? "text-orange-600 bg-orange-200" : ""}
-      ${row.status === "withdrawn" ? "text-red-600 bg-red-200" : ""}
+      ${row.property_status === "available" ? "text-green-600 bg-green-200" : ""}
+      ${row.property_status === "under contract" ? "text-yellow-600 bg-yellow-200" : ""}
+      ${row.property_status === "sold" ? "text-blue-600 bg-blue-200" : ""}
+      ${row.property_status === "leased" ? "text-purple-600 bg-purple-200" : ""}
+      ${row.property_status === "coming soon" ? "text-orange-600 bg-orange-200" : ""}
+      ${row.property_status === "withdrawn" ? "text-red-600 bg-red-200" : ""}
     `}
                         >
-                          {row.status}
+                          {row.property_status}
                         </span>
                       </span>
                     </td>
@@ -96,7 +99,7 @@ const TableUI = ({
                         onClick={() => {}}
                         className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer"
                       >
-                        {row.assigned_salesperson ? (
+                        {row.assigned_to ? (
                           <Tooltip
                             placement="top"
                             arrow
@@ -116,7 +119,7 @@ const TableUI = ({
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => push(`/properties/view/${row?.id}`)}
+                          onClick={() => push(`/properties/view/${row?._id}`)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
@@ -127,7 +130,7 @@ const TableUI = ({
                         />
 
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => handleDelete(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

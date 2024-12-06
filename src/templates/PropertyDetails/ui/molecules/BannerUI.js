@@ -1,10 +1,11 @@
 import Icon from "@/components/ui/atoms/Icon";
-const BannerUI = ({ title, address, updatedAt }) => {
+const BannerUI = ({ title, address, updatedAt, images }) => {
   return (
     <div className="">
       <div className="flex w-full">
       <img
-        src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"
+        // src={"https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"}
+        src={images? images[0] : "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"}
         className="w-full h-[450px]"
       />
       </div>

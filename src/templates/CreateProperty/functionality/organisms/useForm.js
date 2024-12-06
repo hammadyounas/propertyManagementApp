@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { File } from "lucide-react";
+import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -68,7 +69,7 @@ const useCreateForm = () => {
     getValues,
     setValue,
   } = useForm({
-    resolver: yupResolver(schema),
+    // resolver: yupResolver(schema),
     mode: "all",
     defaultValues: {
       assigned_to: "",
@@ -189,41 +190,51 @@ const useCreateForm = () => {
     return false;
   };
 
-  // Function to handle image selection
   const handleImagesChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
+  
     const validImages = Array.from(files).filter((file) =>
       validateFileType(file, "image")
     );
-
+  
     if (validImages.length !== files.length) {
       return toast.error(
         "Some files are not valid images. Please upload JPG, PNG, or GIF files."
       );
     }
-
+  
     setSelectedImages((prevImages) => [...prevImages, ...validImages]);
     e.target.value = null;
   };
-
-  // Function to handle document selection (PDF and DOC/DOCX only)
+  
   const handleDocsChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
+  
     const validDocs = Array.from(files).filter((file) =>
       validateFileType(file, "doc")
     );
-
+  
     if (validDocs.length !== files.length) {
       return toast.error(
         "Some files are not valid documents. Please upload PDF, DOC, or DOCX files."
       );
     }
-
+  
     setSelectedDocs((prevDocs) => [...prevDocs, ...validDocs]);
     e.target.value = null;
   };
+  
+  // Log the selected images and docs whenever they change
+  useEffect(() => {
+    console.log("Selected Images", selectedImages); // Logs when selectedImages state changes
+  }, [selectedImages]);
+  
+  useEffect(() => {
+    console.log("Selected Docs", selectedDocs); // Logs when selectedDocs state changes
+  }, [selectedDocs]);
+  
 
   const handleFileRemove = (indexToRemove, type) => {
     if (type == "image") {
@@ -242,6 +253,12 @@ const useCreateForm = () => {
   };
 
   const handleSelectSalesperson = (selectedValues) => {
+    // try {
+    //   const response = await getRequest('user')
+    //   response.data(setSelectedSalespersons);
+    // } catch (error) {
+    //   console.error("Error:", error); // Log errors
+    // }
     setSelectedSalespersons(selectedValues);
   };
 
@@ -264,17 +281,87 @@ const useCreateForm = () => {
     setSelectedClient(e);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
-    {
-      setTimeout(() => {
-        alert(`Form Submitted`);
-        console.log("Form Data: ", data);
-        setLoading(false);
-        push("/properties");
-      }, 1500);
+
+    try {
+      // Create a new FormData instance
+      const formData = new FormData();
+
+      // Append regular form data (non-file fields)
+      formData.append("title", data.title);
+      formData.append("furnishing_status", data.furnishing_status);
+      formData.append("property_type", data.type);
+      formData.append("property_status", data.status);
+      formData.append("ownership_status", data.ownership_status);
+      formData.append("no_of_units", data.no_of_units);
+      formData.append("description", data.description);
+      formData.append("address", data.address);
+      formData.append("street_number", data.street_number);
+      formData.append("street_name", data.street_name);
+      formData.append("cadstre_number", data.cadstre_number);
+      formData.append("city", data.city);
+      formData.append("area", data.area);
+      formData.append("neighborhood", data.neighborhood);
+      formData.append("location_map_url", data.location_map_url);
+      formData.append("owner_status", data.ownerDetailsStatus);
+      formData.append("price", data.price);
+      formData.append("size", data.size);
+      formData.append("bedrooms", data.bedrooms);
+      formData.append("bathrooms", data.bathrooms);
+      formData.append("owner_name", data.owner_name);
+      formData.append("phone_number", data.phone_number);
+      formData.append("email", data.email);
+      formData.append("owner_address", data.owner_address);
+
+      // Append arrays (e.g., amenities, assigned salespersons)
+      amenities.forEach((amenity) => {
+        formData.append("amenities", amenity.value);
+      });
+
+      selectedSalespersons.forEach((salesperson) => {
+        formData.append("assigned_to", salesperson.value);
+      });
+
+      // Append images and documents (files)
+      selectedImages.forEach((image) => {
+        formData.append("images", image); // Append each file object
+        console.log("Image:", image); // Debugging
+      });
+
+      selectedDocs.forEach((doc) => {
+        formData.append("documents", doc); // Append each file object
+      });
+
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
+      }
+
+      // Now, you can send the form data with the POST request
+      const response = await postRequest("properties", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the content type is set to multipart/form-data
+        },
+      });
+
+      console.log("API Response:", response); // Debug API response
+
+      if (response) {
+        toast.success("Property Added successfully!");
+        // Redirect after successful submission if necessary
+        // push("/clients");
+      } else {
+        toast.error("Create Property failed");
+        throw new Error("Create Property failed");
+      }
+    } catch (error) {
+      console.error("Error:", error); // Log errors
+      toast.error(error.message || "An error occurred while adding property.");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return {
     register,

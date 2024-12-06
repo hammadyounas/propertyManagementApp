@@ -19,7 +19,7 @@ const OverviewUI = ({
   status,
 }) => {
   return (
-    <div className="my-4">
+    <div className="my-4 capitalize">
       <h2 className="text-lg">Property Overview</h2>
       <div className="flex flex-wrap my-4">
         <div className="flex justify-center items-center mr-4 mt-2 border border-black-default p-2 border-dotted">

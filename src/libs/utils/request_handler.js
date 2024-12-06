@@ -7,9 +7,6 @@ export const postRequest = async (url, data) => {
       const response = await axios.post(`${API_URL}/${API_PREFIX}/${url}`, data, 
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
       return response.data;

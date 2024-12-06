@@ -17,7 +17,7 @@ const OwnerDetailsUI = ({
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="owners_name"
+              name="owner_name"
               label="Owner Name*"
               type="text"
               register={register}
@@ -50,7 +50,7 @@ const OwnerDetailsUI = ({
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="address"
+              name="owner_address"
               label="Address*"
               type="text"
               register={register}
@@ -62,7 +62,7 @@ const OwnerDetailsUI = ({
           <div className="w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Status*</div>
             <ReactSelect
-              name="ownerStatus"
+              name="owner_status"
               value={ownersDetailstatus}
               onChange={handleSelectOwnersDetailsStatus}
               options={ownerDetailsStatus}
