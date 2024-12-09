@@ -124,7 +124,7 @@ const TableUI = ({
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => push(`/properties/edit/${row?._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />

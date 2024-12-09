@@ -33,10 +33,7 @@ export const putRequest = async (url, data) => {
   try {
     const response = await axios.put(`${API_URL}/${API_PREFIX}/${url}`, data, 
       {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        withCredentials: true,  
       }
     );
     return response.data;
