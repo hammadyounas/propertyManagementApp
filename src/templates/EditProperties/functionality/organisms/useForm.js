@@ -7,7 +7,7 @@ import {
   ownershipStatus,
   propertyStatus,
   propertyTypes,
-  salesPerson,
+  // salesPerson,
   ownerDetailsStatus
 } from "../constants/data";
 import { useState, useEffect, useRef } from "react";
@@ -34,6 +34,7 @@ const useCreateForm = () => {
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
+  const [salesPerson, setSalesPerson] = useState([]);
   const [ownerDetails, setOwnerDetails] = useState('');
 
   const [furnishing, setFurnishing] = useState("");
@@ -60,25 +61,44 @@ const useCreateForm = () => {
     }
   };
 
+  const fetchSalesPerson =  async () => {
+    try {
+      const response = await getRequest("users");
+      const filteredResponse = response.data.filter((salesPerson) => !salesPerson.isDeleted);
+      setSalesPerson(filteredResponse);
+    } catch (error) {
+      console.error("Error:", error); // Log errors
+    }
+  };
+
   // Helper function to render file previews
   const renderPreview = (files, type) => {
     return files?.map((file, index) => {
       let fileURL = null;
       let fileName = "";
-      if (type === "image" && typeof file === "string") {
-        if (file.startsWith("data:image")) {
-          // If it's a Base64 image string, use it directly
-          fileURL = file;
-          fileName = extractFileNameFromBase64(file, index);
-        } else {
-          // If not Base64, optionally handle it as an error or skip
-          console.warn("Invalid Base64 string for an image.");
+  
+      if (type === "image") {
+        if (typeof file === "string") {
+          // Handle Base64 string
+          if (file.startsWith("data:image")) {
+            fileURL = file; // Use Base64 string directly
+            fileName = extractFileNameFromBase64(file, index);
+          } else {
+            console.warn("Invalid Base64 string for an image.");
+          }
+        } else if (file && file.name && file.type && file.size) {
+          // Perform a loose check for file-like object properties
+          fileURL = URL.createObjectURL(file); // Create a temporary URL for preview
+          fileName = file.name; // Use file's name
         }
       }
-      //  = type == "image" ? URL.createObjectURL(file) : null;
+  
       return (
-        <div className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
-          {type == "image" && fileURL ? (
+        <div
+          key={index}
+          className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4"
+        >
+          {type === "image" && fileURL ? (
             <img
               src={fileURL}
               alt="Preview"
@@ -88,7 +108,6 @@ const useCreateForm = () => {
             <div className="flex flex-col justify-center items-center w-36 h-28">
               <File size={50} />
               <p className="font-bold mt-2 text-center">
-                {" "}
                 {fileName?.length > 16
                   ? `${fileName.slice(0, 8)}...${fileName.slice(-8)}`
                   : fileName}
@@ -99,7 +118,7 @@ const useCreateForm = () => {
             disabled={loading}
             type="button"
             onClick={() => handleFileRemove(index, type)}
-            className=" text-danger-500 mt-4"
+            className="text-danger-500 mt-4"
           >
             Remove
           </button>
@@ -107,7 +126,7 @@ const useCreateForm = () => {
       );
     });
   };
-
+  
   const fetchPropertyData = async () => {
     try {
       const response = await getRequest(`properties/${propertyId}`);
@@ -150,7 +169,7 @@ const useCreateForm = () => {
         setFurnishing(furnishingStatus.find((item) => item.value === propertyData.furnishing_status) || '');
         setSelectedSalespersons(propertyData.assigned_to || []);
         setAmenities(amenities);  // Assuming amenities is being set from a predefined list
-        setOwnerDetails(ownerDetailsStatus.find((item) => item.value === propertyData.owner_status) || {});
+        setOwnerDetails(ownerDetailsStatus.find((item) => item.value === propertyData.owner_status) || '');
   
         // Set form values in a loop
         Object.entries(formFields).forEach(([key, value]) => setValue(key, value || ""));
@@ -166,6 +185,7 @@ const useCreateForm = () => {
   };  
 
   useEffect(() => {
+    fetchSalesPerson();
     fetchPropertyData();
 
   }, [propertyId, setValue])
@@ -225,12 +245,7 @@ const useCreateForm = () => {
   
   // Log the selected images and docs whenever they change
   useEffect(() => {
-    console.log("Selected Images", selectedImages); // Logs when selectedImages state changes
-  }, [selectedImages]);
-  
-  useEffect(() => {
-    console.log("Selected Docs", selectedDocs); // Logs when selectedDocs state changes
-  }, [selectedDocs]);
+  }, [selectedImages, selectedDocs]);
   
 
   const handleFileRemove = (indexToRemove, type) => {
@@ -250,12 +265,6 @@ const useCreateForm = () => {
   };
 
   const handleSelectSalesperson = (selectedValues) => {
-    // try {
-    //   const response = await getRequest('user')
-    //   response.data(setSelectedSalespersons);
-    // } catch (error) {
-    //   console.error("Error:", error); // Log errors
-    // }
     setSelectedSalespersons(selectedValues);
   };
 
@@ -266,7 +275,7 @@ const useCreateForm = () => {
     setStatus(e);
   };
   const handleSelectOwnersDetailsStatus = (e) => {
-    setOwnerDetails(e.value);
+    setOwnerDetails(e);
   };
   const handleSelectOwnershipStatus = (e) => {
     setOwnership(e);
@@ -282,27 +291,76 @@ const useCreateForm = () => {
     setLoading(true);
   
     try {
-      const formData = {
-        ...data,
-        selectedImages: selectedImages.map((image) => ({
-          file: image.file, // Accessing `file` property of image object
-        })),
-        selectedDocs: selectedDocs.map((doc) => ({
-          file: doc.file, // Accessing `file` property of doc object
-        })),
-        property_type: data.type,
-        furnishing_status: furnishing?.value,
-        property_status: status?.value,
-        owner_status: ownerDetails,
-        amenities: amenities ? amenities.filter((amenity) => amenity && amenity.value).map((amenity) => amenity.value) : [],
-        assigned_to: selectedSalespersons ? selectedSalespersons.filter((salesperson) => salesperson && salesperson.value).map((salesperson) => salesperson.value) : []
-      };
-      
-      const response = await putRequest(`properties/${propertyId}`, formData);
+      const formData = new FormData();
+  
+      // Check if 'type' or other fields have values, otherwise default to empty strings
+      formData.append("property_type", type && type.value ? type.value : "");
+      formData.append("furnishing_status", furnishing && furnishing.value ? furnishing.value : "");
+      formData.append("property_status", status && status.value ? status.value : "");
+      formData.append("owner_status", ownerDetails && ownerDetails.value ? ownerDetails.value : "");
+  
+      // Append other text fields
+      formData.append("title", data.title);
+      formData.append("ownership_status", data.ownership_status);
+      formData.append("no_of_units", data.no_of_units);
+      formData.append("description", data.description);
+      formData.append("address", data.address);
+      formData.append("street_number", data.street_number);
+      formData.append("street_name", data.street_name);
+      formData.append("cadstre_number", data.cadstre_number || ""); // Ensure no undefined
+      formData.append("city", data.city);
+      formData.append("area", data.area);
+      formData.append("neighborhood", data.neighborhood);
+      formData.append("location_map_url", data.location_map_url);
+      formData.append("price", data.price);
+      formData.append("size", data.size);
+      formData.append("bedrooms", data.bedrooms);
+      formData.append("bathrooms", data.bathrooms);
+      formData.append("owner_name", data.owner_name);
+      formData.append("phone_number", data.phone_number);
+      formData.append("email", data.email);
+      formData.append("owner_address", data.owner_address);
+  
+      // Append amenities and assigned_to arrays
+      if (amenities) {
+        amenities.filter((amenity) => amenity && amenity.value).forEach((amenity) => {
+          formData.append("amenities", amenity.value);
+        });
+      }
+  
+      if (selectedSalespersons) {
+        selectedSalespersons.filter((salesperson) => salesperson && salesperson.value).forEach((salesperson) => {
+          formData.append("assigned_to", salesperson.value);
+        });
+      }
+  
+      // Append selected images
+      selectedImages.forEach((image) => {
+        formData.append("images", image);
+        console.log("Image:", image); 
+      });
+  
+      // Append selected documents
+      selectedDocs.forEach((doc) => {
+        formData.append("documents", doc);
+        console.log("Doc:", doc); 
+      });
+
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
+      }
+  
+      // Make PUT request with FormData
+      const response = await putRequest(`properties/${propertyId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure correct content type
+        },
+      });
   
       if (response) {
         console.log("Response:", response);
         toast.success("Property updated successfully!");
+        push("/properties");
       } else {
         throw new Error("Failed to update property");
       }
@@ -313,6 +371,8 @@ const useCreateForm = () => {
       setLoading(false);
     }
   };
+  
+  
      
 
 

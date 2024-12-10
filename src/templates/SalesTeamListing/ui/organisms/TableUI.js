@@ -3,7 +3,8 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading }) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
@@ -34,6 +35,15 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              {loading && (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full">
+                        <LoadingUI />
+                      </div>
+                    </td>
+                  </tr>
+                )}
                 {rows.map((row, i) => (
                   <tr
                     key={i}
@@ -41,18 +51,18 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                   >
                     <td className="table-td ">
                       <div className="flex items-center">
-                        <img
+                        {/* <img
                           src={"/assets/images/users/user-1.jpg"}
                           alt=""
                           className="block w-8 h-8 object-cover rounded-full mr-2"
-                        />
+                        /> */}
                         <span className="text-primary-default font-bold cursor-pointer">
                           {row.name}
                         </span>
                       </div>
                     </td>
-                    <td className="table-td ">{row.phone}</td>
-                    <td className="table-td ">{row.email}</td>
+                    <td className="table-td ">{row.contact_number}</td>
+                    <td className="table-td lowercase">{row.email}</td>
                     <td className="table-td ">{row.joining_date}</td>
                     <td className="table-td ">
                       <span className="block w-full">
@@ -69,18 +79,18 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
 
                         <Icon
-                          onClick={() => {}}
+                          onClick={() => { }}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

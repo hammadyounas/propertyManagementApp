@@ -6,7 +6,7 @@ const BannerUI = ({ title, address, updatedAt, images }) => {
       <img
         // src={"https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"}
         src={images? images[0] : "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"}
-        className="w-full h-[450px]"
+        className="min-w-[90%] max-h-[80vh] mx-auto object-cover"
       />
       </div>
       <h1 className="text-2xl mt-4">{title}</h1>

@@ -42,7 +42,10 @@ const AmenitiesUI = ({
               isMulti
               value={selectedSalespersons}
               onChange={handleSelectSalesperson}
-              options={salesPerson}
+              options ={ salesPerson.map((person) => ({
+                label: person.name,
+                value: person._id, // Use a unique identifier for value
+              }))}
               placeholder="Salesperson"
               isDisabled={loading}
               className="text-sm"

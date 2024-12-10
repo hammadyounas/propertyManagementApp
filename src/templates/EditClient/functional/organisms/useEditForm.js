@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { clientStatus, clientTypes, preferredCommunicationChannels, salesPersons } from "../constants/data";
+import { clientStatus, clientTypes, preferredCommunicationChannels } from "../constants/data";
 import { getRequest, putRequest } from "../../../../libs/utils/request_handler";
 
 const useEditForm = () => {
@@ -14,8 +14,24 @@ const useEditForm = () => {
     const { push } = useRouter();
     const router = useRouter();
     const clientId = router.query.id;
+    const [salesPersons, setSalesPersons] = useState([]);
 
     const { register, formState: { errors }, handleSubmit, control, getValues, setValue } = useForm();
+
+    const fetchSalesPersons = async () => {
+        try {
+            const response = await getRequest("users");
+            if (response) {
+                const salesPersonsData = response.data.map((salesPerson) => ({
+                    value: salesPerson.id,
+                    label: salesPerson.name,
+                }));
+                setSalesPersons(salesPersonsData);
+            }
+        } catch (error) {
+            toast.error("Failed to fetch sales persons.");
+        }
+    };
 
     useEffect(() => {
         if (!clientId) return;
@@ -55,6 +71,7 @@ const useEditForm = () => {
         };
     
         fetchClientData();
+        fetchSalesPersons();
     }, [clientId, setValue]);
     
     const handleSelectStatus = (e) => setStatus(e);

@@ -2,7 +2,7 @@ import React from "react";
 
 const LoadingUI = () => {
   return (
-    <div className="flex flex-col items-center justify-center app_height">
+    <div className="flex flex-col items-center justify-center app_height w-full mx-auto">
       <svg
         className="animate-spin ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3 h-6 w-6
          "

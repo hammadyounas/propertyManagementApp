@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { postRequest } from "../../../../libs/utils/request_handler";
+import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -55,29 +55,43 @@ const useCreateForm = () => {
     },
   ];
 
-  const availableProperties = [
-    {
-      value: "property 1",
-      label: "Property 1",
-    },
-    {
-      value: "property 2",
-      label: "Property 2",
-    },
-    {
-      value: "property 3",
-      label: "Property 3",
-    },
-  ];
+  // const availableProperties = [
+  //   {
+  //     value: "property 1",
+  //     label: "Property 1",
+  //   },
+  //   {
+  //     value: "property 2",
+  //     label: "Property 2",
+  //   },
+  //   {
+  //     value: "property 3",
+  //     label: "Property 3",
+  //   },
+  // ];
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const [propertiesAssigned, setPropertiesAssigned] = useState([]);
+  const [availableProperties, setAvailableProperties] = useState([]);
   const { push } = useRouter();
+
+  const availablePropertiesData  =  async () => {
+    try {
+      const response = await getRequest("properties");
+      const filteredResponse = response.data.filter((properties) => !properties.isDeleted);
+      setAvailableProperties(filteredResponse);
+    } catch (error) {
+      console.error("Error:", error); 
+    }
+  }
 
   useEffect(() => {
     setValue("assigned_properties", propertiesAssigned);
     setValue("status", status?.value || "");
+    
+    availablePropertiesData();
+
   }, [propertiesAssigned, status]);
 
   const handleSelectStatus = (e) => {

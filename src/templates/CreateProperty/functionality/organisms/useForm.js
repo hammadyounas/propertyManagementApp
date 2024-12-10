@@ -7,7 +7,7 @@ import {
   ownershipStatus,
   propertyStatus,
   propertyTypes,
-  salesPerson,
+  // salesPerson,
   ownerDetailsStatus
 } from "../constants/data";
 import { useState, useEffect, useRef } from "react";
@@ -88,6 +88,7 @@ const useCreateForm = () => {
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
   const [ownerDetails, setOwnerDetails] = useState(ownerDetailsStatus[0] || null);
+  const [salesPerson, setSalesPerson] = useState([])
 
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -108,6 +109,17 @@ const useCreateForm = () => {
   const triggerDocFileInput = (docRef) => {
     if (docRef.current) {
       docRef.current.click();
+    }
+  };
+
+  const fetchSalesPerson =  async () => {
+    try {
+      const response = await getRequest("users");
+      const filteredResponse = response.data.filter((salesPerson) => !salesPerson.isDeleted);
+      console.log(filteredResponse);
+      setSalesPerson(filteredResponse);
+    } catch (error) {
+      console.error("Error:", error); // Log errors
     }
   };
 
@@ -159,6 +171,7 @@ const useCreateForm = () => {
     setValue("furnishing_status", furnishing?.value || "");
     setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
+    fetchSalesPerson();
   }, [
     amenities,
     selectedImages,
@@ -253,12 +266,6 @@ const useCreateForm = () => {
   };
 
   const handleSelectSalesperson = (selectedValues) => {
-    // try {
-    //   const response = await getRequest('user')
-    //   response.data(setSelectedSalespersons);
-    // } catch (error) {
-    //   console.error("Error:", error); // Log errors
-    // }
     setSelectedSalespersons(selectedValues);
   };
 
@@ -349,7 +356,7 @@ const useCreateForm = () => {
       if (response) {
         toast.success("Property Added successfully!");
         // Redirect after successful submission if necessary
-        // push("/clients");
+        push("/properties");
       } else {
         toast.error("Create Property failed");
         throw new Error("Create Property failed");

@@ -4,6 +4,7 @@ import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import { ToastContainer } from "react-toastify";
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 const TableUI = ({
   columns,
   rows,
@@ -11,7 +12,8 @@ const TableUI = ({
   setGlobalFilter,
   openModal,
   push,
-  handleDelete
+  handleDelete,
+  loading
 }) => {
   return (
     <Card noborder>
@@ -54,7 +56,17 @@ const TableUI = ({
                   ))}
                 </tr>
               </thead>
+
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                {loading && (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full">
+                        <LoadingUI />
+                      </div>
+                    </td>
+                  </tr>
+                )}
                 {rows.map((row, i) => (
                   <tr
                     key={i}
@@ -96,7 +108,7 @@ const TableUI = ({
                     </td>
                     <td className="table-td ">
                       <div
-                        onClick={() => {}}
+                        onClick={() => { }}
                         className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer"
                       >
                         {row.assigned_to ? (

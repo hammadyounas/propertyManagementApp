@@ -19,6 +19,7 @@ const PropertiesListingPage = () => {
     openModal,
     push,
     handleDelete,
+    loading,
   } = useProperty();
 
   return (
@@ -30,6 +31,7 @@ const PropertiesListingPage = () => {
         openModal={openModal}
         push={push}
         handleDelete={handleDelete}
+        loading={loading}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate

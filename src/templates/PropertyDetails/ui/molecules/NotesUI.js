@@ -33,7 +33,7 @@ function NotesUI({ columns, rows }) {
                     <td className="table-td text-primary-default font-bold ">
                       {row.salesperson_name}
                     </td>
-                    <td className="table-td ">{row.notes}</td>
+                    <td className="table-td first-letter:capitalize lowercase">{row.notes}</td>
                     <td className="table-td ">{row.date}</td>
                     <td className="table-td ">{row.time}</td>
                   </tr>

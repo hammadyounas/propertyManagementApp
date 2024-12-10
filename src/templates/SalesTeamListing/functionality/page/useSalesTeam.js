@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { rows } from "../constants/data";
+// import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
 import { getRequest } from "../../../../libs/utils/request_handler";
 
@@ -7,22 +7,27 @@ const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const pageSize = 10;
   const { push } = useRouter();
 
   useEffect(() => {
-    // const fetchClients = async () => {
-    //   try {
-    //     const response = await getRequest('users');
-    //     setUsers(response.data);
-    //   } catch (error) {
-    //     console.error('Error fetching clients:', error);
-    //   }
+    const fetchClients = async () => {
+      setLoading(true); 
+      try {
+        const response = await getRequest('users');
+        setUsers(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching clients:', error);
+      } finally {
+        setLoading(false);
+      }
       
-    // }
-    // fetchClients();
+    }
+    fetchClients();
 
-    setUsers(rows);
+    // setUsers(rows);
   }, []);
 
   // Calculate the paginated users
@@ -45,6 +50,7 @@ const useSalesTeam = () => {
     handlePageChange,
     currentPage,
     push,
+    loading,
   };
 };
 

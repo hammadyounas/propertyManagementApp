@@ -128,7 +128,12 @@ const FormUI = ({
                     isMulti
                     value={propertiesAssigned}
                     onChange={handleSelectAssignedProperties}
-                    options={availableProperties}
+                    options={availableProperties.map((property)=> (
+                      {
+                        label: property.title,
+                        value: property._id,
+                      }
+                    ))}
                     placeholder="Assigned Properties"
                     isDisabled={loading}
                     className="text-sm"

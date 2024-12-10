@@ -30,7 +30,7 @@ const PropertyDetailsPage = () => {
   return loading ? (
     <Loading />
   ) : (
-    <div className="flex justify-between flex-wrap">
+    <div className="flex justify-between flex-wrap capitalize">
       {/* <UserDetails
         client={propertyDetails?.client}
         assignedTo={propertyDetails?.assigned_to}
