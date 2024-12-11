@@ -14,6 +14,7 @@ const SalesTeamListingPage = () => {
     push,
     users,
     loading,
+    handleDelete,
   } = useSalesTeam();
 
   return (
@@ -24,6 +25,7 @@ const SalesTeamListingPage = () => {
         setGlobalFilter={setGlobalFilter}
         push={push}
         loading={loading}
+        handleDelete={handleDelete}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate

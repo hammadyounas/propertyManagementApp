@@ -1,7 +1,7 @@
 import OwnerDetailsUI from "../../ui/molecules/OwnerDetailsUI";
 
 const OnwersDetails = ({
-    register, errors, loading,  handleSelectOwnersDetailsStatus, ownersDetailstatus, ownerDetailsStatus
+    register, errors, loading,  handleSelectOwnersDetailsStatus, ownersDetailstatus, ownerDetailsStatus, ownerDetails
 }) => {
   return (
     <OwnerDetailsUI
@@ -11,6 +11,7 @@ const OnwersDetails = ({
       handleSelectOwnersDetailsStatus={handleSelectOwnersDetailsStatus}
       ownersDetailstatus={ownersDetailstatus}
       ownerDetailsStatus = {ownerDetailsStatus}
+      ownerDetails = {ownerDetails}
     />
   );
 };

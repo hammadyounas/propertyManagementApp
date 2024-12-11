@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { File } from "lucide-react";
 import { getRequest,  putRequest } from "../../../../libs/utils/request_handler";
 import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
+import { getAllUsersByName } from "../../../../libs/api/users";
 
 const useCreateForm = () => {
 
@@ -126,14 +127,19 @@ const useCreateForm = () => {
       );
     });
   };
-  
+
   const fetchPropertyData = async () => {
     try {
       const response = await getRequest(`properties/${propertyId}`);
-      
-      if (response.data) {
+  
+      if (response) {
         const propertyData = response.data;
   
+         // Pass only the assigned_to array to getAllUsersByName
+      const salespersonDetails = await getAllUsersByName(propertyData.assigned_to);
+
+      console.log("salespersonDetails", salespersonDetails);
+
         // Form fields to be set
         const formFields = {
           title: propertyData.title,
@@ -160,6 +166,7 @@ const useCreateForm = () => {
           phone_number: propertyData.phone_number,
           email: propertyData.email,
           owner_address: propertyData.owner_address,
+          assigned_to: salespersonDetails, // Set names instead of IDs
         };
   
         // Set values using the corresponding state setters
@@ -167,23 +174,23 @@ const useCreateForm = () => {
         setStatus(propertyStatus.find((item) => item.value === propertyData.property_status) || '');
         setOwnership(ownershipStatus.find((item) => item.value === propertyData.ownership_status) || '');
         setFurnishing(furnishingStatus.find((item) => item.value === propertyData.furnishing_status) || '');
-        setSelectedSalespersons(propertyData.assigned_to || []);
-        setAmenities(amenities);  // Assuming amenities is being set from a predefined list
-        setOwnerDetails(ownerDetailsStatus.find((item) => item.value === propertyData.owner_status) || '');
+        setSelectedSalespersons(salespersonDetails); // Correctly formatted for ReactSelect
+        setAmenities(availableFacilities.filter((channel) => propertyData.amenities.includes(channel.value))); // Assuming amenities is being set from a predefined list
+        setOwnerDetails(ownerDetailsStatus.find((item) => item.value === propertyData.owner_status) || null);
   
         // Set form values in a loop
         Object.entries(formFields).forEach(([key, value]) => setValue(key, value || ""));
-        
+  
         // Set additional states for images and documents
         setSelectedImages(propertyData.images || []);
         setSelectedDocs(propertyData.documents || []);
       }
     } catch (error) {
-      // Handle error here, e.g., show a toast error message
-      // toast.error("Failed to fetch property data.");
+      console.error("Failed to fetch property data:", error);
     }
-  };  
-
+  };
+  
+  
   useEffect(() => {
     fetchSalesPerson();
     fetchPropertyData();
@@ -265,7 +272,7 @@ const useCreateForm = () => {
   };
 
   const handleSelectSalesperson = (selectedValues) => {
-    setSelectedSalespersons(selectedValues);
+    setSelectedSalespersons(selectedValues) || [];
   };
 
   const handleSelectType = (e) => {
@@ -419,6 +426,7 @@ const useCreateForm = () => {
     selectedSalespersons,
     handleSelectSalesperson,
     ownerDetailsStatus,
+    ownerDetails,
   };
 };
 

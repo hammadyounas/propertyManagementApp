@@ -42,11 +42,11 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, deleteCli
                     >
                       <td className="table-td">
                         <div className="flex items-center">
-                          <img
+                          {/* <img
                             src={"/assets/images/users/user-1.jpg"}
                             alt=""
                             className="block w-8 h-8 object-cover rounded-full mr-2"
-                          />
+                          /> */}
                           <span className="text-primary-default font-bold cursor-pointer">
                             {row.name}
                           </span>
@@ -59,8 +59,8 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, deleteCli
                         <span className="block w-full">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-              ${row.status === "Active" ? "text-green-600 bg-green-200" : ""}
-              ${row.status === "Inactive" ? "text-red-600 bg-red-200" : ""}
+              ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
+              ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
               `}
                           >
                             {row.status}

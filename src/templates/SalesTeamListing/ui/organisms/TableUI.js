@@ -4,9 +4,11 @@ import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading }) => {
+import { ToastContainer } from "react-toastify";
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, handleDelete }) => {
   return (
     <Card noborder>
+      <ToastContainer/>
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
@@ -84,13 +86,13 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading }
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          onClick={() => { }}
+                           onClick={() => push(`/sales-team/edit/${row._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
 
                         <Icon
-                          onClick={() => { }}
+                           onClick={() => handleDelete(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

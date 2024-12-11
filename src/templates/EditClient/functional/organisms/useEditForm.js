@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { clientStatus, clientTypes, preferredCommunicationChannels } from "../constants/data";
 import { getRequest, putRequest } from "../../../../libs/utils/request_handler";
+import { getAllUsersByName } from "../../../../libs/api/users";
 
 const useEditForm = () => {
     const [loading, setLoading] = useState(false);
@@ -23,16 +24,16 @@ const useEditForm = () => {
             const response = await getRequest("users");
             if (response) {
                 const salesPersonsData = response.data.map((salesPerson) => ({
-                    value: salesPerson.id,
+                    value: salesPerson._id,
                     label: salesPerson.name,
                 }));
+                console.log(salesPersonsData);
                 setSalesPersons(salesPersonsData);
             }
         } catch (error) {
             toast.error("Failed to fetch sales persons.");
         }
     };
-
     useEffect(() => {
         if (!clientId) return;
     
@@ -41,29 +42,30 @@ const useEditForm = () => {
                 const response = await getRequest(`clients/${clientId}`);
                 if (response) {
                     const clientData = response.data;
-    
-                    // Map fetched values to match the structure expected by your dropdowns
+                    console.log(clientData);
+        
                     const clientTypeOption = clientTypes.find(option => option.value === clientData.type);
                     const statusOption = clientStatus.find(option => option.value === clientData.status);
                     const preferredCommunicationChannelsOptions = preferredCommunicationChannels.filter(channel =>
                         clientData.preferredCommunicationChannel.includes(channel.value)
                     );
-    
-                    setClientType(clientTypeOption || {});  // Ensure clientType is set
-                    setStatus(statusOption || {});  // Ensure status is set
-                    setSalespersonAssigned(clientData.assignedSalesperson || []);
+
+                    const salesPersonAssignedOptions = await getAllUsersByName(clientData.assignedSalesperson);
+        
+                    setClientType(clientTypeOption || {});
+                    setStatus(statusOption || {});
+                    setSalespersonAssigned(salesPersonAssignedOptions || []);  // Ensure proper assignment
                     setCommunicationChannels(preferredCommunicationChannelsOptions || []);
     
-                    // Populate the form using setValue
                     setValue("name", clientData.name);
                     setValue("email", clientData.email);
                     setValue("phoneNumber", clientData.phoneNumber);
                     setValue("address", clientData.address);
                     setValue("notes", clientData.notes);
-                    setValue("assigned_salesperson", clientData.assignedSalesperson || []);
-                    setValue("status", statusOption);  // Set status option properly
-                    setValue("type", clientTypeOption);  // Set clientType option properly
-                    setValue("preferredCommunicationChannel", preferredCommunicationChannelsOptions);  // Set communication channels
+                    setValue("assigned_salesperson", salesPersonAssignedOptions); // Properly set the salesperson
+                    setValue("status", statusOption); 
+                    setValue("type", clientTypeOption);
+                    setValue("preferredCommunicationChannel", preferredCommunicationChannelsOptions);
                 }
             } catch (error) {
                 toast.error("Failed to fetch client data.");
@@ -73,6 +75,7 @@ const useEditForm = () => {
         fetchClientData();
         fetchSalesPersons();
     }, [clientId, setValue]);
+    
     
     const handleSelectStatus = (e) => setStatus(e);
     const handleSelectClientType = (e) => setClientType(e);
@@ -90,7 +93,7 @@ const useEditForm = () => {
                 type: clientType?.value || "",
                 status: status?.value || "",
                 preferredCommunicationChannel: communicationChannels.map((channel) => channel.value),
-                assignedSalesperson: salesPersonAssigned.map((salesPerson) => salesPerson.value),
+                assignedSalesperson: salesPersonAssigned?.map((salesPerson) => salesPerson.value) || [],
                 notes: data.notes || "",
             };
 

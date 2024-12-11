@@ -53,6 +53,7 @@ const EditPropertyPage = () => {
     ownersDetailstatus,
     handleSelectOwnersDetailsStatus,
     ownerDetailsStatus,
+    ownerDetails
   } = useForm();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
@@ -91,8 +92,9 @@ const EditPropertyPage = () => {
       errors={errors}
       loading={loading}
       handleSelectOwnersDetailsStatus={handleSelectOwnersDetailsStatus}
-      ownersDetailstatus={ownersDetailstatus}
+      // ownersDetailstatus={ownersDetailstatus}
       ownerDetailsStatus={ownerDetailsStatus}
+      ownerDetails={ownerDetails}
       />
       
       <ImagesAndDocuments

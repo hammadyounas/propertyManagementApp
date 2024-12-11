@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 // import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
-import { getRequest } from "../../../../libs/utils/request_handler";
+import { deleteRequest, getRequest } from "../../../../libs/utils/request_handler";
+import { toast } from "react-toastify";
 
 const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -11,21 +12,21 @@ const useSalesTeam = () => {
   const pageSize = 10;
   const { push } = useRouter();
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      setLoading(true); 
-      try {
-        const response = await getRequest('users');
-        setUsers(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching clients:', error);
-      } finally {
-        setLoading(false);
-      }
-      
+  const fetchUsers = async () => {
+    setLoading(true); 
+    try {
+      const response = await getRequest('users');
+      setUsers(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    } finally {
+      setLoading(false);
     }
-    fetchClients();
+    
+  }
+  useEffect(() => {
+    fetchUsers();
 
     // setUsers(rows);
   }, []);
@@ -40,6 +41,17 @@ const useSalesTeam = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteRequest(`user/${id}`);
+      fetchUsers();
+      toast.success("Salesperson deleted successfully.");
+    } catch (error) {
+      console.error("Error:", error); // Log errors
+      toast.error(error.message || "An error occurred while deleting property.");
+    }
+  }
+
   return {
     globalFilter,
     setGlobalFilter,
@@ -51,6 +63,7 @@ const useSalesTeam = () => {
     currentPage,
     push,
     loading,
+    handleDelete,
   };
 };
 

@@ -8,9 +8,9 @@ import {
   clientStatus,
   clientTypes,
   preferredCommunicationChannels,
-  salesPersons,
+  // salesPersons,
 } from "../constants/data";
-import { postRequest } from "../../../../libs/utils/request_handler";
+import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -40,13 +40,30 @@ const useCreateForm = () => {
   const [clientType, setClientType] = useState("");
   const [salesPersonAssigned, setSalespersonAssigned] = useState([]);
   const [communicationChannels, setCommunicationChannels] = useState([]);
+  const [salesPersons, setSalesPersons] = useState([]);
   const { push } = useRouter();
+
+  const fetchSalesPersons = async () => {
+    try {
+        const response = await getRequest("users");
+        if (response) {
+            const salesPersonsData = response.data.map((salesPerson) => ({
+                value: salesPerson._id,
+                label: salesPerson.name,
+            }));
+            setSalesPersons(salesPersonsData);
+        }
+    } catch (error) {
+        console.error("Failed to fetch sales persons.");
+    }
+};
 
   useEffect(() => {
     setValue("assigned_salesperson", salesPersonAssigned);
     setValue("status", status?.value || "");
     setValue("type", clientType?.value || "");
     setValue("preferredCommunicationChannel", communicationChannels);
+    fetchSalesPersons();
   }, [salesPersonAssigned, status, clientType, communicationChannels]);
 
   const handleSelectStatus = (e) => {

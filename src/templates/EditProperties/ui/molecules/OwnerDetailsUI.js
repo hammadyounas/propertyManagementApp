@@ -7,8 +7,9 @@ const OwnerDetailsUI = ({
   errors,
   loading,
   handleSelectOwnersDetailsStatus,
-  ownersDetailstatus,
+  // ownersDetailstatus,
   ownerDetailsStatus,
+  ownerDetails,
 }) => {
   return (
     <div className="mt-8">
@@ -63,7 +64,7 @@ const OwnerDetailsUI = ({
             <div className="my-2 text-sm font-medium">Status*</div>
               <ReactSelect
                 name="owner_status"
-                value={ownersDetailstatus}
+                value={ownerDetails}
                 onChange={handleSelectOwnersDetailsStatus}
                 options={ownerDetailsStatus}
                 placeholder="Status"

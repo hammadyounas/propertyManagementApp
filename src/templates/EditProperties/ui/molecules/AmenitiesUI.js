@@ -40,16 +40,17 @@ const AmenitiesUI = ({
             <ReactSelect
               name="assigned_to"
               isMulti
-              value={selectedSalespersons}
+              value={selectedSalespersons} // Pass the correctly formatted state
               onChange={handleSelectSalesperson}
-              options ={ salesPerson.map((person) => ({
+              options={salesPerson.map((person) => ({
                 label: person.name,
-                value: person._id, // Use a unique identifier for value
+                value: person._id, // Use a unique identifier for the value
               }))}
               placeholder="Salesperson"
               isDisabled={loading}
               className="text-sm"
             />
+
             {errors?.assigned_to && selectedSalespersons.length == 0 && (
               <p className="text-sm text-danger-500 mt-2">
                 {errors?.assigned_to?.message}
