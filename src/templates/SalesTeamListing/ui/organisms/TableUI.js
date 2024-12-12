@@ -1,14 +1,21 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
-import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, handleDelete }) => {
+const TableUI = ({
+  columns,
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  push,
+  loading,
+  handleDelete,
+}) => {
   return (
     <Card noborder>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
@@ -37,11 +44,20 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-              {loading && (
+                {loading && (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
                       <div className="flex items-center justify-center w-full">
                         <LoadingUI />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {rows.length === 0 && (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full text-gray-500">
+                        No Data Found
                       </div>
                     </td>
                   </tr>
@@ -53,11 +69,6 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                   >
                     <td className="table-td ">
                       <div className="flex items-center">
-                        {/* <img
-                          src={"/assets/images/users/user-1.jpg"}
-                          alt=""
-                          className="block w-8 h-8 object-cover rounded-full mr-2"
-                        /> */}
                         <span className="text-primary-default font-bold cursor-pointer">
                           {row.name}
                         </span>
@@ -70,9 +81,9 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-      ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
-      ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
-    `}
+                          ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
+                          ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
+                        `}
                         >
                           {row.status}
                         </span>
@@ -86,13 +97,13 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                           onClick={() => push(`/sales-team/edit/${row._id}`)}
+                          onClick={() => push(`/sales-team/edit/${row._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
 
                         <Icon
-                           onClick={() => handleDelete(row?._id)}
+                          onClick={() => handleDelete(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

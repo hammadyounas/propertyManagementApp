@@ -5,6 +5,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import { ToastContainer } from "react-toastify";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import { ChevronDown } from "lucide-react";
 const TableUI = ({
   columns,
   rows,
@@ -106,7 +107,7 @@ const TableUI = ({
                         </span>
                       </span>
                     </td>
-                    <td className="table-td ">
+                    <td className="table-td flex justify-center items-center my-auto mt-5">
                       <div
                         onClick={() => { }}
                         className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer"
@@ -115,7 +116,7 @@ const TableUI = ({
                           <Tooltip
                             placement="top"
                             arrow
-                            content={row.assigned_salesperson}
+                            content={row.assigned_to}
                           >
                             <img
                               src={"/assets/images/users/user-1.jpg"}
@@ -127,6 +128,9 @@ const TableUI = ({
                           "--"
                         )}
                       </div>
+                        <div className="ml-2 text-gray-400">
+                          <ChevronDown />
+                          </div>
                     </td>
                     <td className="table-td ">
                       <div className="flex">
