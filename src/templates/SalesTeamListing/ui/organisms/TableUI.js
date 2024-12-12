@@ -71,7 +71,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
       ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
-      ${row.status === "in active" ? "text-red-600 bg-red-200" : ""}
+      ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
     `}
                         >
                           {row.status}
@@ -81,7 +81,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, loading, 
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => { }}
+                          onClick={() => push(`/sales-team/view/${row._id}`)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
