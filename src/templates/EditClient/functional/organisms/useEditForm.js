@@ -19,21 +19,21 @@ const useEditForm = () => {
 
     const { register, formState: { errors }, handleSubmit, control, getValues, setValue } = useForm();
 
-    const fetchSalesPersons = async () => {
-        try {
-            const response = await getRequest("users");
-            if (response) {
-                const salesPersonsData = response.data.map((salesPerson) => ({
-                    value: salesPerson._id,
-                    label: salesPerson.name,
-                }));
-                console.log(salesPersonsData);
-                setSalesPersons(salesPersonsData);
+        const fetchSalesPersons = async () => {
+            try {
+                const response = await getRequest("users");
+                if (response) {
+                    const salesPersonsData = response.data.map((salesPerson) => ({
+                        value: salesPerson._id,
+                        label: salesPerson.name,
+                    }));
+                    console.log(salesPersonsData);
+                    setSalesPersons(salesPersonsData);
+                }
+            } catch (error) {
+                toast.error("Failed to fetch sales persons.");
             }
-        } catch (error) {
-            toast.error("Failed to fetch sales persons.");
-        }
-    };
+        };
     useEffect(() => {
         if (!clientId) return;
     

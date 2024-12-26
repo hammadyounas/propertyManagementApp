@@ -2,6 +2,8 @@ import Textinput from "../../../../components/ui/atoms/TextInput";
 import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 import ReactSelect from "react-select";
 import Button from "../../../../components/ui/atoms/Button";
+import RadioButton from "../../../../components/ui/atoms/RadioButtin";
+import { ToastContainer } from "react-toastify";
 
 const AddAndUpdateMeetingModalContentUI = ({
   register,
@@ -23,6 +25,7 @@ const AddAndUpdateMeetingModalContentUI = ({
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <ToastContainer />
       <h6>Meeting Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
@@ -78,6 +81,24 @@ const AddAndUpdateMeetingModalContentUI = ({
         </div>
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
+          <RadioButton
+                  name="location_status"
+                  label="Location Status*"
+                  type="radio"
+                  register={register}
+                  error={errors.location_status}
+                  placeholder="Location Status"
+                  disabled={loading}
+                  radioOptions={[
+                    { label: "Online", value: "Online" },
+                    { label: "Onsite", value: "Onsite" },
+                  ]}
+                  className="text-sm"
+                />
+          </div>
+        </div>
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full">
             <Textinput
               name="location"
               label="Location*"
@@ -123,7 +144,12 @@ const AddAndUpdateMeetingModalContentUI = ({
                 isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
-                options={salespersons}
+                options={salespersons.map((salesPerson)=> (
+                  {
+                    label: salesPerson.name,
+                    value: salesPerson._id,
+                  }
+                ))}
                 placeholder="Salespersons"
                 isDisabled={loading}
                 className="text-sm"
@@ -138,7 +164,12 @@ const AddAndUpdateMeetingModalContentUI = ({
                 isMulti
                 value={selectedClients}
                 onChange={handleSelectClients}
-                options={clients}
+                options={clients.map((client)=> (
+                  {
+                    label: client.name,
+                    value: client._id,
+                  }
+                ))}
                 placeholder="Clients"
                 isDisabled={loading}
                 className="text-sm"

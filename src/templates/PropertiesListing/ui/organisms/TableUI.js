@@ -14,7 +14,7 @@ const TableUI = ({
   openModal,
   push,
   handleDelete,
-  loading
+  loading,
 }) => {
   return (
     <Card noborder>
@@ -74,10 +74,7 @@ const TableUI = ({
                     className=" even:bg-slate-200 dark:even:bg-slate-700"
                   >
                     <td className="table-td">
-                      <img
-                        src={row.images[0]}
-                        className="w-20 h-16"
-                      />
+                      <img src={row.images[0]} className="w-20 h-16" />
                     </td>
                     <td
                       className="table-td text-primary-default font-bold cursor-pointer"
@@ -95,13 +92,37 @@ const TableUI = ({
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-      ${row.property_status === "available" ? "text-green-600 bg-green-200" : ""}
-      ${row.property_status === "under contract" ? "text-yellow-600 bg-yellow-200" : ""}
-      ${row.property_status === "sold" ? "text-blue-600 bg-blue-200" : ""}
-      ${row.property_status === "leased" ? "text-purple-600 bg-purple-200" : ""}
-      ${row.property_status === "coming soon" ? "text-orange-600 bg-orange-200" : ""}
-      ${row.property_status === "withdrawn" ? "text-red-600 bg-red-200" : ""}
-    `}
+                        ${
+                          row.property_status === "available"
+                            ? "text-green-600 bg-green-200"
+                            : ""
+                        }
+                        ${
+                          row.property_status === "under contract"
+                            ? "text-yellow-600 bg-yellow-200"
+                            : ""
+                        }
+                        ${
+                          row.property_status === "sold"
+                            ? "text-blue-600 bg-blue-200"
+                            : ""
+                        }
+                        ${
+                          row.property_status === "leased"
+                            ? "text-purple-600 bg-purple-200"
+                            : ""
+                        }
+                        ${
+                          row.property_status === "coming soon"
+                            ? "text-orange-600 bg-orange-200"
+                            : ""
+                        }
+                        ${
+                          row.property_status === "withdrawn"
+                            ? "text-red-600 bg-red-200"
+                            : ""
+                        }
+                      `}
                         >
                           {row.property_status}
                         </span>
@@ -109,7 +130,7 @@ const TableUI = ({
                     </td>
                     <td className="table-td flex justify-center items-center my-auto mt-5">
                       <div
-                        onClick={() => { }}
+                        onClick={() => {}}
                         className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer"
                       >
                         {row.assigned_to ? (
@@ -128,9 +149,9 @@ const TableUI = ({
                           "--"
                         )}
                       </div>
-                        <div className="ml-2 text-gray-400">
-                          <ChevronDown />
-                          </div>
+                      <div className="ml-2 text-gray-400">
+                        <ChevronDown />
+                      </div>
                     </td>
                     <td className="table-td ">
                       <div className="flex">

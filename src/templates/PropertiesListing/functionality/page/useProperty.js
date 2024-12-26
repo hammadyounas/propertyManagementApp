@@ -21,18 +21,43 @@ const useProperty = () => {
     setActiveModal(!activeModal);
   };
 
+
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      const response = await getRequest('properties')
-      const filteredResponse = response.data.filter((property) => !property.isDeleted);
+      // Fetch sales persons
+      const salesPersonsResponse = await getRequest('users');
+      const salesPersonsData = salesPersonsResponse.data.map((salesPerson) => ({
+        id: salesPerson._id,
+        name: salesPerson.name,
+      }));
+  
+      // Create a map for quick lookup of user names by their ID
+      const salesPersonsMap = Object.fromEntries(
+        salesPersonsData.map((user) => [user.id, user.name])
+      );
+  
+      console.log('Sales Persons Map:', salesPersonsMap);
+  
+      // Fetch properties
+      const response = await getRequest('properties');
+      const filteredResponse = response.data
+        .filter((property) => !property.isDeleted)
+        .map((property) => ({
+          ...property,
+          assigned_to: salesPersonsMap[property.assigned_to],
+        }));
+  
+      console.log('Filtered Properties:', filteredResponse);
+  
       setProperties(filteredResponse);
     } catch (error) {
       console.error('Error fetching clients:', error);
     } finally {
       setLoading(false);
     }
-  }
+  };
+  
 
   useEffect(() => {
     fetchProperties();

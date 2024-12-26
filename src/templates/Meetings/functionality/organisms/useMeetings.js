@@ -4,12 +4,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import {
-  clients,
-  dummyMeetings,
-  salespersons,
+  // clients,
+  // dummyMeetings,
+  // salespersons,
   statuses,
 } from "../constants/data";
 import { v4 as uuidv4 } from "uuid";
+import { postRequest, getRequest } from "../../../../libs/utils/request_handler";
+import toast from "react-hot-toast";
 
 const useMeetings = () => {
   const schema = yup.object({
@@ -17,6 +19,7 @@ const useMeetings = () => {
     description: yup.string().required("Description is required"),
     start_time: yup.string().required("Start Time is required"),
     end_time: yup.string().required("End Time is required"),
+    location_status: yup.string().required("Location is required"),
     location: yup.string().required("Location is required"),
     status: yup.string().required("Status is required"),
   });
@@ -34,27 +37,111 @@ const useMeetings = () => {
     mode: "all",
   });
 
-  const onSubmit = (data) => {
-    setLoading(true);
-    {
-      setTimeout(() => {
-        alert(`Form Submitted`);
-        console.log("Form Data: ", data);
-        if (currentMeetingId) {
-          setMeetings((prevMeetings) =>
-            prevMeetings.map((meeting) =>
-              meeting.meeting_id === currentMeetingId ? data : meeting
-            )
-          );
-        } else {
-          setMeetings((prev) => [...prev, { meeting_id: uuidv4(), ...data }]);
-        }
+  const [salespersons, setSalespersons] = useState();
+  const [clients, setClients] = useState();
+  const [meetings, setMeetings] = useState([]);
 
-        closeModal();
-        setLoading(false);
-      }, 1500);
+  const fetchSalespersonAndClientsData = async () => {
+    try {
+      const response = await getRequest("users");
+      const filteredSalespersons = response.data.filter((sp) => !sp.isDeleted);
+      const salesPersonsMap = Object.fromEntries(
+        filteredSalespersons.map(({ _id, name, contact_number, email }) => [
+          _id,
+          { name, contact_number, email },
+        ])
+      );
+  
+      const clientsResponse = await getRequest("clients");
+      const filteredClients = clientsResponse.data.filter((c) => !c.isDeleted);
+      const clientMap = Object.fromEntries(
+        filteredClients.map(({ _id, name, phoneNumber, email }) => [
+          _id,
+          { name, phoneNumber, email },
+        ])
+      );
+  
+      const meetingsResponse = await getRequest("meetings");
+      const filteredMeetings = meetingsResponse.data
+        .filter((meeting) => !meeting.isDeleted)
+        .map((meeting) => ({
+          ...meeting,
+          salespersons: Array.isArray(meeting.salespersons)
+            ? meeting.salespersons.map((id) => salesPersonsMap[id])
+            : salesPersonsMap[meeting.salespersons],
+          clients: Array.isArray(meeting.clients)
+            ? meeting.clients.map((id) => clientMap[id])
+            : clientMap[meeting.clients],
+        }));
+  
+      console.log("Filtered Meetings:", filteredMeetings);
+  
+      setSalespersons(filteredSalespersons);
+      setClients(filteredClients);
+      setMeetings(filteredMeetings);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
+    
+  
+
+    useEffect(() => {
+      fetchSalespersonAndClientsData();
+    }, []);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      // Prepare data for the API
+      const formData = {
+       ...data,
+       salespersons: selectedSalesPersons.map((salesPerson) => salesPerson.value), // Send only the property values
+       clients: selectedClients.map((client) => client.value), // Send only the property values
+      };
+  
+      // API call to register the user
+      const response = postRequest('meetings', formData)
+      console.log(response.code >= 200 && response.data.status <= 300);
+      if (response) {
+        toast.success("Meeting created successfully!");
+        console.log(response.data); // Log the API response if needed
+        fetchSalespersonAndClientsData();
+        closeModal() // Redirect after successful registration
+
+      } else {
+        toast.error("Meeting created failed");
+        throw new Error("Meeting created failed");
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message || "An error occurred while meeting creation.");
+    } finally {
+      setLoading(false); // Ensure loading state is turned off regardless of success or error
+    }
+  };
+
+  // const onSubmit = (data) => {
+  //   setLoading(true);
+  //   {
+  //     setTimeout(() => {
+  //       alert(`Form Submitted`);
+  //       console.log("Form Data: ", data);
+  //       if (currentMeetingId) {
+  //         setMeetings((prevMeetings) =>
+  //           prevMeetings.map((meeting) =>
+  //             meeting.meeting_id === currentMeetingId ? data : meeting
+  //           )
+  //         );
+  //       } else {
+  //         setMeetings((prev) => [...prev, { meeting_id: uuidv4(), ...data }]);
+  //       }
+
+  //       closeModal();
+  //       setLoading(false);
+  //     }, 1500);
+  //   }
+  // };
 
   const [starAndEndDate, setStarAndEndDate] = useState({
     startDate: moment(new Date()).startOf("month").valueOf(),
@@ -68,27 +155,33 @@ const useMeetings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [meetings, setMeetings] = useState(null);
+  // const [meetings, setMeetings] = useState(null);
   const [meetingsLoading, setMeetingsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      setMeetings(dummyMeetings);
+      // setMeetings(dummyMeetings);
       setMeetingsLoading(false);
     }, 1200);
   }, []);
 
   useEffect(() => {
     if (currentMeetingId) {
-      const current = meetings?.find((m) => m.meeting_id == currentMeetingId);
+      const current = meetings?.find((m) => m._id == currentMeetingId);
       setCurrentMeeting(current);
       for (const key in current) {
         if (key == "status") {
           setStatus({ value: current[key], label: current[key] });
         } else if (key == "salespersons") {
-          setSelectedSalespersons(current[key]);
+          setSelectedSalespersons(current[key].map((sp) => ({
+            value: sp?._id,
+            label: sp?.name,
+          })));
         } else if (key == "clients") {
-          setSelectedClients(current[key]);
+          setSelectedClients(current[key].map((c) => ({
+            value: c?._id,
+            label: c?.name,
+          })));
         } else if (key == "start_time") {
           setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
         } else if (key == "end_time") {

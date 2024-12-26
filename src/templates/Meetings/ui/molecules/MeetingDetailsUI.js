@@ -108,13 +108,13 @@ const MeetingDetailsUI = ({
                             <label className="font-bold text-[16px]">
                               Name
                             </label>
-                            <span className="text-[15px]">{c.label}</span>
+                            <span className="text-[15px]">{c?.name}</span>
                           </div>
                           <div className="flex flex-col mt-4 w-[48%] pl-[10px]">
                             <label className="font-bold text-[16px]">
                               Email
                             </label>
-                            <span className="text-[15px]">{c.email}</span>
+                            <span className="text-[15px]">{c?.email}</span>
                           </div>
                         </div>
                         <div className="flex w-full break-words justify-between">
@@ -122,7 +122,7 @@ const MeetingDetailsUI = ({
                             <label className="font-bold text-[16px]">
                               Phone
                             </label>
-                            <span className="text-[15px]">{c.phone}</span>
+                            <span className="text-[15px]">{c?.phoneNumber}</span>
                           </div>
                           {/* <div className="flex flex-col mt-4 w-[48%] pl-[10px]">
                             <label className="font-bold text-[16px]">
@@ -149,13 +149,13 @@ const MeetingDetailsUI = ({
                             <label className="font-bold text-[16px]">
                               Name
                             </label>
-                            <span className="text-[15px]">{c.label}</span>
+                            <span className="text-[15px]">{c?.name}</span>
                           </div>
                           <div className="flex flex-col mt-4 w-[48%] pl-[10px]">
                             <label className="font-bold text-[16px]">
                               Email
                             </label>
-                            <span className="text-[15px]">{c.email}</span>
+                            <span className="text-[15px]">{c?.email}</span>
                           </div>
                         </div>
                         <div className="flex w-full break-words justify-between">
@@ -163,7 +163,7 @@ const MeetingDetailsUI = ({
                             <label className="font-bold text-[16px]">
                               Phone
                             </label>
-                            <span className="text-[15px]">{c.phone}</span>
+                            <span className="text-[15px]">{c?.contact_number}</span>
                           </div>
                           {/* <div className="flex flex-col mt-4 w-[48%] pl-[10px]">
                             <label className="font-bold text-[16px]">
@@ -181,7 +181,7 @@ const MeetingDetailsUI = ({
               )}
             </Card>
           </div>
-          <div className="mt-[40px]">
+          {/* <div className="mt-[40px]">
             <Card className="bg-gray-100 shadow-xl">
               <div className="flex items-center">
                 <h5 className="mr-4">Scheduling</h5>
@@ -215,7 +215,7 @@ const MeetingDetailsUI = ({
                 </div>
               </div>
             </Card>
-          </div>
+          </div> */}
         </div>
       </Card>
     </div>

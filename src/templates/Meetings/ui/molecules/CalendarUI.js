@@ -47,7 +47,7 @@ const CalendarUI = ({
           start: moment(meeting?.start_time).toISOString(), // Schedule events on different days
           end: moment(meeting?.end_time).toISOString(),
           title: meeting.title,
-          id: meeting.meeting_id,
+          id: meeting._id,
           backgroundColor: getBackgroundColor(meeting.status), // Set background color based on status
         }))}
         // contentHeight={window.innerWidth <= 1440 ? undefined : "auto"}

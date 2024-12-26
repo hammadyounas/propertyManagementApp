@@ -14,8 +14,8 @@ export const statuses = [
     label: "Completed",
   },
   {
-    value: "Canceled",
-    label: "Canceled",
+    value: "Cancelled",
+    label: "Cancelled",
   },
   {
     value: "Rescheduled",
