@@ -1,6 +1,8 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function SalespersonUI({salesperosonDataRows,salespersonColumns}) {
+  const router = useRouter();
     return (
         <div className="my-4">
           <div className="flex justify-start items-center my-2">
@@ -29,7 +31,7 @@ function SalespersonUI({salesperosonDataRows,salespersonColumns}) {
                         key={i}
                         className=" even:bg-slate-200 dark:even:bg-slate-700"
                       >
-                        <td className="table-td text-primary-default font-semibold">{row.name}</td>
+                        <td className="table-td text-primary-default font-semibold cursor-pointer" onClick={()=>router.push(`/sales-team/view/${row._id}`)}>{row.name}</td>
                         <td className="table-td lowercase">{row.email}</td>
                         <td className="table-td ">{row.phone}</td>
                       </tr>

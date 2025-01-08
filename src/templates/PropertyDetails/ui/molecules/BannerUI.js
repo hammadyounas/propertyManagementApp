@@ -1,4 +1,5 @@
 import Icon from "@/components/ui/atoms/Icon";
+import moment from "moment/moment";
 const BannerUI = ({ title, address, updatedAt, images }) => {
   return (
     <div className="">
@@ -21,7 +22,7 @@ const BannerUI = ({ title, address, updatedAt, images }) => {
           icon="heroicons-outline:calendar"
           className="text-primary-default mr-2"
         />
-        <p className="text-sm">Update {updatedAt}</p>
+        <p className="text-sm">Created At {moment(updatedAt).format("DD-MM-YYYY")}</p>
       </div>
     </div>
   );

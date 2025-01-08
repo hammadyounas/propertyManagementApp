@@ -10,7 +10,7 @@ import {
   statuses,
 } from "../constants/data";
 import { v4 as uuidv4 } from "uuid";
-import { postRequest, getRequest } from "../../../../libs/utils/request_handler";
+import { postRequest, getRequest, patchRequest } from "../../../../libs/utils/request_handler";
 import toast from "react-hot-toast";
 
 const useMeetings = () => {
@@ -66,12 +66,12 @@ const useMeetings = () => {
         .filter((meeting) => !meeting.isDeleted)
         .map((meeting) => ({
           ...meeting,
-          salespersons: Array.isArray(meeting.salespersons)
-            ? meeting.salespersons.map((id) => salesPersonsMap[id])
-            : salesPersonsMap[meeting.salespersons],
-          clients: Array.isArray(meeting.clients)
-            ? meeting.clients.map((id) => clientMap[id])
-            : clientMap[meeting.clients],
+          // salespersons: Array.isArray(meeting.salespersons)
+          //   ? meeting.salespersons.map((id) => salesPersonsMap[id])
+          //   : salesPersonsMap[meeting.salespersons],
+          // clients: Array.isArray(meeting.clients)
+          //   ? meeting.clients.map((id) => clientMap[id])
+          //   : clientMap[meeting.clients],
         }));
   
       console.log("Filtered Meetings:", filteredMeetings);
@@ -99,19 +99,32 @@ const useMeetings = () => {
        salespersons: selectedSalesPersons.map((salesPerson) => salesPerson.value), // Send only the property values
        clients: selectedClients.map((client) => client.value), // Send only the property values
       };
-  
-      // API call to register the user
-      const response = postRequest('meetings', formData)
-      console.log(response.code >= 200 && response.data.status <= 300);
-      if (response) {
-        toast.success("Meeting created successfully!");
-        console.log(response.data); // Log the API response if needed
-        fetchSalespersonAndClientsData();
-        closeModal() // Redirect after successful registration
 
-      } else {
-        toast.error("Meeting created failed");
-        throw new Error("Meeting created failed");
+      if (currentMeetingId) {
+        const { _id, ...rest } = formData;
+        // API call to update the user
+        const response = await patchRequest(`meetings/${_id}`, rest)
+        if (response) {
+          toast.success("Meeting updated successfully!");
+          console.log(response.data); // Log the API response if needed
+          fetchSalespersonAndClientsData();
+          closeModal() // Redirect after successful registration
+        } else {
+          toast.error("Meeting update failed");
+          throw new Error("Meeting update failed")}}
+      else {
+        // API call to register the user
+        const response = await postRequest("meetings", formData);
+        console.log(response.code >= 200 && response.data.status <= 300);
+        if (response) {
+          toast.success("Meeting created successfully!");
+          console.log(response.data); // Log the API response if needed
+          fetchSalespersonAndClientsData();
+          closeModal(); // Redirect after successful registration
+        } else {
+          toast.error("Meeting created failed");
+          throw new Error("Meeting created failed");
+        }
       }
     } catch (error) {
       setLoading(false);

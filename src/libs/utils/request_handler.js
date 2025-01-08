@@ -29,9 +29,9 @@ export const getRequest = async (url) => {
   }
 }
 
-export const putRequest = async (url, data) => {
+export const patchRequest = async (url, data) => {
   try {
-    const response = await axios.put(`${API_URL}/${API_PREFIX}/${url}`, data, 
+    const response = await axios.patch(`${API_URL}/${API_PREFIX}/${url}`, data, 
       {
         withCredentials: true,  
       }

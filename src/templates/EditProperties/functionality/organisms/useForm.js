@@ -15,7 +15,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import { File } from "lucide-react";
-import { getRequest,  putRequest } from "../../../../libs/utils/request_handler";
+import {
+  getRequest,
+  patchRequest,
+} from "../../../../libs/utils/request_handler";
 import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
 import { getAllUsersByName } from "../../../../libs/api/users";
 
@@ -358,11 +361,15 @@ const useCreateForm = () => {
       }
   
       // Make PUT request with FormData
-      const response = await putRequest(`properties/${propertyId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure correct content type
-        },
-      });
+      const response = await patchRequest(
+        `properties/${propertyId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure correct content type
+          },
+        }
+      );
   
       if (response) {
         console.log("Response:", response);

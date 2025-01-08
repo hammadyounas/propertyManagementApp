@@ -13,7 +13,10 @@ export default function useClientDetails() {
         try {
             const response = await getRequest(`clients/${clientId}`);
             if (response) {
-                setClientData(response.data);
+                const assignedSalesperson = renderAssignedSalesperson(
+                  response?.data?.assignedSalesperson
+                );
+                setClientData({...response.data, assignedSalesperson});
                 console.log(response.data)
             }
         } catch (error) {
@@ -24,6 +27,12 @@ export default function useClientDetails() {
     useEffect(() => {
         fetchClientData()
     }, [])
+
+    const renderAssignedSalesperson = (salespeople) => {
+      if (!salespeople || salespeople.length === 0)
+        return "N/A";
+      return salespeople.map((person) => person.name).join(", ");
+    };
 
     const handleEdit = () => {
         router.push(`/clients/edit/${clientId}`);

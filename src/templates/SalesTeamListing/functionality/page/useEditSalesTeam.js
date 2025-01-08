@@ -4,7 +4,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { getRequest, putRequest } from "../../../../libs/utils/request_handler";
+import {
+  getRequest,
+  patchRequest,
+} from "../../../../libs/utils/request_handler";
 import { getAllPropertiesByTitle } from "../../../../libs/api/properties";
 
 const useEditSalesTeam = () => {
@@ -28,7 +31,7 @@ const useEditSalesTeam = () => {
         licence_number: yup.string().required("License number is required"),
         licence_type: yup.string().required("License type is required"),
         status: yup.string().required("Status is required"),
-        assigned_properties: yup.array().min(1, "Assign at least one property"),
+        // assigned_properties: yup.array().min(1, "Assign at least one property"),
       })
     ),
   });
@@ -125,11 +128,14 @@ const useEditSalesTeam = () => {
         address: data.address,
         licence_number: data.licence_number,
         licence_type: data.licence_type,
-        assigned_properties: propertiesAssigned.map((property) => property.value),
+        assigned_properties: propertiesAssigned.map(
+          (property) => property.value
+        ),
         status: data.status,
+        joining_date: data.joining_date,
       };
 
-      const response = await putRequest(`user/${userId}`, formData);
+      const response = await patchRequest(`user/${userId}`, formData);
       if (response) {
         toast.success("User updated successfully!");
         push("/sales-team");

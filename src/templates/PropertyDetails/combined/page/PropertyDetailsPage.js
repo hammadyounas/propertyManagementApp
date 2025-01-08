@@ -39,7 +39,7 @@ const PropertyDetailsPage = () => {
         <Banner
           title={propertyDetails?.title}
           address={propertyDetails?.address}
-          updatedAt={propertyDetails?.updated_at}
+          updatedAt={propertyDetails?.createdAt}
           images={propertyDetails?.images}
         />
         <Overview
@@ -53,9 +53,11 @@ const PropertyDetailsPage = () => {
         />
         <Details details={propertyDetails?.description} />
         <Amenities amenities={propertyDetails?.amenities} />
-        <Documents documentDataRows={documentDataRows} />
-        <Salesperson salesperosonDataRows={salesperosonDataRows} />
-        <Notes rows={rows} />
+        {/* <Documents documentDataRows={documentDataRows} /> */}
+        <Salesperson
+          salesperosonDataRows={propertyDetails?.assigned_to || []}
+        />
+        {/* <Notes rows={rows} /> */}
         <Location locationMapUrl={propertyDetails?.location_map_url} />
         {/* <div className="my-4">
           <h2 className="text-lg">Location</h2>

@@ -129,30 +129,32 @@ const TableUI = ({
                       </span>
                     </td>
                     <td className="table-td flex justify-center items-center my-auto mt-5">
-                      <div
-                        onClick={() => {}}
-                        className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer"
-                      >
-                        {row.assigned_to ? (
-                          <Tooltip
-                            placement="top"
-                            arrow
-                            content={row.assigned_to}
+                      {row.assigned_to && row.assigned_to.length > 0 ? (
+                        row.assigned_to.map((user) => (
+                          <div
+                            key={user._id}
+                            className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer relative mx-1"
+                            onClick={() =>
+                              (window.location.href = `/sales-team/view/${user._id}`)
+                            } // Redirect to user page
                           >
-                            <img
-                              src={"/assets/images/users/user-1.jpg"}
-                              alt=""
-                              className="block w-full h-full object-cover rounded-full"
-                            />
-                          </Tooltip>
-                        ) : (
-                          "--"
-                        )}
-                      </div>
-                      <div className="ml-2 text-gray-400">
+                            <Tooltip placement="top" arrow content={user.name}>
+                              <img
+                                src={"/assets/images/users/user-1.jpg"} // Replace with actual avatar URL if available
+                                alt={user.name}
+                                className="block w-full h-full object-cover rounded-full"
+                              />
+                            </Tooltip>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-gray-400">--</div>
+                      )}
+                      {/* <div className="ml-2 text-gray-400">
                         <ChevronDown />
-                      </div>
+                      </div> */}
                     </td>
+
                     <td className="table-td ">
                       <div className="flex">
                         <Icon

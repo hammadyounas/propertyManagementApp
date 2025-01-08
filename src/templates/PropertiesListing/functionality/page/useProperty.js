@@ -25,19 +25,19 @@ const useProperty = () => {
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      // Fetch sales persons
-      const salesPersonsResponse = await getRequest('users');
-      const salesPersonsData = salesPersonsResponse.data.map((salesPerson) => ({
-        id: salesPerson._id,
-        name: salesPerson.name,
-      }));
+      // // Fetch sales persons
+      // const salesPersonsResponse = await getRequest('users');
+      // const salesPersonsData = salesPersonsResponse.data.map((salesPerson) => ({
+      //   id: salesPerson._id,
+      //   name: salesPerson.name,
+      // }));
   
-      // Create a map for quick lookup of user names by their ID
-      const salesPersonsMap = Object.fromEntries(
-        salesPersonsData.map((user) => [user.id, user.name])
-      );
+      // // Create a map for quick lookup of user names by their ID
+      // const salesPersonsMap = Object.fromEntries(
+      //   salesPersonsData.map((user) => [user.id, user.name])
+      // );
   
-      console.log('Sales Persons Map:', salesPersonsMap);
+      // console.log('Sales Persons Map:', salesPersonsMap);
   
       // Fetch properties
       const response = await getRequest('properties');
@@ -45,7 +45,6 @@ const useProperty = () => {
         .filter((property) => !property.isDeleted)
         .map((property) => ({
           ...property,
-          assigned_to: salesPersonsMap[property.assigned_to],
         }));
   
       console.log('Filtered Properties:', filteredResponse);

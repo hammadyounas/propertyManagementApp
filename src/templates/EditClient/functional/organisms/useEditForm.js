@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { clientStatus, clientTypes, preferredCommunicationChannels } from "../constants/data";
-import { getRequest, putRequest } from "../../../../libs/utils/request_handler";
+import { getRequest, patchRequest } from "../../../../libs/utils/request_handler";
 import { getAllUsersByName } from "../../../../libs/api/users";
 
 const useEditForm = () => {
@@ -97,7 +97,10 @@ const useEditForm = () => {
                 notes: data.notes || "",
             };
 
-            const response = await putRequest(`clients/${clientId}`, formData);
+            const response = await patchRequest(
+              `clients/${clientId}`,
+              formData
+            );
 
             if (response) {
                 toast.success("Client updated successfully!");
