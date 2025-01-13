@@ -1,19 +1,11 @@
 export const columns = [
+  // {
+  //   label: "Property Image",
+  //   field: "property_image",
+  // },
   {
-    label: "Property Image",
-    field: "property_image",
-  },
-  {
-    label: "Title",
-    field: "title",
-  },
-  {
-    label: "Location",
-    field: "location",
-  },
-  {
-    label: "Price",
-    field: "price",
+    label: "Address",
+    field: "Address",
   },
   {
     label: "Property Type",
@@ -25,21 +17,44 @@ export const columns = [
     field: "size",
   },
   {
-    label: "Bedrooms",
-    field: "bedrooms",
+    label: "Owner @ Address",
+    field: "property_type",
   },
   {
-    label: "Bathrooms",
-    field: "barhrooms",
+    label: "Tel Number",
+    field: "Tel Number",
   },
   {
     label: "Status",
     field: "status",
   },
+  
   {
-    label: "Assigned Salesperson",
-    field: "assigned_salesperson",
+    label: "Assigned Broker",
+    field: "assigned_broker",
   },
+  // {
+  //   label: "Title",
+  //   field: "title",
+  // },
+  // {
+  //   label: "Location",
+  //   field: "location",
+  // },
+  // {
+  //   label: "Price",
+  //   field: "price",
+  // },
+ 
+  // {
+  //   label: "Bedrooms",
+  //   field: "bedrooms",
+  // },
+  // {
+  //   label: "Bathrooms",
+  //   field: "barhrooms",
+  // },
+
   {
     label: "Action",
     field: "action",
@@ -58,6 +73,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Alice Johnson, 123 Elm Street, Springfield, IL",
+    telno: "555-1234",
+    address: "123 Elm Street, Springfield, IL"
   },
   {
     id: 2,
@@ -70,6 +88,9 @@ export const tableData = [
     bathrooms: 3,
     status: "under contract",
     assigned_salesperson: "John Doe",
+    owneraddress: "Bob Smith, 456 Oak Street, Springfield, IL",
+    telno: "555-2345",
+    address: "456 Oak Street, Springfield, IL"
   },
   {
     id: 3,
@@ -82,6 +103,9 @@ export const tableData = [
     bathrooms: 3,
     status: "withdrawn",
     assigned_salesperson: "John Doe",
+    owneraddress: "Charlie Lee, 789 Pine Street, Springfield, IL",
+    telno: "555-3456",
+    address: "789 Pine Street, Springfield, IL"
   },
   {
     id: 4,
@@ -94,6 +118,9 @@ export const tableData = [
     bathrooms: 3,
     status: "sold",
     assigned_salesperson: "John Doe",
+    owneraddress: "Diana Moore, 101 Maple Avenue, Springfield, IL",
+    telno: "555-4567",
+    address: "101 Maple Avenue, Springfield, IL"
   },
   {
     id: 5,
@@ -106,6 +133,9 @@ export const tableData = [
     bathrooms: 3,
     status: "leased",
     assigned_salesperson: "John Doe",
+    owneraddress: "Ethan Green, 202 Birch Lane, Springfield, IL",
+    telno: "555-5678",
+    address: "202 Birch Lane, Springfield, IL"
   },
   {
     id: 6,
@@ -118,6 +148,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Faith Adams, 303 Cedar Road, Springfield, IL",
+    telno: "555-6789",
+    address: "303 Cedar Road, Springfield, IL"
   },
   {
     id: 7,
@@ -130,6 +163,9 @@ export const tableData = [
     bathrooms: 3,
     status: "coming soon",
     assigned_salesperson: "John Doe",
+    owneraddress: "George Harris, 404 Walnut Street, Springfield, IL",
+    telno: "555-7890",
+    address: "404 Walnut Street, Springfield, IL"
   },
   {
     id: 8,
@@ -142,6 +178,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Hannah Clark, 505 Redwood Drive, Springfield, IL",
+    telno: "555-8901",
+    address: "505 Redwood Drive, Springfield, IL"
   },
   {
     id: 9,
@@ -154,6 +193,9 @@ export const tableData = [
     bathrooms: 3,
     status: "under contract",
     assigned_salesperson: "John Doe",
+    owneraddress: "Isaac King, 606 Fir Street, Springfield, IL",
+    telno: "555-9012",
+    address: "606 Fir Street, Springfield, IL"
   },
   {
     id: 10,
@@ -166,6 +208,9 @@ export const tableData = [
     bathrooms: 3,
     status: "withdrawn",
     assigned_salesperson: "John Doe",
+    owneraddress: "Jackie Wright, 707 Cedar Street, Springfield, IL",
+    telno: "555-0123",
+    address: "707 Cedar Street, Springfield, IL"
   },
   {
     id: 11,
@@ -178,6 +223,9 @@ export const tableData = [
     bathrooms: 3,
     status: "sold",
     assigned_salesperson: "John Doe",
+    owneraddress: "Kevin Walker, 808 Cherry Lane, Springfield, IL",
+    telno: "555-1234",
+    address: "808 Cherry Lane, Springfield, IL"
   },
   {
     id: 12,
@@ -190,6 +238,9 @@ export const tableData = [
     bathrooms: 3,
     status: "leased",
     assigned_salesperson: "John Doe",
+    owneraddress: "Lily Scott, 909 Maple Road, Springfield, IL",
+    telno: "555-2345",
+    address: "909 Maple Road, Springfield, IL"
   },
   {
     id: 13,
@@ -202,6 +253,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Mason Lee, 1010 Oak Lane, Springfield, IL",
+    telno: "555-3456",
+    address: "1010 Oak Lane, Springfield, IL"
   },
   {
     id: 14,
@@ -214,6 +268,9 @@ export const tableData = [
     bathrooms: 3,
     status: "coming soon",
     assigned_salesperson: "John Doe",
+    owneraddress: "Nora Perez, 1111 Birch Street, Springfield, IL",
+    telno: "555-4567",
+    address: "1111 Birch Street, Springfield, IL"
   },
   {
     id: 15,
@@ -226,6 +283,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Oscar Robinson, 1212 Pine Road, Springfield, IL",
+    telno: "555-5678",
+    address: "1212 Pine Road, Springfield, IL"
   },
   {
     id: 16,
@@ -238,6 +298,9 @@ export const tableData = [
     bathrooms: 3,
     status: "under contract",
     assigned_salesperson: "John Doe",
+    owneraddress: "Paula Harris, 1313 Elm Road, Springfield, IL",
+    telno: "555-6789",
+    address: "1313 Elm Road, Springfield, IL"
   },
   {
     id: 17,
@@ -250,6 +313,9 @@ export const tableData = [
     bathrooms: 3,
     status: "withdrawn",
     assigned_salesperson: "John Doe",
+    owneraddress: "Quinn Foster, 1414 Cedar Avenue, Springfield, IL",
+    telno: "555-7890",
+    address: "1414 Cedar Avenue, Springfield, IL"
   },
   {
     id: 18,
@@ -262,6 +328,9 @@ export const tableData = [
     bathrooms: 3,
     status: "sold",
     assigned_salesperson: "John Doe",
+    owneraddress: "Riley Moore, 1515 Maple Avenue, Springfield, IL",
+    telno: "555-8901",
+    address: "1515 Maple Avenue, Springfield, IL"
   },
   {
     id: 19,
@@ -274,6 +343,9 @@ export const tableData = [
     bathrooms: 3,
     status: "leased",
     assigned_salesperson: "John Doe",
+    owneraddress: "Sophia Taylor, 1616 Redwood Lane, Springfield, IL",
+    telno: "555-9012",
+    address: "1616 Redwood Lane, Springfield, IL"
   },
   {
     id: 20,
@@ -286,6 +358,9 @@ export const tableData = [
     bathrooms: 3,
     status: "available",
     assigned_salesperson: "John Doe",
+    owneraddress: "Thomas Jackson, 1717 Oak Street, Springfield, IL",
+    telno: "555-0123",
+    address: "1717 Oak Street, Springfield, IL"
   },
   {
     id: 21,
@@ -298,7 +373,13 @@ export const tableData = [
     bathrooms: 3,
     status: "coming soon",
     assigned_salesperson: "John Doe",
-  },
+    owneraddress: "Uma Patel, 1818 Fir Avenue, Springfield, IL",
+    telno: "555-1234",
+    address: "1818 Fir Avenue, Springfield, IL"
+  }
 ];
+
+
+
 
 export const rows = tableData

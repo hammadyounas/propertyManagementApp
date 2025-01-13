@@ -53,8 +53,9 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     </td>
                     <td className="table-td ">{row.phone}</td>
                     <td className="table-td ">{row.email}</td>
+                    <td className="table-td ">{row.license}</td>
                     <td className="table-td ">{row.joining_date}</td>
-                    <td className="table-td ">
+                    {/* <td className="table-td ">
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
@@ -65,7 +66,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                           {row.status}
                         </span>
                       </span>
-                    </td>
+                    </td> */}
                     <td className="table-td ">
                       <div className="flex">
                         <Icon

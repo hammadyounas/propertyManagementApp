@@ -57,24 +57,17 @@ const TableUI = ({
                     key={i}
                     className=" even:bg-slate-200 dark:even:bg-slate-700"
                   >
-                    <td className="table-td">
+                    {/* <td className="table-td">
                       <img
                         src="/assets/images/all-img/property.jpeg"
                         className="w-20 h-16"
                       />
-                    </td>
-                    <td
-                      className="table-td text-primary-default font-bold cursor-pointer"
-                      onClick={() => push(`/properties/view/${row?.id}`)}
-                    >
-                      {row.title}
-                    </td>
-                    <td className="table-td ">{row.location}</td>
-                    <td className="table-td ">{row.price}</td>
+                    </td> */}
+                    <td className="table-td ">{row.address}</td>
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
-                    <td className="table-td ">{row.bedrooms}</td>
-                    <td className="table-td ">{row.bathrooms}</td>
+                    <td className="table-td ">{row.owneraddress}</td>
+                    <td className="table-td ">{row.telno}</td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span
@@ -100,7 +93,7 @@ const TableUI = ({
                           <Tooltip
                             placement="top"
                             arrow
-                            content={row.assigned_salesperson}
+                            content={row.assigned_broker}
                           >
                             <img
                               src={"/assets/images/users/user-1.jpg"}
@@ -113,6 +106,18 @@ const TableUI = ({
                         )}
                       </div>
                     </td>
+                    {/* <td
+                      className="table-td text-primary-default font-bold cursor-pointer"
+                      onClick={() => push(`/properties/view/${row?.id}`)}
+                    >
+                      {row.title}
+                    </td>
+                    <td className="table-td ">{row.location}</td>
+                    <td className="table-td ">{row.price}</td>
+              
+                    <td className="table-td ">{row.bedrooms}</td>
+                    <td className="table-td ">{row.bathrooms}</td>
+                 */}
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
