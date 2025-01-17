@@ -49,7 +49,7 @@ const ItemsUI = ({
                   disabled={loading}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              {/* <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
                   name={`items[${index}].item_quantity`}
                   label="Quantity"
@@ -66,7 +66,7 @@ const ItemsUI = ({
                     setValue("items", [...items]);
                   }}
                 />
-              </div>
+              </div> */}
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
                   name={`items[${index}].item_price`}
@@ -87,20 +87,26 @@ const ItemsUI = ({
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_tax`}
-                  label="Tax Percentage"
+                  name={`items[${index}].item_gst`}
+                  label="GST (5%)"
                   type="number"
                   register={register}
-                  error={errors.items?.[index]?.item_tax}
-                  placeholder="Price"
-                  disabled={loading}
-                  value={getValues(`items[${index}]`).item_tax}
-                  // error={errors.title}
-                  onChange={(e) => {
-                    setValue(`items[${index}].item_tax`, e.target.value);
-                    const items = getValues("items");
-                    setValue("items", [...items]);
-                  }}
+                  error={errors.items?.[index]?.item_gst}
+                  placeholder="GST"
+                  disabled={true}
+                  //   value={getValues(`items[${index}]`).item_total}
+                />
+              </div>
+              <div className="w-full md:w-[33%] xl:w-[14%]">
+                <Textinput
+                  name={`items[${index}].item_qst`}
+                  label="QST (9.75%)"
+                  type="number"
+                  register={register}
+                  error={errors.items?.[index]?.item_qst}
+                  placeholder="Total"
+                  disabled={true}
+                  //   value={getValues(`items[${index}]`).item_total}
                 />
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
