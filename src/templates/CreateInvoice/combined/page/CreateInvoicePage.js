@@ -39,6 +39,7 @@ const CreateInvoicePage = () => {
     fields,
     append,
     remove,
+    total,
   } = useCreateInvoice();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
@@ -65,12 +66,12 @@ const CreateInvoicePage = () => {
         salesPersonName={salesPersonName}
         handleSelectSalespersonName={handleSelectSalespersonName}
         salesPersons={salesPersons}
-        listingBrokerName = {listingBrokerName}
-        handleSelectListingBroker = {handleSelectListingBroker}
-        listingBrokers = {listingBrokers}
-        sellingBrokerName = {sellingBrokerName}
-        handleSelectSellingBroker = {handleSelectSellingBroker}
-        sellingBrokers = {sellingBrokers}
+        listingBrokerName={listingBrokerName}
+        handleSelectListingBroker={handleSelectListingBroker}
+        listingBrokers={listingBrokers}
+        sellingBrokerName={sellingBrokerName}
+        handleSelectSellingBroker={handleSelectSellingBroker}
+        sellingBrokers={sellingBrokers}
       />
       <PropertyDetails
         register={register}
@@ -90,7 +91,11 @@ const CreateInvoicePage = () => {
         getValues={getValues}
         setValue={setValue}
       />
-      <AdditionalInformation register={register} loading={loading} />
+      <AdditionalInformation
+        register={register}
+        loading={loading}
+        total={total}
+      />
       <div className="flex justify-center md:justify-end mt-12">
         <Button
           text={"Discard"}

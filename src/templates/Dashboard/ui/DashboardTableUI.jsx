@@ -20,12 +20,14 @@ const DashboardTableUI = ({ columns, rows, tableFooterData }) => {
                 {rows.map((row, i) => (
                   <tr key={i} className="even:bg-slate-200 dark:even:bg-slate-700">
                     <td className="table-td px-4 py-4">{row.id}</td>
-                    <td className="table-td px-4 py-4">{row.active}</td>
+                    <td className="table-td px-4 py-4">{row.signatureDate}</td>
                     <td className="table-td px-4 py-4">{row.dd}</td>
                     <td className="table-td px-4 py-4">{row.financing}</td>
                     <td className="table-td px-4 py-4">{row.closing}</td>
                     <td className="table-td px-4 py-4">{row.invoice}</td>
-                    <td className="table-td px-4 py-4">
+                    <td className="table-td px-4 py-4">{row.pmtReceived}</td>
+                    <td className="table-td px-4 py-4">{row.pmtBroker}</td>
+                    {/* <td className="table-td px-4 py-4">
                       <span
                         className={`inline-block px-3 min-w-[90px] text-center py-1 rounded-full bg-opacity-25 ${
                           row.commission_collected === "Completed"
@@ -35,7 +37,7 @@ const DashboardTableUI = ({ columns, rows, tableFooterData }) => {
                       >
                         {row.commission_collected}
                       </span>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

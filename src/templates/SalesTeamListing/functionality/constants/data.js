@@ -12,13 +12,17 @@ export const columns = [
     field: "Email",
   },
   {
+    label: "License",
+    field: "License",
+  },
+  {
     label: "Joining Date",
     field: "Joining Date",
   },
-  {
-    label: "Status",
-    field: "Status",
-  },
+  // {
+  //   label: "Status",
+  //   field: "Status",
+  // },
   {
     label: "Action",
     field: "Action",
@@ -33,6 +37,7 @@ export const tableData = [
     email: "johndoe@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12345"
   },
   {
     id: 2,
@@ -41,6 +46,7 @@ export const tableData = [
     email: "patric@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12346"
   },
   {
     id: 3,
@@ -49,6 +55,7 @@ export const tableData = [
     email: "Janny@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12347"
   },
   {
     id: 4,
@@ -57,6 +64,7 @@ export const tableData = [
     email: "aroun@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12348"
   },
   {
     id: 5,
@@ -65,6 +73,7 @@ export const tableData = [
     email: "vivek@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12349"
   },
   {
     id: 6,
@@ -73,6 +82,7 @@ export const tableData = [
     email: "bla@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12350"
   },
   {
     id: 7,
@@ -81,6 +91,7 @@ export const tableData = [
     email: "johndoe@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12351"
   },
   {
     id: 8,
@@ -89,6 +100,7 @@ export const tableData = [
     email: "patric@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12352"
   },
   {
     id: 9,
@@ -97,6 +109,7 @@ export const tableData = [
     email: "Janny@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12353"
   },
   {
     id: 10,
@@ -105,6 +118,7 @@ export const tableData = [
     email: "aroun@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12354"
   },
   {
     id: 11,
@@ -113,6 +127,7 @@ export const tableData = [
     email: "vivek@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12355"
   },
   {
     id: 12,
@@ -121,8 +136,8 @@ export const tableData = [
     email: "bla@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12356"
   },
-
   {
     id: 13,
     name: "John Doe",
@@ -130,6 +145,7 @@ export const tableData = [
     email: "johndoe@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12357"
   },
   {
     id: 14,
@@ -138,6 +154,7 @@ export const tableData = [
     email: "patric@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12358"
   },
   {
     id: 15,
@@ -146,6 +163,7 @@ export const tableData = [
     email: "Janny@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12359"
   },
   {
     id: 16,
@@ -154,6 +172,7 @@ export const tableData = [
     email: "aroun@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12360"
   },
   {
     id: 17,
@@ -162,6 +181,7 @@ export const tableData = [
     email: "vivek@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12361"
   },
   {
     id: 18,
@@ -170,6 +190,7 @@ export const tableData = [
     email: "bla@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12362"
   },
   {
     id: 19,
@@ -178,6 +199,7 @@ export const tableData = [
     email: "johndoe@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12363"
   },
   {
     id: 20,
@@ -186,6 +208,7 @@ export const tableData = [
     email: "patric@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12364"
   },
   {
     id: 21,
@@ -194,6 +217,7 @@ export const tableData = [
     email: "Janny@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12365"
   },
   {
     id: 22,
@@ -202,6 +226,7 @@ export const tableData = [
     email: "aroun@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12366"
   },
   {
     id: 23,
@@ -210,6 +235,7 @@ export const tableData = [
     email: "vivek@gmail.com",
     status: "active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12367"
   },
   {
     id: 24,
@@ -218,7 +244,9 @@ export const tableData = [
     email: "bla@gmail.com",
     status: "in active",
     joining_date: "5 Oct, 2004",
+    license: "XYZ12368"
   },
 ];
+
 
 export const rows = tableData;

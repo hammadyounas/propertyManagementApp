@@ -18,17 +18,22 @@ const useCreateInvoice = () => {
   const itemSchema = yup.object({
     item_name: yup.string().required("Item name is required"),
     item_description: yup.string().required("Item description is required"),
-    item_quantity: yup
-      .number()
-      .typeError("Item quantity must be a number")
-      .required("Item quantity is required")
-      .min(0, "Item quantity cannot be negative"), // Prevent negative values
+    // item_quantity: yup
+    //   .number()
+    //   .typeError("Item quantity must be a number")
+    //   .required("Item quantity is required")
+    //   .min(0, "Item quantity cannot be negative"), // Prevent negative values
     item_price: yup
       .number()
       .typeError("Item price must be a number")
       .required("Item price is required")
       .min(0, "Item price cannot be negative"), // Prevent negative values
-    item_tax: yup
+    item_gst: yup
+      .number()
+      .typeError("Item tax must be a number")
+      .optional()
+      .min(0, "Item tax cannot be negative"), // Prevent negative values
+    item_qst: yup
       .number()
       .typeError("Item tax must be a number")
       .optional()
@@ -106,19 +111,22 @@ const useCreateInvoice = () => {
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       const updatedItems = getValues("items").map((item, index) => {
-        const quantity = item.item_quantity || 0;
-        const price = item.item_price || 0;
-        const tax = item.item_tax || 0;
-        let total;
-        if (tax > 0) {
-          total = quantity * price + (quantity * price * tax) / 100;
-        } else {
-          total = quantity * price;
-        }
+        const price = parseFloat(item.item_price) || 0; // Ensure price is a number
+        const gst = parseFloat((price * 0.05).toFixed(2)); // Calculate GST and round
+        const qst = parseFloat((price * 0.0975).toFixed(2)); // Calculate QST and round
 
-        // Only update if the total has changed to prevent unnecessary re-renders
+        // Ensure the total is also rounded to 2 decimal places
+        const total = parseFloat((price + gst + qst).toFixed(2));
+
+        // Only update if the value has changed to prevent unnecessary re-renders
         if (item.item_total !== total) {
           setValue(`items.${index}.item_total`, total, { shouldDirty: true });
+        }
+        if (item.item_gst !== gst) {
+          setValue(`items.${index}.item_gst`, gst, { shouldDirty: true });
+        }
+        if (item.item_qst !== qst) {
+          setValue(`items.${index}.item_qst`, qst, { shouldDirty: true });
         }
 
         return item; // Return the updated item
@@ -127,6 +135,49 @@ const useCreateInvoice = () => {
 
     return () => subscription.unsubscribe();
   }, [watch, getValues, setValue]);
+
+  const calculateItemTotals = (items) => {
+    let grandTotal = {
+      totalPrice: 0,
+      totalGst: 0,
+      totalQst: 0,
+      totalItemTotal: 0,
+    };
+
+    items.map((item) => {
+      // Ensure item_price is a number
+      const price = parseFloat(item.item_price) || 0;
+
+      // Calculate GST (5% of price) and round to 2 decimals
+      const gst = parseFloat((price * 0.05).toFixed(2));
+
+      // Calculate QST (9.75% of price) and round to 2 decimals
+      const qst = parseFloat((price * 0.0975).toFixed(2));
+
+      // Calculate total (price + gst + qst)
+      const total = parseFloat((price + gst + qst).toFixed(2));
+
+      // Update grand totals
+      grandTotal.totalPrice += price;
+      grandTotal.totalGst += gst;
+      grandTotal.totalQst += qst;
+      grandTotal.totalItemTotal += total;
+
+      return {
+        ...item,
+        item_price: price,
+        item_gst: gst,
+        item_qst: qst,
+        item_total: total,
+      };
+    });
+
+    return {
+      grandTotal,
+    };
+  };
+
+  const total = calculateItemTotals(getValues("items"));
 
   const handleSelectInvoiceStatus = (e) => {
     setInvoiceStatus(e);
@@ -141,12 +192,12 @@ const useCreateInvoice = () => {
   };
 
   const handleSelectListingBroker = (e) => {
-    setListingBroker(e)
-  }
+    setListingBroker(e);
+  };
 
   const handleSelectSellingBroker = (e) => {
-    setSellingBroker(e)
-  }
+    setSellingBroker(e);
+  };
 
   const handleSelectProperty = (e) => {
     setSelectedProperty(e);
@@ -193,6 +244,7 @@ const useCreateInvoice = () => {
     fields,
     append,
     remove,
+    total,
   };
 };
 

@@ -18,7 +18,7 @@ export const menuItems = [
     link: "/properties",
   },
   {
-    title: "Sales Team",
+    title: "Brokers",
     isHide: false,
     icon: "heroicons:users",
     link: "/sales-team",

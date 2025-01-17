@@ -5,7 +5,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import { ToastContainer } from "react-toastify";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
-import { ChevronDown } from "lucide-react";
+
 const TableUI = ({
   columns,
   rows,
@@ -21,14 +21,13 @@ const TableUI = ({
       <ToastContainer />
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-        <div className=" flex flex-wrap items-center justify-end">
+        <div className="flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center">
             <div
               onClick={openModal}
               className="flex items-center mr-3 p-3 cursor-pointer"
             >
               <Icon
-                // onClick={() => {}}
                 className="cursor-pointer text-[20px] mr-2"
                 icon={"heroicons:funnel"}
               />
@@ -46,18 +45,17 @@ const TableUI = ({
       </div>
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden ">
+          <div className="overflow-hidden">
             <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns.map((column, i) => (
-                    <th key={i} scope="col" className=" table-th font-bold">
+                    <th key={i} scope="col" className="table-th font-bold">
                       {column.label}
                     </th>
                   ))}
                 </tr>
               </thead>
-
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                 {loading && (
                   <tr>
@@ -71,90 +69,70 @@ const TableUI = ({
                 {rows.map((row, i) => (
                   <tr
                     key={i}
-                    className=" even:bg-slate-200 dark:even:bg-slate-700"
+                    className="even:bg-slate-200 dark:even:bg-slate-700"
                   >
-                    <td className="table-td">
-                      <img src={row.images[0]} className="w-20 h-16" />
-                    </td>
-                    <td
-                      className="table-td text-primary-default font-bold cursor-pointer"
-                      onClick={() => push(`/properties/view/${row?._id}`)}
-                    >
-                      {row.title}
-                    </td>
                     <td className="table-td ">{row.address}</td>
-                    <td className="table-td ">{row.price}</td>
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
-                    <td className="table-td ">{row.bedrooms}</td>
-                    <td className="table-td ">{row.bathrooms}</td>
+                    <td className="table-td ">{row.owneraddress}</td>
+                    <td className="table-td ">{row.telno}</td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-                        ${
-                          row.property_status === "available"
-                            ? "text-green-600 bg-green-200"
-                            : ""
-                        }
-                        ${
-                          row.property_status === "under contract"
-                            ? "text-yellow-600 bg-yellow-200"
-                            : ""
-                        }
-                        ${
-                          row.property_status === "sold"
-                            ? "text-blue-600 bg-blue-200"
-                            : ""
-                        }
-                        ${
-                          row.property_status === "leased"
-                            ? "text-purple-600 bg-purple-200"
-                            : ""
-                        }
-                        ${
-                          row.property_status === "coming soon"
-                            ? "text-orange-600 bg-orange-200"
-                            : ""
-                        }
-                        ${
-                          row.property_status === "withdrawn"
-                            ? "text-red-600 bg-red-200"
-                            : ""
-                        }
-                      `}
+                          ${
+                            row.property_status === "available"
+                              ? "text-green-600 bg-green-200"
+                              : ""
+                          }
+                          ${
+                            row.property_status === "under contract"
+                              ? "text-yellow-600 bg-yellow-200"
+                              : ""
+                          }
+                          ${
+                            row.property_status === "sold"
+                              ? "text-blue-600 bg-blue-200"
+                              : ""
+                          }
+                          ${
+                            row.property_status === "leased"
+                              ? "text-purple-600 bg-purple-200"
+                              : ""
+                          }
+                          ${
+                            row.property_status === "coming soon"
+                              ? "text-orange-600 bg-orange-200"
+                              : ""
+                          }
+                          ${
+                            row.property_status === "withdrawn"
+                              ? "text-red-600 bg-red-200"
+                              : ""
+                          }
+                        `}
                         >
                           {row.property_status}
                         </span>
                       </span>
                     </td>
-                    <td className="table-td flex justify-center items-center my-auto mt-5">
-                      {row.assigned_to && row.assigned_to.length > 0 ? (
-                        row.assigned_to.map((user) => (
-                          <div
-                            key={user._id}
-                            className="lg:h-8 lg:w-8 h-7 w-7 rounded-full cursor-pointer relative mx-1"
-                            onClick={() =>
-                              (window.location.href = `/sales-team/view/${user._id}`)
-                            } // Redirect to user page
-                          >
-                            <Tooltip placement="top" arrow content={user.name}>
-                              <img
-                                src={"/assets/images/users/user-1.jpg"} // Replace with actual avatar URL if available
-                                alt={user.name}
-                                className="block w-full h-full object-cover rounded-full"
-                              />
-                            </Tooltip>
-                          </div>
-                        ))
+                    <td className="table-td ">
+                      {row.assigned_salesperson ? (
+                        <Tooltip
+                          placement="top"
+                          arrow
+                          content={row.assigned_salesperson}
+                        >
+                          <img
+                            src="/assets/images/users/user-1.jpg" // Replace with actual avatar URL if available
+                            alt={row.assigned_salesperson}
+                            className="block w-full h-full object-cover rounded-full"
+                          />
+                        </Tooltip>
                       ) : (
                         <div className="text-gray-400">--</div>
                       )}
-                      {/* <div className="ml-2 text-gray-400">
-                        <ChevronDown />
-                      </div> */}
                     </td>
-
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
@@ -167,7 +145,6 @@ const TableUI = ({
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
-
                         <Icon
                           onClick={() => handleDelete(row?._id)}
                           className="cursor-pointer text-[20px]"
