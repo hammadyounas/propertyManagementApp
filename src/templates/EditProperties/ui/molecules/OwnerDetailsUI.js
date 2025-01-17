@@ -22,7 +22,7 @@ const OwnerDetailsUI = ({
               label="Owner Name*"
               type="text"
               register={register}
-              error={errors.owners_name}
+              error={errors.owner_name}
               placeholder="Owner Name"
               disabled={loading}
             />
@@ -31,7 +31,7 @@ const OwnerDetailsUI = ({
             <Textinput
               name="phone_number"
               label="Phone Number*"
-              type="text"
+              type="number"
               register={register}
               error={errors.phone_number}
               placeholder="Phone Number"
@@ -52,31 +52,31 @@ const OwnerDetailsUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="owner_address"
-              label="Address*"
+              label="Owner Address*"
               type="text"
               register={register}
-              error={errors.address}
-              placeholder="Address"
+              error={errors.owner_address}
+              placeholder="Owner Address"
               disabled={loading}
             />
           </div>
-          <div className="w-full md:w-[49%]">
+          {/* <div className="w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Status*</div>
-              <ReactSelect
-                name="owner_status"
-                value={ownerDetails}
-                onChange={handleSelectOwnersDetailsStatus}
-                options={ownerDetailsStatus}
-                placeholder="Status"
-                isDisabled={loading}
-                className="text-sm"
-              />
-              {errors?.ownerStatus && (
-                <p className="text-sm text-danger-500 mt-2">
-                  {errors?.ownerStatus?.message}
-                </p>
-              )}
-          </div>
+            <ReactSelect
+              name="owner_status"
+              value={ownerDetails}
+              onChange={handleSelectOwnersDetailsStatus}
+              options={ownerDetailsStatus}
+              placeholder="Status"
+              isDisabled={loading}
+              className="text-sm"
+            />
+            {errors?.ownerStatus && (
+              <p className="text-sm text-danger-500 mt-2">
+                {errors?.ownerStatus?.message}
+              </p>
+            )}
+          </div> */}
         </div>
       </div>
     </div>

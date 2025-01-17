@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
-import { dummyPropertyDetails, rows, documentDataRows, salesperosonDataRows } from "../constants/data";
+import {
+  dummyPropertyDetails,
+  rows,
+  documentDataRows,
+  salesperosonDataRows,
+} from "../constants/data";
 import { useRouter } from "next/router";
-import { getRequest } from "../../../../libs/utils/request_handler";
+import {
+  deleteRequest,
+  getRequest,
+} from "../../../../libs/utils/request_handler";
+import { toast } from "react-toastify";
 
 const usePropertyDetails = () => {
   const [propertyDetails, setPropertyDetails] = useState(null);
@@ -10,7 +19,7 @@ const usePropertyDetails = () => {
 
   const getPropertyDetails = async () => {
     try {
-      const {id} = query;
+      const { id } = query;
       setLoading(true);
       const response = await getRequest(`/properties/${id}`);
       console.log(response);
@@ -20,13 +29,27 @@ const usePropertyDetails = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    if (query.id) { // Ensure `id` is available before calling the function
+    if (query.id) {
+      // Ensure `id` is available before calling the function
       getPropertyDetails();
     }
-  }, [query.id]); 
+  }, [query.id]);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteRequest(`properties/${id}`);
+      toast.success("Property deleted successfully.");
+      push("/properties");
+    } catch (error) {
+      console.error("Error:", error); // Log errors
+      toast.error(
+        error.message || "An error occurred while deleting property."
+      );
+    }
+  };
 
   return {
     loading,
@@ -34,7 +57,8 @@ const usePropertyDetails = () => {
     documentDataRows,
     salesperosonDataRows,
     push,
-    rows
+    rows,
+    handleDelete,
   };
 };
 

@@ -27,7 +27,7 @@ export const propertyStatus = [
     label: "Available",
   },
   {
-    value: "under_contract",
+    value: "under contract",
     label: "Under Contract",
   },
   {
@@ -35,12 +35,20 @@ export const propertyStatus = [
     label: "Leased",
   },
   {
-    value: "coming_soon",
+    value: "coming soon",
     label: "Coming Soon",
   },
   {
     value: "withdrawn",
     label: "Withdrawn",
+  },
+  {
+    value: "sold",
+    label: "Sold",
+  },
+  {
+    value: "expired",
+    label: "Expired",
   },
 ];
 
@@ -55,24 +63,24 @@ export const ownershipStatus = [
   },
 ];
 
-  export const ownerDetailsStatus = [
-    {
-      value: "under_contract",
-      label: "Under Contract",
-    },
-    {
-      value: "available",
-      label: "Available",
-    },
-    {
-      value: "sold",
-      label: "Sold",
-    },
-    {
-      value: "expired",
-      label: "Expired",
-    },
-  ];
+export const ownerDetailsStatus = [
+  {
+    value: "under contract",
+    label: "Under Contract",
+  },
+  {
+    value: "available",
+    label: "Available",
+  },
+  {
+    value: "sold",
+    label: "Sold",
+  },
+  {
+    value: "expired",
+    label: "Expired",
+  },
+];
 
 export const furnishingStatus = [
   {
@@ -80,7 +88,7 @@ export const furnishingStatus = [
     label: "Furnished",
   },
   {
-    value: "semi-furnished",
+    value: "semi furnished",
     label: "Semi Furnished",
   },
   {

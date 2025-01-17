@@ -14,8 +14,16 @@ import Salesperson from "../molecules/SalespersonUIContainer";
 import Location from "../molecules/LocationUIContainer";
 
 const PropertyDetailsPage = () => {
-  const { loading, propertyDetails, push, rows, documentDataRows, salesperosonDataRows } = usePropertyDetails();
-  
+  const {
+    loading,
+    propertyDetails,
+    push,
+    rows,
+    documentDataRows,
+    salesperosonDataRows,
+    handleDelete,
+  } = usePropertyDetails();
+
   return loading ? (
     <Loading />
   ) : (
@@ -60,14 +68,14 @@ const PropertyDetailsPage = () => {
         </div> */}
         <div className="flex justify-center md:justify-end mt-12">
           <Button
-            onClick={() => push("/properties")}
+            onClick={() => push(`/properties/edit/${propertyDetails?._id}`)}
             text={"Edit"}
             className={
               "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
             }
           />
           <Button
-            onClick={() => push("/properties")}
+            onClick={() => handleDelete(propertyDetails?._id)}
             text={"Delete"}
             className={"md:!w-36"}
           />

@@ -10,7 +10,11 @@ import {
   statuses,
 } from "../constants/data";
 import { v4 as uuidv4 } from "uuid";
-import { postRequest, getRequest, patchRequest } from "../../../../libs/utils/request_handler";
+import {
+  postRequest,
+  getRequest,
+  patchRequest,
+} from "../../../../libs/utils/request_handler";
 import toast from "react-hot-toast";
 
 const useMeetings = () => {
@@ -43,6 +47,7 @@ const useMeetings = () => {
 
   const fetchSalespersonAndClientsData = async () => {
     try {
+      setMeetingsLoading(true);
       const response = await getRequest("users");
       const filteredSalespersons = response.data.filter((sp) => !sp.isDeleted);
       const salesPersonsMap = Object.fromEntries(
@@ -51,7 +56,7 @@ const useMeetings = () => {
           { name, contact_number, email },
         ])
       );
-  
+
       const clientsResponse = await getRequest("clients");
       const filteredClients = clientsResponse.data.filter((c) => !c.isDeleted);
       const clientMap = Object.fromEntries(
@@ -60,7 +65,7 @@ const useMeetings = () => {
           { name, phoneNumber, email },
         ])
       );
-  
+
       const meetingsResponse = await getRequest("meetings");
       const filteredMeetings = meetingsResponse.data
         .filter((meeting) => !meeting.isDeleted)
@@ -73,46 +78,49 @@ const useMeetings = () => {
           //   ? meeting.clients.map((id) => clientMap[id])
           //   : clientMap[meeting.clients],
         }));
-  
+
       console.log("Filtered Meetings:", filteredMeetings);
-  
+
       setSalespersons(filteredSalespersons);
       setClients(filteredClients);
       setMeetings(filteredMeetings);
+      setMeetingsLoading(false);
     } catch (error) {
+      setMeetingsLoading(false);
       console.error("Error fetching data:", error);
     }
   };
-    
-  
 
-    useEffect(() => {
-      fetchSalespersonAndClientsData();
-    }, []);
+  useEffect(() => {
+    fetchSalespersonAndClientsData();
+  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       // Prepare data for the API
       const formData = {
-       ...data,
-       salespersons: selectedSalesPersons.map((salesPerson) => salesPerson.value), // Send only the property values
-       clients: selectedClients.map((client) => client.value), // Send only the property values
+        ...data,
+        salespersons: selectedSalesPersons.map(
+          (salesPerson) => salesPerson.value
+        ), // Send only the property values
+        clients: selectedClients.map((client) => client.value), // Send only the property values
       };
 
       if (currentMeetingId) {
         const { _id, ...rest } = formData;
         // API call to update the user
-        const response = await patchRequest(`meetings/${_id}`, rest)
+        const response = await patchRequest(`meetings/${_id}`, rest);
         if (response) {
           toast.success("Meeting updated successfully!");
           console.log(response.data); // Log the API response if needed
           fetchSalespersonAndClientsData();
-          closeModal() // Redirect after successful registration
+          closeModal(); // Redirect after successful registration
         } else {
           toast.error("Meeting update failed");
-          throw new Error("Meeting update failed")}}
-      else {
+          throw new Error("Meeting update failed");
+        }
+      } else {
         // API call to register the user
         const response = await postRequest("meetings", formData);
         console.log(response.code >= 200 && response.data.status <= 300);
@@ -171,12 +179,12 @@ const useMeetings = () => {
   // const [meetings, setMeetings] = useState(null);
   const [meetingsLoading, setMeetingsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      // setMeetings(dummyMeetings);
-      setMeetingsLoading(false);
-    }, 1200);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     // setMeetings(dummyMeetings);
+  //     setMeetingsLoading(false);
+  //   }, 1200);
+  // }, []);
 
   useEffect(() => {
     if (currentMeetingId) {
@@ -186,15 +194,19 @@ const useMeetings = () => {
         if (key == "status") {
           setStatus({ value: current[key], label: current[key] });
         } else if (key == "salespersons") {
-          setSelectedSalespersons(current[key].map((sp) => ({
-            value: sp?._id,
-            label: sp?.name,
-          })));
+          setSelectedSalespersons(
+            current[key].map((sp) => ({
+              value: sp?._id,
+              label: sp?.name,
+            }))
+          );
         } else if (key == "clients") {
-          setSelectedClients(current[key].map((c) => ({
-            value: c?._id,
-            label: c?.name,
-          })));
+          setSelectedClients(
+            current[key].map((c) => ({
+              value: c?._id,
+              label: c?.name,
+            }))
+          );
         } else if (key == "start_time") {
           setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
         } else if (key == "end_time") {

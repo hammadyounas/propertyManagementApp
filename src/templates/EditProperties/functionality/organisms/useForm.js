@@ -8,7 +8,7 @@ import {
   propertyStatus,
   propertyTypes,
   // salesPerson,
-  ownerDetailsStatus
+  ownerDetailsStatus,
 } from "../constants/data";
 import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
@@ -23,6 +23,76 @@ import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
 import { getAllUsersByName } from "../../../../libs/api/users";
 
 const useCreateForm = () => {
+  const schema = yup.object({
+    title: yup.string().required("Property Title is required"),
+    description: yup.string().required("Property Description is required"),
+    type: yup.string().required("Property Type is required"),
+    status: yup.string().required("Property Status is required"),
+    ownership_status: yup.string().required("Ownership Status is required"),
+    no_of_units: yup
+      .number()
+      .required("Number of Units is required")
+      .moreThan(0, "Number of Units must be greater than 0"),
+    furnishing_status: yup.string().required("Furnishing Status is required"),
+    address: yup.string().required("Address is required"),
+    owner_name: yup.string().required("Owner Name is required"),
+    phone_number: yup.string().required("Phone Number is required"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Email must be a valid email"),
+    owner_address: yup.string().required("Owner Address is required"),
+    street_number: yup.string().required("Street Number is required"),
+    street_name: yup.string().required("Street Name is required"),
+    cadstre_number: yup.string().required("Cadstre Number is required"),
+    city: yup.string().required("City is required"),
+    area: yup.string().required("Area is required"),
+    neighborhood: yup.string().required("Neighborhood is required"),
+    price: yup
+      .number()
+      .required("Price is required")
+      .moreThan(0, "Price must be greater than 0"),
+    size: yup
+      .number()
+      .required("Size is required")
+      .moreThan(0, "Size must be greater than 0"),
+    bedrooms: yup
+      .number()
+      .required("Bedrooms are required")
+      .moreThan(0, "There must be at least 1 bedroom"),
+    bathrooms: yup
+      .number()
+      .required("Bathrooms are required")
+      .moreThan(0, "There must be at least 1 bathroom"),
+    assigned_to: yup
+      .array()
+      .min(1, "At least one salesperson must be selected")
+      .required("Salesperson is required"),
+    images: yup
+      .array()
+      .min(1, "At least one image must be uploaded")
+      .required("Images are required"),
+    location_map_url: yup
+      .string()
+      .notRequired() // Make it optional
+      .test(
+        "is-valid-url",
+        "Location Map URL must be a valid Google Maps iframe URL",
+        (value) =>
+          !value ||
+          /<iframe\s+src="https:\/\/www\.google\.com\/maps\/embed\?pb=[^"]*"/.test(
+            value
+          )
+      ),
+
+    // .notRequired(),
+    // documents: yup
+    //   .array()
+    //   .min(1, "At least one document must be uploaded")
+    //   .required("Documents are required"),
+    // assigned_to: yup.string().required("Assignee is required"),
+    // client: yup.string().required("Client is required"),
+  });
 
   const {
     register,
@@ -31,7 +101,21 @@ const useCreateForm = () => {
     control,
     getValues,
     setValue,
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "all",
+    defaultValues: {
+      assigned_to: "",
+      client: "",
+      price: "1000000",
+      size: "100",
+      bedrooms: "1",
+      bathrooms: "1",
+      no_of_units: "1",
+      location_map_url: "",
+      // ownerDetailsStatus: ""
+    },
+  });
 
   const [amenities, setAmenities] = useState([]);
   const [selectedSalespersons, setSelectedSalespersons] = useState([]);
@@ -39,7 +123,7 @@ const useCreateForm = () => {
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
   const [salesPerson, setSalesPerson] = useState([]);
-  const [ownerDetails, setOwnerDetails] = useState('');
+  const [ownerDetails, setOwnerDetails] = useState("");
 
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -65,10 +149,12 @@ const useCreateForm = () => {
     }
   };
 
-  const fetchSalesPerson =  async () => {
+  const fetchSalesPerson = async () => {
     try {
       const response = await getRequest("users");
-      const filteredResponse = response.data.filter((salesPerson) => !salesPerson.isDeleted);
+      const filteredResponse = response.data.filter(
+        (salesPerson) => !salesPerson.isDeleted
+      );
       setSalesPerson(filteredResponse);
     } catch (error) {
       console.error("Error:", error); // Log errors
@@ -80,7 +166,7 @@ const useCreateForm = () => {
     return files?.map((file, index) => {
       let fileURL = null;
       let fileName = "";
-  
+
       if (type === "image") {
         if (typeof file === "string") {
           // Handle Base64 string
@@ -96,7 +182,7 @@ const useCreateForm = () => {
           fileName = file.name; // Use file's name
         }
       }
-  
+
       return (
         <div
           key={index}
@@ -134,14 +220,20 @@ const useCreateForm = () => {
   const fetchPropertyData = async () => {
     try {
       const response = await getRequest(`properties/${propertyId}`);
-  
+
       if (response) {
         const propertyData = response.data;
-  
-         // Pass only the assigned_to array to getAllUsersByName
-      const salespersonDetails = await getAllUsersByName(propertyData.assigned_to);
 
-      console.log("salespersonDetails", salespersonDetails);
+        //    // Pass only the assigned_to array to getAllUsersByName
+        // const salespersonDetails = await getAllUsersByName(propertyData.assigned_to);
+
+        // console.log("salespersonDetails", salespersonDetails);
+
+        const salespersonDetails =
+          propertyData?.assigned_to?.map((person) => ({
+            label: person.name,
+            value: person._id,
+          })) || [];
 
         // Form fields to be set
         const formFields = {
@@ -155,7 +247,7 @@ const useCreateForm = () => {
           address: propertyData.address,
           street_number: propertyData.street_number,
           street_name: propertyData.street_name,
-          cadastre_number: propertyData.cadastre_number,
+          cadstre_number: propertyData.cadstre_number,
           city: propertyData.city,
           area: propertyData.area,
           neighborhood: propertyData.neighborhood,
@@ -170,20 +262,47 @@ const useCreateForm = () => {
           email: propertyData.email,
           owner_address: propertyData.owner_address,
           assigned_to: salespersonDetails, // Set names instead of IDs
+          images: propertyData.images || [],
         };
-  
+
         // Set values using the corresponding state setters
-        setType(propertyTypes.find((item) => item.value === propertyData.property_type) || '');
-        setStatus(propertyStatus.find((item) => item.value === propertyData.property_status) || '');
-        setOwnership(ownershipStatus.find((item) => item.value === propertyData.ownership_status) || '');
-        setFurnishing(furnishingStatus.find((item) => item.value === propertyData.furnishing_status) || '');
+        setType(
+          propertyTypes.find(
+            (item) => item.value === propertyData.property_type
+          ) || ""
+        );
+        setStatus(
+          propertyStatus.find(
+            (item) => item.value === propertyData.property_status
+          ) || ""
+        );
+        setOwnership(
+          ownershipStatus.find(
+            (item) => item.value === propertyData.ownership_status
+          ) || ""
+        );
+        setFurnishing(
+          furnishingStatus.find(
+            (item) => item.value === propertyData.furnishing_status
+          ) || ""
+        );
         setSelectedSalespersons(salespersonDetails); // Correctly formatted for ReactSelect
-        setAmenities(availableFacilities.filter((channel) => propertyData.amenities.includes(channel.value))); // Assuming amenities is being set from a predefined list
-        setOwnerDetails(ownerDetailsStatus.find((item) => item.value === propertyData.owner_status) || null);
-  
+        setAmenities(
+          availableFacilities.filter((channel) =>
+            propertyData.amenities.includes(channel.value)
+          )
+        ); // Assuming amenities is being set from a predefined list
+        setOwnerDetails(
+          ownerDetailsStatus.find(
+            (item) => item.value === propertyData.owner_status
+          ) || null
+        );
+
         // Set form values in a loop
-        Object.entries(formFields).forEach(([key, value]) => setValue(key, value || ""));
-  
+        Object.entries(formFields).forEach(([key, value]) =>
+          setValue(key, value || "")
+        );
+
         // Set additional states for images and documents
         setSelectedImages(propertyData.images || []);
         setSelectedDocs(propertyData.documents || []);
@@ -192,13 +311,37 @@ const useCreateForm = () => {
       console.error("Failed to fetch property data:", error);
     }
   };
-  
-  
+
   useEffect(() => {
     fetchSalesPerson();
     fetchPropertyData();
+  }, [propertyId, setValue]);
 
-  }, [propertyId, setValue])
+  // Sync external state with form values using setValue
+  useEffect(() => {
+    setValue("amenities", amenities);
+    setValue("images", selectedImages);
+    setValue("documents", selectedDocs);
+    setValue("type", type?.value);
+    setValue("status", status?.value);
+    setValue("ownership_status", ownership?.value || "");
+    setValue("ownerStatus", ownerDetailsStatus?.value || "");
+    setValue("furnishing_status", furnishing?.value || "");
+    setValue("assigned_to", selectedSalespersons);
+    setValue("client", selectedClient?.value || "");
+  }, [
+    amenities,
+    selectedImages,
+    selectedDocs,
+    type,
+    status,
+    ownership,
+    furnishing,
+    selectedSalespersons,
+    selectedClient,
+    setValue,
+    ownerDetails,
+  ]);
 
   // Helper function to validate file types
   const validateFileType = (file, type) => {
@@ -220,43 +363,41 @@ const useCreateForm = () => {
   const handleImagesChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
-  
+
     const validImages = Array.from(files).filter((file) =>
       validateFileType(file, "image")
     );
-  
+
     if (validImages.length !== files.length) {
       return toast.error(
         "Some files are not valid images. Please upload JPG, PNG, or GIF files."
       );
     }
-  
+
     setSelectedImages((prevImages) => [...prevImages, ...validImages]);
     e.target.value = null;
   };
-  
+
   const handleDocsChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
-  
+
     const validDocs = Array.from(files).filter((file) =>
       validateFileType(file, "doc")
     );
-  
+
     if (validDocs.length !== files.length) {
       return toast.error(
         "Some files are not valid documents. Please upload PDF, DOC, or DOCX files."
       );
     }
-  
+
     setSelectedDocs((prevDocs) => [...prevDocs, ...validDocs]);
     e.target.value = null;
   };
-  
+
   // Log the selected images and docs whenever they change
-  useEffect(() => {
-  }, [selectedImages, selectedDocs]);
-  
+  useEffect(() => {}, [selectedImages, selectedDocs]);
 
   const handleFileRemove = (indexToRemove, type) => {
     if (type == "image") {
@@ -299,16 +440,25 @@ const useCreateForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-  
+
     try {
       const formData = new FormData();
-  
+
       // Check if 'type' or other fields have values, otherwise default to empty strings
       formData.append("property_type", type && type.value ? type.value : "");
-      formData.append("furnishing_status", furnishing && furnishing.value ? furnishing.value : "");
-      formData.append("property_status", status && status.value ? status.value : "");
-      formData.append("owner_status", ownerDetails && ownerDetails.value ? ownerDetails.value : "");
-  
+      formData.append(
+        "furnishing_status",
+        furnishing && furnishing.value ? furnishing.value : ""
+      );
+      formData.append(
+        "property_status",
+        status && status.value ? status.value : ""
+      );
+      formData.append(
+        "owner_status",
+        ownerDetails && ownerDetails.value ? ownerDetails.value : ""
+      );
+
       // Append other text fields
       formData.append("title", data.title);
       formData.append("ownership_status", data.ownership_status);
@@ -330,36 +480,40 @@ const useCreateForm = () => {
       formData.append("phone_number", data.phone_number);
       formData.append("email", data.email);
       formData.append("owner_address", data.owner_address);
-  
+
       // Append amenities and assigned_to arrays
       if (amenities) {
-        amenities.filter((amenity) => amenity && amenity.value).forEach((amenity) => {
-          formData.append("amenities", amenity.value);
-        });
+        amenities
+          .filter((amenity) => amenity && amenity.value)
+          .forEach((amenity) => {
+            formData.append("amenities", amenity.value);
+          });
       }
-  
+
       if (selectedSalespersons) {
-        selectedSalespersons.filter((salesperson) => salesperson && salesperson.value).forEach((salesperson) => {
-          formData.append("assigned_to", salesperson.value);
-        });
+        selectedSalespersons
+          .filter((salesperson) => salesperson && salesperson.value)
+          .forEach((salesperson) => {
+            formData.append("assigned_to", salesperson.value);
+          });
       }
-  
+
       // Append selected images
       selectedImages.forEach((image) => {
         formData.append("images", image);
-        console.log("Image:", image); 
+        console.log("Image:", image);
       });
-  
+
       // Append selected documents
       selectedDocs.forEach((doc) => {
         formData.append("documents", doc);
-        console.log("Doc:", doc); 
+        console.log("Doc:", doc);
       });
 
       for (const pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
       }
-  
+
       // Make PUT request with FormData
       const response = await patchRequest(
         `properties/${propertyId}`,
@@ -370,7 +524,7 @@ const useCreateForm = () => {
           },
         }
       );
-  
+
       if (response) {
         console.log("Response:", response);
         toast.success("Property updated successfully!");
@@ -385,10 +539,6 @@ const useCreateForm = () => {
       setLoading(false);
     }
   };
-  
-  
-     
-
 
   return {
     register,

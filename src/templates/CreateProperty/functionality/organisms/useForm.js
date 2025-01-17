@@ -8,14 +8,17 @@ import {
   propertyStatus,
   propertyTypes,
   // salesPerson,
-  ownerDetailsStatus
+  ownerDetailsStatus,
 } from "../constants/data";
 import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { File } from "lucide-react";
-import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
+import {
+  getRequest,
+  postRequest,
+} from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -24,8 +27,22 @@ const useCreateForm = () => {
     type: yup.string().required("Property Type is required"),
     status: yup.string().required("Property Status is required"),
     ownership_status: yup.string().required("Ownership Status is required"),
+    no_of_units: yup
+      .number()
+      .required("Number of Units is required")
+      .moreThan(0, "Number of Units must be greater than 0"),
     furnishing_status: yup.string().required("Furnishing Status is required"),
     address: yup.string().required("Address is required"),
+    owner_name: yup.string().required("Owner Name is required"),
+    phone_number: yup.string().required("Phone Number is required"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Email must be a valid email"),
+    owner_address: yup.string().required("Owner Address is required"),
+    street_number: yup.string().required("Street Number is required"),
+    street_name: yup.string().required("Street Name is required"),
+    cadstre_number: yup.string().required("Cadstre Number is required"),
     city: yup.string().required("City is required"),
     area: yup.string().required("Area is required"),
     neighborhood: yup.string().required("Neighborhood is required"),
@@ -53,6 +70,20 @@ const useCreateForm = () => {
       .array()
       .min(1, "At least one image must be uploaded")
       .required("Images are required"),
+    location_map_url: yup
+      .string()
+      .notRequired() // Make it optional
+      .test(
+        "is-valid-url",
+        "Location Map URL must be a valid Google Maps iframe URL",
+        (value) =>
+          !value ||
+          /<iframe\s+src="https:\/\/www\.google\.com\/maps\/embed\?pb=[^"]*"/.test(
+            value
+          )
+      ),
+
+    // .notRequired(),
     // documents: yup
     //   .array()
     //   .min(1, "At least one document must be uploaded")
@@ -69,7 +100,7 @@ const useCreateForm = () => {
     getValues,
     setValue,
   } = useForm({
-    // resolver: yupResolver(schema),
+    resolver: yupResolver(schema),
     mode: "all",
     defaultValues: {
       assigned_to: "",
@@ -78,6 +109,8 @@ const useCreateForm = () => {
       size: "100",
       bedrooms: "1",
       bathrooms: "1",
+      no_of_units: "1",
+      location_map_url: "",
       // ownerDetailsStatus: ""
     },
   });
@@ -87,8 +120,10 @@ const useCreateForm = () => {
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
-  const [ownerDetails, setOwnerDetails] = useState(ownerDetailsStatus[0] || null);
-  const [salesPerson, setSalesPerson] = useState([])
+  const [ownerDetails, setOwnerDetails] = useState(
+    ownerDetailsStatus[0] || null
+  );
+  const [salesPerson, setSalesPerson] = useState([]);
 
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -112,10 +147,12 @@ const useCreateForm = () => {
     }
   };
 
-  const fetchSalesPerson =  async () => {
+  const fetchSalesPerson = async () => {
     try {
       const response = await getRequest("users");
-      const filteredResponse = response.data.filter((salesPerson) => !salesPerson.isDeleted);
+      const filteredResponse = response.data.filter(
+        (salesPerson) => !salesPerson.isDeleted
+      );
       console.log(filteredResponse);
       setSalesPerson(filteredResponse);
     } catch (error) {
@@ -167,11 +204,10 @@ const useCreateForm = () => {
     setValue("type", type?.value);
     setValue("status", status?.value);
     setValue("ownership_status", ownership?.value || "");
-    setValue("ownerStatus" , ownerDetailsStatus?.value || "");
+    setValue("ownerStatus", ownerDetailsStatus?.value || "");
     setValue("furnishing_status", furnishing?.value || "");
     setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
-    fetchSalesPerson();
   }, [
     amenities,
     selectedImages,
@@ -185,6 +221,10 @@ const useCreateForm = () => {
     setValue,
     ownerDetails,
   ]);
+
+  useEffect(() => {
+    fetchSalesPerson();
+  }, []);
 
   // Helper function to validate file types
   const validateFileType = (file, type) => {
@@ -206,48 +246,38 @@ const useCreateForm = () => {
   const handleImagesChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
-  
+
     const validImages = Array.from(files).filter((file) =>
       validateFileType(file, "image")
     );
-  
+
     if (validImages.length !== files.length) {
       return toast.error(
         "Some files are not valid images. Please upload JPG, PNG, or GIF files."
       );
     }
-  
+
     setSelectedImages((prevImages) => [...prevImages, ...validImages]);
     e.target.value = null;
   };
-  
+
   const handleDocsChange = (e) => {
     const files = e.target.files;
     if (files.length == 0) return;
-  
+
     const validDocs = Array.from(files).filter((file) =>
       validateFileType(file, "doc")
     );
-  
+
     if (validDocs.length !== files.length) {
       return toast.error(
         "Some files are not valid documents. Please upload PDF, DOC, or DOCX files."
       );
     }
-  
+
     setSelectedDocs((prevDocs) => [...prevDocs, ...validDocs]);
     e.target.value = null;
   };
-  
-  // Log the selected images and docs whenever they change
-  useEffect(() => {
-    console.log("Selected Images", selectedImages); // Logs when selectedImages state changes
-  }, [selectedImages]);
-  
-  useEffect(() => {
-    console.log("Selected Docs", selectedDocs); // Logs when selectedDocs state changes
-  }, [selectedDocs]);
-  
 
   const handleFileRemove = (indexToRemove, type) => {
     if (type == "image") {
@@ -311,7 +341,7 @@ const useCreateForm = () => {
       formData.append("area", data.area);
       formData.append("neighborhood", data.neighborhood);
       formData.append("location_map_url", data.location_map_url);
-      formData.append("owner_status", data.ownerDetailsStatus);
+      // formData.append("owner_status", data.ownerDetailsStatus);
       formData.append("price", data.price);
       formData.append("size", data.size);
       formData.append("bedrooms", data.bedrooms);
@@ -368,7 +398,6 @@ const useCreateForm = () => {
       setLoading(false);
     }
   };
-
 
   return {
     register,

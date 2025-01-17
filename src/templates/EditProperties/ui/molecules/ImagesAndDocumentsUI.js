@@ -18,7 +18,7 @@ const ImagesAndDocumentsUI = ({
 }) => {
   return (
     <div className="mt-8">
-      <h6>Images & Documents</h6>
+      <h6>Images</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
@@ -50,7 +50,7 @@ const ImagesAndDocumentsUI = ({
               </p>
             )}
           </div>
-          <div className="w-full mt-8">
+          {/* <div className="w-full mt-8">
             <h6 className="text-sm font-semibold mb-4">
               Documents (Optional - pdf, doc, or docx format supported)
             </h6>
@@ -73,7 +73,7 @@ const ImagesAndDocumentsUI = ({
                 <p className="font-bold mt-2">Documents</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -74,8 +74,10 @@ const TableUI = ({
                     <td className="table-td ">{row.address}</td>
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
-                    <td className="table-td ">{row.owneraddress}</td>
-                    <td className="table-td ">{row.telno}</td>
+                    <td className="table-td ">
+                      {row.owner_name}, {row.owner_address}
+                    </td>
+                    <td className="table-td ">{row.phone_number}</td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span
@@ -117,18 +119,21 @@ const TableUI = ({
                       </span>
                     </td>
                     <td className="table-td ">
-                      {row.assigned_salesperson ? (
-                        <Tooltip
-                          placement="top"
-                          arrow
-                          content={row.assigned_salesperson}
-                        >
-                          <img
-                            src="/assets/images/users/user-1.jpg" // Replace with actual avatar URL if available
-                            alt={row.assigned_salesperson}
-                            className="block w-full h-full object-cover rounded-full"
-                          />
-                        </Tooltip>
+                      {row.assigned_to && row.assigned_to.length > 0 ? (
+                        row.assigned_to.map((salesperson, index) => (
+                          <Tooltip
+                            key={index}
+                            placement="top"
+                            arrow
+                            content={salesperson?.name}
+                          >
+                            <img
+                              src="/assets/images/users/user-1.jpg" // Replace with actual avatar URL if available
+                              alt={salesperson.name}
+                              className="block w-8 h-8 object-cover rounded-full"
+                            />
+                          </Tooltip>
+                        ))
                       ) : (
                         <div className="text-gray-400">--</div>
                       )}
