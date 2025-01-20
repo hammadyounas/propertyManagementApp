@@ -90,8 +90,8 @@ const AddAndUpdateMeetingModalContentUI = ({
                   placeholder="Location Status"
                   disabled={loading}
                   radioOptions={[
-                    { label: "Online", value: "Online" },
-                    { label: "Onsite", value: "Onsite" },
+                    { label: "Online", value: "online" },
+                    { label: "Onsite", value: "onsite" },
                   ]}
                   className="text-sm"
                 />

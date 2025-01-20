@@ -47,7 +47,6 @@ const useMeetings = () => {
 
   const fetchSalespersonAndClientsData = async () => {
     try {
-      setMeetingsLoading(true);
       const response = await getRequest("users");
       const filteredSalespersons = response.data.filter((sp) => !sp.isDeleted);
       const salesPersonsMap = Object.fromEntries(
@@ -65,28 +64,9 @@ const useMeetings = () => {
           { name, phoneNumber, email },
         ])
       );
-
-      const meetingsResponse = await getRequest("meetings");
-      const filteredMeetings = meetingsResponse.data
-        .filter((meeting) => !meeting.isDeleted)
-        .map((meeting) => ({
-          ...meeting,
-          // salespersons: Array.isArray(meeting.salespersons)
-          //   ? meeting.salespersons.map((id) => salesPersonsMap[id])
-          //   : salesPersonsMap[meeting.salespersons],
-          // clients: Array.isArray(meeting.clients)
-          //   ? meeting.clients.map((id) => clientMap[id])
-          //   : clientMap[meeting.clients],
-        }));
-
-      console.log("Filtered Meetings:", filteredMeetings);
-
       setSalespersons(filteredSalespersons);
       setClients(filteredClients);
-      setMeetings(filteredMeetings);
-      setMeetingsLoading(false);
     } catch (error) {
-      setMeetingsLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -114,7 +94,7 @@ const useMeetings = () => {
         if (response) {
           toast.success("Meeting updated successfully!");
           console.log(response.data); // Log the API response if needed
-          fetchSalespersonAndClientsData();
+          fetchMeetings()
           closeModal(); // Redirect after successful registration
         } else {
           toast.error("Meeting update failed");
@@ -127,7 +107,7 @@ const useMeetings = () => {
         if (response) {
           toast.success("Meeting created successfully!");
           console.log(response.data); // Log the API response if needed
-          fetchSalespersonAndClientsData();
+          fetchMeetings()
           closeModal(); // Redirect after successful registration
         } else {
           toast.error("Meeting created failed");
@@ -175,9 +155,29 @@ const useMeetings = () => {
   const [currentMeeting, setCurrentMeeting] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  
 
   // const [meetings, setMeetings] = useState(null);
   const [meetingsLoading, setMeetingsLoading] = useState(true);
+
+    useEffect(() => {
+      fetchMeetings();
+    }, []);
+
+    const fetchMeetings = async () => {
+      try {
+        setMeetingsLoading(true);
+        const response = await getRequest(`meetings`);
+        const filteredMeetings = response.data.filter(
+          (meeting) => !meeting.isDeleted
+        );
+        setMeetings(filteredMeetings);
+        setMeetingsLoading(false);
+      } catch (error) {
+        setMeetingsLoading(false);
+        console.error("Error fetching data:", error);
+      }
+    };
 
   // useEffect(() => {
   //   setTimeout(() => {

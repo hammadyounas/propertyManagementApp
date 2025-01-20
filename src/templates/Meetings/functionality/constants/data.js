@@ -2,23 +2,23 @@ import moment from "moment";
 
 export const statuses = [
   {
-    value: "Pending",
+    value: "pending",
     label: "Pending",
   },
   {
-    value: "Scheduled",
+    value: "scheduled",
     label: "Scheduled",
   },
   {
-    value: "Completed",
+    value: "completed",
     label: "Completed",
   },
   {
-    value: "Cancelled",
+    value: "cancelled",
     label: "Cancelled",
   },
   {
-    value: "Rescheduled",
+    value: "rescheduled",
     label: "Rescheduled",
   },
 ];
