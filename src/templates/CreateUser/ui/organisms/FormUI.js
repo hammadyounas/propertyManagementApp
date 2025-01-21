@@ -92,9 +92,9 @@ const FormUI = ({
                   placeholder="Licence"
                   disabled={loading}
                   radioOptions={[
-                    { label: "Residential", value: "Residential" },
-                    { label: "Commercial", value: "Commercial" },
-                    { label: "Director", value: "Director" },
+                    { label: "Residential", value: "residential" },
+                    { label: "Commercial", value: "commercial" },
+                    { label: "Director", value: "director" },
                   ]}
                   className="text-sm"
                 />

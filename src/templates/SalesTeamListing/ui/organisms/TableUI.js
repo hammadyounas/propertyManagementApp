@@ -74,9 +74,9 @@ const TableUI = ({
                         </span>
                       </div>
                     </td>
-                    <td className="table-td ">{row.phone}</td>
+                    <td className="table-td ">{row.contact_number}</td>
                     <td className="table-td ">{row.email}</td>
-                    <td className="table-td ">{row.license}</td>
+                    <td className="table-td ">{row.licence_number}</td>
                     <td className="table-td ">{row.joining_date}</td>
                     {/* <td className="table-td ">
                       <span className="block w-full">

@@ -121,7 +121,7 @@ const useCreateForm = () => {
       };
   
       // API call to register the user
-      const response = postRequest('register', formData)
+      const response = await postRequest('register', formData)
       console.log(response.code >= 200 && response.data.status <= 300);
       if (response) {
         toast.success("User registered successfully!");
@@ -133,7 +133,7 @@ const useCreateForm = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error(error.message || "An error occurred while registering.");
+      toast.error(error?.response?.data?.message || error?.message || "An error occurred while registering.");
     } finally {
       setLoading(false); // Ensure loading state is turned off regardless of success or error
     }

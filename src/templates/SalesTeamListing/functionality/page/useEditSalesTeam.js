@@ -144,7 +144,7 @@ const useEditSalesTeam = () => {
       }
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error(error.message || "An error occurred.");
+      toast.error(error?.response?.data?.message ||  error?.message || "An error occurred.");
     } finally {
       setLoading(false);
     }
