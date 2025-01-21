@@ -44,6 +44,7 @@ const useMeetings = () => {
   const [salespersons, setSalespersons] = useState();
   const [clients, setClients] = useState();
   const [meetings, setMeetings] = useState([]);
+  const [error, setError] = useState(null);
 
   const fetchSalespersonAndClientsData = async () => {
     try {
@@ -76,6 +77,7 @@ const useMeetings = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    setError(null);
     setLoading(true);
     try {
       // Prepare data for the API
@@ -116,7 +118,8 @@ const useMeetings = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error(error.message || "An error occurred while meeting creation.");
+      setError(error?.response?.data?.message || 'Something went wrong');
+      // toast.error(error.message || "An error occurred while meeting creation.");
     } finally {
       setLoading(false); // Ensure loading state is turned off regardless of success or error
     }
@@ -145,8 +148,8 @@ const useMeetings = () => {
   // };
 
   const [starAndEndDate, setStarAndEndDate] = useState({
-    startDate: moment(new Date()).startOf("month").valueOf(),
-    endDate: moment(new Date()).endOf("month").valueOf(),
+    startDate: moment(new Date()).startOf("month").format("YYYY-MM-DD"),
+    endDate: moment(new Date()).endOf("month").format("YYYY-MM-DD"),
   });
   const [status, setStatus] = useState("");
   const [selectedSalesPersons, setSelectedSalespersons] = useState([]);
@@ -162,12 +165,12 @@ const useMeetings = () => {
 
     useEffect(() => {
       fetchMeetings();
-    }, []);
+    }, [starAndEndDate]);
 
     const fetchMeetings = async () => {
       try {
         setMeetingsLoading(true);
-        const response = await getRequest(`meetings`);
+        const response = await getRequest(`meetings?startDate=${starAndEndDate.startDate}`)
         const filteredMeetings = response.data.filter(
           (meeting) => !meeting.isDeleted
         );
@@ -307,6 +310,7 @@ const useMeetings = () => {
     loading,
     meetings,
     meetingsLoading,
+    error,
   };
 };
 

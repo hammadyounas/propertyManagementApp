@@ -22,6 +22,7 @@ const AddAndUpdateMeetingModalContentUI = ({
   closeModal,
   loading,
   currentMeetingId,
+  error
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -178,6 +179,9 @@ const AddAndUpdateMeetingModalContentUI = ({
           </div>
         </div>
       </div>
+      {error && (
+        <p className="text-danger-500 text-sm mt-2 text-center">{error}</p>
+      )}
       <div className="flex justify-center md:justify-end mt-12">
         <Button
           text={"Discard"}

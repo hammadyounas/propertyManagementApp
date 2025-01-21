@@ -53,8 +53,8 @@ const useCalendar = ({
     endOfMonth.setMonth(endOfMonth.getMonth() + 1);
     endOfMonth.setDate(0);
     setStarAndEndDate({
-      startDate: moment(startOfMonth).valueOf(),
-      endDate: moment(endOfMonth).valueOf(),
+      startDate: moment(startOfMonth).format("YYYY-MM-DD"),
+      endDate: moment(endOfMonth).format("YYYY-MM-DD"),
     });
     setCurrentMeeting(null);
     setCurrentMeetingId(null);
