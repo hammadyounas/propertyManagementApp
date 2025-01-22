@@ -51,7 +51,7 @@ const useClients = () => {
       }
     } catch (error) {
       console.error('Error deleting client:', error);
-      toast.error("Error deleting client!");
+      toast.error(error?.response?.data?.message || error?.message || "Error deleting client!");
     }
   }
 

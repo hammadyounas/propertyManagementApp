@@ -10,7 +10,10 @@ import {
   preferredCommunicationChannels,
   // salesPersons,
 } from "../constants/data";
-import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
+import {
+  getRequest,
+  postRequest,
+} from "../../../../libs/utils/request_handler";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -20,7 +23,9 @@ const useCreateForm = () => {
     address: yup.string().required("Address is required"),
     status: yup.string().required("Client Status is required"),
     type: yup.string().required("Client Type is required"),
-    preferredCommunicationChannel: yup.array().required("Communication Channel is required"),
+    preferredCommunicationChannel: yup
+      .array()
+      .required("Communication Channel is required"),
   });
 
   const {
@@ -32,12 +37,22 @@ const useCreateForm = () => {
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
-    // mode: "all",
+    mode: "all",
+    defaultValues: {
+      type: "buyer",
+      status: "active",
+    },
   });
 
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("");
-  const [clientType, setClientType] = useState("");
+  const [status, setStatus] = useState({
+    value: "active",
+    label: "Active",
+  });
+  const [clientType, setClientType] = useState({
+    value: "buyer",
+    label: "Buyer",
+  });
   const [salesPersonAssigned, setSalespersonAssigned] = useState([]);
   const [communicationChannels, setCommunicationChannels] = useState([]);
   const [salesPersons, setSalesPersons] = useState([]);
@@ -45,18 +60,18 @@ const useCreateForm = () => {
 
   const fetchSalesPersons = async () => {
     try {
-        const response = await getRequest("users");
-        if (response) {
-            const salesPersonsData = response.data.map((salesPerson) => ({
-                value: salesPerson._id,
-                label: salesPerson.name,
-            }));
-            setSalesPersons(salesPersonsData);
-        }
+      const response = await getRequest("users");
+      if (response) {
+        const salesPersonsData = response.data.map((salesPerson) => ({
+          value: salesPerson._id,
+          label: salesPerson.name,
+        }));
+        setSalesPersons(salesPersonsData);
+      }
     } catch (error) {
-        console.error("Failed to fetch sales persons.");
+      console.error("Failed to fetch sales persons.");
     }
-};
+  };
 
   useEffect(() => {
     setValue("assigned_salesperson", salesPersonAssigned);
@@ -96,29 +111,31 @@ const useCreateForm = () => {
         preferredCommunicationChannel: communicationChannels.map(
           (channel) => channel.value
         ),
-        assignedSalesperson: salesPersonAssigned.map((salesPerson) => salesPerson.value),
+        assignedSalesperson: salesPersonAssigned.map(
+          (salesPerson) => salesPerson.value
+        ),
         notes: data.notes,
       };
-  
-      // API call to register the user
+
       const response = await postRequest("clients", formData);
-      console.log("API Response:", response); // Debug API response
-  
       if (response) {
-        toast.success("Client registered successfully!");
-        push("/clients"); // Redirect after successful registration
+        toast.success("Client created successfully!");
+        push("/clients");
       } else {
-        toast.error("Registration failed");
-        throw new Error("Registration failed");
+        toast.error("Client creation failed");
+        throw new Error("Client creation failed");
       }
     } catch (error) {
-      console.error("Error:", error); // Log errors
-      toast.error(error.message || "An error occurred while registering.");
+      console.error("Error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          "An error occurred while creating client."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return {
     register,

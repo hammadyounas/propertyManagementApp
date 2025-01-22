@@ -26,11 +26,11 @@ export const clientStatus = [
   
   export const preferredCommunicationChannels = [
     {
-      value: "Email",
+      value: "email",
       label: "Email",
     },
     {
-      value: "Whatsapp",
+      value: "whatsapp",
       label: "Whatsapp",
     },
   ];
