@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteRequest, getRequest } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
+import { rows } from "../constants/data";
 
 const useProperty = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -59,8 +60,8 @@ const useProperty = () => {
   
 
   useEffect(() => {
-    fetchProperties();
-    // setProperties(rows);
+    // fetchProperties();
+    setProperties(rows);
   }, []);
 
   // Calculate the paginated properties

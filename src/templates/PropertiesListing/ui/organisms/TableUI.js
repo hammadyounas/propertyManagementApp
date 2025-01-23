@@ -75,35 +75,39 @@ const TableUI = ({
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
                     <td className="table-td ">
-                      {row.owner_name}, {row.owner_address}
+                      {/* {row.owner_name}, {row.owner_address} */}
+                      {row.owneraddress}
                     </td>
-                    <td className="table-td ">{row.phone_number}</td>
+                    <td className="table-td ">
+                      {row.phone_number || row.telno}
+                    </td>
                     <td className="table-td ">
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
-                            row.property_status === "available"
+                            row.property_status || row.status === "available"
                               ? "text-green-600 bg-green-200"
                               : ""
                           }
                           ${
-                            row.property_status === "under contract"
+                            row.property_status ||
+                            row.status === "under contract"
                               ? "text-yellow-600 bg-yellow-200"
                               : ""
                           }
                           ${
-                            row.property_status === "sold"
+                            row.property_status || row.status === "sold"
                               ? "text-blue-600 bg-blue-200"
                               : ""
                           }
                           ${
-                            row.property_status === "leased"
+                            row.property_status || row.status === "leased"
                               ? "text-purple-600 bg-purple-200"
                               : ""
                           }
                           ${
-                            row.property_status === "coming soon"
+                            row.property_status || row.status === "coming soon"
                               ? "text-orange-600 bg-orange-200"
                               : ""
                           }
@@ -114,12 +118,12 @@ const TableUI = ({
                           }
                         `}
                         >
-                          {row.property_status}
+                          {row.property_status || row.status}
                         </span>
                       </span>
                     </td>
                     <td className="table-td ">
-                      {row.assigned_to && row.assigned_to.length > 0 ? (
+                      {/* {row.assigned_to && row.assigned_to.length > 0 ? (
                         row.assigned_to.map((salesperson, index) => (
                           <Tooltip
                             key={index}
@@ -136,22 +140,23 @@ const TableUI = ({
                         ))
                       ) : (
                         <div className="text-gray-400">--</div>
-                      )}
+                      )} */}
+                      {row.assigned_salesperson}
                     </td>
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          onClick={() => push(`/properties/view/${row?._id}`)}
+                          // onClick={() => push(`/properties/view/${row?._id}`)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          onClick={() => push(`/properties/edit/${row?._id}`)}
+                          // onClick={() => push(`/properties/edit/${row?._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
                         <Icon
-                          onClick={() => handleDelete(row?._id)}
+                          // onClick={() => handleDelete(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />
