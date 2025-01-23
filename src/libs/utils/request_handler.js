@@ -7,7 +7,7 @@ const token =
 export const postRequest = async (url, data) => {
   try {
     const response = await axios.post(`${API_URL}/${API_PREFIX}/${url}`, data, {
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
       },
@@ -38,7 +38,7 @@ export const patchRequest = async (url, data) => {
       `${API_URL}/${API_PREFIX}/${url}`,
       data,
       {
-        withCredentials: true,
+        // withCredentials: true,
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
@@ -53,7 +53,7 @@ export const patchRequest = async (url, data) => {
 export const deleteRequest = async (url) => {
   try {
     const response = await axios.delete(`${API_URL}/${API_PREFIX}/${url}`, {
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
         "Content-Type": "application/json",
         Authorization: token ? `Bearer ${token}` : "",
