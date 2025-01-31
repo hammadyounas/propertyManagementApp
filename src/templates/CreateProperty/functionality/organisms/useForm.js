@@ -320,8 +320,8 @@ const useCreateForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    toast.success("Property Added successfully!");
-    return push("/properties");
+    // toast.success("Property Added successfully!");
+    // return push("/properties");
 
     try {
       // Create a new FormData instance

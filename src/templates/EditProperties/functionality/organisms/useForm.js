@@ -128,6 +128,7 @@ const useCreateForm = () => {
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [removedImages, setRemovedImages] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
@@ -169,13 +170,8 @@ const useCreateForm = () => {
 
       if (type === "image") {
         if (typeof file === "string") {
-          // Handle Base64 string
-          if (file.startsWith("data:image")) {
-            fileURL = file; // Use Base64 string directly
-            fileName = extractFileNameFromBase64(file, index);
-          } else {
-            console.warn("Invalid Base64 string for an image.");
-          }
+          fileURL = file;
+          fileName = extractFileNameFromBase64(file, index);
         } else if (file && file.name && file.type && file.size) {
           // Perform a loose check for file-like object properties
           fileURL = URL.createObjectURL(file); // Create a temporary URL for preview
@@ -401,6 +397,8 @@ const useCreateForm = () => {
 
   const handleFileRemove = (indexToRemove, type) => {
     if (type == "image") {
+      const removedImage = selectedImages[indexToRemove];
+      setRemovedImages((prevFiles) => [...prevFiles, removedImage]);
       setSelectedImages((prevFiles) =>
         prevFiles.filter((_, index) => index !== indexToRemove)
       );
@@ -498,6 +496,12 @@ const useCreateForm = () => {
           });
       }
 
+      if (removedImages) {
+        removedImages.forEach((img) => {
+          formData.append("removeImages", img);
+        });
+      }
+
       // Append selected images
       selectedImages.forEach((image) => {
         formData.append("images", image);
@@ -534,7 +538,11 @@ const useCreateForm = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to update property.");
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update property."
+      );
     } finally {
       setLoading(false);
     }
