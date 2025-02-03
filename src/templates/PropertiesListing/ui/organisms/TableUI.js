@@ -13,7 +13,7 @@ const TableUI = ({
   setGlobalFilter,
   openModal,
   push,
-  handleDelete,
+  openDeleteModal,
   loading,
 }) => {
   return (
@@ -75,8 +75,8 @@ const TableUI = ({
                     <td className="table-td ">{row.property_type}</td>
                     <td className="table-td ">{row.size}</td>
                     <td className="table-td ">
-                      {/* {row.owner_name}, {row.owner_address} */}
-                      {row.owneraddress}
+                      {row.owner_name}, {row.owner_address}
+                      {/* {row.owneraddress} */}
                     </td>
                     <td className="table-td ">
                       {row.phone_number || row.telno}
@@ -123,40 +123,42 @@ const TableUI = ({
                       </span>
                     </td>
                     <td className="table-td ">
-                      {/* {row.assigned_to && row.assigned_to.length > 0 ? (
-                        row.assigned_to.map((salesperson, index) => (
-                          <Tooltip
-                            key={index}
-                            placement="top"
-                            arrow
-                            content={salesperson?.name}
-                          >
-                            <img
-                              src="/assets/images/users/user-1.jpg" // Replace with actual avatar URL if available
-                              alt={salesperson.name}
-                              className="block w-8 h-8 object-cover rounded-full"
-                            />
-                          </Tooltip>
-                        ))
+                      {row.assigned_to && row.assigned_to.length > 0 ? (
+                        <div className="flex">
+                          {row.assigned_to.map((salesperson, index) => (
+                            <Tooltip
+                              key={index}
+                              placement="top"
+                              arrow
+                              content={salesperson?.name}
+                            >
+                              <img
+                                src="/assets/images/users/user-1.jpg" // Replace with actual avatar URL if available
+                                alt={salesperson.name}
+                                className="block w-8 h-8 object-cover rounded-full"
+                              />
+                            </Tooltip>
+                          ))}
+                        </div>
                       ) : (
                         <div className="text-gray-400">--</div>
-                      )} */}
-                      {row.assigned_salesperson}
+                      )}
+                      {/* {row.assigned_salesperson} */}
                     </td>
                     <td className="table-td ">
                       <div className="flex">
                         <Icon
-                          // onClick={() => push(`/properties/view/${row?._id}`)}
+                          onClick={() => push(`/properties/view/${row?._id}`)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons:eye"}
                         />
                         <Icon
-                          // onClick={() => push(`/properties/edit/${row?._id}`)}
+                          onClick={() => push(`/properties/edit/${row?._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
                           icon={"heroicons:pencil-square"}
                         />
                         <Icon
-                          // onClick={() => handleDelete(row?._id)}
+                          onClick={() => openDeleteModal(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

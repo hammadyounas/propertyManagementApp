@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteRequest, getRequest } from "../../../../libs/utils/request_handler";
+import {
+  deleteRequest,
+  getRequest,
+} from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
 import { rows } from "../constants/data";
 
@@ -9,10 +12,25 @@ const useProperty = () => {
   const [properties, setProperties] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const pageSize = 10;
-  const {push} = useRouter()
 
-  const [activeModal, setActiveModal] = useState(false)
+  const [currentItem, setCurrentItem] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setCurrentItem(null);
+  };
+
+  const openDeleteModal = (id) => {
+    setCurrentItem(id);
+    setShowDeleteModal(!showDeleteModal);
+  };
+
+  const pageSize = 10;
+  const { push } = useRouter();
+
+  const [activeModal, setActiveModal] = useState(false);
 
   const closeModal = () => {
     setActiveModal(false);
@@ -21,7 +39,6 @@ const useProperty = () => {
   const openModal = () => {
     setActiveModal(!activeModal);
   };
-
 
   const fetchProperties = async () => {
     setLoading(true);
@@ -32,36 +49,35 @@ const useProperty = () => {
       //   id: salesPerson._id,
       //   name: salesPerson.name,
       // }));
-  
+
       // // Create a map for quick lookup of user names by their ID
       // const salesPersonsMap = Object.fromEntries(
       //   salesPersonsData.map((user) => [user.id, user.name])
       // );
-  
+
       // console.log('Sales Persons Map:', salesPersonsMap);
-  
+
       // Fetch properties
-      const response = await getRequest('properties');
+      const response = await getRequest("properties");
       const filteredResponse = response.data
         .filter((property) => !property.isDeleted)
         .map((property) => ({
           ...property,
         }));
-  
-      console.log('Filtered Properties:', filteredResponse);
-  
+
+      console.log("Filtered Properties:", filteredResponse);
+
       setProperties(filteredResponse);
     } catch (error) {
-      console.error('Error fetching clients:', error);
+      console.error("Error fetching clients:", error);
     } finally {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
-    // fetchProperties();
-    setProperties(rows);
+    fetchProperties();
+    // setProperties(rows);
   }, []);
 
   // Calculate the paginated properties
@@ -74,16 +90,22 @@ const useProperty = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await deleteRequest(`properties/${id}`);
+      setDeleteLoading(true);
+      await deleteRequest(`properties/${currentItem}`);
+      setDeleteLoading(false);
+      closeDeleteModal();
       fetchProperties();
       toast.success("Property deleted successfully.");
     } catch (error) {
       console.error("Error:", error); // Log errors
-      toast.error(error.message || "An error occurred while deleting property.");
+      toast.error(
+        error.message || "An error occurred while deleting property."
+      );
+      setDeleteLoading(false);
     }
-  }
+  };
 
   return {
     globalFilter,
@@ -100,6 +122,10 @@ const useProperty = () => {
     push,
     loading,
     handleDelete,
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    deleteLoading,
   };
 };
 

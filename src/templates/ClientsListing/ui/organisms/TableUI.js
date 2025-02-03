@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, deleteClientById }) => {
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDeleteModal }) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
@@ -80,7 +80,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, deleteCli
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
-                            onClick={() => { deleteClientById(row._id); }}
+                            onClick={() => { openDeleteModal(row._id); }}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons-outline:trash"}
                           />

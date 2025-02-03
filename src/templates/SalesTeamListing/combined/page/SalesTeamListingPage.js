@@ -2,6 +2,7 @@ import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
 import useSalesTeam from "../../functionality/page/useSalesTeam";
+import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
 
 const SalesTeamListingPage = () => {
   const {
@@ -15,6 +16,10 @@ const SalesTeamListingPage = () => {
     users,
     loading,
     handleDelete,
+    showDeleteModal,
+    closeDeleteModal,
+    openDeleteModal,
+    deleteLoading,
   } = useSalesTeam();
 
   return (
@@ -25,7 +30,7 @@ const SalesTeamListingPage = () => {
         setGlobalFilter={setGlobalFilter}
         push={push}
         loading={loading}
-        handleDelete={handleDelete}
+        openDeleteModal={openDeleteModal}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate
@@ -42,6 +47,13 @@ const SalesTeamListingPage = () => {
           initialPage={currentPage - 1}
         />
       </div>
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={handleDelete}
+        text={"Are you sure you want to delete this broker?"}
+        disabled={deleteLoading}
+      />
     </>
   );
 };

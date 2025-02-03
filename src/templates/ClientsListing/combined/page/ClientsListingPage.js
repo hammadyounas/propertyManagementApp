@@ -2,6 +2,7 @@ import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
 import useClients from "../../functionality/page/useClients";
+import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
 
 const ClientsListingPage = () => {
   const {
@@ -14,6 +15,10 @@ const ClientsListingPage = () => {
     push,
     users,
     deleteClientById,
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    deleteLoading,
   } = useClients();
 
   return (
@@ -23,7 +28,7 @@ const ClientsListingPage = () => {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
-        deleteClientById={deleteClientById}
+        openDeleteModal={openDeleteModal}
       />
       <div className="flex w-full justify-end mt-2 items-center">
         <ReactPaginate
@@ -40,6 +45,13 @@ const ClientsListingPage = () => {
           initialPage={currentPage - 1}
         />
       </div>
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={ deleteClientById}
+        text={"Are you sure you want to delete this client?"}
+        disabled={deleteLoading}
+      />
     </>
   );
 };

@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 // import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
-import { deleteRequest, getRequest } from "../../../../libs/utils/request_handler";
+import {
+  deleteRequest,
+  getRequest,
+} from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
 
 const useSalesTeam = () => {
@@ -12,19 +15,32 @@ const useSalesTeam = () => {
   const pageSize = 10;
   const { push } = useRouter();
 
+  const [currentItem, setCurrentItem] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setCurrentItem(null);
+  };
+
+  const openDeleteModal = (id) => {
+    setCurrentItem(id);
+    setShowDeleteModal(!showDeleteModal);
+  };
+
   const fetchUsers = async () => {
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await getRequest('users');
+      const response = await getRequest("users");
       setUsers(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching clients:', error);
+      console.error("Error fetching clients:", error);
     } finally {
       setLoading(false);
     }
-    
-  }
+  };
   useEffect(() => {
     fetchUsers();
 
@@ -41,16 +57,22 @@ const useSalesTeam = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await deleteRequest(`user/${id}`);
+      setDeleteLoading(true);
+      await deleteRequest(`user/${currentItem}`);
+      setDeleteLoading(false);
+      closeDeleteModal();
       fetchUsers();
-      toast.success("Salesperson deleted successfully.");
+      toast.success("Broker deleted successfully.");
     } catch (error) {
       console.error("Error:", error); // Log errors
-      toast.error(error.message || "An error occurred while deleting property.");
+      toast.error(
+        error.message || "An error occurred while deleting property."
+      );
+      setDeleteLoading(false);
     }
-  }
+  };
 
   return {
     globalFilter,
@@ -64,6 +86,10 @@ const useSalesTeam = () => {
     push,
     loading,
     handleDelete,
+    showDeleteModal,
+    closeDeleteModal,
+    openDeleteModal,
+    deleteLoading,
   };
 };
 

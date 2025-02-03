@@ -11,7 +11,7 @@ const TableUI = ({
   setGlobalFilter,
   push,
   loading,
-  handleDelete,
+  openDeleteModal,
 }) => {
   return (
     <Card noborder>
@@ -104,7 +104,7 @@ const TableUI = ({
                         />
 
                         <Icon
-                          onClick={() => handleDelete(row?._id)}
+                          onClick={() => openDeleteModal(row?._id)}
                           className="cursor-pointer text-[20px]"
                           icon={"heroicons-outline:trash"}
                         />

@@ -1,5 +1,6 @@
 import Modal from "../../../../components/combined/organisms/ModalUIContainer";
 import Button from "../../../../components/ui/molecules/Button";
+import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
 import useProperty from "../../functionality/page/useProperty";
 import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
@@ -20,6 +21,10 @@ const PropertiesListingPage = () => {
     push,
     handleDelete,
     loading,
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    deleteLoading,
   } = useProperty();
 
   return (
@@ -30,7 +35,7 @@ const PropertiesListingPage = () => {
         setGlobalFilter={setGlobalFilter}
         openModal={openModal}
         push={push}
-        handleDelete={handleDelete}
+        openDeleteModal={openDeleteModal}
         loading={loading}
       />
       <div className="flex w-full justify-end mt-2 items-center">
@@ -83,6 +88,13 @@ const PropertiesListingPage = () => {
           Assigned Salesperson (Dropdown)
         </div>
       </Modal>
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={handleDelete}
+        text={"Are you sure you want to delete this property?"}
+        disabled={deleteLoading}
+      />
     </>
   );
 };
