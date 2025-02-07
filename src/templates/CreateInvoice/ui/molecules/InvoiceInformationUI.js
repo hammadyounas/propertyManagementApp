@@ -16,22 +16,22 @@ const InvoiceInformationUI = ({
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="invoice_id"
+              name="invoiceNumber"
               label="Invoice Number"
               type="text"
               register={register}
-              error={errors.invoice_id}
+              error={errors.invoiceNumber}
               placeholder="Invoice ID"
               disabled={true}
             />
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="invoice_date"
+              name="invoiceDate"
               label="Invoice Date*"
               type="date"
               register={register}
-              error={errors.invoice_date}
+              error={errors.invoiceDate}
               placeholder="Invoice Date"
               disabled={loading}
             />
@@ -40,11 +40,11 @@ const InvoiceInformationUI = ({
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="due_date"
+              name="dueDate"
               label="Due Date"
               type="date"
               register={register}
-              error={errors.due_date}
+              error={errors.dueDate}
               placeholder="Due Date"
               disabled={loading}
             />
@@ -53,7 +53,7 @@ const InvoiceInformationUI = ({
             <div className="mt-4">
               <div className="my-2 text-sm font-medium">Invoice Status*</div>
               <ReactSelect
-                name="invoice_status"
+                name="status"
                 value={invoiceStatus}
                 onChange={handleSelectInvoiceStatus}
                 options={invoiceStatuses}
@@ -61,9 +61,9 @@ const InvoiceInformationUI = ({
                 isDisabled={loading}
                 className="text-sm"
               />
-              {errors?.invoice_status && !invoiceStatus && (
+              {errors?.status && !invoiceStatus && (
                 <p className="text-sm text-danger-500 mt-2">
-                  {errors?.invoice_status?.message}
+                  {errors?.status?.message}
                 </p>
               )}
             </div>

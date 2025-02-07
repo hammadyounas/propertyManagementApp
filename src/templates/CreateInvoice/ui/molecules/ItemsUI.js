@@ -29,22 +29,22 @@ const ItemsUI = ({
             >
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_name`}
+                  name={`items[${index}].itemName`}
                   label="Item Name"
                   type="text"
                   register={register}
-                  error={errors.items?.[index]?.item_name}
+                  error={errors.items?.[index]?.itemName}
                   placeholder="Item Name"
                   disabled={loading}
                 />
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_description`}
+                  name={`items[${index}].description`}
                   label="Description"
                   type="text"
                   register={register}
-                  error={errors.items?.[index]?.item_description}
+                  error={errors.items?.[index]?.description}
                   placeholder="Description"
                   disabled={loading}
                 />
@@ -69,17 +69,17 @@ const ItemsUI = ({
               </div> */}
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_price`}
+                  name={`items[${index}].price`}
                   label="Price"
                   type="number"
                   register={register}
-                  error={errors.items?.[index]?.item_price}
+                  error={errors.items?.[index]?.price}
                   placeholder="Price"
                   disabled={loading}
-                  value={getValues(`items[${index}]`).item_price}
+                  value={getValues(`items[${index}]`).price}
                   // error={errors.title}
                   onChange={(e) => {
-                    setValue(`items[${index}].item_price`, e.target.value);
+                    setValue(`items[${index}].price`, e.target.value);
                     const items = getValues("items");
                     setValue("items", [...items]);
                   }}
@@ -87,11 +87,11 @@ const ItemsUI = ({
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_gst`}
+                  name={`items[${index}].gst`}
                   label="GST (5%)"
                   type="number"
                   register={register}
-                  error={errors.items?.[index]?.item_gst}
+                  error={errors.items?.[index]?.gst}
                   placeholder="GST"
                   disabled={true}
                   //   value={getValues(`items[${index}]`).item_total}
@@ -99,11 +99,11 @@ const ItemsUI = ({
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_qst`}
+                  name={`items[${index}].qst`}
                   label="QST (9.75%)"
                   type="number"
                   register={register}
-                  error={errors.items?.[index]?.item_qst}
+                  error={errors.items?.[index]?.qst}
                   placeholder="Total"
                   disabled={true}
                   //   value={getValues(`items[${index}]`).item_total}
@@ -111,11 +111,11 @@ const ItemsUI = ({
               </div>
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
-                  name={`items[${index}].item_total`}
+                  name={`items[${index}].total`}
                   label="Total"
                   type="number"
                   register={register}
-                  error={errors.items?.[index]?.item_total}
+                  error={errors.items?.[index]?.total}
                   placeholder="Total"
                   disabled={true}
                   //   value={getValues(`items[${index}]`).item_total}
@@ -134,13 +134,15 @@ const ItemsUI = ({
           type="button"
           onClick={() =>
             append({
-              item_id: uuidv4(),
-              item_name: "",
-              item_description: "",
-              item_quantity: 0,
-              item_price: 0,
-              item_tax: 0,
-              item_total: 0,
+              // item_id: uuidv4(),
+              itemName: "",
+              description: "",
+              // item_quantity: 0,
+              price: 0,
+              // item_tax: 0,
+              gst: 0,
+              qst: 0,
+              total: 0,
             })
           }
         >

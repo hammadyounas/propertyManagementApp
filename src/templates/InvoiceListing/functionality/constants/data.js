@@ -1,11 +1,11 @@
 export const columns = [
   {
     label: "Invoice Number",
-    field: "invoice_number",
+    field: "invoiceNumber",
   },
   {
     label: "Invoice Date",
-    field: "invoice_date",
+    field: "invoiceDate",
   },
   {
     label: "Client's Name",
@@ -41,8 +41,8 @@ export const columns = [
 export const tableData = [
   {
     id: 1,
-    invoice_number: "INV001",
-    invoice_date: "12/10/2024",
+    invoiceNumber: "INV001",
+    invoiceDate: "12/10/2024",
     client_name: "John Doe",
     client_address: "123 Main St, Springfield, IL",
     responsible_broker: "Broker A",
@@ -53,8 +53,8 @@ export const tableData = [
   },
   {
     id: 2,
-    invoice_number: "INV002",
-    invoice_date: "11/09/2023",
+    invoiceNumber: "INV002",
+    invoiceDate: "11/09/2023",
     client_name: "St. Patric",
     client_address: "456 Oak St, Springfield, IL",
     responsible_broker: "Broker B",
@@ -65,8 +65,8 @@ export const tableData = [
   },
   {
     id: 3,
-    invoice_number: "INV003",
-    invoice_date: "12/04/2024",
+    invoiceNumber: "INV003",
+    invoiceDate: "12/04/2024",
     client_name: "Harry",
     client_address: "789 Birch St, Springfield, IL",
     responsible_broker: "Broker C",
@@ -77,8 +77,8 @@ export const tableData = [
   },
   {
     id: 4,
-    invoice_number: "INV004",
-    invoice_date: "08/08/2022",
+    invoiceNumber: "INV004",
+    invoiceDate: "08/08/2022",
     client_name: "Aroun",
     client_address: "101 Pine St, Springfield, IL",
     responsible_broker: "Broker D",
@@ -89,8 +89,8 @@ export const tableData = [
   },
   {
     id: 5,
-    invoice_number: "INV005",
-    invoice_date: "08/08/2022",
+    invoiceNumber: "INV005",
+    invoiceDate: "08/08/2022",
     client_name: "Vivek",
     client_address: "202 Cedar St, Springfield, IL",
     responsible_broker: "Broker E",
@@ -101,8 +101,8 @@ export const tableData = [
   },
   {
     id: 6,
-    invoice_number: "INV006",
-    invoice_date: "03/02/2025",
+    invoiceNumber: "INV006",
+    invoiceDate: "03/02/2025",
     client_name: "Aroun",
     client_address: "303 Maple St, Springfield, IL",
     responsible_broker: "Broker F",
@@ -113,8 +113,8 @@ export const tableData = [
   },
   {
     id: 7,
-    invoice_number: "INV007",
-    invoice_date: "03/02/2025",
+    invoiceNumber: "INV007",
+    invoiceDate: "03/02/2025",
     client_name: "Bla Bla",
     client_address: "404 Elm St, Springfield, IL",
     responsible_broker: "Broker G",
@@ -125,8 +125,8 @@ export const tableData = [
   },
   {
     id: 8,
-    invoice_number: "INV008",
-    invoice_date: "12/10/2024",
+    invoiceNumber: "INV008",
+    invoiceDate: "12/10/2024",
     client_name: "John Doe",
     client_address: "123 Main St, Springfield, IL",
     responsible_broker: "Broker A",
@@ -137,8 +137,8 @@ export const tableData = [
   },
   {
     id: 9,
-    invoice_number: "INV009",
-    invoice_date: "11/09/2023",
+    invoiceNumber: "INV009",
+    invoiceDate: "11/09/2023",
     client_name: "St. Patric",
     client_address: "456 Oak St, Springfield, IL",
     responsible_broker: "Broker B",
@@ -149,8 +149,8 @@ export const tableData = [
   },
   {
     id: 10,
-    invoice_number: "INV010",
-    invoice_date: "12/04/2024",
+    invoiceNumber: "INV010",
+    invoiceDate: "12/04/2024",
     client_name: "Harry",
     client_address: "789 Birch St, Springfield, IL",
     responsible_broker: "Broker C",
@@ -161,8 +161,8 @@ export const tableData = [
   },
   {
     id: 11,
-    invoice_number: "INV011",
-    invoice_date: "08/08/2022",
+    invoiceNumber: "INV011",
+    invoiceDate: "08/08/2022",
     client_name: "Aroun",
     client_address: "101 Pine St, Springfield, IL",
     responsible_broker: "Broker D",
@@ -173,8 +173,8 @@ export const tableData = [
   },
   {
     id: 12,
-    invoice_number: "INV012",
-    invoice_date: "08/08/2022",
+    invoiceNumber: "INV012",
+    invoiceDate: "08/08/2022",
     client_name: "Vivek",
     client_address: "202 Cedar St, Springfield, IL",
     responsible_broker: "Broker E",
@@ -185,8 +185,8 @@ export const tableData = [
   },
   {
     id: 13,
-    invoice_number: "INV013",
-    invoice_date: "03/02/2025",
+    invoiceNumber: "INV013",
+    invoiceDate: "03/02/2025",
     client_name: "Aroun",
     client_address: "303 Maple St, Springfield, IL",
     responsible_broker: "Broker F",
@@ -197,8 +197,8 @@ export const tableData = [
   },
   {
     id: 14,
-    invoice_number: "INV014",
-    invoice_date: "03/02/2025",
+    invoiceNumber: "INV014",
+    invoiceDate: "03/02/2025",
     client_name: "Bla Bla",
     client_address: "404 Elm St, Springfield, IL",
     responsible_broker: "Broker G",

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
+import { getRequest } from "../../../../libs/utils/request_handler";
 
 const useInvoices = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -9,8 +10,21 @@ const useInvoices = () => {
   const pageSize = 10;
   const { push } = useRouter();
 
+  const fetchInvoices = async () => {
+    try {
+      const response = await getRequest("invoices");
+      const filteredInvoices = response?.data?.filter(
+        (invoice) => !invoice.isDeleted
+      );
+      setInvoices(filteredInvoices);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+    }
+  };
+
   useEffect(() => {
-    setInvoices(rows);
+    fetchInvoices();
+    // setInvoices(rows);
   }, []);
 
   // Calculate the paginated users

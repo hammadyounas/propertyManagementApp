@@ -20,7 +20,7 @@ const SalespersonInformationUI = ({
       <h6>Seller Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
-          <div className="mt-2 w-full md:w-[49%]">
+          {/* <div className="mt-2 w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Seller Name*</div>
             <ReactSelect
               name="salesperson_id"
@@ -36,10 +36,10 @@ const SalespersonInformationUI = ({
                 {errors?.salesperson_id?.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           {/* listing broker */}
-          <div className="mt-2 w-full md:w-[49%]">
+          {/* <div className="mt-2 w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Listing Broker*</div>
             <ReactSelect
               name="listing_broker_id"
@@ -55,23 +55,23 @@ const SalespersonInformationUI = ({
                 {errors?.salesperson_id?.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           {/* selling broker */}
           <div className="mt-2 w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Selling Broker*</div>
             <ReactSelect
-              name="selling_broker_id"
-              value={sellingBrokerName}
-              onChange={handleSelectSellingBroker}
-              options={sellingBrokers}
-              placeholder="Selling Broker Name"
+              name="seller"
+              value={salesPersonName}
+              onChange={handleSelectSalespersonName}
+              options={salesPersons}
+              placeholder="Salesperson Name"
               isDisabled={loading}
               className="text-sm"
             />
-            {errors?.salesperson_id && !salesPersonName && (
+            {errors?.seller && !salesPersonName && (
               <p className="text-sm text-danger-500 mt-2">
-                {errors?.salesperson_id?.message}
+                {errors?.seller?.message}
               </p>
             )}
           </div>

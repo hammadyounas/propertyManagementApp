@@ -19,7 +19,7 @@ const ClientInformationUI = ({
           <div className="mt-2 w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Buyer Name*</div>
             <ReactSelect
-              name="client_id"
+              name="buyer"
               value={clientName}
               onChange={handleSelectClientName}
               options={clients}
@@ -27,9 +27,9 @@ const ClientInformationUI = ({
               isDisabled={loading}
               className="text-sm"
             />
-            {errors?.client_id && !clientName && (
+            {errors?.buyer && !clientName && (
               <p className="text-sm text-danger-500 mt-2">
-                {errors?.client_id?.message}
+                {errors?.buyer?.message}
               </p>
             )}
           </div>

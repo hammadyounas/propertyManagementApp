@@ -18,7 +18,7 @@ const PropertyDetailsUI = ({
           <div className="mt-2 w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Property Name*</div>
             <ReactSelect
-              name="property_id"
+              name="property"
               value={selectedProperty}
               onChange={handleSelectProperty}
               options={properties}
@@ -26,9 +26,9 @@ const PropertyDetailsUI = ({
               isDisabled={loading}
               className="text-sm"
             />
-            {errors?.property_id && !selectedProperty && (
+            {errors?.property && !selectedProperty && (
               <p className="text-sm text-danger-500 mt-2">
-                {errors?.property_id?.message}
+                {errors?.property?.message}
               </p>
             )}
           </div>
@@ -58,11 +58,11 @@ const PropertyDetailsUI = ({
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="instrumental_notary"
+              name="instrumentalNotary"
               label="Instrumental Notary"
               type="text"
               register={register}
-              error={errors.instrumental_notary}
+              error={errors.instrumentalNotary}
               placeholder="Instrumental Notary"
             />
           </div>
@@ -78,7 +78,6 @@ const PropertyDetailsUI = ({
               disabled={true}
             />
           </div>
-       
         </div>
       </div>
     </div>
