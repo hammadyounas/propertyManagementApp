@@ -50,7 +50,7 @@ export const useForm = () => {
         const { data } = response.data;
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("auth_token", data.token);
-        dispatch(setUser(data));
+        dispatch(setUser(data?.user));
         setFormValues(initialFormValues);
         toast.success("Login Successfully");
         router.push("/dashboard");

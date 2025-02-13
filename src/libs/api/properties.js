@@ -1,4 +1,4 @@
-import { getRequest } from "../utils/request_handler";
+import { getRequest, postRequest } from "../utils/request_handler";
 
 export const getAllPropertiesByTitle = async (assignedToIds) => {
     try {
@@ -13,6 +13,19 @@ export const getAllPropertiesByTitle = async (assignedToIds) => {
         })
         .filter(Boolean); // Filter out null values
   
+      return propertyDetails;
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      throw new Error("Failed to fetch properties.");
+    }
+  };
+
+  export const getAllPropertiesByIds = async (assignedToIds) => {
+    try {
+      const propertyResponse = await postRequest("properties/by-ids", {ids:assignedToIds});
+      const properties = propertyResponse?.data || [];
+      const propertyDetails = properties?.map((property)=>({ label: property.title, value: property._id }))
+
       return propertyDetails;
     } catch (error) {
       console.error("Error fetching properties:", error);

@@ -3,6 +3,8 @@ import React from "react";
 import Button from "@/components/ui/atoms/Button";
 import Textinput from "../../../../components/ui/atoms/TextInput";
 import { ToastContainer } from "react-toastify";
+import RadioButton from "../../../../components/ui/atoms/RadioButtin";
+import ReactSelect from "react-select";
 
 export default function ProfileUI({
   loading,
@@ -10,6 +12,14 @@ export default function ProfileUI({
   onSubmit,
   register,
   errors,
+  status,
+  propertiesAssigned,
+  user,
+  isEditing,
+  setIsEditing,
+  handleFileChange,
+  loadingAvatar,
+  handleCancel
 }) {
   return (
     <div>
@@ -24,7 +34,7 @@ export default function ProfileUI({
               <div className="flex-none">
                 <div className="md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative">
                   <img
-                    src="/assets/images/users/user-1.jpg"
+                    src={user?.avatar || "/assets/images/users/user-1.jpg"}
                     alt="User Avatar"
                     className="w-full h-full object-cover rounded-full"
                   />
@@ -39,16 +49,17 @@ export default function ProfileUI({
                     id="avatarUpload"
                     accept="image/*"
                     className="hidden"
-                    disabled={loading}
+                    disabled={loadingAvatar}
+                    onChange={handleFileChange}
                   />
                 </div>
               </div>
               <div className="flex-1">
                 <div className="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]">
-                  Albert Flores
+                  {user?.name}
                 </div>
                 <div className="text-sm font-light text-slate-600 dark:text-slate-400 capitalize">
-                  Admin
+                  {user?.role}
                 </div>
               </div>
             </div>
@@ -56,109 +67,191 @@ export default function ProfileUI({
         </div>
 
         {/* profile details */}
-        <div className="grid grid-cols-12 gap-6">
-          <div className="lg:col-span-6 col-span-12">
-            <ul className="list space-y-8">
-              <li className="flex space-x-3 rtl:space-x-reverse">
-                <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                  <Icon icon="heroicons:envelope" />
-                </div>
-                <div className="flex-1">
-                  <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                    EMAIL
-                  </div>
-                  <a
-                    href={`mailto:info@example.com`}
-                    className="text-base text-slate-600 dark:text-slate-50"
-                  >
-                    info@example.com
-                  </a>
-                </div>
-              </li>
-
-              <li className="flex space-x-3 rtl:space-x-reverse">
-                <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                  <Icon icon="heroicons:phone-arrow-up-right" />
-                </div>
-                <div className="flex-1">
-                  <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                    PHONE
-                  </div>
-                  <a
-                    href={`tel:+1-202-555-0151`}
-                    className="text-base text-slate-600 dark:text-slate-50"
-                  >
-                    +1-202-555-0151
-                  </a>
-                </div>
-              </li>
-
-              <li className="flex space-x-3 rtl:space-x-reverse">
-                <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                  <Icon icon="icons8:gender-neutral-user" />
-                </div>
-                <div className="flex-1">
-                  <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                    GENDER
-                  </div>
-                  <div className="text-base text-slate-600 dark:text-slate-50">
-                    Male
-                  </div>
-                </div>
-              </li>
-
-              <li className="flex space-x-3 rtl:space-x-reverse">
-                <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                  <Icon icon="mingcute:birthday-2-line" />
-                </div>
-                <div className="flex-1">
-                  <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                    Date of Birth
-                  </div>
-                  <div className="text-base text-slate-600 dark:text-slate-50">
-                    12-12-1992
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          {/* confirm passowrd  */}
-          <div className="lg:col-span-6 col-span-12">
-            <h1 className="text-xl text-gray-600">Change Password</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
-              <div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="">
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
                 <Textinput
-                  name="newPassword"
-                  label="New Password"
-                  type="password"
+                  name="name"
+                  label="Name*"
+                  type="text"
                   register={register}
-                  error={errors?.password}
-                  placeholder="Password"
-                  className="px-6"
-                  disabled={loading}
+                  error={errors.name}
+                  placeholder="Name"
+                  disabled={loading || !isEditing}
                 />
               </div>
-              <div>
+              <div className="w-full md:w-[49%]">
                 <Textinput
-                  name="confirm_password"
-                  label="Confirm Password"
-                  type="password"
+                  name="email"
+                  label="Email*"
+                  type="text"
                   register={register}
-                  error={errors?.confirm_password}
-                  placeholder="Confirm your password"
-                  className="px-6"
-                  disabled={loading}
+                  error={errors.email}
+                  placeholder="Email"
+                  disabled
                 />
               </div>
-              <Button
-                loading={loading}
-                text={"Change Password"}
-                type="submit"
-              />
-            </form>
+            </div>
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="contact_number"
+                  label="Phone Number*"
+                  type="number"
+                  register={register}
+                  error={errors.contact_number}
+                  placeholder="Phone Number"
+                  disabled={loading || !isEditing}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="address"
+                  label="Address*"
+                  type="text"
+                  register={register}
+                  error={errors.address}
+                  placeholder="Address"
+                  disabled={loading || !isEditing}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="licence_number"
+                  label="Licence Number*"
+                  type="text"
+                  register={register}
+                  error={errors.licence_number}
+                  placeholder="Licence Number"
+                  disabled={loading || !isEditing}
+                />
+              </div>
+              <div className="w-full md:w-[49%]">
+                <RadioButton
+                  name="licence_type"
+                  label="Licence*"
+                  type="radio"
+                  register={register}
+                  error={errors.licence_type}
+                  placeholder="Licence"
+                  disabled={loading || !isEditing}
+                  radioOptions={[
+                    { label: "Residential", value: "residential" },
+                    { label: "Commercial", value: "commercial" },
+                    { label: "Director", value: "director" },
+                  ]}
+                  className="text-sm"
+                />
+              </div>
+              {/* <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="licence_status"
+                  label="Licence Status*"
+                  type="radio"
+                  register={register}
+                  error={errors.licence_status}
+                  placeholder="Licence"
+                  disabled={loading}
+                  radioOptions={[
+                    { label: "Active", value: "active" },
+                    { label: "In Active", value: "inactive" },
+                  ]}
+                  className="text-sm"
+                />
+              </div> */}
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <div className="mt-4">
+                  <div className="my-2 text-sm font-medium">
+                    Assigned Properties
+                  </div>
+                  <ReactSelect
+                    name="assigned_properties"
+                    isMulti
+                    value={propertiesAssigned}
+                    // onChange={handleSelectAssignedProperties}
+                    // options={availableProperties.map((property) => ({
+                    //   label: property.title,
+                    //   value: property._id,
+                    // }))}
+                    placeholder="Assigned Properties"
+                    isDisabled
+                    className="text-sm"
+                  />
+                  {errors?.propertiesAssigned && !propertiesAssigned.length && (
+                    <p className="text-sm text-danger-500 mt-2">
+                      {errors?.propertiesAssigned?.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="w-full md:w-[49%]">
+                <div className="mt-4">
+                  <div className="my-2 text-sm font-medium">Status*</div>
+                  <ReactSelect
+                    name="status"
+                    value={status}
+                    // onChange={handleSelectStatus}
+                    // options={salespersonStatus}
+                    placeholder="Status"
+                    isDisabled
+                    className="text-sm"
+                  />
+                  {errors?.status && !status && (
+                    <p className="text-sm text-danger-500 mt-2">
+                      {errors?.status?.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="joining_date"
+                  label="Joining Date*"
+                  type="date"
+                  register={register}
+                  error={errors.joining_date}
+                  placeholder="Joining Date"
+                  disabled
+                />
+              </div>
+            </div>
+
+            {!isEditing ? (
+              <div className="flex justify-center md:justify-end mt-12">
+                <Button
+                  text={"Edit"}
+                  className={"md:!w-36 z-50"}
+                  onClick={() => setIsEditing(true)}
+                  loading={loading}
+                />
+              </div>
+            ) : (
+              <div className="flex justify-center md:justify-end mt-12">
+                <Button
+                  text={"Cancel"}
+                  className={
+                    "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
+                  }
+                  onClick={handleCancel}
+                  loading={loading}
+                />
+                <Button
+                  text={"Update"}
+                  className={"md:!w-36 z-50"}
+                  type="submit"
+                  loading={loading}
+                />
+              </div>
+            )}
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
