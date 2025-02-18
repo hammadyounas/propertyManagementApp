@@ -122,7 +122,7 @@ const handleCancel = () => {
   }, [user]);
 
   const fetchAvailableProperties = async () => {
-    if (user?.assigned_properties?.lenth) {
+    if (user?.assigned_properties?.length) {
       const assignedProperties = await getAllPropertiesByIds(
         user?.assigned_properties
       );

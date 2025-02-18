@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../store/authSlice";
 import { API_URL, API_PREFIX } from "../../../../configs/index";
+import { postRequest } from "../../../../libs/utils/request_handler";
 
 // Define validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -43,11 +44,11 @@ export const useForm = () => {
       await validationSchema.validate(formValues, { abortEarly: false });
 
       setLoading(true);
-      const response = await axios.post(`${API_URL}/${API_PREFIX}/login`, formValues);
+      const response = await postRequest(`login`, formValues);
       console.log("Axios response:", response);
 
-      if (response.data.status) {
-        const { data } = response.data;
+      if (response.status) {
+        const { data } = response;
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("auth_token", data.token);
         dispatch(setUser(data?.user));

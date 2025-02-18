@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@/components/ui/atoms/Icon";
 import { handleLogout } from "@/components/partials/auth/store";
-import { setUser } from "@/store/authSlice";
+import { logout, setUser } from "@/store/authSlice";
 
 const useProfile = () => {
   const dispatch = useDispatch();
@@ -89,10 +89,11 @@ const useProfile = () => {
       label: "Logout",
       icon: "heroicons-outline:login",
       action: () => {
-        window.localStorage.removeItem("user_id"); // Remove only user_id
-        window.localStorage.removeItem("auth_token");
-        dispatch(setUser(null))
-        // dispatch(handleLogout()); // This should work to trigger the logout
+        // window.localStorage.removeItem("user_id"); // Remove only user_id
+        // window.localStorage.removeItem("auth_token");
+        // dispatch(setUser(null))
+        // // dispatch(handleLogout()); // This should work to trigger the logout
+        dispatch(logout())
         router.push("/"); // Redirect to the home page
       },
     },
