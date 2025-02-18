@@ -21,7 +21,7 @@ const usePropertyDetails = () => {
     try {
       const { id } = query;
       setLoading(true);
-      const response = await getRequest(`/properties/${id}`);
+      const response = await getRequest(`properties/${id}`);
       console.log(response);
       setPropertyDetails(response.data);
     } catch (error) {

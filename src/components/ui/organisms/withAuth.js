@@ -18,7 +18,7 @@ const withAuth = (Component) => {
     const getUser = async () => {
       setLoading(true);
       try {
-        const response = await getRequest(`/user/${userId}`);
+        const response = await getRequest(`user/${userId}`);
         if (response?.data) {
           dispatch(setUser(response?.data));
         }
