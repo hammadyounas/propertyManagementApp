@@ -145,7 +145,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                 isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
-                options={salespersons.map((salesPerson)=> (
+                options={salespersons?.map((salesPerson)=> (
                   {
                     label: salesPerson.name,
                     value: salesPerson._id,
@@ -165,7 +165,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                 isMulti
                 value={selectedClients}
                 onChange={handleSelectClients}
-                options={clients.map((client)=> (
+                options={clients?.map((client)=> (
                   {
                     label: client.name,
                     value: client._id,

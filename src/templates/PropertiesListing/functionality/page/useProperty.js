@@ -59,9 +59,9 @@ const useProperty = () => {
 
       // Fetch properties
       const response = await getRequest("properties");
-      const filteredResponse = response.data
-        .filter((property) => !property.isDeleted)
-        .map((property) => ({
+      const filteredResponse = response?.data
+        ?.filter((property) => !property.isDeleted)
+        ?.map((property) => ({
           ...property,
         }));
 

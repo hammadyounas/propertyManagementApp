@@ -44,7 +44,7 @@ export default function ViewClientUI({ clientData = {}, handleEdit }) {
             <div className="overflow-hidden">
               <div className="px-4 sm:-py-5 sm:p-0">
                 <div className="sm:divide-y sm:divide-gray-200">
-                  {clientFields.map(({ label, valueKey }) => (
+                  {clientFields?.map(({ label, valueKey }) => (
                    <div
                    key={valueKey}
                    className={`${

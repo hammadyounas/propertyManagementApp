@@ -18,7 +18,7 @@ function SalespersonUI({ salesperosonDataRows, salespersonColumns }) {
             <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
-                  {salespersonColumns.map((column, i) => (
+                  {salespersonColumns?.map((column, i) => (
                     <th key={i} scope="col" className=" table-th font-bold">
                       {column.label}
                     </th>

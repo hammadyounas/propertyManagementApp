@@ -173,7 +173,7 @@ const useCreateInvoice = () => {
   // Function to calculate item_total based on item_quantity and item_price
   useEffect(() => {
     const subscription = watch((value, { name }) => {
-      const updatedItems = getValues("items").map((item, index) => {
+      const updatedItems = getValues("items")?.map((item, index) => {
         const price = parseFloat(item.price) || 0; // Ensure price is a number
         const gst = parseFloat((price * 0.05).toFixed(2)); // Calculate GST and round
         const qst = parseFloat((price * 0.0975).toFixed(2)); // Calculate QST and round
@@ -207,7 +207,7 @@ const useCreateInvoice = () => {
       totalItemTotal: 0,
     };
 
-    items.map((item) => {
+    items?.map((item) => {
       // Ensure item_price is a number
       const price = parseFloat(item.price) || 0;
 

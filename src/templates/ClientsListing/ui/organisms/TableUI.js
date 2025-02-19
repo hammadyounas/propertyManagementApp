@@ -27,7 +27,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
             <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
-                  {columns.map((column, i) => (
+                  {columns?.map((column, i) => (
                     <th key={i} scope="col" className=" table-th font-bold">
                       {column.label}
                     </th>
@@ -50,7 +50,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
                     </td>
                   </tr>
                 ) : (
-                  rows.map((row, i) => (
+                  rows?.map((row, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"

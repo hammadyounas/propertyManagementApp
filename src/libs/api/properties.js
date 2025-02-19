@@ -7,7 +7,7 @@ export const getAllPropertiesByTitle = async (assignedToIds) => {
   
       // Map IDs to {label, value} format, filter out properties that don't exist in the database
       const propertyDetails = assignedToIds
-        .map((id) => {
+        ?.map((id) => {
           const property = properties.find((prop) => prop._id === id);
           return property ? { label: property.title, value: property._id } : null; // Only include valid properties
         })

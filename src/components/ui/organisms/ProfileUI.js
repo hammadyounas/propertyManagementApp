@@ -9,7 +9,7 @@ const ProfileUI = ({ProfileLabel, ProfileMenu}) => {
       label={ProfileLabel()}
       classMenuItems="w-[180px] top-[58px]"
     >
-      {ProfileMenu.map((item, index) => (
+      {ProfileMenu?.map((item, index) => (
         <Menu.Item key={index}>
           {({ active }) => (
             <div

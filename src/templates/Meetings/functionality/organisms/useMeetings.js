@@ -49,18 +49,18 @@ const useMeetings = () => {
   const fetchSalespersonAndClientsData = async () => {
     try {
       const response = await getRequest("users");
-      const filteredSalespersons = response.data.filter((sp) => !sp.isDeleted);
+      const filteredSalespersons = response?.data?.filter((sp) => !sp.isDeleted);
       const salesPersonsMap = Object.fromEntries(
-        filteredSalespersons.map(({ _id, name, contact_number, email }) => [
+        filteredSalespersons?.map(({ _id, name, contact_number, email }) => [
           _id,
           { name, contact_number, email },
         ])
       );
 
       const clientsResponse = await getRequest("clients");
-      const filteredClients = clientsResponse.data.filter((c) => !c.isDeleted);
+      const filteredClients = clientsResponse?.data?.filter((c) => !c.isDeleted);
       const clientMap = Object.fromEntries(
-        filteredClients.map(({ _id, name, phoneNumber, email }) => [
+        filteredClients?.map(({ _id, name, phoneNumber, email }) => [
           _id,
           { name, phoneNumber, email },
         ])
@@ -83,10 +83,10 @@ const useMeetings = () => {
       // Prepare data for the API
       const formData = {
         ...data,
-        salespersons: selectedSalesPersons.map(
+        salespersons: selectedSalesPersons?.map(
           (salesPerson) => salesPerson.value
         ), // Send only the property values
-        clients: selectedClients.map((client) => client.value), // Send only the property values
+        clients: selectedClients?.map((client) => client.value), // Send only the property values
       };
 
       if (currentMeetingId) {
@@ -198,14 +198,14 @@ const useMeetings = () => {
           setStatus({ value: current[key], label: current[key] });
         } else if (key == "salespersons") {
           setSelectedSalespersons(
-            current[key].map((sp) => ({
+            current[key]?.map((sp) => ({
               value: sp?._id,
               label: sp?.name,
             }))
           );
         } else if (key == "clients") {
           setSelectedClients(
-            current[key].map((c) => ({
+            current[key]?.map((c) => ({
               value: c?._id,
               label: c?.name,
             }))

@@ -220,7 +220,7 @@ const useCreateForm = () => {
       const response = await getRequest(`properties/${propertyId}`);
 
       if (response) {
-        const propertyData = response.data;
+        const propertyData = response?.data;
 
         //    // Pass only the assigned_to array to getAllUsersByName
         // const salespersonDetails = await getAllUsersByName(propertyData.assigned_to);

@@ -38,7 +38,7 @@ const useEditForm = () => {
     try {
       const response = await getRequest("users");
       if (response) {
-        const salesPersonsData = response.data.map((salesPerson) => ({
+        const salesPersonsData = response?.data?.map((salesPerson) => ({
           value: salesPerson._id,
           label: salesPerson.name,
         }));
@@ -119,7 +119,7 @@ const useEditForm = () => {
         address: data.address,
         type: clientType?.value || "",
         status: status?.value || "",
-        preferredCommunicationChannel: communicationChannels.map(
+        preferredCommunicationChannel: communicationChannels?.map(
           (channel) => channel.value
         ),
         assignedSalesperson:

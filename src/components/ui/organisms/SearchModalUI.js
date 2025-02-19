@@ -79,7 +79,7 @@ const SearchModalUI = ({
                           </div>
                         )}
 
-                        {filteredsearchList.map((item, i) => (
+                        {filteredsearchList?.map((item, i) => (
                           <Combobox.Option key={i}>
                             {({ active }) => (
                               <div

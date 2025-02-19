@@ -39,7 +39,7 @@ export default function ViewSalesTeamUI({
           <div className="overflow-hidden">
             <div className="px-4 sm:-py-5 sm:px-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-4 capitalize sm:divide-y sm:divide-gray-200 ">
-                {userDataFields.map(({ label, valueKey }) => (
+                {userDataFields?.map(({ label, valueKey }) => (
                   <div
                     key={valueKey}
                     className={`${

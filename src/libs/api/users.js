@@ -6,7 +6,7 @@ export const getAllUsersByName = async (assignedToIds) => {
     const salespersons = salespersonsResponse?.data || [];
 
     // Map ID to {label, value}
-    const salespersonDetails = assignedToIds.map((id) => {
+    const salespersonDetails = assignedToIds?.map((id) => {
       const salesperson = salespersons.find((user) => user._id === id);
       return salesperson ? { label: salesperson.name, value: salesperson._id } : null;
     }).filter(Boolean); // Filter out any null values

@@ -27,7 +27,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
             <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
-                  {columns.map((column, i) => (
+                  {columns?.map((column, i) => (
                     <th key={i} scope="col" className="table-th font-bold">
                       {column.label}
                     </th>
@@ -35,7 +35,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {rows.map((row, i) => (
+                {rows?.map((row, i) => (
                   <tr key={i} className="even:bg-slate-200 dark:even:bg-slate-700">
                     <td className="table-td">{row.date_sold}</td>
                     <td className="table-td">{row.number_of_units}</td>
@@ -66,7 +66,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
               </tbody>
               <tfoot className="bg-slate-100 dark:bg-slate-700">
                 <tr>
-                  {columns.map((column, i) => (
+                  {columns?.map((column, i) => (
                     <td key={i} className="table-td font-semibold">
                       {i === 0 ? <p>Average</p> : ""}
                       {i === 3 ? <p>2000</p> : ""}

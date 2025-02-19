@@ -42,7 +42,7 @@ const AmenitiesUI = ({
               isMulti
               value={selectedSalespersons}
               onChange={handleSelectSalesperson}
-              options ={ salesPerson.map((person) => ({
+              options ={ salesPerson?.map((person) => ({
                 label: person.name,
                 value: person._id, // Use a unique identifier for value
               }))}

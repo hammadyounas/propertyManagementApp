@@ -31,7 +31,7 @@ export default function useClientDetails() {
     const renderAssignedSalesperson = (salespeople) => {
       if (!salespeople || salespeople.length === 0)
         return "N/A";
-      return salespeople.map((person) => person.name).join(", ");
+      return salespeople?.map((person) => person.name).join(", ");
     };
 
     const handleEdit = () => {
