@@ -15,10 +15,11 @@ const EditSalesTeamPage = () => {
     handleSelectAssignedProperties,
     salespersonStatus,
     availableProperties,
+    getDataLoading,
   } = useEditSalesTeam();
   return (
     <EditFormUI
-    handleSubmit={handleSubmit}
+      handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       loading={loading}
       register={register}
@@ -30,6 +31,7 @@ const EditSalesTeamPage = () => {
       handleSelectAssignedProperties={handleSelectAssignedProperties}
       salespersonStatus={salespersonStatus}
       availableProperties={availableProperties}
+      getDataLoading={getDataLoading}
     />
   );
 };

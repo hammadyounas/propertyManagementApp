@@ -5,8 +5,17 @@ import "jspdf-autotable";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
+const TableUI = ({
+  columns,
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  push,
+  loading,
+  invoices,
+}) => {
   const generatePDF = (invoiceData) => {
     const doc = new jsPDF();
 
@@ -119,36 +128,51 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {rows.map((row, i) => (
-                  <tr
-                    key={i}
-                    className="even:bg-slate-200 dark:even:bg-slate-700"
-                  >
-                    <td className="table-td">{row.invoiceNumber}</td>
-                    <td className="table-td">{row.invoiceDate}</td>
-                    <td className="table-td">
-                      <div className="flex items-center">
-                        <span className="text-primary-default font-bold cursor-pointer">
-                          {row.client_name || row?.buyer?.name}
-                        </span>
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full">
+                        <LoadingUI />
                       </div>
                     </td>
-                    <td className="table-td">
-                      {row.client_address || row?.buyer?.address}
+                  </tr>
+                ) : invoices?.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4 text-center">
+                      No Data Found
                     </td>
-                    <td className="table-td">
-                      {row.responsible_broker || row?.seller?.name}
-                    </td>
-                    <td className="table-td">
-                      {row.notary_date || row?.instrumentalNotary}
-                    </td>
-                    <td className="table-td">
-                      {row.commissions_payable || row?.totalCommissionPayable}
-                    </td>
-                    <td className="table-td">
-                      <span className="block w-full">
-                        <span
-                          className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
+                  </tr>
+                ) : (
+                  rows.map((row, i) => (
+                    <tr
+                      key={i}
+                      className="even:bg-slate-200 dark:even:bg-slate-700"
+                    >
+                      <td className="table-td">{row.invoiceNumber}</td>
+                      <td className="table-td">{row.invoiceDate}</td>
+                      <td className="table-td">
+                        <div className="flex items-center">
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {row.client_name || row?.buyer?.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="table-td">
+                        {row.client_address || row?.buyer?.address}
+                      </td>
+                      <td className="table-td">
+                        {row.responsible_broker || row?.seller?.name}
+                      </td>
+                      <td className="table-td">
+                        {row.notary_date || row?.instrumentalNotary}
+                      </td>
+                      <td className="table-td">
+                        {row.commissions_payable || row?.totalCommissionPayable}
+                      </td>
+                      <td className="table-td">
+                        <span className="block w-full">
+                          <span
+                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
                             row?.status === "partially paid" &&
                             "text-blue-600 bg-blue-200"
@@ -166,7 +190,8 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                             "text-orange-600 bg-orange-200"
                           }
                           ${
-                            row?.status === "paid" && "text-teal-600 bg-teal-200"
+                            row?.status === "paid" &&
+                            "text-teal-600 bg-teal-200"
                           }
                           ${
                             row?.status === "sent" &&
@@ -176,21 +201,21 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                             row?.status === "pending" &&
                             "text-yellow-600 bg-yellow-200"
                           }`}
-                        >
-                          {row?.status}
+                          >
+                            {row?.status}
+                          </span>
                         </span>
-                      </span>
-                    </td>
-                    <td className="table-td">
-                      <div className="flex">
-                        <Tooltip content="View">
-                          <Icon
-                            onClick={() => generatePDF(row)}
-                            className="cursor-pointer text-[20px]"
-                            icon={"heroicons:arrow-down-tray"}
-                          />
-                        </Tooltip>
-                        {/* <Tooltip content="Edit">
+                      </td>
+                      <td className="table-td">
+                        <div className="flex">
+                          <Tooltip content="View">
+                            <Icon
+                              onClick={() => generatePDF(row)}
+                              className="cursor-pointer text-[20px]"
+                              icon={"heroicons:arrow-down-tray"}
+                            />
+                          </Tooltip>
+                          {/* <Tooltip content="Edit">
                           <Icon
                             onClick={() => {}}
                             className="cursor-pointer text-[20px] mx-4"
@@ -204,10 +229,11 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                             icon={"heroicons-outline:trash"}
                           />
                         </Tooltip> */}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -17,6 +17,7 @@ const useClients = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -30,12 +31,15 @@ const useClients = () => {
 
   const fetchClients = async () => {
     try {
+      setLoading(true)
       const response = await getRequest("clients");
       console.log(response);
-      const filteredUsers = response.data.filter((user) => !user.isDeleted);
+      const filteredUsers = response?.data?.filter((user) => !user.isDeleted);
       console.log(filteredUsers);
       setUsers(filteredUsers);
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error("Error fetching clients:", error);
     }
   };
@@ -95,6 +99,7 @@ const useClients = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    loading
   };
 };
 

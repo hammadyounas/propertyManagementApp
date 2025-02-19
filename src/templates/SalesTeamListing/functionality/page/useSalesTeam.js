@@ -66,9 +66,11 @@ const useSalesTeam = () => {
       fetchUsers();
       toast.success("Broker deleted successfully.");
     } catch (error) {
-      console.error("Error:", error); // Log errors
+      console.error("Error deleting broker:", error);
       toast.error(
-        error.message || "An error occurred while deleting property."
+        error?.response?.data?.message ||
+          error?.message ||
+          "Error deleting broker!"
       );
       setDeleteLoading(false);
     }

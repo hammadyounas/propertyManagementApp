@@ -1,7 +1,7 @@
 import useTable from "../../functionality/organisms/useTable";
 import TableUI from "../../ui/organisms/TableUI";
 
-const Table = ({ rows, globalFilter, setGlobalFilter, openModal, push, openDeleteModal, loading }) => {
+const Table = ({ rows, globalFilter, setGlobalFilter, openModal, push, openDeleteModal, loading, properties }) => {
   const { columns } = useTable();
   return (
     <TableUI
@@ -13,6 +13,7 @@ const Table = ({ rows, globalFilter, setGlobalFilter, openModal, push, openDelet
       push={push}
       openDeleteModal={openDeleteModal}
       loading={loading}
+      properties={properties}
     />
   );
 };

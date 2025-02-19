@@ -162,8 +162,9 @@ export default function ProfileUI({
               </div> */}
             </div>
 
-            <div className="flex flex-wrap justify-between">
-              <div className="w-full md:w-[49%]">
+            {user?.role?.toUpperCase() != "ADMIN" && (
+              <div className="flex flex-wrap justify-between">
+                {/* <div className="w-full md:w-[49%]">
                 <div className="mt-4">
                   <div className="my-2 text-sm font-medium">
                     Assigned Properties
@@ -187,29 +188,41 @@ export default function ProfileUI({
                     </p>
                   )}
                 </div>
-              </div>
-              <div className="w-full md:w-[49%]">
-                <div className="mt-4">
-                  <div className="my-2 text-sm font-medium">Status*</div>
-                  <ReactSelect
-                    name="status"
-                    value={status}
-                    // onChange={handleSelectStatus}
-                    // options={salespersonStatus}
-                    placeholder="Status"
-                    isDisabled
-                    className="text-sm"
+              </div> */}
+                <div className="w-full md:w-[49%]">
+                  <Textinput
+                    name="joining_date"
+                    label="Joining Date*"
+                    type="date"
+                    register={register}
+                    error={errors.joining_date}
+                    placeholder="Joining Date"
+                    disabled
                   />
-                  {errors?.status && !status && (
-                    <p className="text-sm text-danger-500 mt-2">
-                      {errors?.status?.message}
-                    </p>
-                  )}
+                </div>
+                <div className="w-full md:w-[49%]">
+                  <div className="mt-4">
+                    <div className="my-2 text-sm font-medium">Status*</div>
+                    <ReactSelect
+                      name="status"
+                      value={status}
+                      // onChange={handleSelectStatus}
+                      // options={salespersonStatus}
+                      placeholder="Status"
+                      isDisabled
+                      className="text-sm"
+                    />
+                    {errors?.status && !status && (
+                      <p className="text-sm text-danger-500 mt-2">
+                        {errors?.status?.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="flex flex-wrap justify-between">
+            {/* <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
                   name="joining_date"
@@ -221,7 +234,7 @@ export default function ProfileUI({
                   disabled
                 />
               </div>
-            </div>
+            </div> */}
 
             {!isEditing ? (
               <div className="flex justify-center md:justify-end mt-12">

@@ -25,31 +25,33 @@ const EditClientPage = () => {
     clientTypes,
     preferredCommunicationChannels,
     salesPersons,
+    getDataLoading,
   } = useEditForm();
   return (
     <EditFormUI
-    handleSubmit={handleSubmit}
-    onSubmit={onSubmit}
-    loading={loading}
-    register={register}
-    errors={errors}
-    push={push}
-    control = {control}
-    getValues={getValues}
-    setValue={setValue} 
-    status={status}
-    handleSelectStatus={handleSelectStatus}
-    clientType={clientType}
-    handleSelectClientType={handleSelectClientType}
-    salesPersonAssigned={salesPersonAssigned}
-    handleSelectAssignedSalesperson={handleSelectAssignedSalesperson}
-    communicationChannels={communicationChannels}
-    handleSelectCommunicationChannel={handleSelectCommunicationChannel}
-    clientStatus={clientStatus}
-    clientTypes={clientTypes}
-    preferredCommunicationChannels={preferredCommunicationChannels}
-    salesPersons={salesPersons}
-  />
+      handleSubmit={handleSubmit}
+      onSubmit={onSubmit}
+      loading={loading}
+      register={register}
+      errors={errors}
+      push={push}
+      control={control}
+      getValues={getValues}
+      setValue={setValue}
+      status={status}
+      handleSelectStatus={handleSelectStatus}
+      clientType={clientType}
+      handleSelectClientType={handleSelectClientType}
+      salesPersonAssigned={salesPersonAssigned}
+      handleSelectAssignedSalesperson={handleSelectAssignedSalesperson}
+      communicationChannels={communicationChannels}
+      handleSelectCommunicationChannel={handleSelectCommunicationChannel}
+      clientStatus={clientStatus}
+      clientTypes={clientTypes}
+      preferredCommunicationChannels={preferredCommunicationChannels}
+      salesPersons={salesPersons}
+      getDataLoading={getDataLoading}
+    />
   );
 };
 

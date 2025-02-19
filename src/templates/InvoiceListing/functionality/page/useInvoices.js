@@ -9,15 +9,19 @@ const useInvoices = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
+  const [loading, setLoading] = useState(false)
 
   const fetchInvoices = async () => {
     try {
+      setLoading(true)
       const response = await getRequest("invoices");
       const filteredInvoices = response?.data?.filter(
         (invoice) => !invoice.isDeleted
       );
       setInvoices(filteredInvoices);
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error("Error fetching invoices:", error);
     }
   };
@@ -47,6 +51,7 @@ const useInvoices = () => {
     handlePageChange,
     currentPage,
     push,
+    loading
   };
 };
 

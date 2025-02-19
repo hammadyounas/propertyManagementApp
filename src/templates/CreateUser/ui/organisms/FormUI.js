@@ -118,7 +118,7 @@ const FormUI = ({
             </div>
 
             <div className="flex flex-wrap justify-between">
-              <div className="w-full md:w-[49%]">
+              {/* <div className="w-full md:w-[49%]">
                 <div className="mt-4">
                   <div className="my-2 text-sm font-medium">
                     Assigned Properties
@@ -138,13 +138,24 @@ const FormUI = ({
                     isDisabled={loading}
                     className="text-sm"
                   />
-                  {errors?.propertiesAssigned && !propertiesAssigned.length && (
+                  {errors?.assigned_properties && !propertiesAssigned.length && (
                     <p className="text-sm text-danger-500 mt-2">
-                      {errors?.propertiesAssigned?.message}
+                      {errors?.assigned_properties?.message}
                     </p>
                   )}
 
                 </div>
+              </div> */}
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="joining_date"
+                  label="Joining Date*"
+                  type="date"
+                  register={register}
+                  error={errors.joining_date}
+                  placeholder="Joining Date"
+                  disabled={loading}
+                />
               </div>
               <div className="w-full md:w-[49%]">
                 <div className="mt-4">
@@ -168,7 +179,7 @@ const FormUI = ({
             </div>
 
             <div className="flex flex-wrap justify-between">
-              <div className="w-full md:w-[49%]">
+              {/* <div className="w-full md:w-[49%]">
                 <Textinput
                   name="joining_date"
                   label="Joining Date*"
@@ -178,7 +189,7 @@ const FormUI = ({
                   placeholder="Joining Date"
                   disabled={loading}
                 />
-              </div>
+              </div> */}
               <div className="w-full md:w-[49%]">
                 <Textinput
                   name="password"
@@ -190,8 +201,6 @@ const FormUI = ({
                   disabled={loading}
                 />
               </div>
-            </div>
-            <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
                   name="confirm_password"
@@ -204,6 +213,19 @@ const FormUI = ({
                 />
               </div>
             </div>
+            {/* <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
+                <Textinput
+                  name="confirm_password"
+                  label="Confirm Password*"
+                  type="password"
+                  register={register}
+                  error={errors.confirm_password}
+                  placeholder="Confirm Password"
+                  disabled={loading}
+                />
+              </div>
+            </div> */}
 
             <div className="flex justify-center md:justify-end mt-12">
               <Button

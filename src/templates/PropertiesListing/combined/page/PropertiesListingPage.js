@@ -37,8 +37,9 @@ const PropertiesListingPage = () => {
         push={push}
         openDeleteModal={openDeleteModal}
         loading={loading}
+        properties={properties}
       />
-      <div className="flex w-full justify-end mt-2 items-center">
+      <div className={`flex w-full justify-end mt-2 items-center ${properties?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}

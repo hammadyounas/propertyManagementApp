@@ -99,9 +99,11 @@ const useProperty = () => {
       fetchProperties();
       toast.success("Property deleted successfully.");
     } catch (error) {
-      console.error("Error:", error); // Log errors
+      console.error("Error deleting property:", error);
       toast.error(
-        error.message || "An error occurred while deleting property."
+        error?.response?.data?.message ||
+          error?.message ||
+          "Error deleting property!"
       );
       setDeleteLoading(false);
     }

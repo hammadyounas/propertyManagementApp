@@ -64,10 +64,10 @@ const useCreateForm = () => {
       .number()
       .required("Bathrooms are required")
       .moreThan(0, "There must be at least 1 bathroom"),
-    assigned_to: yup
-      .array()
-      .min(1, "At least one salesperson must be selected")
-      .required("Salesperson is required"),
+    // assigned_to: yup
+    //   .array()
+    //   .min(1, "At least one salesperson must be selected")
+    //   .required("Salesperson is required"),
     images: yup
       .array()
       .min(1, "At least one image must be uploaded")
@@ -131,6 +131,7 @@ const useCreateForm = () => {
   const [removedImages, setRemovedImages] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [getDataLoading, setGetDataLoading] = useState(false)
   const { push } = useRouter();
   const router = useRouter();
   const propertyId = router.query.id;
@@ -215,6 +216,7 @@ const useCreateForm = () => {
 
   const fetchPropertyData = async () => {
     try {
+      setGetDataLoading(true)
       const response = await getRequest(`properties/${propertyId}`);
 
       if (response) {
@@ -233,32 +235,32 @@ const useCreateForm = () => {
 
         // Form fields to be set
         const formFields = {
-          title: propertyData.title,
-          furnishing_status: propertyData.furnishing_status,
-          property_type: propertyData.property_type,
-          property_status: propertyData.property_status,
-          ownership_status: propertyData.ownership_status,
-          no_of_units: propertyData.no_of_units,
-          description: propertyData.description,
-          address: propertyData.address,
-          street_number: propertyData.street_number,
-          street_name: propertyData.street_name,
-          cadstre_number: propertyData.cadstre_number,
-          city: propertyData.city,
-          area: propertyData.area,
-          neighborhood: propertyData.neighborhood,
-          location_map_url: propertyData.location_map_url,
-          owner_status: propertyData.owner_status,
-          price: propertyData.price,
-          size: propertyData.size,
-          bedrooms: propertyData.bedrooms,
-          bathrooms: propertyData.bathrooms,
-          owner_name: propertyData.owner_name,
-          phone_number: propertyData.phone_number,
-          email: propertyData.email,
-          owner_address: propertyData.owner_address,
+          title: propertyData?.title,
+          furnishing_status: propertyData?.furnishing_status,
+          property_type: propertyData?.property_type,
+          property_status: propertyData?.property_status,
+          ownership_status: propertyData?.ownership_status,
+          no_of_units: propertyData?.no_of_units,
+          description: propertyData?.description,
+          address: propertyData?.address,
+          street_number: propertyData?.street_number,
+          street_name: propertyData?.street_name,
+          cadstre_number: propertyData?.cadstre_number,
+          city: propertyData?.city,
+          area: propertyData?.area,
+          neighborhood: propertyData?.neighborhood,
+          location_map_url: propertyData?.location_map_url,
+          owner_status: propertyData?.owner_status,
+          price: propertyData?.price,
+          size: propertyData?.size,
+          bedrooms: propertyData?.bedrooms,
+          bathrooms: propertyData?.bathrooms,
+          owner_name: propertyData?.owner_name,
+          phone_number: propertyData?.phone_number,
+          email: propertyData?.email,
+          owner_address: propertyData?.owner_address,
           assigned_to: salespersonDetails, // Set names instead of IDs
-          images: propertyData.images || [],
+          images: propertyData?.images || [],
         };
 
         // Set values using the corresponding state setters
@@ -303,7 +305,9 @@ const useCreateForm = () => {
         setSelectedImages(propertyData.images || []);
         setSelectedDocs(propertyData.documents || []);
       }
+      setGetDataLoading(false)
     } catch (error) {
+      setGetDataLoading(false)
       console.error("Failed to fetch property data:", error);
     }
   };
@@ -480,36 +484,45 @@ const useCreateForm = () => {
       formData.append("owner_address", data.owner_address);
 
       // Append amenities and assigned_to arrays
-      if (amenities) {
+      if (amenities?.length) {
         amenities
           .filter((amenity) => amenity && amenity.value)
           .forEach((amenity) => {
             formData.append("amenities", amenity.value);
           });
       }
+      else {
+        formData.append("amenities", []);
+      }
 
-      if (selectedSalespersons) {
+      if (selectedSalespersons?.length) {
         selectedSalespersons
           .filter((salesperson) => salesperson && salesperson.value)
           .forEach((salesperson) => {
             formData.append("assigned_to", salesperson.value);
           });
       }
+      else {
+         formData.append("assigned_to", []);
+      }
 
-      if (removedImages) {
+      if (removedImages?.length) {
         removedImages.forEach((img) => {
           formData.append("removeImages", img);
         });
       }
+      else {
+        formData.append("removeImages", []);
+      }
 
       // Append selected images
-      selectedImages.forEach((image) => {
+      selectedImages?.forEach((image) => {
         formData.append("images", image);
         console.log("Image:", image);
       });
 
       // Append selected documents
-      selectedDocs.forEach((doc) => {
+      selectedDocs?.forEach((doc) => {
         formData.append("documents", doc);
         console.log("Doc:", doc);
       });
@@ -592,6 +605,7 @@ const useCreateForm = () => {
     handleSelectSalesperson,
     ownerDetailsStatus,
     ownerDetails,
+    getDataLoading
   };
 };
 

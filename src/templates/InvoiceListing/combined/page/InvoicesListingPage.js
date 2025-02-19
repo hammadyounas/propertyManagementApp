@@ -14,6 +14,7 @@ const InvoicesListingPage = () => {
     handlePageChange,
     currentPage,
     push,
+    loading
   } = useInvoices();
 
   return (
@@ -23,8 +24,10 @@ const InvoicesListingPage = () => {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
+        loading={loading}
+        invoices={invoices}
       />
-      <div className="flex w-full justify-end mt-2 items-center">
+      <div className={`flex w-full justify-end mt-2 items-center ${invoices?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}

@@ -14,10 +14,10 @@ const useCreateForm = () => {
     address: yup.string().required("Address is required"),
     status: yup.string().required("Status is required"),
     // propertiesAssigned: yup.array().required("Status is required"),
-    propertiesAssigned: yup
-    .array()
-    // .required("Assigned Properties are required"),
-    .min(1, "At least one property must be selected"),
+    // assigned_properties: yup
+    //   .array()
+    //   // .required("Assigned Properties are required"),
+    //   .min(1, "At least one property must be selected"),
     licence_number: yup.string().required("Licence Number is required"),
     licence_type: yup.string().required("Licence Type is required"),
     licence_type: yup.string().required("Licence Type is required"),
@@ -90,7 +90,7 @@ const useCreateForm = () => {
     setValue("assigned_properties", propertiesAssigned);
     setValue("status", status?.value || "");
     
-    availablePropertiesData();
+    // availablePropertiesData();
 
   }, [propertiesAssigned, status]);
 
@@ -113,7 +113,7 @@ const useCreateForm = () => {
         address: data.address,
         licence_number: data.licence_number,
         licence_type: data.licence_type,
-        assigned_properties: propertiesAssigned.map((property) => property.value), // Send only the property values
+        // assigned_properties: propertiesAssigned.map((property) => property.value), // Send only the property values
         status: data.status,
         joining_date: data.joining_date,
         password: data.password,

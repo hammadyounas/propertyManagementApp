@@ -23,6 +23,7 @@ const useEditForm = () => {
   const router = useRouter();
   const clientId = router.query.id;
   const [salesPersons, setSalesPersons] = useState([]);
+  const [getDataLoading, setGetDataLoading] = useState(false)
 
   const {
     register,
@@ -53,16 +54,17 @@ const useEditForm = () => {
 
     const fetchClientData = async () => {
       try {
+        setGetDataLoading(true)
         const response = await getRequest(`clients/${clientId}`);
         if (response) {
           const clientData = response.data;
           console.log(clientData);
 
           const clientTypeOption = clientTypes.find(
-            (option) => option.value === clientData.type
+            (option) => option.value === clientData?.type
           );
           const statusOption = clientStatus.find(
-            (option) => option.value === clientData.status
+            (option) => option.value === clientData?.status
           );
           const preferredCommunicationChannelsOptions =
             preferredCommunicationChannels.filter((channel) =>
@@ -76,11 +78,11 @@ const useEditForm = () => {
           setSalespersonAssigned(salesPersonAssignedOptions || []); // Ensure proper assignment
           setCommunicationChannels(preferredCommunicationChannelsOptions || []);
 
-          setValue("name", clientData.name);
-          setValue("email", clientData.email);
-          setValue("phoneNumber", clientData.phoneNumber);
-          setValue("address", clientData.address);
-          setValue("notes", clientData.notes);
+          setValue("name", clientData?.name);
+          setValue("email", clientData?.email);
+          setValue("phoneNumber", clientData?.phoneNumber);
+          setValue("address", clientData?.address);
+          setValue("notes", clientData?.notes);
           setValue("assigned_salesperson", salesPersonAssignedOptions); // Properly set the salesperson
           setValue("status", statusOption);
           setValue("type", clientTypeOption);
@@ -89,7 +91,9 @@ const useEditForm = () => {
             preferredCommunicationChannelsOptions
           );
         }
+        setGetDataLoading(false)
       } catch (error) {
+        setGetDataLoading(false)
         toast.error("Failed to fetch client data.");
       }
     };
@@ -162,6 +166,7 @@ const useEditForm = () => {
     clientTypes,
     preferredCommunicationChannels,
     salesPersons,
+    getDataLoading
   };
 };
 

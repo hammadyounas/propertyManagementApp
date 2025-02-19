@@ -53,10 +53,11 @@ const EditPropertyPage = () => {
     ownersDetailstatus,
     handleSelectOwnersDetailsStatus,
     ownerDetailsStatus,
-    ownerDetails
+    ownerDetails,
+    getDataLoading,
   } = useForm();
   return (
-    <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
+    <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit} getDataLoading={getDataLoading}>
       <GeneralInformation
         register={register}
         control={control}

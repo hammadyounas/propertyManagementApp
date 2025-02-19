@@ -31,8 +31,9 @@ const SalesTeamListingPage = () => {
         push={push}
         loading={loading}
         openDeleteModal={openDeleteModal}
+        users={users}
       />
-      <div className="flex w-full justify-end mt-2 items-center">
+      <div className={`flex w-full justify-end mt-2 items-center ${users?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}

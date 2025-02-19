@@ -15,10 +15,10 @@ export default function useSalesTeamDetails() {
       const response = await getRequest(`user/${userId}`);
       if (response) {
         setSalesTeamData(response.data);
-        if (response.data?.assigned_properties?.length) {
-          const propertyDetails = await getAllPropertiesByTitle(response.data.assigned_properties);
-          setAssignedProperties(propertyDetails); // Update state with property details
-        }
+        // if (response.data?.assigned_properties?.length) {
+        //   const propertyDetails = await getAllPropertiesByTitle(response.data.assigned_properties);
+        //   setAssignedProperties(propertyDetails); // Update state with property details
+        // }
       }
     } catch (error) {
       toast.error("Failed to fetch sales team data.");

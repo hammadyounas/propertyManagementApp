@@ -42,6 +42,7 @@ const useEditSalesTeam = () => {
   ];
 
   const [loading, setLoading] = useState(false);
+  const [getDataLoading, setGetDataLoading] = useState(false)
   const [status, setStatus] = useState("");
   const [propertiesAssigned, setPropertiesAssigned] = useState([]);
   const [availableProperties, setAvailableProperties] = useState([]);
@@ -66,40 +67,43 @@ const useEditSalesTeam = () => {
   
     const fetchUserData = async () => {
       try {
+        setGetDataLoading(true)
         const response = await getRequest(`user/${userId}`);
-        const userData = response.data;
+        const userData = response?.data;
 
         // Find the matching option for status
         const statusOption = salespersonStatus.find(
-          (status) => status.value === userData.status
+          (status) => status.value === userData?.status
         );
         
         // Set form values
-        setValue("name", userData.name);
-        setValue("email", userData.email);
-        setValue("contact_number", userData.contact_number);
-        setValue("address", userData.address);
-        setValue("licence_number", userData.licence_number);
-        setValue("licence_type", userData.licence_type);
-        setValue("notes", userData.notes);
+        setValue("name", userData?.name);
+        setValue("email", userData?.email);
+        setValue("contact_number", userData?.contact_number);
+        setValue("address", userData?.address);
+        setValue("licence_number", userData?.licence_number);
+        setValue("licence_type", userData?.licence_type);
+        setValue("notes", userData?.notes);
         setValue("status", statusOption); // Set the ReactSelect-compatible option
         setStatus(statusOption); // Update the local state for ReactSelect
   
         // Set joining date
-        setValue("joining_date", userData.joining_date);
+        setValue("joining_date", userData?.joining_date);
   
         // Fetch and set assigned properties
-        const assignedProperties = await getAllPropertiesByTitle(userData.assigned_properties);
-        setValue("assigned_properties", assignedProperties);
-        setPropertiesAssigned(assignedProperties);
+        // const assignedProperties = await getAllPropertiesByTitle(userData.assigned_properties);
+        // setValue("assigned_properties", assignedProperties);
+        // setPropertiesAssigned(assignedProperties);
+        setGetDataLoading(false)
       } catch (error) {
+        setGetDataLoading(false)
         console.error("Failed to fetch user data:", error);
         toast.error("Failed to fetch user data.");
       }
     };
   
     fetchUserData();
-    fetchAvailableProperties();
+    // fetchAvailableProperties();
   }, [userId, setValue]);
   
 
@@ -128,9 +132,9 @@ const useEditSalesTeam = () => {
         address: data.address,
         licence_number: data.licence_number,
         licence_type: data.licence_type,
-        assigned_properties: propertiesAssigned.map(
-          (property) => property.value
-        ),
+        // assigned_properties: propertiesAssigned.map(
+        //   (property) => property.value
+        // ),
         status: data.status,
         joining_date: data.joining_date,
       };
@@ -164,6 +168,7 @@ const useEditSalesTeam = () => {
     handleSelectAssignedProperties,
     salespersonStatus,
     availableProperties,
+    getDataLoading,
   };
 };
 

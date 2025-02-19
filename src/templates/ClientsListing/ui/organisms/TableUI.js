@@ -3,7 +3,8 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDeleteModal }) => {
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDeleteModal, loading, users }) => {
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
@@ -34,7 +35,21 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {rows && rows.length > 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full">
+                        <LoadingUI />
+                      </div>
+                    </td>
+                  </tr>
+                ) : users?.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4 text-center">
+                      No Data Found
+                    </td>
+                  </tr>
+                ) : (
                   rows.map((row, i) => (
                     <tr
                       key={i}
@@ -70,7 +85,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
                       <td className="table-td">
                         <div className="flex">
                           <Icon
-                            onClick={() =>  push(`/clients/view/${row._id}`)}
+                            onClick={() => push(`/clients/view/${row._id}`)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
@@ -80,7 +95,9 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
-                            onClick={() => { openDeleteModal(row._id); }}
+                            onClick={() => {
+                              openDeleteModal(row._id);
+                            }}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons-outline:trash"}
                           />
@@ -88,18 +105,8 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDelet
                       </td>
                     </tr>
                   ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="6"
-                      className="table-td text-center text-gray-500 dark:text-gray-400 pt-10"
-                    >
-                      No Data Found
-                    </td>
-                  </tr>
                 )}
               </tbody>
-
             </table>
           </div>
         </div>

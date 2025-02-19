@@ -131,11 +131,11 @@ const handleCancel = () => {
     }
   };
 
-  useEffect(() => {
-    if (user?._id) {
-      fetchAvailableProperties();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?._id) {
+  //     fetchAvailableProperties();
+  //   }
+  // }, [user]);
 
   const onSubmit = async (data) => {
     try {

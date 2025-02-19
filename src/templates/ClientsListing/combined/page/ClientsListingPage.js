@@ -19,6 +19,7 @@ const ClientsListingPage = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    loading
   } = useClients();
 
   return (
@@ -29,8 +30,10 @@ const ClientsListingPage = () => {
         setGlobalFilter={setGlobalFilter}
         push={push}
         openDeleteModal={openDeleteModal}
+        loading={loading}
+        users={users}
       />
-      <div className="flex w-full justify-end mt-2 items-center">
+      <div className={`flex w-full justify-end mt-2 items-center ${users?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
@@ -48,7 +51,7 @@ const ClientsListingPage = () => {
       <ConfirmDeleteModal
         isOpen={showDeleteModal}
         onClose={closeDeleteModal}
-        onDelete={ deleteClientById}
+        onDelete={deleteClientById}
         text={"Are you sure you want to delete this client?"}
         disabled={deleteLoading}
       />

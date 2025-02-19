@@ -12,6 +12,7 @@ const TableUI = ({
   push,
   loading,
   openDeleteModal,
+  users,
 }) => {
   return (
     <Card noborder>
@@ -44,7 +45,7 @@ const TableUI = ({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {loading && (
+                {loading ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
                       <div className="flex items-center justify-center w-full">
@@ -52,33 +53,30 @@ const TableUI = ({
                       </div>
                     </td>
                   </tr>
-                )}
-                {rows.length === 0 && (
+                ) : users?.length === 0 ? (
                   <tr>
-                    <td colSpan={columns.length} className="p-4">
-                      <div className="flex items-center justify-center w-full text-gray-500">
-                        No Data Found
-                      </div>
+                    <td colSpan={columns.length} className="p-4 text-center">
+                      No Data Found
                     </td>
                   </tr>
-                )}
-                {rows.map((row, i) => (
-                  <tr
-                    key={i}
-                    className=" even:bg-slate-200 dark:even:bg-slate-700"
-                  >
-                    <td className="table-td ">
-                      <div className="flex items-center">
-                        <span className="text-primary-default font-bold cursor-pointer">
-                          {row.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="table-td ">{row.contact_number}</td>
-                    <td className="table-td ">{row.email}</td>
-                    <td className="table-td ">{row.licence_number}</td>
-                    <td className="table-td ">{row.joining_date}</td>
-                    {/* <td className="table-td ">
+                ) : (
+                  rows.map((row, i) => (
+                    <tr
+                      key={i}
+                      className=" even:bg-slate-200 dark:even:bg-slate-700"
+                    >
+                      <td className="table-td ">
+                        <div className="flex items-center">
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {row.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="table-td ">{row.contact_number}</td>
+                      <td className="table-td ">{row.email}</td>
+                      <td className="table-td ">{row.licence_number}</td>
+                      <td className="table-td ">{row.joining_date}</td>
+                      {/* <td className="table-td ">
                       <span className="block w-full">
                         <span
                           className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
@@ -90,28 +88,29 @@ const TableUI = ({
                         </span>
                       </span>
                     </td> */}
-                    <td className="table-td ">
-                      <div className="flex">
-                        <Icon
-                          onClick={() => push(`/sales-team/view/${row._id}`)}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons:eye"}
-                        />
-                        <Icon
-                          onClick={() => push(`/sales-team/edit/${row._id}`)}
-                          className="cursor-pointer text-[20px] mx-4"
-                          icon={"heroicons:pencil-square"}
-                        />
+                      <td className="table-td ">
+                        <div className="flex">
+                          <Icon
+                            onClick={() => push(`/sales-team/view/${row._id}`)}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons:eye"}
+                          />
+                          <Icon
+                            onClick={() => push(`/sales-team/edit/${row._id}`)}
+                            className="cursor-pointer text-[20px] mx-4"
+                            icon={"heroicons:pencil-square"}
+                          />
 
-                        <Icon
-                          onClick={() => openDeleteModal(row?._id)}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons-outline:trash"}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                          <Icon
+                            onClick={() => openDeleteModal(row?._id)}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons-outline:trash"}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

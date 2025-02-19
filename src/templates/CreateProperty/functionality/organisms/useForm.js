@@ -62,10 +62,10 @@ const useCreateForm = () => {
       .number()
       .required("Bathrooms are required")
       .moreThan(0, "There must be at least 1 bathroom"),
-    assigned_to: yup
-      .array()
-      .min(1, "At least one salesperson must be selected")
-      .required("Salesperson is required"),
+    // assigned_to: yup
+    //   .array()
+    //   .min(1, "At least one salesperson must be selected")
+    //   .required("Salesperson is required"),
     images: yup
       .array()
       .min(1, "At least one image must be uploaded")
@@ -354,21 +354,21 @@ const useCreateForm = () => {
       formData.append("owner_address", data.owner_address);
 
       // Append arrays (e.g., amenities, assigned salespersons)
-      amenities.forEach((amenity) => {
+      amenities?.forEach((amenity) => {
         formData.append("amenities", amenity.value);
       });
 
-      selectedSalespersons.forEach((salesperson) => {
+      selectedSalespersons?.forEach((salesperson) => {
         formData.append("assigned_to", salesperson.value);
       });
 
       // Append images and documents (files)
-      selectedImages.forEach((image) => {
+      selectedImages?.forEach((image) => {
         formData.append("images", image); // Append each file object
         console.log("Image:", image); // Debugging
       });
 
-      selectedDocs.forEach((doc) => {
+      selectedDocs?.forEach((doc) => {
         formData.append("documents", doc); // Append each file object
       });
 
@@ -394,8 +394,12 @@ const useCreateForm = () => {
         throw new Error("Create Property failed");
       }
     } catch (error) {
-      console.error("Error:", error); // Log errors
-      toast.error(error.message || "An error occurred while adding property.");
+      console.error("Error adding property:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Error adding property!"
+      );
     } finally {
       setLoading(false);
     }
