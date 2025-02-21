@@ -44,18 +44,8 @@ export const menuItems = [
   {
     title: "Marketing Emails",
     icon: "heroicons:at-symbol",
-    isOpen: true,
     isHide: false,
-    child: [
-      {
-        childtitle: "Email Templates",
-        childlink: "/email-templates",
-      },
-      {
-        childtitle: "Send Email",
-        childlink: "/send-email",
-      },
-    ],
+    link: "/marketing-emails",
   },
   {
     title: "Market Analysis (ACM)",
