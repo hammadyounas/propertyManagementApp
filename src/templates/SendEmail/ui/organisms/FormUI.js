@@ -23,8 +23,24 @@ const FormUI = ({
   handleRemoveImage,
   recipients,
 }) => {
+  const [modal, setModal] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+  const [imageBase64, setImageBase64] = useState(null);
+
+  const handlePreview = (data) => {
+    setPreviewData(data);
+    if (selectedImage) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageBase64(reader.result);
+      };
+      reader.readAsDataURL(selectedImage);
+      setModal(true);
+    }
+    console.log('here is data:', data)
+  };
   console.log(errors);
-  
+
   return (
     <div className="w-full lg:w-[75%]">
       <Card title="Send Email">
@@ -176,13 +192,13 @@ const FormUI = ({
                     options={
                       selectedType === "clients"
                         ? clients.map((c) => ({
-                            label: c.label,
-                            value: c.value,
-                          }))
+                          label: c.label,
+                          value: c.value,
+                        }))
                         : brokers.map((b) => ({
-                            label: b.label,
-                            value: b.value,
-                          }))
+                          label: b.label,
+                          value: b.value,
+                        }))
                     }
                     placeholder={`Select ${selectedType} emails`}
                     isDisabled={loading}
@@ -209,13 +225,80 @@ const FormUI = ({
               <Button
                 text={"Submit"}
                 className={"md:!w-36"}
-                type="submit"
+                // type="submit"
+                onClick={handleSubmit(handlePreview)}
                 loading={loading}
               />
+              {/* <button onClick={handlePreview}>Submit</button> */}
             </div>
           </div>
         </form>
       </Card>
+      {modal && previewData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center right-20">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 border">
+            <img
+              src="https://static.vecteezy.com/system/resources/previews/015/577/147/non_2x/property-and-construction-logo-design-vector.jpg"
+              alt="Company Logo"
+              width="70"
+              className="rounded-md border border-gray-300"
+            />
+            {imageBase64 && (
+              <img
+                src={imageBase64}
+                alt="Preview"
+                className="h-32 w-[330px] object-cover rounded-md mt-2 border"
+              />
+            )}
+            <h3 className="font-bold text-green-700 text-center mt-2">{previewData.title || "helo"}</h3>
+            <p className="mt-5">{previewData.description || "helo"}</p>
+            <td align="center">
+              <a className="bg-green-600 text-white px-4 py-2 rounded-md inline-block mt-2 mb-3">
+                Learn More
+              </a>
+            </td>
+            <tr>
+              <td className="footer text-center bg-gray-200">
+                <p className="font-semibold text-gray-700 mt-4">Follow us</p>
+                <div className="flex justify-center space-x-4 mt-3">
+                  <a href="#" className="social-icons">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/768px-Facebook_Logo_%282019%29.png"
+                      alt="Facebook"
+                      className="w-8 h-8"
+                    />
+                  </a>
+                  <a href="#" className="social-icons">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/1200px-Logo_of_Twitter.svg.png"
+                      alt="Twitter"
+                      className="w-8 h-8"
+                    />
+                  </a>
+                </div>
+                <p className="text-gray-600 mt-4">Property Management, The Real Estate Builder</p>
+              </td>
+            </tr>
+
+            <div className="flex justify-end mt-4">
+              <Button
+                text="Cancel"
+                className="bg-gray-300 text-black mx-2"
+                onClick={() => setModal(false)}
+              />
+              <Button
+                text="OK"
+                className="bg-blue-500 text-white"
+                onClick={() => {
+                  setModal(false);
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
