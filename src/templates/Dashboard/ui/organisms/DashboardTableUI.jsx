@@ -1,4 +1,4 @@
-import Card from "../../../components/combined/molecules/CardUIContainer";
+import Card from "../../../../components/combined/molecules/CardUIContainer";
 
 const DashboardTableUI = ({ columns, rows, tableFooterData }) => {
   return (
@@ -27,6 +27,7 @@ const DashboardTableUI = ({ columns, rows, tableFooterData }) => {
                     <td className="table-td px-4 py-4">{row.invoice}</td>
                     <td className="table-td px-4 py-4">{row.pmtReceived}</td>
                     <td className="table-td px-4 py-4">{row.pmtBroker}</td>
+                    <td className="table-td px-4 py-4">{row.amount}</td>
                     {/* <td className="table-td px-4 py-4">
                       <span
                         className={`inline-block px-3 min-w-[90px] text-center py-1 rounded-full bg-opacity-25 ${

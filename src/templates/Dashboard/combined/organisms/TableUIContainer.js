@@ -1,5 +1,5 @@
 import useTable from "../../functionality/organisms/useTable";
-import DashboardTableUI from "../../ui/DashboardTableUI";
+import DashboardTableUI from "../../ui/organisms/DashboardTableUI";
 
 const Table = ({ rows, globalFilter, setGlobalFilter, push, tableFooterData }) => {
   const { columns } = useTable();

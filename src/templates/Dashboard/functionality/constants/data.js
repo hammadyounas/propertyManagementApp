@@ -1,3 +1,29 @@
+export const invoiceStatus = [
+  {
+    value: "submitted",
+    label: "Submitted",
+  },
+  {
+    value: "paid",
+    label: "Paid",
+  },
+  {
+    value: "pending",
+    label: "Pending",
+  },
+]
+
+export const pmtReceivedStatus = [
+  {
+    value: "paid",
+    label: "Paid",
+  },
+  {
+    value: "non Paid",   
+    label: "Non Paid", 
+  }
+]
+
 export const columns = [
     {
       label: "S.NO",
@@ -35,10 +61,10 @@ export const columns = [
       label: "PMT Broker",
       field: "PMT Broker",
     },
-    // {
-    //   label: "Commission Collected",
-    //   field: "Commission Collected",
-    // },
+    {
+      label: "Amount",
+      field: "amount",
+    },
    
   ];
   export const tableData = [
@@ -52,7 +78,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-01", // Sample signature date
       pmtReceived: "2025-01-02", // Sample payment received date
-      pmtBroker: "John Doe" // Sample broker name
+      pmtBroker: "John Doe",
+      amount: "2400",
     },
     {
       id: 2,
@@ -64,7 +91,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-02",
       pmtReceived: "2025-01-03",
-      pmtBroker: "Jane Smith"
+      pmtBroker: "Jane Smith",
+      amount: "1800",
     },
     {
       id: 3,
@@ -76,7 +104,8 @@ export const columns = [
       commission_collected: "Not Completed",
       signatureDate: "2025-01-03",
       pmtReceived: "2025-01-04",
-      pmtBroker: "David Johnson"
+      pmtBroker: "David Johnson",
+      amount: "12"
     },
     {
       id: 4,
@@ -88,7 +117,8 @@ export const columns = [
       commission_collected: "Not Completed",
       signatureDate: "2025-01-04",
       pmtReceived: "2025-01-05",
-      pmtBroker: "Emily Davis"
+      pmtBroker: "Emily Davis",
+      amount: "150"
     },
     {
       id: 5,
@@ -100,7 +130,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-05",
       pmtReceived: "2025-01-06",
-      pmtBroker: "Michael Brown"
+      pmtBroker: "Michael Brown",
+      amount: "999"
     },
     {
       id: 6,
@@ -112,7 +143,8 @@ export const columns = [
       commission_collected: "Not Completed",
       signatureDate: "2025-01-06",
       pmtReceived: "2025-01-07",
-      pmtBroker: "Sarah Wilson"
+      pmtBroker: "Sarah Wilson",
+      amount: "12"
     },
     {
       id: 7,
@@ -124,7 +156,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-07",
       pmtReceived: "2025-01-08",
-      pmtBroker: "Chris Lee"
+      pmtBroker: "Chris Lee",
+      amount: "1234"
     },
     {
       id: 8,
@@ -136,7 +169,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-08",
       pmtReceived: "2025-01-09",
-      pmtBroker: "Jessica Taylor"
+      pmtBroker: "Jessica Taylor",
+      amount: "123"
     },
     {
       id: 9,
@@ -148,7 +182,8 @@ export const columns = [
       commission_collected: "Not Completed",
       signatureDate: "2025-01-09",
       pmtReceived: "2025-01-10",
-      pmtBroker: "Kevin Anderson"
+      pmtBroker: "Kevin Anderson",
+      amount: "100"
     },
     {
       id: 10,
@@ -160,7 +195,8 @@ export const columns = [
       commission_collected: "Completed",
       signatureDate: "2025-01-10",
       pmtReceived: "2025-01-11",
-      pmtBroker: "Laura Thomas"
+      pmtBroker: "Laura Thomas",
+      amount: "123"
     }
   ];
   
@@ -200,8 +236,8 @@ export const tableFooterData = [
         label: "456",
         field: "456",
       },
-      // {
-      //   label: "456",
-      //   field: "456",
-      // },
+      {
+        label: "54300",
+        field: "54300",
+      },
 ]

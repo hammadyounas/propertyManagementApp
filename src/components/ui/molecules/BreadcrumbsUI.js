@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon from "@/components/ui/atoms/Icon";
+import { usePathname } from "next/navigation";
 
 const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
+  const pathname = usePathname();
+
   return (
     <>
       {!isHide ? (
-        <div className="md:mb-6 mb-4 flex space-x-3 rtl:space-x-reverse">
+        <div className="md:mb-6 mb-4 flex justify-between space-x-3 rtl:space-x-reverse">
           <ul className="breadcrumbs">
             <li className="text-primary-500">
               <Link href="/dashboard" className="text-lg">
@@ -32,6 +35,20 @@ const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
                 : locationName?.split("/")?.slice(0, 1)?.join(" / ")}
             </li>
           </ul>
+
+          {/* dashboard button */}
+          {pathname === "/dashboard" && (
+            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+              <Link
+                href="/dashboard/add"
+                className="text-white bg-primary-default btn flex items-center justify-center space-x-2"
+                type="button"
+              >
+                <span>Add</span>
+                <Icon icon="heroicons-outline:plus" />
+              </Link>
+            </div>
+          )}
         </div>
       ) : null}
     </>
