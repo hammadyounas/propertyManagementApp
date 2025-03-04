@@ -30,7 +30,7 @@ const DashboardPage = () => {
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
           breakLabel={"..."}
-          pageCount={Math.ceil(users?.length / pageSize)} // Correctly calculate number of pages
+          pageCount={Math.ceil(users?.length / pageSize)} // Correctly calculate the number of pages
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={({ selected }) => handlePageChange(selected)}
