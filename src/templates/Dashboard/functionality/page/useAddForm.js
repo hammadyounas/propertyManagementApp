@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { invoiceStatus, pmtReceivedStatus } from "../constants/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { postRequest } from "../../../../libs/utils/request_handler";
 
 const useAddForm = () => {
   const schema = yup.object({
@@ -12,18 +13,25 @@ const useAddForm = () => {
     dd: yup
       .number()
       .typeError("DD must be a number")
-      .required("DD is required"),
+      .required("DD is required")
+      .min(0, "DD cannot be negative"),
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
-      .required("Financing Days is required"),
+      .required("Financing Days is required")
+      .min(0, "Financing Days cannot be negative"),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
-      .required("Closing Days is required"),
+      .required("Closing Days is required")
+      .min(0, "Closing Days cannot be negative"),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
-    value_of_amount: yup.string().required("Value of Amount is required"),
+    value_of_amount: yup
+      .number()
+      .typeError("Value of Amount must be a number")
+      .required("Value of Amount is required")
+      .min(0, "Value of Amount cannot be negative"),
   });
 
   const { push } = useRouter();
@@ -38,6 +46,12 @@ const useAddForm = () => {
     reset,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      dd: 0,
+      financing_days: 0,
+      closing_days: 0,
+      value_of_amount: 0,
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -54,19 +68,40 @@ const useAddForm = () => {
     setValue("pmtReceived", selectedOption?.value);
   };
 
-  const onSubmit = (data) => {
-    setLoading(true);
-    console.log("Form Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const formData = {
+        signatureDate: data.signature_date,
+        dd: data.dd,
+        closingDays: data.closing_days,
+        financingDays: data.financing_days,
+        invoice: data.invoice,
+        pmtReceived: data.pmtReceived,
+        amount: data.value_of_amount
+      };
 
-    // Simulate form submission
-    setTimeout(() => {
+      const response = await postRequest("dashboard", formData);
+      if (response) {
+        toast.success("Dashboard entry added successfully!");
+        push("/dashboard");
+      } else {
+        toast.error("Dashboard entry creation failed");
+        throw new Error("Dashboard entry creation failed");
+      }
       setLoading(false);
       reset();
       setInvoice(null);
       setPmtReceived(null);
-    }, 1000);
-
-    toast.success("Form Submitted Successfully!");
+    } catch (error) {
+      setLoading(false);
+      console.error("Error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          "An error occurred while creating dashboard entry"
+      );
+    }
   };
 
   return {

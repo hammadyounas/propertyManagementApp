@@ -37,7 +37,7 @@ const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
           </ul>
 
           {/* dashboard button */}
-          {pathname === "/dashboard" && (
+          {/* {pathname === "/dashboard" && (
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
               <Link
                 href="/dashboard/add"
@@ -48,7 +48,7 @@ const BreadcrumbsUI = ({ locationName, isHide, groupTitle }) => {
                 <Icon icon="heroicons-outline:plus" />
               </Link>
             </div>
-          )}
+          )} */}
         </div>
       ) : null}
     </>

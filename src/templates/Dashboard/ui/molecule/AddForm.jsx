@@ -94,7 +94,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
             <Textinput
               name="value_of_amount"
               label="Value of Amount*"
-              type="text"
+              type="number"
               register={register}
               error={errors.value_of_amount}
               placeholder="Value of Amount"

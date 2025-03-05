@@ -19,54 +19,53 @@ export const pmtReceivedStatus = [
     label: "Paid",
   },
   {
-    value: "non Paid",   
+    value: "non paid",   
     label: "Non Paid", 
   }
 ]
 
 export const columns = [
-    {
-      label: "S.NO",
-      field: "S.NO",
-    },
-    // {
-    //   label: "Active",
-    //   field: "Active",
-    // },
-    {
-      label: "Signature date ",
-      field: "Signature date ",
-    },
-    {
-      label: "D.D",
-      field: "D.D",
-    },
-    {
-      label: "Financing",
-      field: "Financing",
-    },
-    {
-      label: "Closing",
-      field: "Closing",
-    },
-    {
-      label: "Invoice",
-      field: "Invoice",
-    },
-    {
-      label: "PMT received",
-      field: "PMT received",
-    },
-    {
-      label: "PMT Broker",
-      field: "PMT Broker",
-    },
-    {
-      label: "Amount",
-      field: "amount",
-    },
-   
-  ];
+  {
+    label: "S.NO",
+    field: "S.NO",
+  },
+  // {
+  //   label: "Active",
+  //   field: "Active",
+  // },
+  {
+    label: "Signature date ",
+    field: "Signature date ",
+  },
+  {
+    label: "D.D",
+    field: "D.D",
+  },
+  {
+    label: "Financing Days",
+    field: "Financing Days",
+  },
+  {
+    label: "Closing Days",
+    field: "Closing Days",
+  },
+  {
+    label: "Invoice",
+    field: "Invoice",
+  },
+  {
+    label: "PMT received",
+    field: "PMT received",
+  },
+  {
+    label: "PMT Broker",
+    field: "PMT Broker",
+  },
+  {
+    label: "Amount",
+    field: "amount",
+  },
+];
   export const tableData = [
     {
       id: 1,
