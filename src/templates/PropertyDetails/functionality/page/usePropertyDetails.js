@@ -11,11 +11,13 @@ import {
   getRequest,
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const usePropertyDetails = () => {
   const [propertyDetails, setPropertyDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const { push, query } = useRouter();
+  const { user } = useSelector((state) => state.auth);
 
   const getPropertyDetails = async () => {
     try {
@@ -61,6 +63,7 @@ const usePropertyDetails = () => {
     push,
     rows,
     handleDelete,
+    user
   };
 };
 

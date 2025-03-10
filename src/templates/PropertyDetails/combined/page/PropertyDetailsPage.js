@@ -12,6 +12,8 @@ import Notes from "../molecules/NotesUIContainer";
 import Documents from "../molecules/DocumentsUIContainer";
 import Salesperson from "../molecules/SalespersonUIContainer";
 import Location from "../molecules/LocationUIContainer";
+import { Edit, Trash2, Plus } from "lucide-react";
+import Comments from "../molecules/CommentsUIContainer";
 
 const PropertyDetailsPage = () => {
   const {
@@ -22,6 +24,7 @@ const PropertyDetailsPage = () => {
     documentDataRows,
     salesperosonDataRows,
     handleDelete,
+    user,
   } = usePropertyDetails();
 
   return loading ? (
@@ -66,7 +69,10 @@ const PropertyDetailsPage = () => {
             />
           </div>
         </div> */}
-        <div className="flex justify-center md:justify-end mt-12">
+        {/* Broker Comments Section */}
+        {/* Broker Comments Section */}
+        <Comments user={user} />
+        <div className="flex justify-center md:justify-end mt-12 border-t pt-4">
           <Button
             onClick={() => push(`/properties/edit/${propertyDetails?._id}`)}
             text={"Edit"}
@@ -74,11 +80,11 @@ const PropertyDetailsPage = () => {
               "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
             }
           />
-          <Button
+          {/* <Button
             onClick={() => handleDelete(propertyDetails?._id)}
             text={"Delete"}
             className={"md:!w-36"}
-          />
+          /> */}
         </div>
       </PropertyDetailsUI>
     </div>
