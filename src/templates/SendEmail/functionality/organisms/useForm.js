@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import Papa from "papaparse";
 import {
   getRequest,
   postRequest,
@@ -39,6 +40,7 @@ const useCreateForm = () => {
     control,
     getValues,
     setValue,
+    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
@@ -49,8 +51,18 @@ const useCreateForm = () => {
   const [brokers, setBrokers] = useState([]);
   const [clients, setClients] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedCSV, setSelectedCSV] = useState(null);
   const [selectedType, setSelectedType] = useState("clients");
+  const [selectionMethod, setSelectionMethod] = useState("manual");
+  const [uploadedCsvEmails, setUploadedCsvEmails] = useState([]);
+  const [activeModal, setActiveModal] = useState(false);
+  const [emailData, setEmailData] = useState({});
   const { push } = useRouter();
+
+  const closeModal = () => {
+    setActiveModal(false);
+    setEmailData({});
+  };
 
   const fetchBrokers = async () => {
     try {
@@ -91,8 +103,45 @@ const useCreateForm = () => {
     setValue("recipients", recipients);
   }, [recipients]);
 
-  const handleSelectRecipients = (selectedValues) => {
-    setRecipients(selectedValues);
+  const handleSelectRecipients = (selectedOptions) => {
+    const isSelectAll = selectedOptions.some(
+      (option) => option.value === "select_all"
+    );
+    if (isSelectAll) {
+      const fullList =
+        selectedType === "both"
+          ? [...clients, ...brokers]
+          : selectedType === "clients"
+          ? clients
+          : brokers;
+      setRecipients(fullList);
+    } else {
+      setRecipients(selectedOptions);
+    }
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event?.target?.files[0];
+    if (file) {
+      setSelectedCSV(file);
+      Papa.parse(file, {
+        complete: (result) => {
+          const emails = result?.data?.map((row) => ({
+            label: row[0],
+            value: row[0],
+          }));
+          handleSelectRecipients(emails);
+          setUploadedCsvEmails(emails);
+        },
+        skipEmptyLines: true,
+      });
+    }
+  };
+
+  const handleRemoveCSV = () => {
+    setSelectedCSV(null);
+    setUploadedCsvEmails([]);
+    handleSelectRecipients([]);
   };
 
   const handleImageUpload = (event) => {
@@ -109,12 +158,27 @@ const useCreateForm = () => {
   };
 
   const onSubmit = async (data) => {
+    setEmailData(data);
+    setActiveModal(true);
+  };
+
+  const handleConfirm = async () => {
     setLoading(true);
     try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const invalidEmails = recipients
+        ?.map((recipient) => recipient.value)
+        .filter((email) => !emailRegex.test(email));
+
+      if (invalidEmails.length > 0) {
+        toast.error(`Invalid email(s): ${invalidEmails.join(", ")}`);
+        setLoading(false);
+        return;
+      }
       const formData = new FormData();
-      formData.append("subject", data.subject);
-      formData.append("title", data.title);
-      formData.append("description", data.description);
+      formData.append("subject", emailData?.subject);
+      formData.append("title", emailData?.title);
+      formData.append("description", emailData?.description);
 
       if (selectedImage) {
         formData.append("image", selectedImage);
@@ -131,6 +195,7 @@ const useCreateForm = () => {
       });
 
       if (response) {
+        closeModal();
         toast.success("Email sent successfully!");
         push("/marketing-emails");
       } else {
@@ -168,6 +233,18 @@ const useCreateForm = () => {
     setSelectedType,
     handleRemoveImage,
     recipients,
+    setSelectionMethod,
+    selectionMethod,
+    handleFileUpload,
+    setUploadedCsvEmails,
+    uploadedCsvEmails,
+    handleRemoveCSV,
+    selectedCSV,
+    watch,
+    activeModal,
+    closeModal,
+    emailData,
+    handleConfirm,
   };
 };
 

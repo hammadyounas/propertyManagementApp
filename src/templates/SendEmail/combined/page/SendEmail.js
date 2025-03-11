@@ -21,6 +21,18 @@ const SendEmailPage = () => {
     setSelectedType,
     handleRemoveImage,
     recipients,
+    setSelectionMethod,
+    selectionMethod,
+    handleFileUpload,
+    setUploadedCsvEmails,
+    uploadedCsvEmails,
+    handleRemoveCSV,
+    selectedCSV,
+    watch,
+    activeModal,
+    closeModal,
+    emailData,
+    handleConfirm,
   } = useForm();
   return (
     <FormUI
@@ -39,6 +51,18 @@ const SendEmailPage = () => {
       setSelectedType={setSelectedType}
       handleRemoveImage={handleRemoveImage}
       recipients={recipients}
+      setSelectionMethod={setSelectionMethod}
+      selectionMethod={selectionMethod}
+      handleFileUpload={handleFileUpload}
+      setUploadedCsvEmails={setUploadedCsvEmails}
+      uploadedCsvEmails={uploadedCsvEmails}
+      handleRemoveCSV={handleRemoveCSV}
+      selectedCSV={selectedCSV}
+      watch={watch}
+      activeModal={activeModal}
+      closeModal={closeModal}
+      emailData={emailData}
+      handleConfirm={handleConfirm}
     />
   );
 };
