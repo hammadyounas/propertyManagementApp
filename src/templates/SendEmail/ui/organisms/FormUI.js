@@ -274,20 +274,20 @@ const FormUI = ({
                     />
                     Brokers
                   </label>
-                  <label className="flex items-center">
+                  {/* <label className="flex items-center">
                     <input
                       type="radio"
-                      value="brokers"
-                      checked={selectedType === "both"}
+                      value="select_all"
+                      checked={selectedType === "select_all"}
                       onChange={() => {
-                        setSelectedType("both");
+                        setSelectedType("select_all");
                         handleSelectRecipients([]);
                       }}
                       className="mr-2"
                       disabled={loading}
                     />
-                    Both (Clients & Brokers)
-                  </label>
+                    Select All
+                  </label> */}
                 </div>
                 <div className="flex flex-wrap justify-between mt-4">
                   <div className="w-full">
@@ -297,7 +297,7 @@ const FormUI = ({
                           ? "Select Clients Emails*"
                           : selectedType === "brokers"
                           ? "Select Brokers Emails*"
-                          : "Select Both (Clients & Brokers) Emails*"}
+                          : "Select All Emails*"}
                       </label>
                       <ReactSelect
                         name="recipients"
@@ -329,7 +329,7 @@ const FormUI = ({
                         }
                         placeholder={`Select ${
                           selectedType == "both"
-                            ? "both (clients & brokers)"
+                            ? "All"
                             : selectedType
                         } emails`}
                         isDisabled={loading}
