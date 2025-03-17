@@ -128,9 +128,9 @@ const DashboardTableUI = ({
                     {columnsFooter?.map((column, i) => (
                       <td key={i} className="table-td font-semibold px-4 py-4">
                         {[
-                          "dd",
-                          "financingDays",
-                          "closingDays",
+                          // "dd",
+                          // "financingDays",
+                          // "closingDays",
                           "amount",
                         ].includes(column.key) ? (
                           <>
