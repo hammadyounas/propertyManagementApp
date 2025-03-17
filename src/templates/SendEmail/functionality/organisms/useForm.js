@@ -109,11 +109,11 @@ const useCreateForm = () => {
     );
     if (isSelectAll) {
       const fullList =
-        selectedType === "both"
-          ? [...clients, ...brokers]
-          : selectedType === "clients"
+        selectedType === "clients"
           ? clients
-          : brokers;
+          : selectedType === "brokers"
+          ? brokers
+          : [...clients, ...brokers];
       setRecipients(fullList);
     } else {
       setRecipients(selectedOptions);
