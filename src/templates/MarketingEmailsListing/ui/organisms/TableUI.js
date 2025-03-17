@@ -107,7 +107,7 @@ const TableUI = ({
                           <img
                             src={
                               row?.created_by?.avatar ||
-                              "/assets/images/users/user-1.jpg"
+                              "/assets/images/users/u.jpg"
                             }
                             alt={row?.created_by?.name}
                             className="block w-8 h-8 rounded-full mr-4"

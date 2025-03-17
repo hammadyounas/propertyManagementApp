@@ -99,7 +99,7 @@ const DashboardTableUI = ({
                         <img
                           src={
                             row?.created_by?.avatar ||
-                            "/assets/images/users/user-1.jpg"
+                            "/assets/images/users/default.jpg"
                           } // Replace with actual avatar URL if available
                           alt={row?.created_by?.name}
                           className="block w-8 h-8 object-cover rounded-full mr-2"

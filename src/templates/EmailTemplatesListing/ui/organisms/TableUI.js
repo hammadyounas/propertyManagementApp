@@ -47,7 +47,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
                     <td className="table-td ">
                       <div className="flex items-center">
                         <img
-                          src={"/assets/images/users/user-1.jpg"}
+                          src={"/assets/images/users/u.jpg"}
                           alt=""
                           className="block w-8 h-8 object-cover rounded-full mr-2"
                         />
