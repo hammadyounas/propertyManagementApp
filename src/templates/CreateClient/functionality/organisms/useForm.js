@@ -194,6 +194,7 @@
           }
     
           toast.success("CSV File Uploaded Successfully");
+          push("/clients");
         } else {
           const formData = {
             name: data.name,
