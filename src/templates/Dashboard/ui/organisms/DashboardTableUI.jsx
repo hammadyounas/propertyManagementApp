@@ -47,14 +47,14 @@ const DashboardTableUI = ({
       <div className="overflow-x-auto -mx-6 min-h-[70vh] relative">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 text-center">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
                     <th
                       key={i}
                       scope="col"
-                      className="table-th font-bold text-left px-4 py-4"
+                      className="table-th font-bold text-center px-4 py-4"
                     >
                       {column.label}
                     </th>
