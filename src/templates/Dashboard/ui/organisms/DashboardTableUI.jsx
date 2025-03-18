@@ -2,6 +2,7 @@ import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
+import { dateFormat } from "../../../../libs/utils/helper";
 
 const DashboardTableUI = ({
   columns,
@@ -84,7 +85,7 @@ const DashboardTableUI = ({
                     >
                       <td className="table-td px-4 py-4">{i + 1}</td>
                       <td className="table-td px-4 py-4">
-                        {row.signatureDate}
+                        {dateFormat(row.signatureDate)}
                       </td>
                       <td className="table-td px-4 py-4">{row.dd}</td>
                       <td className="table-td px-4 py-4">
