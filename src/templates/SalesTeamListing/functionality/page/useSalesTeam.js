@@ -47,16 +47,17 @@ const useSalesTeam = () => {
     // setUsers(rows);
   }, []);
 
-    // 🔍 Search Filter: Filters brokers based on First Name, Last Name, or Contact Number
-    const filteredUsers = useMemo(() => {
-      if (!globalFilter) {
-        return users;
-      }
-      return users.filter((user) => 
-        ["name", "contact_number"].some((key)=>
+  // 🔍 Search Filter: Filters brokers based on First Name, Last Name, or Contact Number
+  const filteredUsers = useMemo(() => {
+    if (!globalFilter) {
+      return users;
+    }
+    return users.filter((user) =>
+      ["name", "contact_number"].some((key) =>
         user[key]?.toLowerCase().includes(globalFilter.toLowerCase())
-    ))
-    }, [users, globalFilter]);
+      )
+    );
+  }, [users, globalFilter]);
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
