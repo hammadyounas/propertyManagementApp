@@ -107,7 +107,7 @@ const DashboardTableUI = ({
                         />
                         {row?.created_by?.name}
                       </td>
-                      <td className="table-td px-4 py-4">{row.amount}</td>
+                      <td className="table-td px-4 py-4">$ {row.amount.toLocaleString()}</td>
                       {/* <td className="table-td px-4 py-4">
                       <span
                         className={`inline-block px-3 min-w-[90px] text-center py-1 rounded-full bg-opacity-25 ${
@@ -136,7 +136,7 @@ const DashboardTableUI = ({
                         ].includes(column.key) ? (
                           <>
                             <p>Total</p>
-                            <p>{calculateTotal(column.key)}</p>
+                            <p>$ {calculateTotal(column.key).toLocaleString()}</p>
                           </>
                         ) : null}
                       </td>
