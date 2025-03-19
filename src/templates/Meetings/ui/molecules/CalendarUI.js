@@ -41,7 +41,8 @@ const CalendarUI = ({
         headerToolbar={{
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+          right: "dayGridMonth",
+          // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
         }}
         events={meetings?.map((meeting, index) => ({
           start: moment(meeting?.start_time).toISOString(), // Schedule events on different days
