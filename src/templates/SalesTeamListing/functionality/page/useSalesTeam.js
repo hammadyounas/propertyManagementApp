@@ -32,38 +32,36 @@ const useSalesTeam = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await getRequest("users");
-      setUsers(response.data);
-      console.log(response.data);
+      let url = "users"; // Default URL for all users
+
+      if (globalFilter.trim() !== "") {
+        const searchQuery = encodeURIComponent(globalFilter);
+        url = `users?search=${searchQuery}`;
+      }
+  
+      const response = await getRequest(url);
+      setUsers(response.data || []); // Ensure correct data format
     } catch (error) {
       console.error("Error fetching clients:", error);
     } finally {
       setLoading(false);
     }
   };
+  
   useEffect(() => {
-    fetchUsers();
-
-    // setUsers(rows);
+    fetchUsers(); // Fetch all users on component mount
   }, []);
 
-  // 🔍 Search Filter: Filters brokers based on First Name, Last Name, or Contact Number
-  const filteredUsers = useMemo(() => {
-    if (!globalFilter) {
-      return users;
-    }
-    return users.filter((user) =>
-      ["name", "contact_number"].some((key) =>
-        user[key]?.toLowerCase().includes(globalFilter.toLowerCase())
-      )
-    );
-  }, [users, globalFilter]);
+  useEffect(() => {
+    fetchUsers();
+}, [globalFilter]); // Runs only when search query changes
+
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
-    return filteredUsers.slice(startIndex, startIndex + pageSize);
-  }, [filteredUsers, currentPage, pageSize]);
+    return users.slice(startIndex, startIndex + pageSize);
+  }, [users, currentPage, pageSize]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
