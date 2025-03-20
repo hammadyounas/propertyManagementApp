@@ -1,9 +1,11 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
+import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
+import { dateFormat } from "../../../../libs/utils/helper";
 const TableUI = ({
   columns,
   rows,
@@ -13,6 +15,10 @@ const TableUI = ({
   loading,
   openDeleteModal,
   users,
+  setStatusFilter,
+  setSelectedFilter,
+  selectedFilter,
+  handleStatusChange,
 }) => {
   return (
     <Card noborder>
@@ -20,10 +26,23 @@ const TableUI = ({
       <div className="flex justify-between items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
+          <div className="w-full flex items-center gap-2">
+            <DropdownUINew
+              label={selectedFilter || "Status"}
+              wrapperClass="w-40"
+              labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              classMenuItems="w-40 left-0"
+              classItem="p-2"
+              onSelect={(value) => console.log("Selected:", value)} // ✅ Ensure this is passed
+              items={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
+            />
+            ;
             <span className="w-full">
               <Button
-                text="Add User"
+                text="Add Broker"
                 onClick={() => push("/sales-team/create")}
                 className="btn-primary bg-primary-default w-full"
               />
@@ -34,11 +53,11 @@ const TableUI = ({
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden ">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+            <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className=" table-th font-bold">
+                    <th key={i} scope="col" className="text-center table-th font-bold">
                       {column.label}
                     </th>
                   ))}
@@ -66,7 +85,7 @@ const TableUI = ({
                       className=" even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td ">
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-center">
                           <span className="text-primary-default font-bold cursor-pointer">
                             {row.name}
                           </span>
@@ -75,7 +94,9 @@ const TableUI = ({
                       <td className="table-td ">{row.contact_number}</td>
                       <td className="table-td ">{row.email}</td>
                       <td className="table-td ">{row.licence_number}</td>
-                      <td className="table-td ">{row.joining_date}</td>
+                      <td className="table-td ">
+                        {dateFormat(row.joining_date)}
+                      </td>
                       {/* <td className="table-td ">
                       <span className="block w-full">
                         <span
@@ -89,7 +110,7 @@ const TableUI = ({
                       </span>
                     </td> */}
                       <td className="table-td ">
-                        <div className="flex">
+                        <div className="flex justify-center">
                           <Icon
                             onClick={() => push(`/sales-team/view/${row._id}`)}
                             className="cursor-pointer text-[20px]"

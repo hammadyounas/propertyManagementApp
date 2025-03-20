@@ -6,6 +6,7 @@ import {
   getRequest,
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
+import { set } from "react-hook-form";
 
 const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -18,6 +19,8 @@ const useSalesTeam = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("active");
+  const [selectedFilter, setSelectedFilter] = useState("Active"); 
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -33,19 +36,36 @@ const useSalesTeam = () => {
     setLoading(true);
     try {
       const response = await getRequest("users");
-      setUsers(response.data);
-      console.log(response.data);
+      let fetchedUsers = response.data;
+  
+      // Apply filtering only for active/inactive
+      if (statusFilter === "active" || statusFilter === "inactive") {
+        fetchedUsers = fetchedUsers.filter(user => user.status === statusFilter);
+      }
+  
+      setUsers(fetchedUsers); // Update state with filtered users
+      console.log("Filtered Users:", fetchedUsers);
     } catch (error) {
-      console.error("Error fetching clients:", error);
+      console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchUsers();
 
-    // setUsers(rows);
-  }, []);
+
+  useEffect(() => {
+    console.log("Fetching users for status:", statusFilter); // Debug log
+    fetchUsers();
+  }, [statusFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
+  
+
+  const handleStatusChange = (status) => {
+    console.log("Selected Status:", status); // ✅ Check if this runs
+    setStatusFilter(status);
+  };
+
+  console.log("handleStatusChange in TableUI:", handleStatusChange);
+
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
@@ -92,6 +112,11 @@ const useSalesTeam = () => {
     closeDeleteModal,
     openDeleteModal,
     deleteLoading,
+    setStatusFilter,  // ✅ Ensure this is being returned
+    statusFilter,
+    setSelectedFilter,
+    selectedFilter,
+    handleStatusChange,
   };
 };
 

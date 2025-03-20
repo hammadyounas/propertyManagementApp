@@ -24,7 +24,7 @@ const EditFormUI = ({
 }) => {
   return (
     <div className="w-full lg:w-[75%]">
-      <Card title="Edit User">
+      <Card title="Edit Broker">
         {getDataLoading ? (
           <div className="flex items-center justify-center w-full">
             <LoadingUI />

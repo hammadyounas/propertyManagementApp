@@ -20,6 +20,11 @@ const SalesTeamListingPage = () => {
     closeDeleteModal,
     openDeleteModal,
     deleteLoading,
+    setStatusFilter,
+    statusFilter,
+    setSelectedFilter,
+    selectedFilter,
+    handleStatusChange,
   } = useSalesTeam();
 
   return (
@@ -32,6 +37,11 @@ const SalesTeamListingPage = () => {
         loading={loading}
         openDeleteModal={openDeleteModal}
         users={users}
+        setStatusFilter={setStatusFilter}  // ✅ Make sure this is passed
+        statusFilter={statusFilter}
+        setSelectedFilter={setSelectedFilter}
+        selectedFilter={selectedFilter}
+        handleStatusChange={handleStatusChange}
       />
       <div className={`flex w-full justify-end mt-2 items-center ${users?.length <= pageSize && "hidden"}`}>
         <ReactPaginate

@@ -23,7 +23,7 @@ export default function ViewSalesTeamUI({
   ];
 
   return (
-    <Card title="User Details">
+    <Card title="Broker Details">
       <div className="flex items-center text-green-700">
         <span className="w-full flex justify-end items-center">
           <p>Edit</p>
