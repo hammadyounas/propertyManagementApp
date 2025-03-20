@@ -32,29 +32,31 @@ const useSalesTeam = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      let url = "users"; // Default URL for all users
-
+      let url = "users"; // Default: fetch all users
+  
       if (globalFilter.trim() !== "") {
         const searchQuery = encodeURIComponent(globalFilter);
         url = `users?search=${searchQuery}`;
       }
   
       const response = await getRequest(url);
-      setUsers(response.data || []); // Ensure correct data format
+      setUsers(response.data || []);
     } catch (error) {
-      console.error("Error fetching clients:", error);
+      console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
   
-  useEffect(() => {
-    fetchUsers(); // Fetch all users on component mount
-  }, []);
 
   useEffect(() => {
     fetchUsers();
-}, [globalFilter]); // Runs only when search query changes
+  }, [globalFilter]); // Fetch data when search filter changes
+  
+  useEffect(() => {
+    fetchUsers(); // Fetch all users on component mount
+  }, []);
+  
 
 
   // Calculate the paginated users
