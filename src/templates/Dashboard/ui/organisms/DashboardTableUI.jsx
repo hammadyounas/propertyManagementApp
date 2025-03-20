@@ -95,7 +95,7 @@ const DashboardTableUI = ({
                       </td>
                       <td className="table-td px-4 py-4">{row.invoice}</td>
                       <td className="table-td px-4 py-4">{row.pmtReceived}</td>
-                      <td className="table-td px-4 py-4 flex items-center">
+                      <td className="table-td px-4 py-4 flex justify-center items-center">
                         <img
                           src={
                             row?.created_by?.avatar ||
