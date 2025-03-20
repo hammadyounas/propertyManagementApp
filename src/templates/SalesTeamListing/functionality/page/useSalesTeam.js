@@ -32,20 +32,32 @@ const useSalesTeam = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await getRequest("users");
-      setUsers(response.data);
-      console.log(response.data);
+      let url = "users"; // Default: fetch all users
+  
+      if (globalFilter.trim() !== "") {
+        const searchQuery = encodeURIComponent(globalFilter);
+        url = `users?search=${searchQuery}`;
+      }
+  
+      const response = await getRequest(url);
+      setUsers(response.data || []);
     } catch (error) {
-      console.error("Error fetching clients:", error);
+      console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
+  
+
   useEffect(() => {
     fetchUsers();
-
-    // setUsers(rows);
+  }, [globalFilter]); // Fetch data when search filter changes
+  
+  useEffect(() => {
+    fetchUsers(); // Fetch all users on component mount
   }, []);
+  
+
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
