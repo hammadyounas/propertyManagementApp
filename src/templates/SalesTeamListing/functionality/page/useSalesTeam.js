@@ -35,28 +35,43 @@ const useSalesTeam = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await getRequest("users");
-      let fetchedUsers = response.data;
+      let url = "users"; // Default: fetch all users
   
-      // Apply filtering only for active/inactive
-      if (statusFilter === "active" || statusFilter === "inactive") {
-        fetchedUsers = fetchedUsers.filter(user => user.status === statusFilter);
+      const params = new URLSearchParams();
+      
+      // Convert globalFilter to string to avoid trim() errors
+      const searchQuery = globalFilter ? String(globalFilter).trim() : "";
+  
+      // Add search query if provided
+      if (searchQuery !== "") {
+        params.append("search", searchQuery);
       }
   
-      setUsers(fetchedUsers); // Update state with filtered users
-      console.log("Filtered Users:", fetchedUsers);
+      // Add status filter if provided (Only send "active" or "inactive", not "all")
+      if (statusFilter === "active" || statusFilter === "inactive") {
+        params.append("status", statusFilter);
+      }
+  
+      // If params exist, update the URL
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+  
+      const response = await getRequest(url);
+      setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
-
+  
+  
 
   useEffect(() => {
     console.log("Fetching users for status:", statusFilter); // Debug log
     fetchUsers();
-  }, [statusFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
+  }, [statusFilter, globalFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
 
 
   // Calculate the paginated users
