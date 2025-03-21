@@ -18,7 +18,6 @@ const TableUI = ({
   setStatusFilter,
   setSelectedFilter,
   selectedFilter,
-  handleStatusChange,
 }) => {
   return (
     <Card noborder>
@@ -28,12 +27,15 @@ const TableUI = ({
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center gap-2">
             <DropdownUINew
-              label={selectedFilter || "Status"}
+              label={selectedFilter}
               wrapperClass="w-40"
               labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="w-40 left-0"
               classItem="p-2"
-              onSelect={(value) => console.log("Selected:", value)} // ✅ Ensure this is passed
+              onSelect={(value) => {
+                setSelectedFilter(value === "active" ? "Active" : "Inactive");
+                setStatusFilter(value);
+              }}
               items={[
                 { label: "Active", value: "active" },
                 { label: "Inactive", value: "inactive" },
@@ -57,7 +59,11 @@ const TableUI = ({
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="text-center table-th font-bold">
+                    <th
+                      key={i}
+                      scope="col"
+                      className="text-center table-th font-bold"
+                    >
                       {column.label}
                     </th>
                   ))}
@@ -97,18 +103,26 @@ const TableUI = ({
                       <td className="table-td ">
                         {dateFormat(row.joining_date)}
                       </td>
-                      {/* <td className="table-td ">
-                      <span className="block w-full">
-                        <span
-                          className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-                          ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
-                          ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
+                      <td className="table-td ">
+                        <span className="block w-full">
+                          <span
+                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
+                          ${
+                            row.status === "active"
+                              ? "text-green-600 bg-green-200"
+                              : ""
+                          }
+                          ${
+                            row.status === "inactive"
+                              ? "text-red-600 bg-red-200"
+                              : ""
+                          }
                         `}
-                        >
-                          {row.status}
+                          >
+                            {row.status}
+                          </span>
                         </span>
-                      </span>
-                    </td> */}
+                      </td>
                       <td className="table-td ">
                         <div className="flex justify-center">
                           <Icon

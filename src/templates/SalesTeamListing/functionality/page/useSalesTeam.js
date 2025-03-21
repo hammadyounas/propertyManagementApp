@@ -57,14 +57,6 @@ const useSalesTeam = () => {
     console.log("Fetching users for status:", statusFilter); // Debug log
     fetchUsers();
   }, [statusFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
-  
-
-  const handleStatusChange = (status) => {
-    console.log("Selected Status:", status); // ✅ Check if this runs
-    setStatusFilter(status);
-  };
-
-  console.log("handleStatusChange in TableUI:", handleStatusChange);
 
 
   // Calculate the paginated users
@@ -116,7 +108,6 @@ const useSalesTeam = () => {
     statusFilter,
     setSelectedFilter,
     selectedFilter,
-    handleStatusChange,
   };
 };
 
