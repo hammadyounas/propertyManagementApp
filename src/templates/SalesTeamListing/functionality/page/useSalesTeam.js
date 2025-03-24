@@ -20,7 +20,7 @@ const useSalesTeam = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState("active");
-  const [selectedFilter, setSelectedFilter] = useState("Active"); 
+  const [selectedFilter, setSelectedFilter] = useState("Active");
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -36,27 +36,27 @@ const useSalesTeam = () => {
     setLoading(true);
     try {
       let url = "users"; // Default: fetch all users
-  
+
       const params = new URLSearchParams();
-      
+
       // Convert globalFilter to string to avoid trim() errors
       const searchQuery = globalFilter ? String(globalFilter).trim() : "";
-  
+
       // Add search query if provided
       if (searchQuery !== "") {
         params.append("search", searchQuery);
       }
-  
+
       // Add status filter if provided (Only send "active" or "inactive", not "all")
       if (statusFilter === "active" || statusFilter === "inactive") {
         params.append("status", statusFilter);
       }
-  
+
       // If params exist, update the URL
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
-  
+
       const response = await getRequest(url);
       setUsers(response.data);
     } catch (error) {
@@ -65,14 +65,11 @@ const useSalesTeam = () => {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     console.log("Fetching users for status:", statusFilter); // Debug log
     fetchUsers();
   }, [statusFilter, globalFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
-
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
@@ -119,7 +116,7 @@ const useSalesTeam = () => {
     closeDeleteModal,
     openDeleteModal,
     deleteLoading,
-    setStatusFilter,  // ✅ Ensure this is being returned
+    setStatusFilter, // ✅ Ensure this is being returned
     statusFilter,
     setSelectedFilter,
     selectedFilter,
