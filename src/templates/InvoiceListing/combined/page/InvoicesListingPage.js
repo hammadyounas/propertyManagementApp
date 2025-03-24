@@ -14,7 +14,10 @@ const InvoicesListingPage = () => {
     handlePageChange,
     currentPage,
     push,
-    loading
+    loading,
+    downloadPDF,
+    selectedInvoice,
+    setSelectedInvoice,
   } = useInvoices();
 
   return (
@@ -26,6 +29,10 @@ const InvoicesListingPage = () => {
         push={push}
         loading={loading}
         invoices={invoices}
+        setInvoices={setInvoices}
+        downloadPDF={downloadPDF}
+        selectedInvoice={selectedInvoice}
+        setSelectedInvoice={setSelectedInvoice}
       />
       <div className={`flex w-full justify-end mt-2 items-center ${invoices?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
