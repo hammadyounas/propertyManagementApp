@@ -59,12 +59,14 @@ const useSalesTeam = () => {
 
       const response = await getRequest(url);
       setUsers(response.data);
+
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     console.log("Fetching users for status:", statusFilter); // Debug log
