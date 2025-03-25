@@ -8,8 +8,9 @@ import { getRequest, postRequest } from "../../../../libs/utils/request_handler"
 
 const useCreateForm = () => {
   const schema = yup.object({
-    name: yup.string().required("Name is required"),
-    contact_number: yup.string().required("Contact Number is required"),
+    name: yup.string().matches(/^[A-Za-z\s]+$/, "Name must contain only alphabetic characters").required("Name is required"),
+    contact_number: yup.string().matches(/^[0-9]+$/, "Contact number must contain only digits").min(10, "Contact Number must be at least 10 digits")
+    .max(14, "Contact Number cannot exceed 14 digits").required("Contact Number is required"),
     email: yup.string().required("Email is required").email("Invalid email"),
     address: yup.string().required("Address is required"),
     status: yup.string().required("Status is required"),

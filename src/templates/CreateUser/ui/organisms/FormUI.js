@@ -21,7 +21,7 @@ const FormUI = ({
 }) => {
   return (
     <div className="w-full lg:w-[75%]">
-      <Card title="Create User">
+      <Card title="Create Broker">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
             <div className="flex flex-wrap justify-between">

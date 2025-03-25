@@ -61,9 +61,14 @@ export const useForm = () => {
 
       if (error.response) {
         // Handle server errors and show error toast messages
-        const { data } = error.response;
+        const { data, status } = error.response;
         console.error("Server error:", data);
-        toast.error(data.message || "Invalid credentials. Please try again.");
+        if (status === 403) {
+          // Show a popup if the account is deleted
+          toast.error("Your account has been deactivated. Please contact the administrator.");
+        } else {
+          toast.error(data.message || "Invalid credentials. Please try again.");
+        }
       } else if (error.name === "ValidationError") {
         // Handle Yup validation errors and show toast
         const formattedErrors = error.inner.reduce(
