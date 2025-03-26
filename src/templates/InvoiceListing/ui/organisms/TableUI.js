@@ -5,6 +5,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
+import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
 
 const TableUI = ({
   columns,
@@ -17,7 +18,7 @@ const TableUI = ({
   setInvoices,
   downloadPDF,
   selectedInvoice,
-  setSelectedInvoice,
+  selectedLanguage,
 }) => {
   return (
     <Card noborder>
@@ -37,8 +38,8 @@ const TableUI = ({
       </div>
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+          <div className="overflow-hidden min-h-[30vh]">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
@@ -128,31 +129,31 @@ const TableUI = ({
                         </span>
                       </td>
                       <td className="table-td">
-                        <div className="flex">
-                          <Tooltip content="View">
-                            <Icon
-                              onClick={() => {
-                                setSelectedInvoice(row);
-                                setTimeout(downloadPDF, 300);
-                              }}
-                              className="cursor-pointer text-[20px]"
-                              icon={"heroicons:arrow-down-tray"}
-                            />
-                          </Tooltip>
-                          {/* <Tooltip content="Edit">
-                          <Icon
-                            onClick={() => {}}
-                            className="cursor-pointer text-[20px] mx-4"
-                            icon={"heroicons:pencil-square"}
+                        <div className="flex relative">
+                          <DropdownUI
+                            label={
+                              <>
+                                Download{" "}
+                                <Icon
+                                  className="cursor-pointer text-[20px]"
+                                  icon="heroicons:chevron-down"
+                                />
+                              </>
+                            }
+                            labelClass="flex items-center justify-center gap-2"
+                            classMenuItems="w-32 min-w-[120px] top-full mt-1 z-[9999] overflow-visible"
+                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                            items={[
+                              {
+                                label: "English",
+                                onClick: () => {downloadPDF("en", row);},
+                              },
+                              {
+                                label: "French",
+                                onClick: () => {downloadPDF("fr", row);},
+                              },
+                            ]}
                           />
-                        </Tooltip>
-                        <Tooltip content="Delete">
-                          <Icon
-                            onClick={() => {}}
-                            className="cursor-pointer text-[20px]"
-                            icon={"heroicons-outline:trash"}
-                          />
-                        </Tooltip> */}
                         </div>
                       </td>
                     </tr>
@@ -164,8 +165,7 @@ const TableUI = ({
         </div>
       </div>
       {/* Hidden Invoice for PDF Generation */}
-      <Invoice invoiceData={selectedInvoice} />
-      {/* {selectedInvoice && (
+      {selectedInvoice && (
         <div
           style={{
             position: "absolute",
@@ -174,9 +174,12 @@ const TableUI = ({
             opacity: 0,
           }}
         >
-          <Invoice invoiceData={selectedInvoice} />
+          <Invoice
+            invoiceData={selectedInvoice}
+            selectedLanguage={selectedLanguage}
+          />
         </div>
-      )} */}
+      )}
     </Card>
   );
 };

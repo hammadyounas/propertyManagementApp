@@ -11,20 +11,21 @@ const useInvoices = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const fetchInvoices = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await getRequest("invoices");
       const filteredInvoices = response?.data?.filter(
         (invoice) => !invoice.isDeleted
       );
       setInvoices(filteredInvoices);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.error("Error fetching invoices:", error);
     }
   };
@@ -44,47 +45,37 @@ const useInvoices = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
-  const downloadPDF = async () => {
+  const downloadPDF = async (language, invoice) => {
+    if (!invoice) {
+      console.error("No invoice selected!");
+      return;
+    }
+
+    setSelectedInvoice(invoice); // Ensure the correct invoice is set
+    setSelectedLanguage(language); // Set the selected language
+
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Allow state update
+
     const element = document.getElementById("invoice");
-    
+
     if (!element) {
       console.error("Invoice element not found!");
       return;
     }
-  
+
     try {
-      // Wait for Next.js to render the invoice properly
-      await new Promise((resolve) => setTimeout(resolve, 500)); 
-  
-      // Capture the invoice as an image
-      const canvas = await html2canvas(element, {
-        scale: 3, // Higher resolution
-        useCORS: true, // Allow cross-origin elements
-        allowTaint: false, // Prevent security issues
-        logging: true, // Enable debugging
-      });
-  
+      const canvas = await html2canvas(element, { scale: 3, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
-  
-      // Debug: Ensure image data is valid
-      if (!imgData || imgData.length < 50) {
-        console.error("Captured image is empty or corrupt.");
-        return;
-      }
-  
-      console.log("Image data:", imgData.substring(0, 100)); // Log first 100 chars
-  
       const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
-  
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save(`${selectedInvoice?.invoiceNumber || "invoice"}.pdf`);
+      pdf.save(`${invoice.invoiceNumber || "INVOICE"}_${language}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
-  
 
   return {
     globalFilter,
@@ -100,6 +91,7 @@ const useInvoices = () => {
     selectedInvoice,
     setSelectedInvoice,
     downloadPDF,
+    selectedLanguage,
   };
 };
 
