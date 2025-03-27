@@ -8,10 +8,20 @@ import { getRequest, postRequest } from "../../../../libs/utils/request_handler"
 
 const useCreateForm = () => {
   const schema = yup.object({
-    name: yup.string().matches(/^[A-Za-z\s]+$/, "Name must contain only alphabetic characters").required("Name is required"),
+    name: yup.string().matches(/^[A-Za-z\s-]+$/, "Name can only contain letters, spaces, and hyphens.").required("Name is required"),
     contact_number: yup.string().matches(/^[0-9]+$/, "Contact number must contain only digits").min(10, "Contact Number must be at least 10 digits")
     .max(14, "Contact Number cannot exceed 14 digits").required("Contact Number is required"),
-    email: yup.string().required("Email is required").email("Invalid email"),
+    email: yup.string().required("Email is required")
+    .test("email-duplicate", "This email address is already in use. Please use a different email.", async (value) => {
+      if (!value) return true; // Skip validation if no email is provided
+      try {
+        const response = await getRequest(`users?email=${value}`);
+        return response.data.length === 0; // Returns false if email exists
+      } catch (error) {
+        console.error("Error checking duplicate email:", error);
+        return true; // In case of error, allow the email temporarily
+      }
+    }),
     address: yup.string().required("Address is required"),
     status: yup.string().required("Status is required"),
     // propertiesAssigned: yup.array().required("Status is required"),
@@ -19,7 +29,19 @@ const useCreateForm = () => {
     //   .array()
     //   // .required("Assigned Properties are required"),
     //   .min(1, "At least one property must be selected"),
-    licence_number: yup.string().required("Licence Number is required"),
+    licence_number: yup
+    .string()
+    .required("Licence Number is required")
+    .test("license-duplicate", "Duplicate Licence Number", async (value) => {
+      if (!value) return true;
+      try {
+        const response = await getRequest(`users?licence_number=${value}`);
+        return response.data.length === 0; // Returns false if license exists
+      } catch (error) {
+        console.error("Error checking duplicate license:", error);
+        return true;
+      }
+    }),
     licence_type: yup.string().required("Licence Type is required"),
     licence_type: yup.string().required("Licence Type is required"),
     joining_date: yup.string().required("Joining Date is required"),
@@ -40,6 +62,8 @@ const useCreateForm = () => {
     control,
     getValues,
     setValue,
+    watch,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
@@ -76,6 +100,7 @@ const useCreateForm = () => {
   const [propertiesAssigned, setPropertiesAssigned] = useState([]);
   const [availableProperties, setAvailableProperties] = useState([]);
   const { push } = useRouter();
+
 
   const availablePropertiesData  =  async () => {
     try {
