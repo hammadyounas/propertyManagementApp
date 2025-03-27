@@ -1,11 +1,11 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import Invoice from "./Invoice";
+import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
 
 const TableUI = ({
   columns,
@@ -15,89 +15,11 @@ const TableUI = ({
   push,
   loading,
   invoices,
+  setInvoices,
+  downloadPDF,
+  selectedInvoice,
+  selectedLanguage,
 }) => {
-  const generatePDF = (invoiceData) => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(22);
-    doc.text("Invoice", 80, 20);
-
-    // Invoice Details Box (Left Aligned with Light Gray Background)
-    doc.setFillColor(230, 230, 230); // Light gray background
-    doc.rect(14, 30, 190, 30, "F"); // Rectangle box for invoice details
-
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0); // Black text
-    doc.text(`Invoice Number: ${invoiceData?.invoiceNumber}`, 18, 38);
-    doc.text(`Invoice Date: ${invoiceData?.invoiceDate}`, 18, 44);
-    doc.text(`Due Date: ${invoiceData?.dueDate}`, 18, 50);
-    doc.text(`Status: ${invoiceData?.status}`, 18, 56);
-
-    // Bill from & Bill to section
-    doc.setFontSize(12);
-    doc.text("Bill From:", 14, 70);
-    doc.text(`Name: ${invoiceData?.seller?.name}`, 14, 78);
-    doc.text(`Address: ${invoiceData?.seller?.address}`, 14, 86);
-    doc.text(`Email: ${invoiceData?.seller?.email}`, 14, 94);
-    doc.text(`Phone Number: ${invoiceData?.seller?.contact_number}`, 14, 102);
-
-    doc.text("Bill To:", 120, 70);
-    doc.text(`Name: ${invoiceData?.buyer?.name}`, 120, 78);
-    doc.text(`Address: ${invoiceData?.buyer?.address}`, 120, 86);
-    doc.text(`Email: ${invoiceData?.buyer?.email}`, 120, 94);
-    doc.text(`Phone Number: ${invoiceData?.buyer?.phoneNumber}`, 120, 102);
-
-    // Property Details
-    doc.text("Property Details:", 14, 118);
-    doc.text(`Title: ${invoiceData?.property?.title}`, 14, 126);
-    doc.text(`Type: ${invoiceData?.property?.property_type}`, 14, 134);
-    doc.text(`Description: ${invoiceData?.property?.description}`, 14, 142);
-    doc.text(`Address: ${invoiceData?.property?.address}`, 14, 150);
-
-    // Table for Items
-    doc.autoTable({
-      startY: 160,
-      head: [
-        ["Item", "Description", "Price", "GST (5%)", "QST (9.75%)", "Total"],
-      ],
-      body: invoiceData?.items?.map((item) => [
-        item?.itemName,
-        item?.description,
-        `$${item?.price?.toFixed(2)}`,
-        `$${item?.gst?.toFixed(2)}`,
-        `$${item?.qst?.toFixed(2)}`,
-        `$${item?.total?.toFixed(2)}`,
-      ]),
-      styles: { fontSize: 10, cellPadding: 3 },
-    });
-
-    let finalY = doc.autoTable.previous.finalY;
-
-    // Summary Table
-    doc.autoTable({
-      startY: finalY + 10,
-      head: [["Summary", "Amount"]],
-      body: [
-        [
-          "Total Commission Payable",
-          `$${invoiceData?.totalCommissionPayable?.toFixed(2) || 0}`,
-        ],
-        [
-          "Commission Amount",
-          `$${invoiceData?.commissionAmount?.toFixed(2) || 0}`,
-        ],
-        ["Plus GST (5%)", `$${invoiceData?.totalGst?.toFixed(2) || 0}`],
-        ["Plus QST (9.75%)", `$${invoiceData?.totalQst?.toFixed(2) || 0}`],
-        ["Total", `$${invoiceData?.totalCommissionPayable?.toFixed(2) || 0}`],
-      ],
-      styles: { fontSize: 10, cellPadding: 3 },
-    });
-
-    finalY = doc.autoTable.previous.finalY;
-
-    doc.save(`${invoiceData?.invoiceNumber}_invoice.pdf`);
-  };
-
   return (
     <Card noborder>
       <div className="flex justify-between items-center mb-6">
@@ -116,8 +38,8 @@ const TableUI = ({
       </div>
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+          <div className="overflow-hidden min-h-[30vh]">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
@@ -207,28 +129,31 @@ const TableUI = ({
                         </span>
                       </td>
                       <td className="table-td">
-                        <div className="flex">
-                          <Tooltip content="View">
-                            <Icon
-                              onClick={() => generatePDF(row)}
-                              className="cursor-pointer text-[20px]"
-                              icon={"heroicons:arrow-down-tray"}
-                            />
-                          </Tooltip>
-                          {/* <Tooltip content="Edit">
-                          <Icon
-                            onClick={() => {}}
-                            className="cursor-pointer text-[20px] mx-4"
-                            icon={"heroicons:pencil-square"}
+                        <div className="flex relative">
+                          <DropdownUI
+                            label={
+                              <>
+                                Download{" "}
+                                <Icon
+                                  className="cursor-pointer text-[20px]"
+                                  icon="heroicons:chevron-down"
+                                />
+                              </>
+                            }
+                            labelClass="flex items-center justify-center gap-2"
+                            classMenuItems="w-32 min-w-[120px] top-full mt-1 z-[9999] overflow-visible"
+                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                            items={[
+                              {
+                                label: "English",
+                                onClick: () => {downloadPDF("en", row);},
+                              },
+                              {
+                                label: "French",
+                                onClick: () => {downloadPDF("fr", row);},
+                              },
+                            ]}
                           />
-                        </Tooltip>
-                        <Tooltip content="Delete">
-                          <Icon
-                            onClick={() => {}}
-                            className="cursor-pointer text-[20px]"
-                            icon={"heroicons-outline:trash"}
-                          />
-                        </Tooltip> */}
                         </div>
                       </td>
                     </tr>
@@ -239,6 +164,22 @@ const TableUI = ({
           </div>
         </div>
       </div>
+      {/* Hidden Invoice for PDF Generation */}
+      {selectedInvoice && (
+        <div
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            top: "0",
+            opacity: 0,
+          }}
+        >
+          <Invoice
+            invoiceData={selectedInvoice}
+            selectedLanguage={selectedLanguage}
+          />
+        </div>
+      )}
     </Card>
   );
 };

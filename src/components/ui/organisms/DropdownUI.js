@@ -12,6 +12,7 @@ const DropdownUI = ({
   items,
   classItem ,
   className,
+  onClick,
 }) => {
   return (
     <div className={`relative ${wrapperClass}`}>
@@ -51,6 +52,7 @@ const DropdownUI = ({
                               ? "border-t border-slate-100 dark:border-slate-700"
                               : ""
                           }`}
+                          onClick={item.onClick}
                         >
                           {item.link ? (
                             <Link
