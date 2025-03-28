@@ -128,11 +128,7 @@ const useCreateForm = () => {
       }
     } catch (error) {
       setLoading(false);
-      if (error?.response?.data?.message.includes("Licence Number is already in use")) {
-        setError("licence_number", { type: "manual", message: "Licence Number is already in use." });
-      } else {
-        toast.error(error?.response?.data?.message || "An error occurred while registering.");
-      }
+      toast.error(error?.response?.data?.message || error?.response?.data || "An error occurred while registering.");
     } finally {
       setLoading(false); // Ensure loading state is turned off regardless of success or error
     }
