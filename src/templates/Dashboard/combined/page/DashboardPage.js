@@ -14,7 +14,7 @@ const DashboardPage = () => {
     currentPage,
     push,
     dashboardEntries,
-    loading
+    loading, 
   } = useDashboard();
 
   return (

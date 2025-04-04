@@ -2,6 +2,7 @@ import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
+import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
 
 const DashboardTableUI = ({
@@ -12,7 +13,7 @@ const DashboardTableUI = ({
   dashboardEntries,
   globalFilter,
   setGlobalFilter,
-  push
+  push,
 }) => {
   const calculateTotal = (key) => {
     return rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
@@ -87,12 +88,38 @@ const DashboardTableUI = ({
                       <td className="table-td px-4 py-4">
                         {dateFormat(row.signatureDate)}
                       </td>
-                      <td className="table-td px-4 py-4">{row.dd}</td>
-                      <td className="table-td px-4 py-4">
-                        {row.financingDays}
+                      <td className={`table-td px-4 py-4 `}>
+                        <span
+                          className={`${
+                            row.dd > 0
+                              ? "text-green-700 py-2 bg-green-200 px-6 rounded-full"
+                              : ""
+                          }`}
+                        >
+                          <CountdownTimer initialDays={row.dd} />
+                        </span>
                       </td>
-                      <td className="table-td px-4 py-4">
-                        {row.closingDays}
+                      <td className={`table-td px-4 py-4 `}>
+                        <span
+                          className={`${
+                            row.financingDays > 0
+                              ? "text-green-600 py-2 bg-green-200 px-6 rounded-full"
+                              : ""
+                          }`}
+                        >
+                          <CountdownTimer initialDays={row.financingDays} />
+                        </span>
+                      </td>
+                      <td className={`table-td px-4 py-4 `}>
+                        <span
+                          className={`${
+                            row.closingDays > 0
+                              ? "text-green-600 py-2 bg-green-200 px-6 rounded-full"
+                              : ""
+                          }`}
+                        >
+                          <CountdownTimer initialDays={row.closingDays} />
+                        </span>
                       </td>
                       <td className="table-td px-4 py-4">{row.invoice}</td>
                       <td className="table-td px-4 py-4">{row.pmtReceived}</td>
@@ -107,7 +134,9 @@ const DashboardTableUI = ({
                         />
                         {row?.created_by?.name}
                       </td>
-                      <td className="table-td px-4 py-4">$ {row.amount.toLocaleString()}</td>
+                      <td className="table-td px-4 py-4">
+                        $ {row.amount.toLocaleString()}
+                      </td>
                       {/* <td className="table-td px-4 py-4">
                       <span
                         className={`inline-block px-3 min-w-[90px] text-center py-1 rounded-full bg-opacity-25 ${
@@ -136,7 +165,9 @@ const DashboardTableUI = ({
                         ].includes(column.key) ? (
                           <>
                             <p>Total</p>
-                            <p>$ {calculateTotal(column.key).toLocaleString()}</p>
+                            <p>
+                              $ {calculateTotal(column.key).toLocaleString()}
+                            </p>
                           </>
                         ) : null}
                       </td>
