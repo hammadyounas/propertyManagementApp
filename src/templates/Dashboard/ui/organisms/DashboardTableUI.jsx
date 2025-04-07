@@ -1,3 +1,5 @@
+
+import { Icon } from '@iconify/react'; // ✅ Correct import
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
@@ -122,7 +124,7 @@ const DashboardTableUI = ({
                         </span>
                       </td>
                       <td className="table-td px-4 py-4">{row.invoice}</td>
-                      <td className="table-td px-4 py-4">{row.pmtReceived}</td>
+                      <td className="table-td px-4 py-4">{row.pmtReceived === 'paid' ? <><div className='flex justify-center items-center gap-2 text-green-600'><Icon icon='fa:flag'/> {row.pmtReceived}</div></> : row.pmtReceived}</td>
                       <td className="table-td px-4 py-4 flex justify-center items-center">
                         <img
                           src={
