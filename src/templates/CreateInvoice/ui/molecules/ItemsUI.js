@@ -100,7 +100,7 @@ const ItemsUI = ({
               <div className="w-full md:w-[33%] xl:w-[14%]">
                 <Textinput
                   name={`items[${index}].qst`}
-                  label="QST (9.75%)"
+                  label="QST (9.975%)"
                   type="number"
                   register={register}
                   error={errors.items?.[index]?.qst}

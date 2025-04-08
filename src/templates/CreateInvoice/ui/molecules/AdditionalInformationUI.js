@@ -18,7 +18,7 @@ const AdditionalInformationUI = ({ register, loading, total }) => {
           <p className="font-medium">${total?.grandTotal?.totalGst}</p>
         </div>
         <div className="flex justify-between items-center">
-          <p className="font-medium">Plus QST (9.75%)</p>
+          <p className="font-medium">Plus QST (9.975%)</p>
           <p className="font-medium">${total?.grandTotal?.totalQst}</p>
         </div>
         <div className="flex justify-between items-center font-bold border-t pt-4">
