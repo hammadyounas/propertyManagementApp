@@ -176,7 +176,7 @@ const useCreateInvoice = () => {
       const updatedItems = getValues("items")?.map((item, index) => {
         const price = parseFloat(item.price) || 0; // Ensure price is a number
         const gst = parseFloat((price * 0.05).toFixed(2)); // Calculate GST and round
-        const qst = parseFloat((price * 0.0975).toFixed(2)); // Calculate QST and round
+        const qst = parseFloat((price * 0.09975).toFixed(2)); // Calculate QST and round
 
         // Ensure the total is also rounded to 2 decimal places
         const total = parseFloat((price + gst + qst).toFixed(2));
@@ -215,7 +215,7 @@ const useCreateInvoice = () => {
       const gst = parseFloat((price * 0.05).toFixed(2));
 
       // Calculate QST (9.75% of price) and round to 2 decimals
-      const qst = parseFloat((price * 0.0975).toFixed(2));
+      const qst = parseFloat((price * 0.09975).toFixed(2));
 
       // Calculate total (price + gst + qst)
       const total = parseFloat((price + gst + qst).toFixed(2));
