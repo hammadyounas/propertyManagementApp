@@ -1,5 +1,4 @@
-
-import { Icon } from '@iconify/react'; // ✅ Correct import
+import { Icon } from "@iconify/react"; // ✅ Correct import
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
@@ -94,37 +93,95 @@ const DashboardTableUI = ({
                         <span
                           className={`${
                             row.dd > 0
-                              ? "text-green-700 py-2 bg-green-200 px-6 rounded-full"
+                              ? "text-green-700 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer initialDays={row.dd} />
+                          <CountdownTimer
+                            initialDays={
+                              row.dd > 0 ? (
+                                <>
+                                  <div className="flex justify-center items-center gap-2 text-green-600">
+                                    <Icon
+                                      icon="majesticons:timer-line"
+                                      className=""
+                                    />{" "}
+                                    {row.dd}
+                                  </div>
+                                </>
+                              ) : (
+                                row.dd
+                              )
+                            }
+                          />
                         </span>
                       </td>
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.financingDays > 0
-                              ? "text-green-600 py-2 bg-green-200 px-6 rounded-full"
+                            row.financingDays > 0 && row.dd === 0
+                              ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer initialDays={row.financingDays} />
+                          <CountdownTimer
+                            initialDays={
+                              row.financingDays > 0 && row.dd === 0 ? (
+                                <>
+                                  <div className="flex justify-center items-center gap-2 text-green-600">
+                                    <Icon
+                                      icon="majesticons:timer-line"
+                                      className=""
+                                    />{" "}
+                                    {row.financingDays}
+                                  </div>
+                                </>
+                              ) : (
+                                row.financingDays
+                              )
+                            }
+                          />
                         </span>
                       </td>
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.closingDays > 0
-                              ? "text-green-600 py-2 bg-green-200 px-6 rounded-full"
+                            row.closingDays > 0 && row.financingDays === 0
+                              ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer initialDays={row.closingDays} />
+                          <CountdownTimer
+                            initialDays={
+                              row.closingDays > 0 && row.financingDays === 0 ? (
+                                <>
+                                  <div className="flex justify-center items-center gap-2 text-green-600">
+                                    <Icon
+                                      icon="majesticons:timer-line"
+                                      className=""
+                                    />{" "}
+                                    {row.closingDays}
+                                  </div>
+                                </>
+                              ) : (
+                                row.closingDays
+                              )
+                            }
+                          />
                         </span>
                       </td>
                       <td className="table-td px-4 py-4">{row.invoice}</td>
-                      <td className="table-td px-4 py-4">{row.pmtReceived === 'paid' ? <><div className='flex justify-center items-center gap-2 text-green-600'><Icon icon='fa:flag'/> {row.pmtReceived}</div></> : row.pmtReceived}</td>
+                      <td className="table-td px-4 py-4">
+                        {row.pmtReceived === "paid" ? (
+                          <>
+                            <div className="flex justify-center items-center gap-2 text-green-600">
+                              <Icon icon="fa:flag" /> {row.pmtReceived}
+                            </div>
+                          </>
+                        ) : (
+                          row.pmtReceived
+                        )}
+                      </td>
                       <td className="table-td px-4 py-4 flex justify-center items-center">
                         <img
                           src={
