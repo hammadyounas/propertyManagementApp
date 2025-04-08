@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Icon } from '@iconify/react';
 
 const CountdownTimer = ({ initialDays }) => {
   const [daysRemaining, setDaysRemaining] = useState(initialDays);
@@ -11,7 +12,6 @@ const CountdownTimer = ({ initialDays }) => {
     return () => clearInterval(interval);
   }, []);
 
-  return <span>{daysRemaining} days</span>;
+  return <span className="flex justify-center items-center gap-2">{daysRemaining } days</span>;
 };
-
 export default CountdownTimer;
