@@ -4,6 +4,7 @@ import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
+import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
 
@@ -16,6 +17,9 @@ const DashboardTableUI = ({
   globalFilter,
   setGlobalFilter,
   push,
+  setStatusFilter,
+  setSelectedFilter,
+  selectedFilter,
 }) => {
   const calculateTotal = (key) => {
     return rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
@@ -34,11 +38,27 @@ const DashboardTableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
-            <span className="w-full">
+          <div className="w-full flex items-center max-sm:justify-end gap-2 max-sm:mt-2">
+          <DropdownUINew
+              label={selectedFilter}
+              wrapperClass="sm:w-40"
+              labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              classMenuItems="w-48 left-0"
+              classItem="p-2"
+              onSelect={(value) => {
+                setSelectedFilter(value === "pending" ? "Pending" : "Paid");
+                setStatusFilter(value);
+              }}
+              items={[
+                { label: "Pending", value: "pending" },
+                { label: "Approved", value: "approved" },
+                { label: "Rejected", value: "rejected" },
+              ]}
+            />
+            <span className="sm:w-full">
               <Button
                 text="Add Entry"
                 onClick={() => push("/dashboard/add")}

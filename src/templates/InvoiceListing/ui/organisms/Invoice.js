@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const Invoice = ({ invoiceData, selectedLanguage }) => {
+const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
   const invoiceRef = useRef();
 
   const ContactInfo = ({ label, value, link }) => (
