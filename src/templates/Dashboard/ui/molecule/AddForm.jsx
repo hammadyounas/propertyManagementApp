@@ -16,7 +16,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               error={errors.signature_date}
               placeholder="Signature Date"
               disabled={loading}
-              min={new Date().toISOString().split("T")[0]}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
 
