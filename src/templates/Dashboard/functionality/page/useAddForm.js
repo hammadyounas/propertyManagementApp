@@ -14,17 +14,17 @@ const useAddForm = () => {
       .number()
       .typeError("DD must be a number")
       .required("DD is required")
-      .min(0, "DD cannot be negative"),
+      .min(1, "DD must be greater than 0"),
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
       .required("Financing Days is required")
-      .min(0, "Financing Days cannot be negative"),
+      .min(1, "Financing Days must be greater than 0"),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
       .required("Closing Days is required")
-      .min(0, "Closing Days cannot be negative"),
+      .min(1, "Closing Days must be greater than 0"),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
     value_of_amount: yup
@@ -32,6 +32,7 @@ const useAddForm = () => {
       .typeError("Value of Amount must be a number")
       .required("Value of Amount is required")
       .min(0, "Value of Amount cannot be negative"),
+    comment: yup.string().optional().max(200, "Comment must be at most 200 characters long"),
   });
 
   const { push } = useRouter();
@@ -46,12 +47,12 @@ const useAddForm = () => {
     reset,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: {
-      dd: 0,
-      financing_days: 0,
-      closing_days: 0,
-      value_of_amount: 0,
-    },
+    // defaultValues: {
+    //   dd: 0,
+    //   financing_days: 0,
+    //   closing_days: 0,
+    //   value_of_amount: 0,
+    // },
   });
 
   const [loading, setLoading] = useState(false);
@@ -78,7 +79,8 @@ const useAddForm = () => {
         financingDays: data.financing_days,
         invoice: data.invoice,
         pmtReceived: data.pmtReceived,
-        amount: data.value_of_amount
+        amount: data.value_of_amount,
+        comment: data.comment,
       };
 
       const response = await postRequest("dashboard", formData);

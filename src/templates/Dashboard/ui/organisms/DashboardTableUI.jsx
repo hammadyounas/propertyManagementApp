@@ -29,6 +29,7 @@ const DashboardTableUI = ({
     { key: "invoice", label: "Invoice" },
     { key: "pmtReceived", label: "Payment Received" },
     { key: "created_by", label: "Created By" },
+    { key: "comment", label: "Comment" },
     { key: "amount", label: "Amount" },
   ];
 
@@ -193,6 +194,9 @@ const DashboardTableUI = ({
                           className="block w-8 h-8 object-cover rounded-full mr-2"
                         />
                         {row?.created_by?.name}
+                      </td>
+                      <td className="table-td px-4 py-4">
+                        {row.comment || 'N/A'}
                       </td>
                       <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}

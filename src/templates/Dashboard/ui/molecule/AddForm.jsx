@@ -1,5 +1,6 @@
 import React from 'react'
 import Textinput from '../../../../components/ui/atoms/TextInput'
+import TextareaUI from '../../../../components/ui/molecules/TextareaUI'
 import ReactSelect from "react-select";
 
 export default function AddForm({register, errors, loading, invoice, handleSelectInvoiceStatus, invoiceStatus, pmtReceived, handlePmtReceived, pmtReceivedStatus}) {
@@ -15,6 +16,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               error={errors.signature_date}
               placeholder="Signature Date"
               disabled={loading}
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
 
@@ -99,6 +101,19 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               error={errors.value_of_amount}
               placeholder="Value of Amount"
               disabled={loading}
+            />
+          </div>
+
+          <div className="w-full md:w-[49%]">
+            <TextareaUI
+              name="comment"
+              label="Comment"
+              register={register}
+              error={errors.comment}
+              placeholder="Comment"
+              disabled={loading}
+              classLabel='my-2 text-sm'
+              className={'capitalize'}
             />
           </div>
 

@@ -29,7 +29,7 @@ const DashboardPage = () => {
         dashboardEntries={dashboardEntries}
         paginatedDashboardEntries={paginatedDashboardEntries} // Pass paginated properties to the Table
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
+      <div className={`flex w-full justify-center mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}

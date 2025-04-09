@@ -30,9 +30,9 @@ const useDashboard = () => {
     fetchDashboardEntries();
   }, []);
 
-  useEffect(() => {
-    setDashboardEntries(rows);
-  }, []);
+  // useEffect(() => {
+  //   setDashboardEntries(rows);
+  // }, []);
 
   // Calculate the paginated users
 const paginatedDashboardEntries = useMemo(() => {
