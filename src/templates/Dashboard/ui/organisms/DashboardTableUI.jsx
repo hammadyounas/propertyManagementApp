@@ -15,9 +15,10 @@ const DashboardTableUI = ({
   globalFilter,
   setGlobalFilter,
   push,
+  paginatedDashboardEntries,
 }) => {
   const calculateTotal = (key) => {
-    return rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+    return paginatedDashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
   };
   const columnsFooter = [
     { key: "id", label: "ID" },
@@ -80,7 +81,7 @@ const DashboardTableUI = ({
                     </td>
                   </tr>
                 ) : (
-                  rows?.map((row, i) => (
+                  paginatedDashboardEntries?.map((row, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
@@ -146,7 +147,7 @@ const DashboardTableUI = ({
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.closingDays > 0 && row.financingDays === 0
+                            row.closingDays > 0 && row.financingDays === 0 && row.dd === 0
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}

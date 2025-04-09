@@ -27,6 +27,7 @@ const DashboardPage = () => {
         tableFooterData={tableFooterData}
         loading={loading}
         dashboardEntries={dashboardEntries}
+        paginatedDashboardEntries={paginatedDashboardEntries} // Pass paginated properties to the Table
       />
       <div className={`flex w-full justify-end mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
