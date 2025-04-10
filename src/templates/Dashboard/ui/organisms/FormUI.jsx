@@ -3,11 +3,11 @@
 import { ToastContainer } from "react-toastify";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 
-const FormUI = ({ children, handleSubmit, onSubmit }) => {
+const FormUI = ({ children, handleSubmit, onSubmit, title }) => {
   return (
     <div className="w-full lg:w-[75%]">
       <ToastContainer />
-      <Card title="Add Details">
+      <Card title={title}>
         <form onSubmit={handleSubmit(onSubmit)}>{children}</form>
       </Card>
     </div>

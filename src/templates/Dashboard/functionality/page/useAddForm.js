@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { invoiceStatus, pmtReceivedStatus } from "../constants/data";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { postRequest } from "../../../../libs/utils/request_handler";
 
 const useAddForm = () => {
@@ -36,6 +36,14 @@ const useAddForm = () => {
   });
 
   const { push } = useRouter();
+  const pathname = usePathname();
+  const { query } = useRouter();
+  const id = query?._id; // Extract the ID from the query parameters
+  
+  // Ensure `id` is a string (if it's an array, use the first element)
+  // const editPage = pathname === `/dashboard/edit/${id}` ? pathname : null; 
+  const editPage = pathname;
+  console.log("Path",editPage);
 
   const {
     register,
@@ -47,17 +55,27 @@ const useAddForm = () => {
     reset,
   } = useForm({
     resolver: yupResolver(schema),
-    // defaultValues: {
-    //   dd: 0,
-    //   financing_days: 0,
-    //   closing_days: 0,
-    //   value_of_amount: 0,
-    // },
+    defaultValues: {
+      invoice: "pending",
+      pmtReceived: "non paid"
+      // dd: 0,
+      // financing_days: 0,
+      // closing_days: 0,
+      // value_of_amount: 0,
+    },
   });
 
   const [loading, setLoading] = useState(false);
-  const [invoice, setInvoice] = useState(null);
-  const [pmtReceived, setPmtReceived] = useState(null);
+  const [invoice, setInvoice] = useState({ label: "Pending", value: "pending" });
+  const [pmtReceived, setPmtReceived] = useState({ label: "Non Paid", value: "non paid" });
+
+  useEffect(() => {
+    setValue("invoice", "pending");
+  }, [setValue]);
+
+  useEffect(() => {
+    setValue("pmtReceived", "non paid");
+  }, [setValue]);
 
   const handleSelectInvoiceStatus = (selectedOption) => {
     setInvoice(selectedOption);
@@ -123,6 +141,7 @@ const useAddForm = () => {
     invoiceStatus,
     pmtReceivedStatus,
     push,
+    editPage,
   };
 };
 

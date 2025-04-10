@@ -3,7 +3,7 @@ import Textinput from '../../../../components/ui/atoms/TextInput'
 import TextareaUI from '../../../../components/ui/molecules/TextareaUI'
 import ReactSelect from "react-select";
 
-export default function AddForm({register, errors, loading, invoice, handleSelectInvoiceStatus, invoiceStatus, pmtReceived, handlePmtReceived, pmtReceivedStatus}) {
+export default function EditDashboardForm({register, errors, loading, invoice, handleSelectInvoiceStatus, invoiceStatus, pmtReceived, handlePmtReceived, pmtReceivedStatus}) {
   return (
       <div className='my-4'>
         <div className='flex flex-wrap justify-between'>
@@ -15,12 +15,12 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               register={register}
               error={errors.signature_date}
               placeholder="Signature Date"
-              disabled={loading}
+              disabled={true}
               max={new Date().toISOString().split("T")[0]}
             />
           </div>
 
-        <div className="mt-[6px] w-full md:w-[49%]">
+        <div className="w-full md:w-[49%]">
             <Textinput
               name="dd"
               label="DD*"
@@ -64,8 +64,8 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               onChange={handleSelectInvoiceStatus}
               options={invoiceStatus}
               placeholder="Invoice Status"
-              isDisabled={true}
-              className="text-sm"
+              isDisabled={loading}
+              className="text-sm capitalize"
             />
             {errors?.invoice && !invoice && (
               <p className="text-sm text-danger-500 mt-2">
@@ -82,8 +82,8 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               onChange={handlePmtReceived}
               options={pmtReceivedStatus}
               placeholder="PMT Received"
-              isDisabled={true}
-              className="text-sm"
+              isDisabled={loading}
+              className="text-sm capitalize"
             />
             {errors?.pmtReceived && !pmtReceived && (
               <p className="text-sm text-danger-500 mt-2">
@@ -100,7 +100,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               register={register}
               error={errors.value_of_amount}
               placeholder="Value of Amount"
-              disabled={loading}
+              disabled={true}
             />
           </div>
 
@@ -111,7 +111,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               register={register}
               error={errors.comment}
               placeholder="Comment"
-              disabled={loading}
+              disabled={true}
               classLabel='my-2 text-sm'
               className={'capitalize'}
             />

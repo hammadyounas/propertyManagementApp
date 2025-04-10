@@ -1,10 +1,10 @@
-import { Icon } from "@iconify/react"; // ✅ Correct import
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
 import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
+import { Icon } from "@iconify/react";
 
 const DashboardTableUI = ({
   columns,
@@ -31,6 +31,7 @@ const DashboardTableUI = ({
     { key: "created_by", label: "Created By" },
     { key: "comment", label: "Comment" },
     { key: "amount", label: "Amount" },
+    { key: "action", label: "Action" },
   ];
 
   return (
@@ -200,6 +201,13 @@ const DashboardTableUI = ({
                       </td>
                       <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}
+                      </td>
+                      <td className="table-td px-4 py-4">
+                      <Icon
+                            onClick={() => push(`/dashboard/edit/${row._id}`)}
+                            className="cursor-pointer text-[20px] mx-4"
+                            icon={"heroicons:pencil-square"}
+                          />
                       </td>
                       {/* <td className="table-td px-4 py-4">
                       <span

@@ -69,6 +69,10 @@ export const columns = [
     label: "Amount",
     field: "amount",
   },
+  {
+    label: "Action",
+    field: "action",
+  }
 ];
   export const tableData = [
     {
