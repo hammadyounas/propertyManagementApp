@@ -39,23 +39,34 @@ const DashboardTableUI = ({
   return (
     <Card noborder>
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"Search By Amount OR Date (YYYY-MM-DD)"} className={'md:w-[30%] w-full'} />
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center max-sm:justify-end gap-2 max-sm:mt-2">
           <DropdownUINew
-              label={selectedFilter}
+              label={selectedFilter ? selectedFilter : "Filter"}
               wrapperClass="sm:w-40"
               labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="w-48 left-0"
               classItem="p-2"
               onSelect={(value) => {
-                setSelectedFilter(value === "pending" ? "Pending" : "Paid");
-                setStatusFilter(value);
+                if (value === "all") {
+                  setSelectedFilter("All");
+                  setStatusFilter(""); // clear filter
+                } else {
+                  const labelMap = {
+                    paid: "Paid",
+                    pending: "Pending",
+                    submitted: "Submitted",
+                  };
+                  setSelectedFilter(labelMap[value]);
+                  setStatusFilter(value);
+                }
               }}
               items={[
+                { label: "All", value: "all" },
+                { label: "Paid", value: "paid" },
                 { label: "Pending", value: "pending" },
-                { label: "Approved", value: "approved" },
-                { label: "Rejected", value: "rejected" },
+                { label: "Submitted", value: "submitted" },
               ]}
             />
             <span className="sm:w-full">

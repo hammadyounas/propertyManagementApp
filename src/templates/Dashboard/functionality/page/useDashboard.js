@@ -7,6 +7,8 @@ const useDashboard = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [dashboardEntries, setDashboardEntries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("");
   const pageSize = 10;
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);
@@ -14,7 +16,24 @@ const useDashboard = () => {
   const fetchDashboardEntries = async () => {
     try {
       setLoading(true);
-      const response = await getRequest("dashboard");
+      let url = 'dashboard';
+      const params = new URLSearchParams();
+      const searchQuery = globalFilter.trim();
+      if (searchQuery !== "") {
+        params.append("search", searchQuery);
+      }
+
+      // Add status filter if provided (Only send "active" or "inactive", not "all")
+      if (statusFilter === "pending" || statusFilter === "submitted" || statusFilter === "paid") {
+        params.append("invoice", statusFilter);
+      }
+
+      // If params exist, update the URL
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const response = await getRequest(url);
       const filteredEntries = response?.data?.filter(
         (entry) => !entry.isDeleted
       );
@@ -28,11 +47,11 @@ const useDashboard = () => {
 
   useEffect(() => {
     fetchDashboardEntries();
-  }, []);
+  }, [statusFilter, globalFilter]);
 
-  useEffect(() => {
-    setDashboardEntries(rows);
-  }, []);
+  // useEffect(() => {
+  //   setDashboardEntries(rows);
+  // }, []);
 
   // Calculate the paginated users
   const paginatedDashboardEntries = useMemo(() => {
@@ -55,6 +74,10 @@ const useDashboard = () => {
     currentPage,
     push,
     loading,
+    statusFilter,
+    setStatusFilter,
+    setSelectedFilter,
+    selectedFilter,
   };
 };
 
