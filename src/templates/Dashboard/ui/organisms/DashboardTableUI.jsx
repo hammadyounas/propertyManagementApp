@@ -39,8 +39,8 @@ const DashboardTableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex max-sm:flex-col sm:justify-end sm:items-center mb-6">
-        {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"Search By Amount OR Date (YYYY-MM-DD)"} className={'md:w-[30%] w-full'} /> */}
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"🔎︎ Search..."} className={'md:w-[30%] w-full'} />
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center max-sm:justify-end gap-2 max-sm:mt-2">
           <DropdownUINew
@@ -232,7 +232,7 @@ const DashboardTableUI = ({
                       <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}
                       </td>
-                      <td className="table-td px-4 py-4">
+                      <td className="table-td px-4 py-4 flex justify-center items-center">
                       <Icon
                             onClick={() => push(`/dashboard/edit/${row._id}`)}
                             className="cursor-pointer text-[20px] mx-4"
