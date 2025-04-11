@@ -32,7 +32,7 @@ const useAddForm = () => {
       .typeError("Value of Amount must be a number")
       .required("Value of Amount is required")
       .min(0, "Value of Amount cannot be negative"),
-    comment: yup.string().optional().max(200, "Comment must be at most 200 characters long"),
+    comment: yup.string().optional().max(100, "Comment must be at most 200 characters long"),
   });
 
   const { push } = useRouter();

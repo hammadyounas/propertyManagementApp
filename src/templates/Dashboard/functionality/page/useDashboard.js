@@ -12,6 +12,8 @@ const useDashboard = () => {
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);
   const [totalEntries, setTotalEntries] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+const [selectedComment, setSelectedComment] = useState("");
 
 
   const fetchDashboardEntries = async () => {
@@ -58,6 +60,15 @@ const useDashboard = () => {
       console.error("Error fetching dashboard entries:", error);
     }
   };
+
+  const handleOpenCommentModal = (comment) => {
+    setSelectedComment(comment);
+    setIsModalOpen(true);  // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);  // Close the modal
+  };
   
   useEffect(() => {
     fetchDashboardEntries();
@@ -82,6 +93,10 @@ const useDashboard = () => {
     setSelectedFilter,
     selectedFilter,
     totalEntries,
+    handleOpenCommentModal,
+    handleCloseModal,
+    selectedComment,
+    isModalOpen,
   };
 };
 

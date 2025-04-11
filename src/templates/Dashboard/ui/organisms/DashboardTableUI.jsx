@@ -19,6 +19,7 @@ const DashboardTableUI = ({
   setStatusFilter,
   setSelectedFilter,
   selectedFilter,
+  handleOpenCommentModal,
 }) => {
   const calculateTotal = (key) => {
     return dashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
@@ -227,7 +228,18 @@ const DashboardTableUI = ({
                         {row?.created_by?.name}
                       </td>
                       <td className="table-td px-4 py-4">
-                        {row.comment || 'N/A'}
+                      {row.comment && row.comment.length > 20 ? (
+                            <div className="flex justify-center items-center gap-2">
+                              <span>{row.comment.substring(0, 15)}...</span>
+                              <Icon
+                                icon="akar-icons:eye"
+                                className="cursor-pointer ml-2"
+                                onClick={() => handleOpenCommentModal(row.comment)}
+                              />
+                            </div>
+                          ) : (
+                              row.comment || "N/A"
+                          )}
                       </td>
                       <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}

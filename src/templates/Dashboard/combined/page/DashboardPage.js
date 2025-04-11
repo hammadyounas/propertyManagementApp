@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import useDashboard from "../../functionality/page/useDashboard";
 import { tableFooterData } from "../../functionality/constants/data";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
+import ModalUI from "../../../../components/ui/organisms/ModalUI";
 
 const DashboardPage = () => {
   const {
@@ -20,6 +21,10 @@ const DashboardPage = () => {
     setSelectedFilter,
     selectedFilter,
     totalEntries,
+    handleOpenCommentModal,
+    handleCloseModal,
+    selectedComment,
+    isModalOpen,
   } = useDashboard();
 
   return (
@@ -37,6 +42,7 @@ const DashboardPage = () => {
         setSelectedFilter={setSelectedFilter}
         selectedFilter={selectedFilter}
         totalEntries={totalEntries}
+        handleOpenCommentModal={handleOpenCommentModal}
       />
       <div
         className={`flex w-full justify-center mt-2 items-center ${
@@ -48,6 +54,18 @@ const DashboardPage = () => {
           onPageChange={({ selected }) => handlePageChange(selected)}
           initialPage={currentPage - 1}
         />
+      </div>
+
+      <div className="flex justify-center items-center">
+        <ModalUI
+          activeModal={isModalOpen}
+          onClose={handleCloseModal}
+          title="Comment"
+        >
+          <div className="text-center">
+            <p>{selectedComment}</p>
+          </div>
+        </ModalUI>
       </div>
     </>
   );

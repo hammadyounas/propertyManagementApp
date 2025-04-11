@@ -14,6 +14,10 @@ const Table = ({
   setSelectedFilter,
   selectedFilter,
   totalEntries,
+  handleOpenCommentModal,
+  handleCloseModal,
+  selectedComment,
+  isModalOpen,
 }) => {
   const { columns } = useTable();
   return (
@@ -31,6 +35,10 @@ const Table = ({
       setSelectedFilter={setSelectedFilter}
       selectedFilter={selectedFilter}
       totalEntries={totalEntries}
+      handleOpenCommentModal={handleOpenCommentModal}
+      handleCloseModal={handleCloseModal}
+      selectedComment={selectedComment}
+      isModalOpen={isModalOpen}
     />
   );
 };

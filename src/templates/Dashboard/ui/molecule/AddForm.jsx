@@ -107,7 +107,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
           <div className="w-full md:w-[49%]">
             <TextareaUI
               name="comment"
-              label="Comment"
+              label="Comment (Max 200)"
               register={register}
               error={errors.comment}
               placeholder="Comment"
