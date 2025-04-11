@@ -155,6 +155,7 @@ const FormUI = ({
                   error={errors.joining_date}
                   placeholder="Joining Date"
                   disabled={loading}
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
               <div className="w-full md:w-[49%]">

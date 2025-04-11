@@ -43,19 +43,19 @@ const useSalesTeam = () => {
       const searchQuery = globalFilter ? String(globalFilter).trim() : "";
 
       // Add search query if provided
-      if (searchQuery !== "") {
-        params.append("search", searchQuery);
-      }
+        if (searchQuery !== "") {
+          params.append("search", searchQuery);
+        }
 
-      // Add status filter if provided (Only send "active" or "inactive", not "all")
-      if (statusFilter === "active" || statusFilter === "inactive") {
-        params.append("status", statusFilter);
-      }
+        // Add status filter if provided (Only send "active" or "inactive", not "all")
+        if (statusFilter === "active" || statusFilter === "inactive") {
+          params.append("status", statusFilter);
+        }
 
-      // If params exist, update the URL
-      if (params.toString()) {
-        url += `?${params.toString()}`;
-      }
+        // If params exist, update the URL
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
 
       const response = await getRequest(url);
       setUsers(response.data);
