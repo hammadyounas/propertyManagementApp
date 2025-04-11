@@ -1,7 +1,10 @@
 import useTable from "../../functionality/organisms/useTable";
 import DashboardTableUI from "../../ui/organisms/DashboardTableUI";
 
-const Table = ({ rows, globalFilter, setGlobalFilter, push, tableFooterData, loading, dashboardEntries }) => {
+const Table = ({ rows, globalFilter, setGlobalFilter, push, tableFooterData, loading, dashboardEntries,  statusFilter,
+  setStatusFilter,
+  setSelectedFilter,
+  selectedFilter, }) => {
   const { columns } = useTable();
   return (
     <DashboardTableUI
@@ -13,6 +16,10 @@ const Table = ({ rows, globalFilter, setGlobalFilter, push, tableFooterData, loa
       push={push}
       loading={loading}
       dashboardEntries={dashboardEntries}
+      statusFilter={statusFilter}
+      setStatusFilter={setStatusFilter}
+      setSelectedFilter={setSelectedFilter}
+      selectedFilter={selectedFilter}
     />
   );
 };

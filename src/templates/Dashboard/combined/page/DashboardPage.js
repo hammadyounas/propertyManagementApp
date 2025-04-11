@@ -15,6 +15,10 @@ const DashboardPage = () => {
     push,
     dashboardEntries,
     loading, 
+    statusFilter,
+    setStatusFilter,
+    setSelectedFilter,
+    selectedFilter,
   } = useDashboard();
 
   return (
@@ -27,6 +31,10 @@ const DashboardPage = () => {
         tableFooterData={tableFooterData}
         loading={loading}
         dashboardEntries={dashboardEntries}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        setSelectedFilter={setSelectedFilter}
+        selectedFilter={selectedFilter}
       />
       <div className={`flex w-full justify-end mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
