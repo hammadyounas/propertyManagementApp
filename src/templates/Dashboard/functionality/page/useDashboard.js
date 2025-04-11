@@ -18,7 +18,8 @@ const useDashboard = () => {
       setLoading(true);
       let url = 'dashboard';
       const params = new URLSearchParams();
-      const searchQuery = globalFilter.trim();
+      const searchQuery = (globalFilter || "").trim();
+
       if (searchQuery !== "") {
         params.append("search", searchQuery);
       }
