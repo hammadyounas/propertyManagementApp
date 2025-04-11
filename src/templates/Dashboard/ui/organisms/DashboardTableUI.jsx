@@ -16,13 +16,12 @@ const DashboardTableUI = ({
   globalFilter,
   setGlobalFilter,
   push,
-  paginatedDashboardEntries,
   setStatusFilter,
   setSelectedFilter,
   selectedFilter,
 }) => {
   const calculateTotal = (key) => {
-    return paginatedDashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+    return dashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
   };
   const columnsFooter = [
     { key: "id", label: "ID" },
@@ -40,8 +39,8 @@ const DashboardTableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"Search By Amount OR Date (YYYY-MM-DD)"} className={'md:w-[30%] w-full'} />
+      <div className="flex max-sm:flex-col sm:justify-end sm:items-center mb-6">
+        {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"Search By Amount OR Date (YYYY-MM-DD)"} className={'md:w-[30%] w-full'} /> */}
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center max-sm:justify-end gap-2 max-sm:mt-2">
           <DropdownUINew
@@ -114,7 +113,7 @@ const DashboardTableUI = ({
                     </td>
                   </tr>
                 ) : (
-                  paginatedDashboardEntries?.map((row, i) => (
+                  dashboardEntries?.map((row, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"

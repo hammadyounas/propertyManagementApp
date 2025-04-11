@@ -9,11 +9,11 @@ const Table = ({
   tableFooterData,
   loading,
   dashboardEntries,
-  paginatedDashboardEntries,
   statusFilter,
   setStatusFilter,
   setSelectedFilter,
   selectedFilter,
+  totalEntries,
 }) => {
   const { columns } = useTable();
   return (
@@ -26,11 +26,11 @@ const Table = ({
       push={push}
       loading={loading}
       dashboardEntries={dashboardEntries}
-      paginatedDashboardEntries={paginatedDashboardEntries}
       statusFilter={statusFilter}
       setStatusFilter={setStatusFilter}
       setSelectedFilter={setSelectedFilter}
       selectedFilter={selectedFilter}
+      totalEntries={totalEntries}
     />
   );
 };

@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { rows } from "../constants/data";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRequest } from "../../../../libs/utils/request_handler";
 
@@ -12,56 +11,57 @@ const useDashboard = () => {
   const pageSize = 10;
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);
+  const [totalEntries, setTotalEntries] = useState(0);
+
 
   const fetchDashboardEntries = async () => {
     try {
       setLoading(true);
-      let url = 'dashboard';
       const params = new URLSearchParams();
       const searchQuery = (globalFilter || "").trim();
-
+  
+      params.append("page", currentPage);
+      params.append("limit", pageSize);
+  
       if (searchQuery !== "") {
         params.append("search", searchQuery);
       }
-
-      // Add status filter if provided (Only send "active" or "inactive", not "all")
-      if (statusFilter === "pending" || statusFilter === "submitted" || statusFilter === "paid") {
+  
+      if (["pending", "submitted", "paid"].includes(statusFilter)) {
         params.append("invoice", statusFilter);
       }
-
-      // If params exist, update the URL
+  
+      let url = `dashboard`;
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
-
+  
       const response = await getRequest(url);
-      const filteredEntries = response?.data?.filter(
+      console.log("Response:", response); // Add this line to inspect totalCount
+  
+      const filteredEntries = response?.data?.data?.filter(
         (entry) => !entry.isDeleted
       );
-      setDashboardEntries(filteredEntries);
+  
+      setDashboardEntries(filteredEntries || []);
+      setTotalEntries(response.data?.totalCount || 0);
+      console.log("Total entries:", totalEntries); // Add this line to inspect totalCount
+  
+      // If totalCount is available from backend:
+      if (response?.totalCount) {
+        setTotalEntries(response.totalCount);
+      }
+  
       setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Error fetching dashboard entries:", error);
     }
   };
-
+  
   useEffect(() => {
     fetchDashboardEntries();
-  }, [statusFilter, globalFilter]);
-
-  // useEffect(() => {
-  //   setDashboardEntries(rows);
-  // }, []);
-
-  // Calculate the paginated users
-const paginatedDashboardEntries = useMemo(() => {
-  const startIndex = (currentPage - 1) * pageSize;
-  return dashboardEntries?.slice(startIndex, startIndex + pageSize);
-}, [dashboardEntries, currentPage, pageSize]);
-
-// Pass paginatedDashboardEntries to Table and TableUI
-
+  }, [statusFilter, globalFilter, currentPage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
@@ -72,7 +72,6 @@ const paginatedDashboardEntries = useMemo(() => {
     setGlobalFilter,
     dashboardEntries,
     setDashboardEntries,
-    paginatedDashboardEntries, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,
@@ -82,6 +81,7 @@ const paginatedDashboardEntries = useMemo(() => {
     setStatusFilter,
     setSelectedFilter,
     selectedFilter,
+    totalEntries,
   };
 };
 
