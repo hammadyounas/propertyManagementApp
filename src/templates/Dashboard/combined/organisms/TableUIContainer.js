@@ -1,11 +1,20 @@
-  import useTable from "../../functionality/organisms/useTable";
-  import DashboardTableUI from "../../ui/organisms/DashboardTableUI";
+import useTable from "../../functionality/organisms/useTable";
+import DashboardTableUI from "../../ui/organisms/DashboardTableUI";
 
-
-const Table = ({ rows, globalFilter, setGlobalFilter, push, tableFooterData, loading, dashboardEntries,  statusFilter,
+const Table = ({
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  push,
+  tableFooterData,
+  loading,
+  dashboardEntries,
+  paginatedDashboardEntries,
+  statusFilter,
   setStatusFilter,
   setSelectedFilter,
-  selectedFilter, }) => {
+  selectedFilter,
+}) => {
   const { columns } = useTable();
   return (
     <DashboardTableUI
