@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { invoiceStatus, pmtReceivedStatus } from "../constants/data";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { postRequest } from "../../../../libs/utils/request_handler";
 
 const useAddForm = () => {
@@ -14,17 +14,17 @@ const useAddForm = () => {
       .number()
       .typeError("DD must be a number")
       .required("DD is required")
-      .min(0, "DD cannot be negative"),
+      .min(1, "DD must be greater than 0"),
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
       .required("Financing Days is required")
-      .min(0, "Financing Days cannot be negative"),
+      .min(1, "Financing Days must be greater than 0"),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
       .required("Closing Days is required")
-      .min(0, "Closing Days cannot be negative"),
+      .min(1, "Closing Days must be greater than 0"),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
     value_of_amount: yup
@@ -32,9 +32,18 @@ const useAddForm = () => {
       .typeError("Value of Amount must be a number")
       .required("Value of Amount is required")
       .min(0, "Value of Amount cannot be negative"),
+    comment: yup.string().optional().max(200, "Comment must be at most 200 characters long"),
   });
 
   const { push } = useRouter();
+  const pathname = usePathname();
+  const { query } = useRouter();
+  const id = query?._id; // Extract the ID from the query parameters
+  
+  // Ensure `id` is a string (if it's an array, use the first element)
+  // const editPage = pathname === `/dashboard/edit/${id}` ? pathname : null; 
+  const editPage = pathname;
+  console.log("Path",editPage);
 
   const {
     register,
@@ -47,16 +56,26 @@ const useAddForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      dd: 0,
-      financing_days: 0,
-      closing_days: 0,
-      value_of_amount: 0,
+      invoice: "pending",
+      pmtReceived: "non paid"
+      // dd: 0,
+      // financing_days: 0,
+      // closing_days: 0,
+      // value_of_amount: 0,
     },
   });
 
   const [loading, setLoading] = useState(false);
-  const [invoice, setInvoice] = useState(null);
-  const [pmtReceived, setPmtReceived] = useState(null);
+  const [invoice, setInvoice] = useState({ label: "Pending", value: "pending" });
+  const [pmtReceived, setPmtReceived] = useState({ label: "Non Paid", value: "non paid" });
+
+  useEffect(() => {
+    setValue("invoice", "pending");
+  }, [setValue]);
+
+  useEffect(() => {
+    setValue("pmtReceived", "non paid");
+  }, [setValue]);
 
   const handleSelectInvoiceStatus = (selectedOption) => {
     setInvoice(selectedOption);
@@ -78,7 +97,8 @@ const useAddForm = () => {
         financingDays: data.financing_days,
         invoice: data.invoice,
         pmtReceived: data.pmtReceived,
-        amount: data.value_of_amount
+        amount: data.value_of_amount,
+        comment: data.comment,
       };
 
       const response = await postRequest("dashboard", formData);
@@ -121,6 +141,7 @@ const useAddForm = () => {
     invoiceStatus,
     pmtReceivedStatus,
     push,
+    editPage,
   };
 };
 

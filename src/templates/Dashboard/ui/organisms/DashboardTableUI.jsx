@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react"; // ✅ Correct import
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
@@ -6,6 +5,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
+import { Icon } from "@iconify/react";
 
 const DashboardTableUI = ({
   columns,
@@ -16,12 +16,13 @@ const DashboardTableUI = ({
   globalFilter,
   setGlobalFilter,
   push,
+  paginatedDashboardEntries,
   setStatusFilter,
   setSelectedFilter,
   selectedFilter,
 }) => {
   const calculateTotal = (key) => {
-    return rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+    return paginatedDashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
   };
   const columnsFooter = [
     { key: "id", label: "ID" },
@@ -32,7 +33,9 @@ const DashboardTableUI = ({
     { key: "invoice", label: "Invoice" },
     { key: "pmtReceived", label: "Payment Received" },
     { key: "created_by", label: "Created By" },
+    { key: "comment", label: "Comment" },
     { key: "amount", label: "Amount" },
+    { key: "action", label: "Action" },
   ];
 
   return (
@@ -111,7 +114,7 @@ const DashboardTableUI = ({
                     </td>
                   </tr>
                 ) : (
-                  rows?.map((row, i) => (
+                  paginatedDashboardEntries?.map((row, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
@@ -177,7 +180,7 @@ const DashboardTableUI = ({
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.closingDays > 0 && row.financingDays === 0
+                            row.closingDays > 0 && row.financingDays === 0 && row.dd === 0
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
@@ -225,7 +228,17 @@ const DashboardTableUI = ({
                         {row?.created_by?.name}
                       </td>
                       <td className="table-td px-4 py-4">
+                        {row.comment || 'N/A'}
+                      </td>
+                      <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}
+                      </td>
+                      <td className="table-td px-4 py-4">
+                      <Icon
+                            onClick={() => push(`/dashboard/edit/${row._id}`)}
+                            className="cursor-pointer text-[20px] mx-4"
+                            icon={"heroicons:pencil-square"}
+                          />
                       </td>
                       {/* <td className="table-td px-4 py-4">
                       <span

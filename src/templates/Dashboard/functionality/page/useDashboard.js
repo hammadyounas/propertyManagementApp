@@ -54,10 +54,13 @@ const useDashboard = () => {
   // }, []);
 
   // Calculate the paginated users
-  const paginatedDashboardEntries = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return dashboardEntries?.slice(startIndex, startIndex + pageSize);
-  }, [dashboardEntries, currentPage, pageSize]);
+const paginatedDashboardEntries = useMemo(() => {
+  const startIndex = (currentPage - 1) * pageSize;
+  return dashboardEntries?.slice(startIndex, startIndex + pageSize);
+}, [dashboardEntries, currentPage, pageSize]);
+
+// Pass paginatedDashboardEntries to Table and TableUI
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing

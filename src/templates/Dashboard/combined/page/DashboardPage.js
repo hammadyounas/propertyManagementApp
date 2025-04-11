@@ -31,12 +31,13 @@ const DashboardPage = () => {
         tableFooterData={tableFooterData}
         loading={loading}
         dashboardEntries={dashboardEntries}
+        paginatedDashboardEntries={paginatedDashboardEntries} // Pass paginated properties to the Table
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         setSelectedFilter={setSelectedFilter}
         selectedFilter={selectedFilter}
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
+      <div className={`flex w-full justify-center mt-2 items-center ${dashboardEntries?.length <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
