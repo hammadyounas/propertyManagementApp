@@ -54,7 +54,7 @@ const DashboardTableUI = ({
           {/*search by react select  */}
           <ReactSelect
             placeholder="Select Broker"
-            className="md:w-[30%] w-full capitalize"
+            className="xl:w-[30%] md:w-[50%] w-full capitalize"
             value={selectedBroker}
             onChange={(option) => {
               if (option?.value === "all") {
