@@ -6,6 +6,7 @@ import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
 import { Icon } from "@iconify/react";
+import ReactSelect from "react-select";
 
 const DashboardTableUI = ({
   columns,
@@ -20,9 +21,16 @@ const DashboardTableUI = ({
   setSelectedFilter,
   selectedFilter,
   handleOpenCommentModal,
+  brokerOptions,
+  setBrokerOptions,
+  selectedBroker,
+  setSelectedBroker,
 }) => {
   const calculateTotal = (key) => {
-    return dashboardEntries.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+    return dashboardEntries.reduce(
+      (total, row) => total + (Number(row[key]) || 0),
+      0
+    );
   };
   const columnsFooter = [
     { key: "id", label: "ID" },
@@ -41,45 +49,88 @@ const DashboardTableUI = ({
   return (
     <Card noborder>
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"🔎︎ Search..."} className={'md:w-[30%] w-full'} />
-        <div className=" flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center max-sm:justify-end gap-2 max-sm:mt-2">
+        {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"🔎︎ Search..."} className={'md:w-[30%] w-full'} /> */}
+        <div className="w-full flex gap-2">
+          {/*search by react select  */}
+          <ReactSelect
+            placeholder="Select Broker"
+            className="md:w-[30%] w-full capitalize"
+            value={selectedBroker}
+            onChange={(option) => {
+              if (option?.value === "all") {
+                setSelectedBroker(null); // Clear filter
+              } else {
+                setSelectedBroker(option); // Set selected broker
+              }
+            }}
+            options={brokerOptions}
+            styles={{
+              control: (base) => ({
+                ...base,
+                backgroundColor: "white", // Button background color
+                padding: "0.3rem 0.2rem", // Adjust button padding
+                cursor: "pointer", // Pointer cursor
+                borderColor: "#666666", // Border color
+                "&:focus": {
+                  borderColor: "#666666", // Change border color on focus
+                },
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: "black", // Placeholder text color
+              }),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isSelected ? "#F1B62E" : "white", // Background color for selected option
+                color: state.isSelected ? "white" : "black", // Text color for selected option
+                padding: "0.6rem 0.8rem", // Padding for option items
+                "&:hover": {
+                  backgroundColor: "#F4f5f7", // Hover effect for options
+                  color: "black",
+                },
+              }),
+            }}
+          />
+          {/* search filter by invoice status */}
           <DropdownUINew
-              label={selectedFilter ? selectedFilter : "Filter"}
-              wrapperClass="sm:w-40"
-              labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
-              classMenuItems="w-48 left-0"
-              classItem="p-2"
-              onSelect={(value) => {
-                if (value === "all") {
-                  setSelectedFilter("All");
-                  setStatusFilter(""); // clear filter
-                } else {
-                  const labelMap = {
-                    paid: "Paid",
-                    pending: "Pending",
-                    submitted: "Submitted",
-                  };
-                  setSelectedFilter(labelMap[value]);
-                  setStatusFilter(value);
-                }
-              }}
-              items={[
-                { label: "All", value: "all" },
-                { label: "Paid", value: "paid" },
-                { label: "Pending", value: "pending" },
-                { label: "Submitted", value: "submitted" },
-              ]}
-            />
-            <span className="sm:w-full">
-              <Button
-                text="Add Entry"
-                onClick={() => push("/dashboard/add")}
-                className="btn-primary bg-primary-default w-full"
-              />
-            </span>
-          </div>
+            label={selectedFilter ? selectedFilter : "Filter"}
+            wrapperClass="sm:w-40"
+            labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+            classMenuItems="w-48 left-0"
+            classItem="p-2"
+            onSelect={(value) => {
+              if (value === "all") {
+                setSelectedFilter("All");
+                setStatusFilter(""); // clear filter
+              } else {
+                const labelMap = {
+                  paid: "Paid",
+                  pending: "Pending",
+                  submitted: "Submitted",
+                };
+                setSelectedFilter(labelMap[value]);
+                setStatusFilter(value);
+              }
+            }}
+            items={[
+              { label: "All", value: "all" },
+              { label: "Paid", value: "paid" },
+              { label: "Pending", value: "pending" },
+              { label: "Submitted", value: "submitted" },
+            ]}
+          />
         </div>
+        <div className="w-full flex items-center justify-end gap-2 max-sm:mt-2">
+          <span className="">
+            <Button
+              text="Add Entry"
+              onClick={() => push("/dashboard/add")}
+              className="btn-primary bg-primary-default w-full"
+            />
+          </span>
+        </div>
+
+        <div className=" flex flex-wrap items-center justify-end"></div>
       </div>
       <div className="overflow-x-auto -mx-6 min-h-[70vh] relative">
         <div className="inline-block min-w-full align-middle">
@@ -180,7 +231,9 @@ const DashboardTableUI = ({
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.closingDays > 0 && row.financingDays === 0 && row.dd === 0
+                            row.closingDays > 0 &&
+                            row.financingDays === 0 &&
+                            row.dd === 0
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
@@ -228,28 +281,30 @@ const DashboardTableUI = ({
                         {row?.created_by?.name}
                       </td>
                       <td className="table-td px-4 py-4">
-                      {row.comment && row.comment.length > 20 ? (
-                            <div className="flex justify-center items-center gap-2">
-                              <span>{row.comment.substring(0, 15)}...</span>
-                              <Icon
-                                icon="akar-icons:eye"
-                                className="cursor-pointer ml-2"
-                                onClick={() => handleOpenCommentModal(row.comment)}
-                              />
-                            </div>
-                          ) : (
-                              row.comment || "N/A"
-                          )}
+                        {row.comment && row.comment.length > 20 ? (
+                          <div className="flex justify-between items-center gap-2">
+                            <span>{row.comment.substring(0, 15)}...</span>
+                            <Icon
+                              icon="akar-icons:eye"
+                              className="cursor-pointer ml-2"
+                              onClick={() =>
+                                handleOpenCommentModal(row.comment)
+                              }
+                            />
+                          </div>
+                        ) : (
+                          row.comment || "N/A"
+                        )}
                       </td>
                       <td className="table-td px-4 py-4">
                         $ {row.amount.toLocaleString()}
                       </td>
                       <td className="table-td px-4 py-4 flex justify-center items-center">
-                      <Icon
-                            onClick={() => push(`/dashboard/edit/${row._id}`)}
-                            className="cursor-pointer text-[20px] mx-4"
-                            icon={"heroicons:pencil-square"}
-                          />
+                        <Icon
+                          onClick={() => push(`/dashboard/edit/${row._id}`)}
+                          className="cursor-pointer text-[20px] mx-4"
+                          icon={"heroicons:pencil-square"}
+                        />
                       </td>
                       {/* <td className="table-td px-4 py-4">
                       <span

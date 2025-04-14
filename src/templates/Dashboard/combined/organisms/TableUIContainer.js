@@ -18,6 +18,10 @@ const Table = ({
   handleCloseModal,
   selectedComment,
   isModalOpen,
+  brokerOptions,
+  setBrokerOptions,
+  selectedBroker,
+  setSelectedBroker,
 }) => {
   const { columns } = useTable();
   return (
@@ -39,6 +43,10 @@ const Table = ({
       handleCloseModal={handleCloseModal}
       selectedComment={selectedComment}
       isModalOpen={isModalOpen}
+      brokerOptions={brokerOptions}
+      setBrokerOptions={setBrokerOptions}
+      selectedBroker={selectedBroker}
+      setSelectedBroker={setSelectedBroker}
     />
   );
 };

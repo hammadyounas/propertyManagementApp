@@ -17,6 +17,7 @@ const ModalUI = ({
   uncontrol,
   label = "Basic Modal",
   labelClass,
+  mainClass = "",
   ref,
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -63,9 +64,9 @@ const ModalUI = ({
                 </Transition.Child>
               )}
 
-              <div className="fixed inset-0 overflow-y-auto">
+              <div className="fixed inset-0 flex justify-center items-center overflow-y-auto">
                 <div
-                  className={`flex min-h-full justify-center text-center p-6 ${
+                  className={`flex min-h-full my-auto justify-center text-center p-6 ${
                     centered ? "items-center" : "items-start "
                   }`}
                 >
@@ -130,7 +131,7 @@ const ModalUI = ({
 
             <div className="fixed inset-0 overflow-y-auto">
               <div
-                className={`flex min-h-full justify-center text-center p-6 ${
+                className={`flex min-h-screen justify-center text-center p-6 ${mainClass} ${
                   centered ? "items-center" : "items-start "
                 }`}
               >

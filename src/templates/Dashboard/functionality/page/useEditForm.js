@@ -13,24 +13,21 @@ import {
 const useEditForm = () => {
   const schema = yup.object({
     signature_date: yup.string().required("Signature Date is required"),
-    dd: yup.number().typeError("DD must be a number").required().min(1),
+    dd: yup.number().typeError("DD must be a number").required().min(0),
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
-      .required()
-      .min(1),
+      .required().min(0),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
-      .required()
-      .min(1),
+      .required().min(0),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
     value_of_amount: yup
       .number()
       .typeError("Value of Amount must be a number")
-      .required()
-      .min(0),
+      .required(),
     comment: yup.string().optional().max(200),
   });
 

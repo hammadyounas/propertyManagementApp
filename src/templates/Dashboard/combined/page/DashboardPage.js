@@ -25,6 +25,10 @@ const DashboardPage = () => {
     handleCloseModal,
     selectedComment,
     isModalOpen,
+    brokerOptions,
+    setBrokerOptions,
+    selectedBroker,
+    setSelectedBroker,
   } = useDashboard();
 
   return (
@@ -43,6 +47,10 @@ const DashboardPage = () => {
         selectedFilter={selectedFilter}
         totalEntries={totalEntries}
         handleOpenCommentModal={handleOpenCommentModal}
+        brokerOptions={brokerOptions}
+        setBrokerOptions={setBrokerOptions}
+        selectedBroker={selectedBroker}
+        setSelectedBroker={setSelectedBroker}
       />
       <div
         className={`flex w-full justify-center mt-2 items-center ${
@@ -61,6 +69,7 @@ const DashboardPage = () => {
           activeModal={isModalOpen}
           onClose={handleCloseModal}
           title="Comment"
+          mainClass="items-center"
         >
           <div className="text-center">
             <p>{selectedComment}</p>
