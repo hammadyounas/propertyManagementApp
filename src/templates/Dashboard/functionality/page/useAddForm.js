@@ -32,7 +32,15 @@ const useAddForm = () => {
       .typeError("Value of Amount must be a number")
       .required("Value of Amount is required")
       .min(0, "Value of Amount cannot be negative"),
-    comment: yup.string().optional().max(100, "Comment must be at most 200 characters long"),
+    comment: yup.string().optional().max(100, "Comment must be at most 200 characters long").test(
+      "maxWords",
+      "Comment must be at most 100 words",
+      value => {
+        if (!value) return true;
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 100;
+      }
+    ),
   });
 
   const { push } = useRouter();
@@ -53,6 +61,7 @@ const useAddForm = () => {
     getValues,
     setValue,
     reset,
+    watch,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -68,6 +77,9 @@ const useAddForm = () => {
   const [loading, setLoading] = useState(false);
   const [invoice, setInvoice] = useState({ label: "Pending", value: "pending" });
   const [pmtReceived, setPmtReceived] = useState({ label: "Non Paid", value: "non paid" });
+  const comment = watch("comment") || "";
+  const wordCount = comment.trim().split(/\s+/).filter(Boolean).length;
+
 
   useEffect(() => {
     setValue("invoice", "pending");
@@ -142,6 +154,8 @@ const useAddForm = () => {
     pmtReceivedStatus,
     push,
     editPage,
+    wordCount,
+    watch,
   };
 };
 

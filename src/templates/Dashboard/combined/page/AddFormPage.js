@@ -23,6 +23,8 @@ const AddFormPage = () => {
     push,
     pmtReceivedStatus,
     editPage,
+    watch,
+    wordCount,
   } = useAddForm();
 
   console.log("editapge", editPage)
@@ -44,6 +46,8 @@ const AddFormPage = () => {
           invoiceStatus={invoiceStatus}
           pmtReceivedStatus={pmtReceivedStatus}
           editPage={editPage}
+          wordCount={wordCount}
+          watch={watch}
         />
        
 

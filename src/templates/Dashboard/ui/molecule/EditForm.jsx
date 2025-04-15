@@ -115,6 +115,7 @@ export default function EditDashboardForm({register, errors, loading, invoice, h
               classLabel='my-2 text-sm'
               className={'capitalize'}
             />
+              <p className="text-xs text-gray-500 text-right">Max (100 words)</p>
           </div>
 
         </div>

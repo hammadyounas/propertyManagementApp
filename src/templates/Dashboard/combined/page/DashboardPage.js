@@ -69,7 +69,7 @@ const DashboardPage = () => {
           activeModal={isModalOpen}
           onClose={handleCloseModal}
           title="Comment"
-          mainClass="items-center"
+          mainClass="items-center break-all whitespace-pre-wrap"
         >
           <div className="text-center">
             <p>{selectedComment}</p>

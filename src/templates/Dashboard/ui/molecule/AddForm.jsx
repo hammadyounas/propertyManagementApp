@@ -107,7 +107,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
           <div className="w-full md:w-[49%]">
             <TextareaUI
               name="comment"
-              label="Comment (Max 200)"
+              label="Comment"
               register={register}
               error={errors.comment}
               placeholder="Comment"
@@ -115,6 +115,8 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
               classLabel='my-2 text-sm'
               className={'capitalize'}
             />
+            <p className="text-xs text-gray-500 text-right">Max (100 words)</p>
+
           </div>
 
         </div>
