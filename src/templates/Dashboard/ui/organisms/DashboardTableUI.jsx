@@ -54,7 +54,7 @@ const DashboardTableUI = ({
           {/*search by react select  */}
           <ReactSelect
             placeholder="Select Broker"
-            className="xl:w-[30%] md:w-[50%] w-full capitalize"
+            className="xl:w-[50%] md:w-[50%] w-full capitalize"
             value={selectedBroker}
             onChange={(option) => {
               if (option?.value === "all") {
@@ -91,10 +91,12 @@ const DashboardTableUI = ({
               }),
             }}
           />
+        </div>
+        <div className="w-full flex items-center justify-end gap-2 max-sm:mt-2">
           {/* search filter by invoice status */}
           <DropdownUINew
-            label={selectedFilter ? selectedFilter : "Filter"}
-            wrapperClass="sm:w-40"
+            label={selectedFilter ? selectedFilter : "Invoice Status"}
+            wrapperClass="sm:w-48"
             labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
             classMenuItems="w-48 left-0"
             classItem="p-2"
@@ -119,13 +121,11 @@ const DashboardTableUI = ({
               { label: "Submitted", value: "submitted" },
             ]}
           />
-        </div>
-        <div className="w-full flex items-center justify-end gap-2 max-sm:mt-2">
           <span className="">
             <Button
               text="Add Entry"
               onClick={() => push("/dashboard/add")}
-              className="btn-primary bg-primary-default w-full"
+              className="btn-primary bg-gray-950 w-full"
             />
           </span>
         </div>
