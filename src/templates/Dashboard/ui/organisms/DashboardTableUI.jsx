@@ -97,7 +97,7 @@ const DashboardTableUI = ({
           <DropdownUINew
             label={selectedFilter ? selectedFilter : "Invoice Status"}
             wrapperClass="sm:w-48"
-            labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+            labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
             classMenuItems="w-48 left-0"
             classItem="p-2"
             onSelect={(value) => {
@@ -125,7 +125,7 @@ const DashboardTableUI = ({
             <Button
               text="Add Entry"
               onClick={() => push("/dashboard/add")}
-              className="btn-primary bg-gray-950 w-full"
+              className="btn-primary bg-primary-default w-full"
             />
           </span>
         </div>
