@@ -39,10 +39,10 @@ const DropdownUINew = ({
   return (
     <div className={`relative ${wrapperClass}`} ref={dropdownRef}>
       <button 
-        className={`w-full flex items-center justify-between px-4 py-2 bg-gray-200 rounded cursor-pointer ${labelClass}`} 
+        className={`w-full flex items-center justify-center px-4 py-2 bg-gray-200 rounded cursor-pointer ${labelClass}`} 
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Icon icon="circum:filter" className="text-xl" />
+        {/* <Icon icon="circum:filter" className="text-xl" /> */}
         <span>{selected}</span>
       </button>
 

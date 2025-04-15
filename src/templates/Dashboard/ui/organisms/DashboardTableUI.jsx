@@ -96,9 +96,9 @@ const DashboardTableUI = ({
           {/* search filter by invoice status */}
           <DropdownUINew
             label={selectedFilter ? selectedFilter : "Invoice Status"}
-            wrapperClass="sm:w-48"
+            wrapperClass="sm:w-40"
             labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
-            classMenuItems="w-48 left-0"
+            classMenuItems="w-40 left-0"
             classItem="p-2"
             onSelect={(value) => {
               if (value === "all") {
@@ -177,14 +177,14 @@ const DashboardTableUI = ({
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.dd > 0
+                            row.dd > 0 && row.pmtReceived === 'non paid'
                               ? "text-green-700 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
                           <CountdownTimer
                             initialDays={
-                              row.dd > 0 ? (
+                              row.dd > 0 && row.pmtReceived === 'non paid' ? (
                                 <>
                                   <div className="flex justify-center items-center gap-2 text-green-600">
                                     <Icon
@@ -204,14 +204,14 @@ const DashboardTableUI = ({
                       <td className={`table-td px-4 py-4 `}>
                         <span
                           className={`${
-                            row.financingDays > 0 && row.dd === 0
+                            row.financingDays > 0 && row.dd  === 0 && row.pmtReceived === 'non paid'
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
                           <CountdownTimer
                             initialDays={
-                              row.financingDays > 0 && row.dd === 0 ? (
+                              row.financingDays > 0 && row.dd === 0 && row.pmtReceived === 'non paid' ? (
                                 <>
                                   <div className="flex justify-center items-center gap-2 text-green-600">
                                     <Icon
@@ -234,13 +234,14 @@ const DashboardTableUI = ({
                             row.closingDays > 0 &&
                             row.financingDays === 0 &&
                             row.dd === 0
+                            && row.pmtReceived === 'non paid'
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
                           <CountdownTimer
                             initialDays={
-                              row.closingDays > 0 && row.financingDays === 0 ? (
+                              row.closingDays > 0 && row.financingDays === 0 && row.pmtReceived === 'non paid' ? (
                                 <>
                                   <div className="flex justify-center items-center gap-2 text-green-600">
                                     <Icon
