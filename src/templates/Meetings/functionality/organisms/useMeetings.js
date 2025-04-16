@@ -45,17 +45,36 @@ const useMeetings = () => {
   const [clients, setClients] = useState();
   const [meetings, setMeetings] = useState([]);
   const [error, setError] = useState(null);
+  const userId = localStorage.getItem("user_id");
+  const userRole = localStorage.getItem("role");
+  const [isSalespersonDisabled, setIsSalespersonDisabled] = useState(false);
+
 
   const fetchSalespersonAndClientsData = async () => {
     try {
       const response = await getRequest("users");
       const filteredSalespersons = response?.data?.filter((sp) => !sp.isDeleted);
       const salesPersonsMap = Object.fromEntries(
-        filteredSalespersons?.map(({ _id, name, contact_number, email }) => [
+        filteredSalespersons?.map(({ _id, name, contact_number, email, role }) => [
           _id,
-          { name, contact_number, email },
+          { name, contact_number, email, role },
         ])
       );
+
+      setSalespersons(filteredSalespersons);
+      
+      const userResponse = await getRequest(`user/${userId}`);
+      const currentUser = userResponse?.data;
+      
+      if (currentUser.role === "BROKER") {
+        setSelectedSalespersons({
+          label: currentUser.name,
+          value: currentUser._id,
+        });
+        setIsSalespersonDisabled(true);
+      }
+      
+      console.log("Current User",currentUser);
 
       const clientsResponse = await getRequest("clients");
       const filteredClients = clientsResponse?.data?.filter((c) => !c.isDeleted);
@@ -65,7 +84,7 @@ const useMeetings = () => {
           { name, phoneNumber, email },
         ])
       );
-      setSalespersons(filteredSalespersons);
+
       setClients(filteredClients);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -83,10 +102,9 @@ const useMeetings = () => {
       // Prepare data for the API
       const formData = {
         ...data,
-        salespersons: selectedSalesPersons?.map(
-          (salesPerson) => salesPerson.value
-        ), // Send only the property values
-        clients: selectedClients?.map((client) => client.value), // Send only the property values
+        salespersons: selectedSalesPersons?.value,
+        clients: selectedClients?.value,
+
       };
 
       if (currentMeetingId) {
@@ -197,19 +215,17 @@ const useMeetings = () => {
         if (key == "status") {
           setStatus({ value: current[key], label: current[key] });
         } else if (key == "salespersons") {
-          setSelectedSalespersons(
-            current[key]?.map((sp) => ({
-              value: sp?._id,
-              label: sp?.name,
-            }))
-          );
+          setSelectedSalespersons({
+            value: current[key]?._id,
+            label: current[key]?.name,
+          });
+          
         } else if (key == "clients") {
-          setSelectedClients(
-            current[key]?.map((c) => ({
-              value: c?._id,
-              label: c?.name,
-            }))
-          );
+          setSelectedClients({
+            value: current[key]?._id,
+            label: current[key]?.name,
+          });
+          
         } else if (key == "start_time") {
           setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
         } else if (key == "end_time") {
@@ -311,6 +327,7 @@ const useMeetings = () => {
     meetings,
     meetingsLoading,
     error,
+    isSalespersonDisabled,
   };
 };
 

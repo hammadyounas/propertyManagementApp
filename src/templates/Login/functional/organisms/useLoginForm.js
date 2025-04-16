@@ -51,6 +51,7 @@ export const useForm = () => {
         const { data } = response;
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("role", data.user.role);
         dispatch(setUser(data?.user));
         setFormValues(initialFormValues);
         toast.success("Login Successfully");

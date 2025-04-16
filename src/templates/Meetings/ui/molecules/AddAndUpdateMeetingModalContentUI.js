@@ -22,7 +22,8 @@ const AddAndUpdateMeetingModalContentUI = ({
   closeModal,
   loading,
   currentMeetingId,
-  error
+  error,
+  isSalespersonDisabled,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -122,7 +123,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               options={statuses}
               placeholder="Status"
               isDisabled={loading}
-              className="text-sm"
+              className="text-sm capitalize"
             />
             {errors?.status && !status && (
               <p className="text-sm text-danger-500 mt-2">
@@ -138,11 +139,11 @@ const AddAndUpdateMeetingModalContentUI = ({
           <div className="w-full">
             <div className="my-4">
               <div className="my-2 text-sm font-medium">
-                Salesperson (Optional)
+                Broker *
               </div>
               <ReactSelect
                 name="salespersons"
-                isMulti
+                // isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
                 options={salespersons?.map((salesPerson)=> (
@@ -151,18 +152,18 @@ const AddAndUpdateMeetingModalContentUI = ({
                     value: salesPerson._id,
                   }
                 ))}
-                placeholder="Salespersons"
-                isDisabled={loading}
-                className="text-sm"
+                placeholder={"Broker"}
+                isDisabled={isSalespersonDisabled}
+                className="text-sm capitalize"
               />
             </div>
           </div>
           <div className="w-full">
             <div className="">
-              <div className="my-2 text-sm font-medium">Clients (Optional)</div>
+              <div className="my-2 text-sm font-medium">Clients *</div>
               <ReactSelect
                 name="clients"
-                isMulti
+                // isMulti
                 value={selectedClients}
                 onChange={handleSelectClients}
                 options={clients?.map((client)=> (
@@ -173,7 +174,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                 ))}
                 placeholder="Clients"
                 isDisabled={loading}
-                className="text-sm"
+                className="text-sm capitalize"
               />
             </div>
           </div>
