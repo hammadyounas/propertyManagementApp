@@ -283,15 +283,8 @@ const DashboardTableUI = ({
                       </td>
                       <td className="table-td px-4 py-4">
                         {row.comment && row.comment.length > 20 ? (
-                          <div className="flex justify-between items-center gap-2">
-                            <span>{row.comment.substring(0, 15)}...</span>
-                            <Icon
-                              icon="akar-icons:eye"
-                              className="cursor-pointer ml-2"
-                              onClick={() =>
-                                handleOpenCommentModal(row.comment)
-                              }
-                            />
+                          <div className="flex justify-center items-center gap-2">
+                            <Button text='View' onClick={() => handleOpenCommentModal(row.comment)} className="bg-transparent text-green-600 hover:border-b border-green-600 py-0 px-0 text-center rounded-none" />
                           </div>
                         ) : (
                           row.comment || "N/A"
