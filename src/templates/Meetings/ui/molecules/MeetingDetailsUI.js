@@ -139,7 +139,7 @@ const MeetingDetailsUI = ({
                 </div>
           
                 <div className="px-5">
-                  <h6 className="font-semibold text-lg text-primary-default">Salespersons</h6>
+                  <h6 className="font-semibold text-lg text-primary-default">Broker</h6>
                       <div className=" pb-4">
                         <div className="flex w-full break-words justify-between">
                           <div className="flex flex-col mt-2 w-[48%]">
