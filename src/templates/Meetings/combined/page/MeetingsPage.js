@@ -36,7 +36,8 @@ const MeetingsPage = () => {
     loading,
     meetings,
     meetingsLoading,
-    error
+    error,
+    isSalespersonDisabled,
   } = useMeetings();
   return (
     <div className="flex flex-col 2xl:flex-row 2xl:justify-between w-full">
@@ -89,6 +90,7 @@ const MeetingsPage = () => {
             loading={loading}
             currentMeetingId={currentMeetingId}
             error={error}
+            isSalespersonDisabled={isSalespersonDisabled}
           />
         }
       </Modal>
