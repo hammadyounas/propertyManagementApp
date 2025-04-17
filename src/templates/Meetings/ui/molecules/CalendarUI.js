@@ -18,6 +18,8 @@ const CalendarUI = ({
   loading,
   openModal,
   closeModal,
+  setStarAndEndDate,
+  setValue,
 }) => {
   return (
     <Card className=" bg-white w-full 2xl:w-[62%]">
@@ -69,6 +71,27 @@ const CalendarUI = ({
         initialView="dayGridMonth"
         eventContent={renderEventContent}
         datesSet={handleMonthChange}
+
+        select={(info) => {
+          const selectedDate = moment(info.start);
+        
+          // Check if selected date is in the past
+          const now = moment().startOf("day");
+          if (selectedDate.isBefore(now)) {
+            return; // Don't open modal
+          }
+        
+          closeModal(); // Close if an edit modal is open
+          setCurrentMeetingId(null); // Reset currentMeetingId for new meeting
+          openModal(); // Open modal
+        
+          setValue("start_time", selectedDate.format("YYYY-MM-DDTHH:mm"));
+          const endDate = moment(info.start).add(1, "hour").format("YYYY-MM-DDTHH:mm");
+          setValue("end_time", endDate);
+        
+          scrollToDiv(); // Scroll if needed
+        }}
+        
       />
     </Card>
   );

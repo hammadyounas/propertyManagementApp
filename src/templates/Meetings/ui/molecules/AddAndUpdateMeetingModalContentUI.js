@@ -67,6 +67,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.start_time}
               placeholder="Start Time"
               disabled={loading}
+              min={new Date().toISOString().slice(0, 16)}
             />
           </div>
           <div className="w-full md:w-[49%]">
@@ -78,6 +79,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.end_time}
               placeholder="End Time"
               disabled={loading}
+              min={new Date().toISOString().slice(0, 16)}
             />
           </div>
         </div>
