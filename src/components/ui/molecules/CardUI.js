@@ -5,7 +5,7 @@ const CardUI = ({
   title,
   subtitle,
   headerslot,
-  className = "custom-class  bg-white ",
+  className = "custom-class  bg-white rounded-md",
   bodyClass = "p-6",
   noborder,
   titleClass = "custom-class ",
@@ -13,7 +13,7 @@ const CardUI = ({
   return (
     <div
       className={`
-        card rounded-md   dark:bg-slate-800   ${
+        card    dark:bg-slate-800   ${
         //   skin === "bordered"
         //     ? " border border-slate-200 dark:border-slate-700"
         //     : 

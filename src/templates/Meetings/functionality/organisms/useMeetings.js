@@ -9,7 +9,6 @@ import {
   // salespersons,
   statuses,
 } from "../constants/data";
-import { v4 as uuidv4 } from "uuid";
 import {
   postRequest,
   getRequest,
@@ -22,7 +21,13 @@ const useMeetings = () => {
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
     start_time: yup.string().required("Start Time is required"),
-    end_time: yup.string().required("End Time is required"),
+    end_time: yup
+    .string()
+    .required("End Time is required")
+    .test("is-after-start", "End time cannot be earlier than start time. Please select a valid time range.", function (value) {
+      const { start_time } = this.parent;
+      return new Date(value) > new Date(start_time);
+    }),
     location_status: yup.string().required("Location is required"),
     location: yup.string().required("Location is required"),
     status: yup.string().required("Status is required"),
@@ -113,7 +118,6 @@ const useMeetings = () => {
         const response = await patchRequest(`meetings/${_id}`, rest);
         if (response) {
           toast.success("Meeting updated successfully!");
-          console.log(response.data); // Log the API response if needed
           fetchMeetings()
           closeModal(); // Redirect after successful registration
         } else {
@@ -192,6 +196,7 @@ const useMeetings = () => {
         const filteredMeetings = response.data.filter(
           (meeting) => !meeting.isDeleted
         );
+        console.log("Meetings",response.data); // Log the API response if needed
         setMeetings(filteredMeetings);
         setMeetingsLoading(false);
       } catch (error) {
@@ -328,6 +333,7 @@ const useMeetings = () => {
     meetingsLoading,
     error,
     isSalespersonDisabled,
+    setValue,
   };
 };
 

@@ -11,6 +11,7 @@ const Calendar = ({
   meetings,
   loading,
   closeModal,
+  setValue,
 }) => {
   const { renderEventContent, handleMonthChange, getBackgroundColor } =
     useCalendar({
@@ -31,6 +32,7 @@ const Calendar = ({
       loading={loading}
       openModal={openModal}
       closeModal={closeModal}
+      setValue={setValue}
     />
   );
 };
