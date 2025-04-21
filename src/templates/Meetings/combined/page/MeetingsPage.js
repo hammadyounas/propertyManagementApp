@@ -93,6 +93,9 @@ const MeetingsPage = () => {
             currentMeetingId={currentMeetingId}
             error={error}
             isSalespersonDisabled={isSalespersonDisabled}
+            currentMeeting = {meetings.find(
+              (meeting) => meeting.id === currentMeetingId
+            )}
           />
         }
       </Modal>

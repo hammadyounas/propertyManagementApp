@@ -12,15 +12,15 @@ const useCalendar = ({
   const getBackgroundColor = (status) => {
     switch (status) {
       case "scheduled":
-        return "#007BFF"; // Blue
+        return "#6F42C1"; // Blue #6F42C1
       case "completed":
         return "#28A745"; // Green
       case "cancelled":
-        return "#DC3545"; // Red
+        return "#db0404"; // Red
       case "pending":
-        return "#FFC107"; // Orange
+        return "#F1B62E"; // Orange
       case "rescheduled":
-        return "#6F42C1"; // Purple
+        return "#f77605"; // Purple #FFC107
       default:
         return "#6C757D"; // Gray as fallback
     }

@@ -118,6 +118,7 @@ const useMeetings = () => {
         const response = await patchRequest(`meetings/${_id}`, rest);
         if (response) {
           toast.success("Meeting updated successfully!");
+          
           fetchMeetings()
           closeModal(); // Redirect after successful registration
         } else {
@@ -146,6 +147,7 @@ const useMeetings = () => {
       setLoading(false); // Ensure loading state is turned off regardless of success or error
     }
   };
+
 
   // const onSubmit = (data) => {
   //   setLoading(true);
@@ -196,7 +198,7 @@ const useMeetings = () => {
         const filteredMeetings = response.data.filter(
           (meeting) => !meeting.isDeleted
         );
-        console.log("Meetings",response.data); // Log the API response if needed
+        console.log("Meetings",filteredMeetings); // Log the API response if needed
         setMeetings(filteredMeetings);
         setMeetingsLoading(false);
       } catch (error) {
