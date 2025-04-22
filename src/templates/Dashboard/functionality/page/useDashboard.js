@@ -34,7 +34,8 @@ const useDashboard = () => {
       }
 
       const response = await getRequest(url);
-      const filteredEntries = response?.data?.filter(
+      console.log("filteredEntries", response?.data);
+      const filteredEntries = response?.data?.data?.filter(
         (entry) => !entry.isDeleted
       );
       setDashboardEntries(filteredEntries);
