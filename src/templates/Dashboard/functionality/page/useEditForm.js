@@ -17,17 +17,28 @@ const useEditForm = () => {
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
-      .required().min(0),
+      .required()
+      .min(0),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
-      .required().min(0),
+      .required()
+      .min(0),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
     value_of_amount: yup
       .number()
       .typeError("Value of Amount must be a number")
-      .required(),
+      .required("Value of Amount is required")
+      .min(0, "Value of Amount cannot be negative")
+      .test(
+        "not-exponential",
+        "Scientific notation is not allowed",
+        (value) => {
+          if (value === undefined || value === null) return true;
+          return !value.toString().toLowerCase().includes("e");
+        }
+      ),
     comment: yup.string().optional().max(200),
   });
 

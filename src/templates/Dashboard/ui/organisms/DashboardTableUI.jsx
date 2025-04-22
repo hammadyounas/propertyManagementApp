@@ -282,7 +282,7 @@ const DashboardTableUI = ({
                         {row?.created_by?.name}
                       </td>
                       <td className="table-td px-4 py-4">
-                        {row.comment && row.comment.length > 20 ? (
+                        {row.comment ? (
                           <div className="flex justify-center items-center gap-2">
                             <Button text='View' onClick={() => handleOpenCommentModal(row.comment)} className="bg-transparent text-green-600 hover:border-b border-green-600 py-0 px-0 text-center rounded-none" />
                           </div>
