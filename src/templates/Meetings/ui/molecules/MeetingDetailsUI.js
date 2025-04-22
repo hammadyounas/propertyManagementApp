@@ -8,6 +8,7 @@ const MeetingDetailsUI = ({
   currentMeeting,
   openModal,
   closeModal,
+  getBackgroundColor,
 }) => {
   return (
     <div ref={targetDivRef} className="w-full mt-[20px] 2xl:w-[36%] 2xl:mt-0 capitalize">
@@ -93,7 +94,7 @@ const MeetingDetailsUI = ({
                 </div>
                 <div className="flex flex-col mt-2 w-[48%] pl-[10px]">
                   <label className="font-semibold text-[16px] text-black-500">Status</label>
-                  <span className="text-[14px] flex items-center gap-1"><span className="text-green-700 text-xs">⬤</span> {currentMeeting?.status}</span>
+                  <span className="text-[14px] flex items-center gap-1"><span className={` text-green-700 text-xs`}>⬤</span> {currentMeeting?.status}</span>
                 </div>
               </div>
             </Card>
@@ -102,17 +103,17 @@ const MeetingDetailsUI = ({
             <Card className="bg-white border-b-4 border-primary-default" bodyClass="p-0">
               <h5 className="md:text-xl bg-black-default text-white text-lg p-3 ">Participants</h5>
                 <div className="px-5 pt-5">
-                  <h6 className="font-semibold text-lg text-primary-default">Client</h6>
+                  <h6 className="font-semibold text-lg text-black-500">Client</h6>
                       <div className=" pb-4">
                         <div className="flex w-full break-words justify-between">
                           <div className="flex flex-col mt-2 w-[48%]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Name
                             </label>
                             <span className="text-[14px]">{currentMeeting?.clients?.name}</span>
                           </div>
                           <div className="flex flex-col mt-2 w-[48%] pl-[10px]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Email
                             </label>
                             <span className="text-[14px] lowercase">{currentMeeting?.clients?.email}</span>
@@ -120,7 +121,7 @@ const MeetingDetailsUI = ({
                         </div>
                         <div className="flex w-full break-words justify-between">
                           <div className="flex flex-col mt-2 w-[48%]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Phone
                             </label>
                             <span className="text-[14px]">{currentMeeting?.clients?.phoneNumber}</span>
@@ -139,17 +140,17 @@ const MeetingDetailsUI = ({
                 </div>
           
                 <div className="px-5">
-                  <h6 className="font-semibold text-lg text-primary-default">Broker</h6>
+                  <h6 className="font-semibold text-lg text-black-500">Broker</h6>
                       <div className=" pb-4">
                         <div className="flex w-full break-words justify-between">
                           <div className="flex flex-col mt-2 w-[48%]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Name
                             </label>
                             <span className="text-[14px]">{currentMeeting?.salespersons?.name}</span>
                           </div>
                           <div className="flex flex-col mt-2 w-[48%] pl-[10px]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Email
                             </label>
                             <span className="text-[14px] lowercase">{currentMeeting?.salespersons?.email}</span>
@@ -157,7 +158,7 @@ const MeetingDetailsUI = ({
                         </div>
                         <div className="flex w-full break-words justify-between">
                           <div className="flex flex-col mt-4 w-[48%]">
-                            <label className="font-semibold text-[16px] text-black-500">
+                            <label className="font-semibold text-[16px] text-gray-600">
                               Phone
                             </label>
                             <span className="text-[14px]">{currentMeeting?.salespersons?.contact_number}</span>

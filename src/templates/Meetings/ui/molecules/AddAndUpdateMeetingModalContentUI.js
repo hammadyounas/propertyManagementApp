@@ -24,6 +24,7 @@ const AddAndUpdateMeetingModalContentUI = ({
   currentMeetingId,
   error,
   isSalespersonDisabled,
+  currentMeeting,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -67,7 +68,11 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.start_time}
               placeholder="Start Time"
               disabled={loading}
-              min={new Date().toISOString().slice(0, 16)}
+              min={
+                !currentMeetingId || currentMeeting?.status === "rescheduled" // create mode → restrict
+                  ? new Date().toISOString().slice(0, 16)
+                  : undefined // edit mode & not rescheduled → no restriction
+              }
             />
           </div>
           <div className="w-full md:w-[49%]">
@@ -79,26 +84,30 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.end_time}
               placeholder="End Time"
               disabled={loading}
-              min={new Date().toISOString().slice(0, 16)}
+              min={
+                !currentMeetingId
+                  ? new Date().toISOString().slice(0, 16)
+                  : undefined
+              }
             />
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
-          <RadioButton
-                  name="location_status"
-                  label="Location Status*"
-                  type="radio"
-                  register={register}
-                  error={errors.location_status}
-                  placeholder="Location Status"
-                  disabled={loading}
-                  radioOptions={[
-                    { label: "Online", value: "online" },
-                    { label: "Onsite", value: "onsite" },
-                  ]}
-                  className="text-sm"
-                />
+            <RadioButton
+              name="location_status"
+              label="Location Status*"
+              type="radio"
+              register={register}
+              error={errors.location_status}
+              placeholder="Location Status"
+              disabled={loading}
+              radioOptions={[
+                { label: "Online", value: "online" },
+                { label: "Onsite", value: "onsite" },
+              ]}
+              className="text-sm"
+            />
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
@@ -140,21 +149,17 @@ const AddAndUpdateMeetingModalContentUI = ({
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
             <div className="my-4">
-              <div className="my-2 text-sm font-medium">
-                Broker *
-              </div>
+              <div className="my-2 text-sm font-medium">Broker *</div>
               <ReactSelect
                 name="salespersons"
                 // isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
-                options={salespersons?.map((salesPerson)=> (
-                  {
-                    label: salesPerson.name,
-                    value: salesPerson._id,
-                  }
-                ))}
-                placeholder={"Broker"}
+                options={salespersons?.map((salesPerson) => ({
+                  label: salesPerson.name,
+                  value: salesPerson._id,
+                }))}
+                placeholder={"Select Broker"}
                 isDisabled={isSalespersonDisabled}
                 className="text-sm capitalize"
               />
@@ -162,19 +167,17 @@ const AddAndUpdateMeetingModalContentUI = ({
           </div>
           <div className="w-full">
             <div className="">
-              <div className="my-2 text-sm font-medium">Clients *</div>
+              <div className="my-2 text-sm font-medium">Client *</div>
               <ReactSelect
                 name="clients"
                 // isMulti
                 value={selectedClients}
                 onChange={handleSelectClients}
-                options={clients?.map((client)=> (
-                  {
-                    label: client.name,
-                    value: client._id,
-                  }
-                ))}
-                placeholder="Clients"
+                options={clients?.map((client) => ({
+                  label: client.name,
+                  value: client._id,
+                }))}
+                placeholder="Select Client"
                 isDisabled={loading}
                 className="text-sm capitalize"
               />
