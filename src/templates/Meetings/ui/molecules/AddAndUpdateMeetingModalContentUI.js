@@ -159,7 +159,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                   label: salesPerson.name,
                   value: salesPerson._id,
                 }))}
-                placeholder={"Broker"}
+                placeholder={"Select Broker"}
                 isDisabled={isSalespersonDisabled}
                 className="text-sm capitalize"
               />
@@ -167,7 +167,7 @@ const AddAndUpdateMeetingModalContentUI = ({
           </div>
           <div className="w-full">
             <div className="">
-              <div className="my-2 text-sm font-medium">Clients *</div>
+              <div className="my-2 text-sm font-medium">Client *</div>
               <ReactSelect
                 name="clients"
                 // isMulti
@@ -177,7 +177,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                   label: client.name,
                   value: client._id,
                 }))}
-                placeholder="Clients"
+                placeholder="Select Client"
                 isDisabled={loading}
                 className="text-sm capitalize"
               />
