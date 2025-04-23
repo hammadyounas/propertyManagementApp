@@ -48,7 +48,7 @@ const DashboardTableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex max-sm:flex-col sm:justify-between sm:items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2">
         {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"🔎︎ Search..."} className={'md:w-[30%] w-full'} /> */}
         <div className="w-full flex gap-2">
           {/*search by react select  */}
@@ -97,7 +97,7 @@ const DashboardTableUI = ({
           <DropdownUINew
             label={selectedFilter ? selectedFilter : "Invoice Status"}
             wrapperClass="sm:w-40"
-            labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+            labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 sm:py-3 py-2 rounded cursor-pointer"
             classMenuItems="w-40 left-0"
             classItem="p-2"
             onSelect={(value) => {
@@ -132,11 +132,11 @@ const DashboardTableUI = ({
 
         <div className=" flex flex-wrap items-center justify-end"></div>
       </div>
-      <div className="overflow-x-auto -mx-6 min-h-[70vh] relative">
+      <div className="overflow-x-auto -mx-6 min-h-[70vh]  relative">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden">
             <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 text-center">
-              <thead className="bg-slate-200 dark:bg-slate-700">
+              <thead className="bg-slate-200 dark:bg-slate-700 whitespace-nowrap ">
                 <tr>
                   {columns?.map((column, i) => (
                     <th
@@ -149,7 +149,7 @@ const DashboardTableUI = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700 ">
                 {loading ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
@@ -168,13 +168,13 @@ const DashboardTableUI = ({
                   dashboardEntries?.map((row, i) => (
                     <tr
                       key={i}
-                      className="even:bg-slate-200 dark:even:bg-slate-700"
+                      className="even:bg-slate-200 dark:even:bg-slate-700 whitespace-nowrap"
                     >
-                      <td className="table-td px-4 py-4">{i + 1}</td>
-                      <td className="table-td px-4 py-4">
+                      <td className="table-td sm:p-4 p-2">{i + 1}</td>
+                      <td className="table-td sm:p-4 p-2">
                         {dateFormat(row.signatureDate)}
                       </td>
-                      <td className={`table-td px-4 py-4 `}>
+                      <td className={`table-td sm:p-4 p-2 `}>
                         <span
                           className={`${
                             row.dd > 0 && row.pmtReceived === 'non paid'
@@ -201,7 +201,7 @@ const DashboardTableUI = ({
                           />
                         </span>
                       </td>
-                      <td className={`table-td px-4 py-4 `}>
+                      <td className={`table-td sm:p-4 p-2 `}>
                         <span
                           className={`${
                             row.financingDays > 0 && row.dd  === 0 && row.pmtReceived === 'non paid'
@@ -228,7 +228,7 @@ const DashboardTableUI = ({
                           />
                         </span>
                       </td>
-                      <td className={`table-td px-4 py-4 `}>
+                      <td className={`table-td sm:p-4 p-2 `}>
                         <span
                           className={`${
                             row.closingDays > 0 &&
@@ -258,8 +258,8 @@ const DashboardTableUI = ({
                           />
                         </span>
                       </td>
-                      <td className="table-td px-4 py-4">{row.invoice}</td>
-                      <td className="table-td px-4 py-4">
+                      <td className="table-td sm:p-4 p-2">{row.invoice}</td>
+                      <td className="table-td sm:p-4 p-2">
                         {row.pmtReceived === "paid" ? (
                           <>
                             <div className="flex justify-center items-center gap-2 text-green-600">
@@ -270,7 +270,7 @@ const DashboardTableUI = ({
                           row.pmtReceived
                         )}
                       </td>
-                      <td className="table-td px-4 py-4 flex justify-center items-center">
+                      <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <img
                           src={
                             row?.created_by?.avatar ||
@@ -281,7 +281,7 @@ const DashboardTableUI = ({
                         />
                         {row?.created_by?.name}
                       </td>
-                      <td className="table-td px-4 py-4">
+                      <td className="table-td sm:p-4 p-2">
                         {row.comment && row.comment.length > 20 ? (
                           <div className="flex justify-between items-center gap-2">
                             <span>{row.comment.substring(0, 15)}...</span>
@@ -297,10 +297,10 @@ const DashboardTableUI = ({
                           row.comment || "N/A"
                         )}
                       </td>
-                      <td className="table-td px-4 py-4">
+                      <td className="table-td sm:p-4 p-2">
                         $ {row.amount.toLocaleString()}
                       </td>
-                      <td className="table-td px-4 py-4 flex justify-center items-center">
+                      <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <Icon
                           onClick={() => push(`/dashboard/edit/${row._id}`)}
                           className="cursor-pointer text-[20px] mx-4"
@@ -323,7 +323,7 @@ const DashboardTableUI = ({
                 )}
               </tbody>
               {dashboardEntries?.length > 0 && (
-                <tfoot className="bg-slate-100 dark:bg-slate-700">
+                <tfoot className="bg-slate-100 dark:bg-slate-700 whitespace-nowrap ">
                   <tr>
                     {columnsFooter?.map((column, i) => (
                       <td key={i} className="table-td font-semibold px-4 py-4">

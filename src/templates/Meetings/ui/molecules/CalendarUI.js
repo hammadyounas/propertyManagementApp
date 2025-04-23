@@ -22,10 +22,10 @@ const CalendarUI = ({
   setValue,
 }) => {
   return (
-    <Card className=" bg-white w-full 2xl:w-[62%]">
+    <Card className=" bg-white w-full 2xl:w-[62%]" bodyClass="p-2 sm:p-4 lg:p-6">
       <div className="flex justify-between items-center mb-4">
         <p className="h-8 font-semibold">
-          {loading ? "Fetching meetings, please wait..." : " "}
+          {loading ? "Loading ..." : " "}
         </p>
         <Button
           text="New Meeting"
@@ -37,6 +37,7 @@ const CalendarUI = ({
         />
       </div>
       <FullCalendar
+      className="responsive-calendar"
         // ref={calendarRef}
         // height={calendarHeight}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}

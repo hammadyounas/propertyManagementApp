@@ -91,16 +91,16 @@
   @media (max-width: 981px) {
     .fc-button-group,
     .fc .fc-toolbar {
-      display: block !important;
+      // @apply w-full flex justify-between;
     }
     .fc .fc-toolbar {
       @apply space-y-4;
     }
     .fc-toolbar-chunk {
-      @apply space-y-4;
+      @apply space-y-4 space-x-2 flex items-center justify-between;
     }
     .fc .fc-button {
-      padding: 0.4em 0.65em !important;
+      padding: 0.4em 0.4em !important;
     }
   }
   .fc .fc-timegrid-axis-cushion,
