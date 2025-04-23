@@ -10,6 +10,7 @@
     fetchMeetings,
     createMeeting,
     updateMeeting,
+    clearError,
   } from "../../../../store/features/meetings/meetingSlice";
   import {
     fetchUsers,
@@ -66,7 +67,7 @@
       reset,
     } = useForm({
       resolver: yupResolver(schema),
-      mode: "all",
+      // mode: "all",
     });
 
     const [salespersons, setSalespersons] = useState();
@@ -141,13 +142,12 @@
           ).unwrap();
           toast.success("Meeting updated successfully!");
           dispatch(fetchMeetings(starAndEndDate.startDate));
-          closeModal();
         } else {
           await dispatch(createMeeting(formData)).unwrap();
           toast.success("Meeting created successfully!");
           dispatch(fetchMeetings(starAndEndDate.startDate));
-          closeModal();
         }
+        closeModal();
       } catch (error) {
         setLoading(false);
         console.error("Meeting Error:", error);
@@ -209,6 +209,8 @@
     const [activeModal, setActiveModal] = useState(false);
 
     const closeModal = () => {
+      reset();
+      dispatch(clearError()); 
       setModalOpen(false);
       setActiveModal(false);
       setCurrentMeeting(null);
@@ -216,14 +218,21 @@
       setStatus("");
       setSelectedSalespersons(null);
       setSelectedClients(null);
-      reset({}, { keepErrors: false });
 
     };
 
     const openModal = async () => {
+      
       await dispatch(fetchUserById(userId)); 
       setActiveModal(!activeModal);
     };
+
+    const handleDiscard = () => {
+      console.log("Discard clicked"); 
+      reset();
+      closeModal(); // reset() will clear form and errors
+      dispatch(clearError()); 
+    };    
 
     const targetDivRef = useRef(null);
 
@@ -278,6 +287,7 @@
       error,
       isSalespersonDisabled,
       setValue,
+      handleDiscard
     };
   };
 

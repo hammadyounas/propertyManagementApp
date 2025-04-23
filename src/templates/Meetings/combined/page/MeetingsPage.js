@@ -39,6 +39,7 @@ const MeetingsPage = () => {
     error,
     isSalespersonDisabled,
     setValue,
+    handleDiscard,
   } = useMeetings();
   return (
     <div className="flex flex-col 2xl:flex-row 2xl:justify-between w-full">
@@ -96,6 +97,7 @@ const MeetingsPage = () => {
             currentMeeting = {meetings.find(
               (meeting) => meeting.id === currentMeetingId
             )}
+            handleDiscard={handleDiscard}
           />
         }
       </Modal>

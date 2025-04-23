@@ -37,6 +37,9 @@ const meetingsSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        clearError: (state) => {
+          state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -75,5 +78,5 @@ const meetingsSlice = createSlice({
       },
     });
     
-    export const { resetMeetingsState } = meetingsSlice.actions;
+    export const { resetMeetingsState, clearError } = meetingsSlice.actions;
     export default meetingsSlice.reducer;
