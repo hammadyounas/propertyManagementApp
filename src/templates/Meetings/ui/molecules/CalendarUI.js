@@ -37,9 +37,7 @@ const CalendarUI = ({
         />
       </div>
       <FullCalendar
-      className="responsive-calendar"
         // ref={calendarRef}
-        // height={calendarHeight}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
         headerToolbar={{
           left: "prev,next today",
@@ -47,6 +45,8 @@ const CalendarUI = ({
           right: "dayGridMonth",
           // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
         }}
+        height={window.innerWidth < 768 ? '70vh' : '80vh'}
+
         events={meetings?.map((meeting, index) => ({
           start: moment(meeting?.start_time).toISOString(), // Schedule events on different days
           end: moment(meeting?.end_time).toISOString(),
