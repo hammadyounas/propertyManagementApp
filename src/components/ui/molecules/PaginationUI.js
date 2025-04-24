@@ -15,7 +15,7 @@ export default function PaginationUI({
     >
       <ReactPaginate
         previousLabel={
-          <span className="flex items-center space-x-2 mr-4 text-gray-500">
+          <span className="flex items-center space-x-2 sm:mr-4 mr-2 text-gray-500">
             <Icon
               icon="material-symbols:keyboard-double-arrow-left"
               className="text-xl"
@@ -24,7 +24,7 @@ export default function PaginationUI({
           </span>
         }
         nextLabel={
-          <span className="flex items-center space-x-2 ml-4 text-gray-500">
+          <span className="flex items-center space-x-2 sm:ml-4 ml-2 text-gray-500">
             Next
             <Icon
               icon="material-symbols:keyboard-double-arrow-right"
@@ -38,9 +38,9 @@ export default function PaginationUI({
         pageRangeDisplayed={5}
         onPageChange={onPageChange}
         initialPage={initialPage}
-        containerClassName="flex items-center space-x-2 mt-4"
+        containerClassName="flex items-center justify-center sm:space-x-2 space-x-1 max-sm:space-y-1 max-sm:text-xs w-full overflow-x-scroll sm:flex-wrap sm:mt-4"
         pageClassName="bg-gray-200 text-gray-500 rounded-md"
-        pageLinkClassName="px-3 py-1 block text-gray-400 rounded-md hover:bg-gray-900 hover:text-gray-100"
+        pageLinkClassName="sm:px-3 px-2 py-1 block text-gray-400 rounded-md hover:bg-gray-900 hover:text-gray-100"
         activeClassName="bg-primary-default text-gray-100"
         activeLinkClassName="!text-white"
         previousClassName="rounded-md"

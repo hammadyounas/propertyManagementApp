@@ -25,6 +25,7 @@ const AddAndUpdateMeetingModalContentUI = ({
   error,
   isSalespersonDisabled,
   currentMeeting,
+  handleDiscard,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -194,7 +195,7 @@ const AddAndUpdateMeetingModalContentUI = ({
           className={
             "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
           }
-          onClick={() => closeModal()}
+          onClick={handleDiscard}
           loading={loading}
         />
         <Button
