@@ -71,7 +71,7 @@ const MeetingDetailsUI = ({
                 <div className="flex flex-col mt-2 w-[48%]">
                   <label className="font-semibold text-[16px] text-black-500">Start Time</label>
                   <span className="text-[14px]">
-                    {moment(currentMeeting?.start_time).format(
+                    {moment.utc(currentMeeting?.start_time).format(
                       "DD-MM-YYYY | hh:mm A"
                     )}
                   </span>
@@ -79,7 +79,7 @@ const MeetingDetailsUI = ({
                 <div className="flex flex-col mt-2 w-[48%] pl-[10px]">
                   <label className="font-semibold text-[16px] text-black-500">End Time</label>
                   <span className="text-[14px]">
-                    {moment(currentMeeting?.end_time).format(
+                    {moment.utc(currentMeeting?.end_time).format(
                       "DD-MM-YYYY | hh:mm A"
                     )}
                   </span>

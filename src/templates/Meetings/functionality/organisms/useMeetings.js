@@ -228,7 +228,6 @@
     };
 
     const handleDiscard = () => {
-      console.log("Discard clicked"); 
       reset();
       closeModal(); // reset() will clear form and errors
       dispatch(clearError()); 
