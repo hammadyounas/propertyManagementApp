@@ -16,6 +16,7 @@ const Modal = ({
   label = "Basic Modal",
   labelClass,
   ref,
+  onBackdropClick,
 }) => {
   return (
     <ModalUI
@@ -33,6 +34,8 @@ const Modal = ({
       uncontrol={uncontrol}
       label={label}
       labelClass={labelClass}
+      ref={ref}
+      onBackdropClick={onBackdropClick}
     />
   );
 };

@@ -65,14 +65,14 @@ const MeetingsPage = () => {
         />
       )}
       <Modal
-        title={currentMeetingId ? "Update Meeting" : "New Meeting"}
-        label={currentMeetingId ? "Update Meeting" : "New Meeting"}
-        labelClass="btn-outline-dark"
-        // uncontrol
-        activeModal={activeModal}
-        // scrollContent
-        onClose={!loading ? closeModal : () => {}}
-        centered
+      title={currentMeetingId ? "Update Meeting" : "New Meeting"}
+      label={currentMeetingId ? "Update Meeting" : "New Meeting"}
+      labelClass="btn-outline-dark"
+      activeModal={activeModal}
+      onClose={!loading ? closeModal : () => {}}
+      centered
+      disableBackdrop={false}
+      onBackdropClick={false}
       >
         {
           <AddAndUpdateMeetingModalContent
