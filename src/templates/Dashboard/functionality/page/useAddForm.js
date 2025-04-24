@@ -31,31 +31,34 @@ const useAddForm = () => {
       .number()
       .typeError("Value of Amount must be a number")
       .required("Value of Amount is required")
-      .min(0, "Value of Amount cannot be negative"),
+      .min(0, "Value of Amount cannot be negative")
+      .test(
+        "not-exponential",
+        "Scientific notation is not allowed",
+        (value) => {
+          if (value === undefined || value === null) return true;
+          return !value.toString().toLowerCase().includes("e");
+        }
+      ),
     comment: yup
       .string()
       .optional()
-      .test(
-        "maxWords",
-        "Comment must be at most 100 words",
-        value => {
-          if (!value) return true;
-          const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-          return wordCount <= 100;
-        }
-      ),
-    
+      .test("maxWords", "Comment must be at most 100 words", (value) => {
+        if (!value) return true;
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        return wordCount <= 100;
+      }),
   });
 
   const { push } = useRouter();
   const pathname = usePathname();
   const { query } = useRouter();
   const id = query?._id; // Extract the ID from the query parameters
-  
+
   // Ensure `id` is a string (if it's an array, use the first element)
-  // const editPage = pathname === `/dashboard/edit/${id}` ? pathname : null; 
+  // const editPage = pathname === `/dashboard/edit/${id}` ? pathname : null;
   const editPage = pathname;
-  console.log("Path",editPage);
+  console.log("Path", editPage);
 
   const {
     register,
@@ -70,7 +73,7 @@ const useAddForm = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       invoice: "pending",
-      pmtReceived: "non paid"
+      pmtReceived: "non paid",
       // dd: 0,
       // financing_days: 0,
       // closing_days: 0,
@@ -79,11 +82,16 @@ const useAddForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [invoice, setInvoice] = useState({ label: "Pending", value: "pending" });
-  const [pmtReceived, setPmtReceived] = useState({ label: "Non Paid", value: "non paid" });
+  const [invoice, setInvoice] = useState({
+    label: "Pending",
+    value: "pending",
+  });
+  const [pmtReceived, setPmtReceived] = useState({
+    label: "Non Paid",
+    value: "non paid",
+  });
   const comment = watch("comment") || "";
   const wordCount = comment.trim().split(/\s+/).filter(Boolean).length;
-
 
   useEffect(() => {
     setValue("invoice", "pending");
