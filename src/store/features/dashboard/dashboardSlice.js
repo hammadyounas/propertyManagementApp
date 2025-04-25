@@ -1,0 +1,111 @@
+
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getRequest } from '@/libs/utils/request_handler';
+
+// Async thunk to fetch dashboard entries
+export const fetchDashboardEntries = createAsyncThunk(
+    'dashboard/fetchEntries',
+    async ({ currentPage, statusFilter, selectedBroker, globalFilter, pageSize }) => {
+      try {
+        const params = new URLSearchParams();
+        params.append('page', currentPage);
+        params.append('limit', pageSize);
+  
+        // Apply selected broker filter if selected
+        if (selectedBroker && selectedBroker.value !== 'all') {
+          params.append('search', selectedBroker.value); // Backend should handle ?broker=name
+        }
+  
+        // Apply the status filter
+        if (['pending', 'submitted', 'paid'].includes(statusFilter)) {
+          params.append('invoice', statusFilter);
+        }
+  
+        let url = `dashboard`;
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }        
+  
+        const response = await getRequest(url);
+        console.log('Response:', response.data); // Log the response for debugging
+        return response.data; // Return the response data for Redux to store
+      } catch (error) {
+        throw new Error('Error fetching dashboard entries:', error); // Handle errors
+      }
+    }
+  );
+  
+
+const dashboardSlice = createSlice({
+  name: 'dashboard',
+  initialState: {
+    dashboardEntries: [],
+    totalEntries: 0,
+    brokerOptions: [{ label: 'All', value: 'all' }],
+    loading: false,
+    statusFilter: '',
+    selectedBroker: null,
+    globalFilter: '',
+    currentPage: 1,
+    isModalOpen: false,
+    selectedComment: '',
+  },
+  reducers: {
+    setStatusFilter: (state, action) => {
+      state.statusFilter = action.payload;
+    },
+    setSelectedBroker: (state, action) => {
+      state.selectedBroker = action.payload;
+    },
+    setGlobalFilter: (state, action) => {
+      state.globalFilter = action.payload;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+    handleOpenCommentModal: (state, action) => {
+      state.selectedComment = action.payload;
+      state.isModalOpen = true;
+    },
+    handleCloseModal: (state) => {
+      state.isModalOpen = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchDashboardEntries.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDashboardEntries.fulfilled, (state, action) => {
+        const { data, createdByNames, totalCount } = action.payload;
+        
+        if (state.brokerOptions.length <= 1) {
+            const uniqueBrokerOptions = createdByNames?.map(name => ({
+              label: name,
+              value: name,
+            })) || [];
+          
+            state.brokerOptions = [{ label: 'All', value: 'all' }, ...uniqueBrokerOptions];
+          }          
+      
+        state.dashboardEntries = data?.filter(entry => !entry.isDeleted) || [];
+        state.totalEntries = totalCount || 0;
+        state.loading = false;
+      })
+      
+      .addCase(fetchDashboardEntries.rejected, (state) => {
+        state.loading = false;
+      });
+  },
+});
+
+export const {
+  setStatusFilter,
+  setSelectedBroker,
+  setGlobalFilter,
+  setCurrentPage,
+  handleOpenCommentModal,
+  handleCloseModal,
+} = dashboardSlice.actions;
+
+export default dashboardSlice.reducer;

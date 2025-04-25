@@ -1,116 +1,75 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getRequest } from "../../../../libs/utils/request_handler";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchDashboardEntries,
+  setStatusFilter,
+  setSelectedBroker,
+  setGlobalFilter,
+  setCurrentPage,
+  handleOpenCommentModal,
+  handleCloseModal,
+} from "../../../../store/features/dashboard/dashboardSlice";
 
 const useDashboard = () => {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [dashboardEntries, setDashboardEntries] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("");
   const pageSize = 10;
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [totalEntries, setTotalEntries] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-const [selectedComment, setSelectedComment] = useState("");
-const [brokerOptions, setBrokerOptions] = useState([{ label: "All", value: "all" }]);
-const [selectedBroker, setSelectedBroker] = useState(null);
+  const dispatch = useDispatch();
 
+  const {
+    dashboardEntries,
+    totalEntries,
+    brokerOptions,
+    selectedBroker,
+    statusFilter,
+    globalFilter,
+    currentPage,
+    loading,
+    isModalOpen,
+    selectedComment,
+  } = useSelector((state) => state.dashboard);
 
-const fetchDashboardEntries = async () => {
-  try {
-    setLoading(true);
-    const params = new URLSearchParams();
-    const searchQuery = (globalFilter || "").trim();
-
-    params.append("page", currentPage);
-    params.append("limit", pageSize);
-
-    if (selectedBroker && selectedBroker.value !== "all") {
-      params.append("search", selectedBroker.value); // Backend should handle ?broker=name
-    }
-
-    if (["pending", "submitted", "paid"].includes(statusFilter)) {
-      params.append("invoice", statusFilter);
-    }
-
-    let url = `dashboard`;
-    if (params.toString()) {
-      url += `?${params.toString()}`;
-    }
-
-    const response = await getRequest(url);
-
-    // Use the createdByNames directly from the response
-    if (brokerOptions.length === 1) {
-      const uniqueBrokerOptions = response?.data?.createdByNames?.map((name) => ({
-        label: name,
-        value: name,
-      })) || [];
-      setBrokerOptions([{ label: "All", value: "all" }, ...uniqueBrokerOptions]);
-    }
-
-    const filteredEntries = response?.data?.data?.filter(
-      (entry) => !entry.isDeleted
-    );
-
-    setDashboardEntries(filteredEntries || []);
-    setTotalEntries(response.data?.totalCount || 0);
-
-    // If totalCount is available from backend:
-    if (response?.totalCount) {
-      setTotalEntries(response.totalCount);
-    }
-
-    setLoading(false);
-  } catch (error) {
-    setLoading(false);
-    console.error("Error fetching dashboard entries:", error);
-  }
-};
-
-
-  const handleOpenCommentModal = (comment) => {
-    setSelectedComment(comment);
-    setIsModalOpen(true);  // Open the modal
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);  // Close the modal
-  };
-  
   useEffect(() => {
-    fetchDashboardEntries();
-  }, [statusFilter, globalFilter, currentPage, selectedBroker]);
+    dispatch(
+      fetchDashboardEntries({
+        currentPage,
+        statusFilter,
+        selectedBroker,
+        globalFilter,
+        pageSize,
+      })
+    );
+  }, [dispatch, currentPage, statusFilter, selectedBroker, globalFilter]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
+    dispatch(setCurrentPage(page + 1)); // For 1-based page indexing
+  };
+
+  const setSelectedFilter = (filter) => {
+    dispatch(setStatusFilter(filter)); // Dispatch Redux action to update status filter
   };
 
   return {
     globalFilter,
-    setGlobalFilter,
+    setGlobalFilter: (value) => dispatch(setGlobalFilter(value)),
     dashboardEntries,
-    setDashboardEntries,
     pageSize,
     handlePageChange,
     currentPage,
     push,
     loading,
     statusFilter,
-    setStatusFilter,
-    setSelectedFilter,
-    selectedFilter,
+    setStatusFilter: (value) => dispatch(setStatusFilter(value)),
     totalEntries,
-    handleOpenCommentModal,
-    handleCloseModal,
+    handleOpenCommentModal: (comment) =>
+      dispatch(handleOpenCommentModal(comment)),
+    handleCloseModal: () => dispatch(handleCloseModal()),
     selectedComment,
     isModalOpen,
     brokerOptions,
-    setBrokerOptions,
     selectedBroker,
-    setSelectedBroker,
+    setSelectedFilter,
+    setSelectedBroker: (value) => dispatch(setSelectedBroker(value)),
   };
 };
 

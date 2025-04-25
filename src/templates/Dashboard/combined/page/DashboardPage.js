@@ -1,6 +1,4 @@
 import Table from "../organisms/TableUIContainer";
-import { Icon } from "@iconify/react";
-import ReactPaginate from "react-paginate";
 import useDashboard from "../../functionality/page/useDashboard";
 import { tableFooterData } from "../../functionality/constants/data";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
