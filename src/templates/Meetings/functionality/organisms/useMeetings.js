@@ -132,6 +132,8 @@
         // Prepare data for the API
         const formData = {
           ...data,
+          start_time: new Date(data.start_time).toISOString(), // Convert to UTC
+          end_time: new Date(data.end_time).toISOString(), 
           salespersons: selectedSalesPersons?.value,
           clients: selectedClients?.value,
         };
@@ -175,9 +177,9 @@
               label: current[key]?.name,
             });
           } else if (key == "start_time") {
-            setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
+            setValue(key, moment(current[key]).local().format("YYYY-MM-DDTHH:mm"));
           } else if (key == "end_time") {
-            setValue(key, moment(current[key]).format("YYYY-MM-DDTHH:mm"));
+            setValue(key, moment(current[key]).local().format("YYYY-MM-DDTHH:mm"));
           } else {
             setValue(key, current[key]);
           }
