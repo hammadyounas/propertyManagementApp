@@ -20,6 +20,9 @@ const AddAndUpdateMeetingModalContent = ({
   error,
   isSalespersonDisabled,
   handleDiscard,
+  isStartTimeDisabled,
+  isEndTimeDisabled,
+  isOtherFieldsDisabled,
 }) => {
   return (
     <AddAndUpdateMeetingModalContentUI
@@ -42,6 +45,9 @@ const AddAndUpdateMeetingModalContent = ({
       error={error}
       isSalespersonDisabled={isSalespersonDisabled}
       handleDiscard={handleDiscard}
+      isStartTimeDisabled={isStartTimeDisabled}
+      isEndTimeDisabled={isEndTimeDisabled}
+      isOtherFieldsDisabled={isOtherFieldsDisabled}
     />
   );
 };

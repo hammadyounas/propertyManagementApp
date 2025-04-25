@@ -40,6 +40,9 @@ const MeetingsPage = () => {
     isSalespersonDisabled,
     setValue,
     handleDiscard,
+    isStartTimeDisabled,
+    isEndTimeDisabled,
+    isOtherFieldsDisabled,
   } = useMeetings();
   return (
     <div className="flex flex-col 2xl:flex-row 2xl:justify-between w-full">
@@ -98,6 +101,9 @@ const MeetingsPage = () => {
               (meeting) => meeting.id === currentMeetingId
             )}
             handleDiscard={handleDiscard}
+            isStartTimeDisabled={isStartTimeDisabled}
+            isEndTimeDisabled={isEndTimeDisabled}
+            isOtherFieldsDisabled={isOtherFieldsDisabled}
           />
         }
       </Modal>

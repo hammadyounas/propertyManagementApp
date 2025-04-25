@@ -2,7 +2,7 @@
   import { useEffect, useRef, useState } from "react";
   import * as yup from "yup";
   import { yupResolver } from "@hookform/resolvers/yup";
-  import { useForm } from "react-hook-form";
+  import { useForm, useWatch } from "react-hook-form";
   import { statuses } from "../constants/data";
   import toast from "react-hot-toast";
   import { useSelector, useDispatch } from "react-redux";
@@ -65,11 +65,13 @@
       handleSubmit,
       setValue,
       reset,
+      control,
     } = useForm({
       resolver: yupResolver(schema),
       // mode: "all",
     });
 
+    const watchedStatus = useWatch({ control, name: 'status' });
     const [salespersons, setSalespersons] = useState();
     const userId = localStorage.getItem("user_id");
     const [status, setStatus] = useState("");
@@ -84,7 +86,6 @@
       startDate: moment(new Date()).startOf("month").format("YYYY-MM-DD"),
       endDate: moment(new Date()).endOf("month").format("YYYY-MM-DD"),
     });
-
       useEffect(() => {
         if (users && users.length > 0) {
           setSalespersons(users); // ✅ This is the list for the ReactSelect options
@@ -195,6 +196,13 @@
       setValue("clients", selectedClients);
     }, [status, selectedSalesPersons, selectedClients, setValue]);
 
+    const isStatusRescheduled = status?.value === 'rescheduled';
+
+    const isStartTimeDisabled = currentMeetingId  && !isStatusRescheduled;
+    const isEndTimeDisabled = currentMeetingId  && !isStatusRescheduled;
+    const isOtherFieldsDisabled = currentMeetingId;
+
+
     const handleSelectStatus = (e) => {
       setStatus(e);
     };
@@ -288,7 +296,10 @@
       error,
       isSalespersonDisabled,
       setValue,
-      handleDiscard
+      handleDiscard,
+      isStartTimeDisabled,
+      isEndTimeDisabled,
+      isOtherFieldsDisabled,
     };
   };
 

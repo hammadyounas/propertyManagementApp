@@ -26,6 +26,9 @@ const AddAndUpdateMeetingModalContentUI = ({
   isSalespersonDisabled,
   currentMeeting,
   handleDiscard,
+  isStartTimeDisabled,
+  isEndTimeDisabled,
+  isOtherFieldsDisabled,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -42,7 +45,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.title}
               placeholder="Title"
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
           <div className="w-full mt-1">
@@ -55,7 +58,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               placeholder="Description"
               row={5}
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
         </div>
@@ -68,7 +71,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               register={register}
               error={errors.start_time}
               placeholder="Start Time"
-              disabled={loading}
+              disabled={isStartTimeDisabled}
               min={
                 !currentMeetingId || currentMeeting?.status === "rescheduled" // create mode → restrict
                   ? new Date().toISOString().slice(0, 16)
@@ -84,7 +87,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               register={register}
               error={errors.end_time}
               placeholder="End Time"
-              disabled={loading}
+              disabled={isEndTimeDisabled}
               min={
                 !currentMeetingId
                   ? new Date().toISOString().slice(0, 16)
@@ -102,7 +105,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               register={register}
               error={errors.location_status}
               placeholder="Location Status"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
               radioOptions={[
                 { label: "Online", value: "online" },
                 { label: "Onsite", value: "onsite" },
@@ -121,7 +124,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.location}
               placeholder="Location or link for the meeting"
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
         </div>
@@ -161,7 +164,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                   value: salesPerson._id,
                 }))}
                 placeholder={"Select Broker"}
-                isDisabled={isSalespersonDisabled}
+                isDisabled={currentMeetingId? isOtherFieldsDisabled : isSalespersonDisabled}
                 className="text-sm capitalize"
               />
             </div>
@@ -179,7 +182,7 @@ const AddAndUpdateMeetingModalContentUI = ({
                   value: client._id,
                 }))}
                 placeholder="Select Client"
-                isDisabled={loading}
+                isDisabled={isOtherFieldsDisabled}
                 className="text-sm capitalize"
               />
             </div>
