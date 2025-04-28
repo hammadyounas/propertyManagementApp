@@ -39,11 +39,11 @@ const TableUI = ({
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden min-h-[30vh]">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
+            <table className="min-w-full divide-y divide-slate-100 text-center table-fixed dark:divide-slate-700 ">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold">
+                    <th key={i} scope="col" className="table-th font-bold text-center">
                       {column.label}
                     </th>
                   ))}
@@ -71,10 +71,10 @@ const TableUI = ({
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td">{row.invoiceNumber}</td>
-                      <td className="table-td">{row.invoiceDate}</td>
+                      <td className="table-td whitespace-nowrap">{row.invoiceDate}</td>
                       <td className="table-td">
-                        <div className="flex items-center">
-                          <span className="text-primary-default font-bold cursor-pointer">
+                        <div className="flex items-center justify-center">
+                          <span className="text-primary-default font-bold cursor-pointer text-center whitespace-nowrap">
                             {row.client_name || row?.buyer?.name}
                           </span>
                         </div>
@@ -82,17 +82,17 @@ const TableUI = ({
                       <td className="table-td">
                         {row.client_address || row?.buyer?.address}
                       </td>
-                      <td className="table-td">
-                        {row.responsible_broker || row?.seller?.name}
+                      <td className="table-td whitespace-nowrap">
+                        {row.responsible_broker || row?.seller?.name || 'N/A'}
                       </td>
-                      <td className="table-td">
-                        {row.notary_date || row?.instrumentalNotary}
+                      <td className={`table-td`}>
+                        {row.notary_date || row?.instrumentalNotary || 'N/A'}
                       </td>
                       <td className="table-td">
                         {row.commissions_payable || row?.totalCommissionPayable}
                       </td>
                       <td className="table-td">
-                        <span className="block w-full">
+                        <span className="block w-full  whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
@@ -142,7 +142,7 @@ const TableUI = ({
                             }
                             labelClass="flex items-center justify-center gap-2"
                             classMenuItems="w-32 min-w-[120px] top-full mt-1 z-[9999] overflow-visible"
-                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 z-[9999]"
                             items={[
                               {
                                 label: "English",
