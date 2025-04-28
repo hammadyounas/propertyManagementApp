@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 import Icon from "@/components/ui/atoms/Icon";
 
 const ModalUI = ({
@@ -17,9 +17,12 @@ const ModalUI = ({
   uncontrol,
   label = "Basic Modal",
   labelClass,
+  mainClass = "",
   ref,
+  onBackdropClick = true, // Added prop to control backdrop click behavior
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const modalRef = useRef(null);
 
   const closeModal = () => {
     setShowModal(false);
@@ -28,9 +31,30 @@ const ModalUI = ({
   const openModal = () => {
     setShowModal(!showModal);
   };
+
   const returnNull = () => {
     return null;
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        if (onBackdropClick) {
+          closeModal();
+        }
+      }
+    };
+    // Only attach listener if modal is open and backdrop is not disabled
+    if (showModal && !disableBackdrop && onBackdropClick) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showModal, disableBackdrop, onBackdropClick]);
 
   return (
     <>
@@ -63,10 +87,11 @@ const ModalUI = ({
                 </Transition.Child>
               )}
 
-              <div className="fixed inset-0 overflow-y-auto">
+              <div className="fixed inset-0 flex justify-center items-center overflow-y-auto">
                 <div
-                  className={`flex min-h-full justify-center text-center p-6 ${
-                    centered ? "items-center" : "items-start "
+                  ref={modalRef}
+                  className={`flex min-h-full my-auto justify-center text-center p-6 ${
+                    centered ? "items-center" : "items-start"
                   }`}
                 >
                   <Transition.Child
@@ -88,7 +113,10 @@ const ModalUI = ({
                         <h2 className="capitalize leading-6 tracking-wider font-medium text-base text-white">
                           {title}
                         </h2>
-                        <button onClick={closeModal} className="text-[22px]">
+                        <button
+                          onClose={onBackdropClick ? onClose : () => {}}
+                          className="text-[22px]"
+                        >
                           <Icon icon="heroicons-outline:x" />
                         </button>
                       </div>
@@ -113,7 +141,8 @@ const ModalUI = ({
         </>
       ) : (
         <Transition appear show={activeModal} as={Fragment}>
-          <Dialog as="div" className="relative z-[99999]" onClose={onClose}>
+          <Dialog as="div" className="relative z-[99999]" onClose={onBackdropClick ? onClose : () => {}}
+          >
             <Transition.Child
               as={Fragment}
               enter={noFade ? "" : "duration-300 ease-out"}
@@ -130,8 +159,9 @@ const ModalUI = ({
 
             <div className="fixed inset-0 overflow-y-auto">
               <div
-                className={`flex min-h-full justify-center text-center p-6 ${
-                  centered ? "items-center" : "items-start "
+                ref={modalRef}
+                className={`flex min-h-screen justify-center text-center p-6 ${mainClass} ${
+                  centered ? "items-center" : "items-start"
                 }`}
               >
                 <Transition.Child

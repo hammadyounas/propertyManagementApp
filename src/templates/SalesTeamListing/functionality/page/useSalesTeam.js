@@ -6,6 +6,7 @@ import {
   getRequest,
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
+import { set } from "react-hook-form";
 
 const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -18,6 +19,8 @@ const useSalesTeam = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("active");
+  const [selectedFilter, setSelectedFilter] = useState("Active");
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -33,31 +36,42 @@ const useSalesTeam = () => {
     setLoading(true);
     try {
       let url = "users"; // Default: fetch all users
-  
-      if (globalFilter.trim() !== "") {
-        const searchQuery = encodeURIComponent(globalFilter);
-        url = `users?search=${searchQuery}`;
-      }
-  
+
+      const params = new URLSearchParams();
+
+      // Convert globalFilter to string to avoid trim() errors
+      const searchQuery = globalFilter ? String(globalFilter).trim() : "";
+
+      // Add search query if provided
+        if (searchQuery !== "") {
+          params.append("search", searchQuery);
+        }
+
+        // Add status filter if provided (Only send "active" or "inactive", not "all")
+        if (statusFilter === "active" || statusFilter === "inactive") {
+          params.append("status", statusFilter);
+        }
+
+        // If params exist, update the URL
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+
       const response = await getRequest(url);
-      setUsers(response.data || []);
+      setUsers(response.data);
+
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   useEffect(() => {
+    console.log("Fetching users for status:", statusFilter); // Debug log
     fetchUsers();
-  }, [globalFilter]); // Fetch data when search filter changes
-  
-  useEffect(() => {
-    fetchUsers(); // Fetch all users on component mount
-  }, []);
-  
-
+  }, [statusFilter, globalFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
@@ -104,6 +118,10 @@ const useSalesTeam = () => {
     closeDeleteModal,
     openDeleteModal,
     deleteLoading,
+    setStatusFilter, // ✅ Ensure this is being returned
+    statusFilter,
+    setSelectedFilter,
+    selectedFilter,
   };
 };
 

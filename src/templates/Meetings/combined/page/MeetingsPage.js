@@ -36,7 +36,13 @@ const MeetingsPage = () => {
     loading,
     meetings,
     meetingsLoading,
-    error
+    error,
+    isSalespersonDisabled,
+    setValue,
+    handleDiscard,
+    isStartTimeDisabled,
+    isEndTimeDisabled,
+    isOtherFieldsDisabled,
   } = useMeetings();
   return (
     <div className="flex flex-col 2xl:flex-row 2xl:justify-between w-full">
@@ -50,6 +56,7 @@ const MeetingsPage = () => {
         meetings={meetings}
         loading={meetingsLoading}
         closeModal={closeModal}
+        setValue={setValue}
       />
       {modalOpen && (
         <MeetingDetails
@@ -61,14 +68,14 @@ const MeetingsPage = () => {
         />
       )}
       <Modal
-        title={currentMeetingId ? "Update Meeting" : "New Meeting"}
-        label={currentMeetingId ? "Update Meeting" : "New Meeting"}
-        labelClass="btn-outline-dark"
-        // uncontrol
-        activeModal={activeModal}
-        // scrollContent
-        onClose={!loading ? closeModal : () => {}}
-        centered
+      title={currentMeetingId ? "Update Meeting" : "New Meeting"}
+      label={currentMeetingId ? "Update Meeting" : "New Meeting"}
+      labelClass="btn-outline-dark"
+      activeModal={activeModal}
+      onClose={!loading ? closeModal : () => {}}
+      centered
+      disableBackdrop={false}
+      onBackdropClick={false}
       >
         {
           <AddAndUpdateMeetingModalContent
@@ -89,6 +96,14 @@ const MeetingsPage = () => {
             loading={loading}
             currentMeetingId={currentMeetingId}
             error={error}
+            isSalespersonDisabled={isSalespersonDisabled}
+            currentMeeting = {meetings.find(
+              (meeting) => meeting.id === currentMeetingId
+            )}
+            handleDiscard={handleDiscard}
+            isStartTimeDisabled={isStartTimeDisabled}
+            isEndTimeDisabled={isEndTimeDisabled}
+            isOtherFieldsDisabled={isOtherFieldsDisabled}
           />
         }
       </Modal>

@@ -22,7 +22,13 @@ const AddAndUpdateMeetingModalContentUI = ({
   closeModal,
   loading,
   currentMeetingId,
-  error
+  error,
+  isSalespersonDisabled,
+  currentMeeting,
+  handleDiscard,
+  isStartTimeDisabled,
+  isEndTimeDisabled,
+  isOtherFieldsDisabled,
 }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -39,7 +45,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.title}
               placeholder="Title"
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
           <div className="w-full mt-1">
@@ -52,7 +58,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               placeholder="Description"
               row={5}
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
         </div>
@@ -65,7 +71,12 @@ const AddAndUpdateMeetingModalContentUI = ({
               register={register}
               error={errors.start_time}
               placeholder="Start Time"
-              disabled={loading}
+              disabled={isStartTimeDisabled}
+              min={
+                !currentMeetingId || currentMeeting?.status === "rescheduled" // create mode → restrict
+                  ? new Date().toISOString().slice(0, 16)
+                  : undefined // edit mode & not rescheduled → no restriction
+              }
             />
           </div>
           <div className="w-full md:w-[49%]">
@@ -76,26 +87,31 @@ const AddAndUpdateMeetingModalContentUI = ({
               register={register}
               error={errors.end_time}
               placeholder="End Time"
-              disabled={loading}
+              disabled={isEndTimeDisabled}
+              min={
+                !currentMeetingId
+                  ? new Date().toISOString().slice(0, 16)
+                  : undefined
+              }
             />
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
-          <RadioButton
-                  name="location_status"
-                  label="Location Status*"
-                  type="radio"
-                  register={register}
-                  error={errors.location_status}
-                  placeholder="Location Status"
-                  disabled={loading}
-                  radioOptions={[
-                    { label: "Online", value: "online" },
-                    { label: "Onsite", value: "onsite" },
-                  ]}
-                  className="text-sm"
-                />
+            <RadioButton
+              name="location_status"
+              label="Location Status*"
+              type="radio"
+              register={register}
+              error={errors.location_status}
+              placeholder="Location Status"
+              disabled={isOtherFieldsDisabled}
+              radioOptions={[
+                { label: "Online", value: "online" },
+                { label: "Onsite", value: "onsite" },
+              ]}
+              className="text-sm"
+            />
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
@@ -108,7 +124,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.location}
               placeholder="Location or link for the meeting"
               className="px-4"
-              disabled={loading}
+              disabled={isOtherFieldsDisabled}
             />
           </div>
         </div>
@@ -122,7 +138,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               options={statuses}
               placeholder="Status"
               isDisabled={loading}
-              className="text-sm"
+              className="text-sm capitalize"
             />
             {errors?.status && !status && (
               <p className="text-sm text-danger-500 mt-2">
@@ -137,43 +153,37 @@ const AddAndUpdateMeetingModalContentUI = ({
         <div className="flex flex-wrap justify-between">
           <div className="w-full">
             <div className="my-4">
-              <div className="my-2 text-sm font-medium">
-                Salesperson (Optional)
-              </div>
+              <div className="my-2 text-sm font-medium">Broker *</div>
               <ReactSelect
                 name="salespersons"
-                isMulti
+                // isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
-                options={salespersons?.map((salesPerson)=> (
-                  {
-                    label: salesPerson.name,
-                    value: salesPerson._id,
-                  }
-                ))}
-                placeholder="Salespersons"
-                isDisabled={loading}
-                className="text-sm"
+                options={salespersons?.map((salesPerson) => ({
+                  label: salesPerson.name,
+                  value: salesPerson._id,
+                }))}
+                placeholder={"Select Broker"}
+                isDisabled={currentMeetingId? isOtherFieldsDisabled : isSalespersonDisabled}
+                className="text-sm capitalize"
               />
             </div>
           </div>
           <div className="w-full">
             <div className="">
-              <div className="my-2 text-sm font-medium">Clients (Optional)</div>
+              <div className="my-2 text-sm font-medium">Client *</div>
               <ReactSelect
                 name="clients"
-                isMulti
+                // isMulti
                 value={selectedClients}
                 onChange={handleSelectClients}
-                options={clients?.map((client)=> (
-                  {
-                    label: client.name,
-                    value: client._id,
-                  }
-                ))}
-                placeholder="Clients"
-                isDisabled={loading}
-                className="text-sm"
+                options={clients?.map((client) => ({
+                  label: client.name,
+                  value: client._id,
+                }))}
+                placeholder="Select Client"
+                isDisabled={isOtherFieldsDisabled}
+                className="text-sm capitalize"
               />
             </div>
           </div>
@@ -188,7 +198,7 @@ const AddAndUpdateMeetingModalContentUI = ({
           className={
             "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
           }
-          onClick={() => closeModal()}
+          onClick={handleDiscard}
           loading={loading}
         />
         <Button

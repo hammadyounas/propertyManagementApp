@@ -8,8 +8,8 @@ export default function ViewSalesTeamUI({
   handleEdit,
 }) {
   const userDataFields = [
-    { label: "Name", valueKey: "name" },
-    { label: "Email address", valueKey: "email" },
+    // { label: "Name", valueKey: "name" },
+    // { label: "Email address", valueKey: "email" },
     { label: "Phone number", valueKey: "contact_number" },
     { label: "Address", valueKey: "address" },
     { label: "Licence Number", valueKey: "licence_number" },
@@ -23,7 +23,7 @@ export default function ViewSalesTeamUI({
   ];
 
   return (
-    <Card title="User Details">
+    <Card title={salesteamData?.name} subtitle={salesteamData?.email}>
       <div className="flex items-center text-green-700">
         <span className="w-full flex justify-end items-center">
           <p>Edit</p>
@@ -38,7 +38,11 @@ export default function ViewSalesTeamUI({
         <div className="inline-block w-full xl:w-[80%] align-middle">
           <div className="overflow-hidden">
             <div className="px-4 sm:-py-5 sm:px-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-4 capitalize sm:divide-y sm:divide-gray-200 ">
+              <div>
+                <p></p>
+                <img src={salesteamData?.name} alt="" /> 
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-4 capitalize ">
                 {userDataFields?.map(({ label, valueKey }) => (
                   <div
                     key={valueKey}
@@ -48,10 +52,10 @@ export default function ViewSalesTeamUI({
                         : "hidden"
                     }`}
                   >
-                    <dt className="text-sm font-medium text-gray-500">
+                    <dt className="text-sm font-medium text-gray-500 py-2">
                       {label}
                     </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 mx-auto">
+                    <dd className="mt-1 text-sm w-full bg-gray-200 rounded-sm text-center py-2 text-gray-700 sm:col-span-2 mx-auto">
                       {salesteamData?.[valueKey] || "N/A"}
                     </dd>
                   </div>

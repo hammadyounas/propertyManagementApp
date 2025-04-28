@@ -39,7 +39,7 @@ const TableUI = ({
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden min-h-[30vh]">
-            <table className="min-w-full divide-y divide-slate-100 text-center table-fixed dark:divide-slate-700 ">
+            <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
@@ -129,7 +129,7 @@ const TableUI = ({
                         </span>
                       </td>
                       <td className="table-td">
-                        <div className="flex relative">
+                        <div className="flex justify-center relative">
                           <DropdownUI
                             label={
                               <>
@@ -140,7 +140,7 @@ const TableUI = ({
                                 />
                               </>
                             }
-                            labelClass="flex items-center justify-center gap-2"
+                            labelClass="flex items-center gap-2"
                             classMenuItems="w-32 min-w-[120px] top-full mt-1 z-[9999] overflow-visible"
                             classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 z-[9999]"
                             items={[

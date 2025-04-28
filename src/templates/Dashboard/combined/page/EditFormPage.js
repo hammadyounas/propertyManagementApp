@@ -1,10 +1,11 @@
 import React from "react";
 import useAddForm from "../../functionality/page/useAddForm";
 import FormUI from "../../ui/organisms/FormUI";
-import AddForm from "../../ui/molecule/AddForm";
 import Button from "../../../../components/ui/atoms/Button";
+import EditDashboardForm from "../../ui/molecule/EditForm";
+import useEditForm from "../../functionality/page/useEditForm";
 
-const AddFormPage = () => {
+const EditFormPage = () => {
   const {
     register,
     errors,
@@ -20,18 +21,14 @@ const AddFormPage = () => {
     handlePmtReceived,
     onSubmit,
     invoiceStatus,
-    push,
+    router,
     pmtReceivedStatus,
-    editPage,
-    watch,
-    wordCount,
-  } = useAddForm();
+  } = useEditForm();
 
-  console.log("editapge", editPage)
   return (
     <>
-      <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit} title={"Add Details"}>
-        <AddForm
+      <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit} title={"Edit Details"}>
+        <EditDashboardForm
           register={register}
           errors={errors}
           control={control}
@@ -45,9 +42,6 @@ const AddFormPage = () => {
           handlePmtReceived={handlePmtReceived}
           invoiceStatus={invoiceStatus}
           pmtReceivedStatus={pmtReceivedStatus}
-          editPage={editPage}
-          wordCount={wordCount}
-          watch={watch}
         />
        
 
@@ -57,7 +51,7 @@ const AddFormPage = () => {
             className={
               "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
             }
-            onClick={() => push("/dashboard")}
+            onClick={() => router.push("/dashboard")}
             loading={loading}
           />
           <Button
@@ -72,4 +66,4 @@ const AddFormPage = () => {
   );
 };
 
-export default AddFormPage;
+export default EditFormPage;

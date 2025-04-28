@@ -1,60 +1,75 @@
-import { useEffect, useMemo, useState } from "react";
-import { rows } from "../constants/data";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getRequest } from "../../../../libs/utils/request_handler";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchDashboardEntries,
+  setStatusFilter,
+  setSelectedBroker,
+  setGlobalFilter,
+  setCurrentPage,
+  handleOpenCommentModal,
+  handleCloseModal,
+} from "../../../../store/features/dashboard/dashboardSlice";
 
 const useDashboard = () => {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [dashboardEntries, setDashboardEntries] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const fetchDashboardEntries = async () => {
-    try {
-      setLoading(true);
-      const response = await getRequest("dashboard");
-      const filteredEntries = response?.data?.filter(
-        (entry) => !entry.isDeleted
-      );
-      setDashboardEntries(filteredEntries);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error fetching dashboard entries:", error);
-    }
-  };
+  const {
+    dashboardEntries,
+    totalEntries,
+    brokerOptions,
+    selectedBroker,
+    statusFilter,
+    globalFilter,
+    currentPage,
+    loading,
+    isModalOpen,
+    selectedComment,
+  } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    fetchDashboardEntries();
-  }, []);
-
-  useEffect(() => {
-    setDashboardEntries(rows);
-  }, []);
-
-  // Calculate the paginated users
-  const paginatedDashboardEntries = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return dashboardEntries?.slice(startIndex, startIndex + pageSize);
-  }, [dashboardEntries, currentPage, pageSize]);
+    dispatch(
+      fetchDashboardEntries({
+        currentPage,
+        statusFilter,
+        selectedBroker,
+        globalFilter,
+        pageSize,
+      })
+    );
+  }, [dispatch, currentPage, statusFilter, selectedBroker, globalFilter]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
+    dispatch(setCurrentPage(page + 1)); // For 1-based page indexing
+  };
+
+  const setSelectedFilter = (filter) => {
+    dispatch(setStatusFilter(filter)); // Dispatch Redux action to update status filter
   };
 
   return {
     globalFilter,
-    setGlobalFilter,
+    setGlobalFilter: (value) => dispatch(setGlobalFilter(value)),
     dashboardEntries,
-    setDashboardEntries,
-    paginatedDashboardEntries, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,
     push,
     loading,
+    statusFilter,
+    setStatusFilter: (value) => dispatch(setStatusFilter(value)),
+    totalEntries,
+    handleOpenCommentModal: (comment) =>
+      dispatch(handleOpenCommentModal(comment)),
+    handleCloseModal: () => dispatch(handleCloseModal()),
+    selectedComment,
+    isModalOpen,
+    brokerOptions,
+    selectedBroker,
+    setSelectedFilter,
+    setSelectedBroker: (value) => dispatch(setSelectedBroker(value)),
   };
 };
 

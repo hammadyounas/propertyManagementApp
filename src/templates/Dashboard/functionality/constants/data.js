@@ -62,9 +62,17 @@ export const columns = [
     field: "PMT Broker",
   },
   {
+    label: "Comments",
+    field: "comment",
+  },
+  {
     label: "Amount",
     field: "amount",
   },
+  {
+    label: "Action",
+    field: "action",
+  }
 ];
   export const tableData = [
     {
@@ -78,7 +86,7 @@ export const columns = [
       signatureDate: "2025-01-01", // Sample signature date
       pmtReceived: "2025-01-02", // Sample payment received date
       pmtBroker: "John Doe",
-      amount: "2400",
+      // amount: "2400",
     },
     {
       id: 2,
@@ -91,7 +99,7 @@ export const columns = [
       signatureDate: "2025-01-02",
       pmtReceived: "2025-01-03",
       pmtBroker: "Jane Smith",
-      amount: "1800",
+      // amount: "1800",
     },
     {
       id: 3,
@@ -104,7 +112,7 @@ export const columns = [
       signatureDate: "2025-01-03",
       pmtReceived: "2025-01-04",
       pmtBroker: "David Johnson",
-      amount: "12"
+      // amount: "12"
     },
     {
       id: 4,
@@ -117,7 +125,7 @@ export const columns = [
       signatureDate: "2025-01-04",
       pmtReceived: "2025-01-05",
       pmtBroker: "Emily Davis",
-      amount: "150"
+      // amount: "150"
     },
     {
       id: 5,
@@ -130,7 +138,7 @@ export const columns = [
       signatureDate: "2025-01-05",
       pmtReceived: "2025-01-06",
       pmtBroker: "Michael Brown",
-      amount: "999"
+      // amount: "999"
     },
     {
       id: 6,
@@ -143,7 +151,7 @@ export const columns = [
       signatureDate: "2025-01-06",
       pmtReceived: "2025-01-07",
       pmtBroker: "Sarah Wilson",
-      amount: "12"
+      // amount: "12"
     },
     {
       id: 7,
@@ -156,7 +164,7 @@ export const columns = [
       signatureDate: "2025-01-07",
       pmtReceived: "2025-01-08",
       pmtBroker: "Chris Lee",
-      amount: "1234"
+      // amount: "1234"
     },
     {
       id: 8,
@@ -169,7 +177,7 @@ export const columns = [
       signatureDate: "2025-01-08",
       pmtReceived: "2025-01-09",
       pmtBroker: "Jessica Taylor",
-      amount: "123"
+      // amount: "123"
     },
     {
       id: 9,
@@ -182,7 +190,7 @@ export const columns = [
       signatureDate: "2025-01-09",
       pmtReceived: "2025-01-10",
       pmtBroker: "Kevin Anderson",
-      amount: "100"
+      // amount: "100"
     },
     {
       id: 10,
@@ -195,7 +203,7 @@ export const columns = [
       signatureDate: "2025-01-10",
       pmtReceived: "2025-01-11",
       pmtBroker: "Laura Thomas",
-      amount: "123"
+      // amount: "123"
     }
   ];
   

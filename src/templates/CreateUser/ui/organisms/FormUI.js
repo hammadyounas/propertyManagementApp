@@ -21,7 +21,7 @@ const FormUI = ({
 }) => {
   return (
     <div className="w-full lg:w-[75%]">
-      <Card title="Create User">
+      <Card title="Create Broker">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
             <div className="flex flex-wrap justify-between">
@@ -155,6 +155,7 @@ const FormUI = ({
                   error={errors.joining_date}
                   placeholder="Joining Date"
                   disabled={loading}
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
               <div className="w-full md:w-[49%]">

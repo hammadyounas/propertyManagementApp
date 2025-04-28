@@ -21,27 +21,27 @@ const SidebarLogoUI = ({
       
       `}
     >
-      {/* <Link href="/analytics">
-        <div className="flex items-center space-x-4">
-          <div className="logo-icon">
+      {/* <Link href="/analytics"> */}
+        <div className="flex items-center justify-center space-x-4 w-full">
+          <div className="logo-icon flex justify-center items-center ">
             {!isDark && !isSemiDark ? (
-              <img src="/assets/images/logo/logo-c.svg" alt="" />
+              <img src="/assets/images/logo/WHITE-LOGO.png" alt="" className="w-[65%]" />
             ) : (
-              <img src="/assets/images/logo/logo-c-white.svg" alt="" />
+              <img src="/assets/images/logo/BLACK-LOGO.png" alt="" className="w-[65%]" />
             )}
           </div>
 
-          {(!collapsed || menuHover) && (
+          {/* {(!collapsed || menuHover) && (
             <div>
               <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                 DashCode
               </h1>
             </div>
-          )}
+          )} */}
         </div>
-      </Link> */}
+      {/* </Link> */}
 
-      <h6 className="text-white">LOGO</h6>
+      {/* <h6 className="text-white">LOGO</h6> */}
 
       {/* {(!collapsed || menuHover) && (
         <div

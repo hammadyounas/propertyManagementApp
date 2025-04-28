@@ -18,12 +18,14 @@ const CalendarUI = ({
   loading,
   openModal,
   closeModal,
+  setStarAndEndDate,
+  setValue,
 }) => {
   return (
-    <Card className=" bg-white w-full 2xl:w-[62%]">
+    <Card className=" bg-white w-full 2xl:w-[62%]" bodyClass="p-2 sm:p-4 lg:p-6">
       <div className="flex justify-between items-center mb-4">
         <p className="h-8 font-semibold">
-          {loading ? "Fetching meetings, please wait..." : " "}
+          {loading ? "Loading ..." : " "}
         </p>
         <Button
           text="New Meeting"
@@ -36,7 +38,6 @@ const CalendarUI = ({
       </div>
       <FullCalendar
         // ref={calendarRef}
-        // height={calendarHeight}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
         headerToolbar={{
           left: "prev,next today",
@@ -44,6 +45,8 @@ const CalendarUI = ({
           right: "dayGridMonth",
           // right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
         }}
+        height={window.innerWidth < 768 ? '70vh' : '80vh'}
+
         events={meetings?.map((meeting, index) => ({
           start: moment(meeting?.start_time).toISOString(), // Schedule events on different days
           end: moment(meeting?.end_time).toISOString(),
@@ -69,6 +72,27 @@ const CalendarUI = ({
         initialView="dayGridMonth"
         eventContent={renderEventContent}
         datesSet={handleMonthChange}
+
+        select={(info) => {
+          const selectedDate = moment(info.start);
+        
+          // Check if selected date is in the past
+          const now = moment().startOf("day");
+          if (selectedDate.isBefore(now)) {
+            return; // Don't open modal
+          }
+        
+          closeModal(); // Close if an edit modal is open
+          setCurrentMeetingId(null); // Reset currentMeetingId for new meeting
+          openModal(); // Open modal
+        
+          setValue("start_time", selectedDate.format("YYYY-MM-DDTHH:mm"));
+          const endDate = moment(info.start).add(1, "hour").format("YYYY-MM-DDTHH:mm");
+          setValue("end_time", endDate);
+        
+          scrollToDiv(); // Scroll if needed
+        }}
+        
       />
     </Card>
   );

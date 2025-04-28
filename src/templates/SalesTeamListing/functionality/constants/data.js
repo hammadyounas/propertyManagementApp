@@ -19,10 +19,10 @@ export const columns = [
     label: "Joining Date",
     field: "Joining Date",
   },
-  // {
-  //   label: "Status",
-  //   field: "Status",
-  // },
+  {
+    label: "Status",
+    field: "Status",
+  },
   {
     label: "Action",
     field: "Action",

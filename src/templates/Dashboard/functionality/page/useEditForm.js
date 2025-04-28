@@ -4,27 +4,26 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { invoiceStatus, pmtReceivedStatus } from "../constants/data";
 import toast from "react-hot-toast";
-import { usePathname, useRouter } from "next/navigation";
-import { postRequest } from "../../../../libs/utils/request_handler";
+import { useRouter } from "next/router"; // Correct import for routing
+import {
+  getRequest,
+  patchRequest,
+} from "../../../../libs/utils/request_handler";
 
-const useAddForm = () => {
+const useEditForm = () => {
   const schema = yup.object({
     signature_date: yup.string().required("Signature Date is required"),
-    dd: yup
-      .number()
-      .typeError("DD must be a number")
-      .required("DD is required")
-      .min(1, "DD must be greater than 0"),
+    dd: yup.number().typeError("DD must be a number").required().min(0),
     financing_days: yup
       .number()
       .typeError("Financing Days must be a number")
-      .required("Financing Days is required")
-      .min(1, "Financing Days must be greater than 0"),
+      .required()
+      .min(0),
     closing_days: yup
       .number()
       .typeError("Closing Days must be a number")
-      .required("Closing Days is required")
-      .min(1, "Closing Days must be greater than 0"),
+      .required()
+      .min(0),
     invoice: yup.string().required("Invoice Status is required"),
     pmtReceived: yup.string().required("PMT Received is required"),
     value_of_amount: yup
@@ -40,25 +39,14 @@ const useAddForm = () => {
           return !value.toString().toLowerCase().includes("e");
         }
       ),
-    comment: yup
-      .string()
-      .optional()
-      .test("maxWords", "Comment must be at most 100 words", (value) => {
-        if (!value) return true;
-        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-        return wordCount <= 100;
-      }),
+    comment: yup.string().optional().max(200),
   });
 
-  const { push } = useRouter();
-  const pathname = usePathname();
-  const { query } = useRouter();
-  const id = query?._id; // Extract the ID from the query parameters
-
-  // Ensure `id` is a string (if it's an array, use the first element)
-  // const editPage = pathname === `/dashboard/edit/${id}` ? pathname : null;
-  const editPage = pathname;
-  console.log("Path", editPage);
+  const router = useRouter();
+  const { query, push } = router;
+  const id = query?.id;
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("user_id") : null;
 
   const {
     register,
@@ -68,16 +56,11 @@ const useAddForm = () => {
     getValues,
     setValue,
     reset,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       invoice: "pending",
       pmtReceived: "non paid",
-      // dd: 0,
-      // financing_days: 0,
-      // closing_days: 0,
-      // value_of_amount: 0,
     },
   });
 
@@ -90,16 +73,47 @@ const useAddForm = () => {
     label: "Non Paid",
     value: "non paid",
   });
-  const comment = watch("comment") || "";
-  const wordCount = comment.trim().split(/\s+/).filter(Boolean).length;
 
   useEffect(() => {
-    setValue("invoice", "pending");
-  }, [setValue]);
+    if (!id) return;
 
-  useEffect(() => {
-    setValue("pmtReceived", "non paid");
-  }, [setValue]);
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const res = await getRequest(`dashboard/${id}`);
+        const dashboardData = res.data;
+
+        const formattedSignatureDate = dashboardData?.signatureDate
+          ? new Date(dashboardData.signatureDate).toISOString().split("T")[0]
+          : "";
+
+        setValue("signature_date", formattedSignatureDate);
+        setValue("dd", dashboardData?.dd);
+        setValue("closing_days", dashboardData?.closingDays);
+        setValue("financing_days", dashboardData?.financingDays);
+        setValue("invoice", dashboardData?.invoice);
+        setValue("pmtReceived", dashboardData?.pmtReceived);
+        setValue("value_of_amount", dashboardData?.amount);
+        setValue("comment", dashboardData?.comment);
+
+        setInvoice({
+          label: dashboardData?.invoice,
+          value: dashboardData?.invoice,
+        });
+        setPmtReceived({
+          label: dashboardData?.pmtReceived,
+          value: dashboardData?.pmtReceived,
+        });
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+        toast.error("Failed to fetch dashboard data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [id, setValue]);
 
   const handleSelectInvoiceStatus = (selectedOption) => {
     setInvoice(selectedOption);
@@ -115,36 +129,30 @@ const useAddForm = () => {
     try {
       setLoading(true);
       const formData = {
-        signatureDate: data.signature_date,
         dd: data.dd,
         closingDays: data.closing_days,
         financingDays: data.financing_days,
         invoice: data.invoice,
         pmtReceived: data.pmtReceived,
-        amount: data.value_of_amount,
-        comment: data.comment,
+        user_id: userId,
       };
-
-      const response = await postRequest("dashboard", formData);
+      console.log(formData);
+      const response = await patchRequest(`dashboard/${id}`, formData);
       if (response) {
-        toast.success("Dashboard entry added successfully!");
-        push("/dashboard");
+        toast.success("Dashboard entry edited successfully!");
+        router.push("/dashboard");
       } else {
-        toast.error("Dashboard entry creation failed");
-        throw new Error("Dashboard entry creation failed");
+        toast.error("Dashboard entry update failed");
       }
-      setLoading(false);
-      reset();
-      setInvoice(null);
-      setPmtReceived(null);
     } catch (error) {
-      setLoading(false);
       console.error("Error:", error);
       toast.error(
         error?.response?.data?.message ||
           error.message ||
-          "An error occurred while creating dashboard entry"
+          "An error occurred while updating dashboard entry"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -164,11 +172,8 @@ const useAddForm = () => {
     onSubmit,
     invoiceStatus,
     pmtReceivedStatus,
-    push,
-    editPage,
-    wordCount,
-    watch,
+    router,
   };
 };
 
-export default useAddForm;
+export default useEditForm;

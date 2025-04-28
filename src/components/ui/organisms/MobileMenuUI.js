@@ -21,23 +21,18 @@ const MobileMenuUI = ({
       className={`${className} fixed  top-0 bg-black-default dark:bg-slate-800 shadow-lg  h-full   w-[248px]`}
     >
       <div className="logo-segment flex justify-between items-center bg-black-default dark:bg-slate-800 z-[9] h-[85px]  px-4 ">
-        {/* <Link href="/">
+        {/* <Link href="/"> */}
           <div className="flex items-center space-x-4">
             <div className="logo-icon">
               {!isDark && !isSemiDark ? (
-                <img src="/assets/images/logo/logo-c.svg" alt="" />
+                <img src="/assets/images/logo/WHITE-LOGO.png" alt="" className="w-[65%]" />
               ) : (
-                <img src="/assets/images/logo/logo-c-white.svg" alt="" />
+                <img src="/assets/images/logo/BLACK-LOGO.png" alt="" className="w-[65%]" />
               )}
             </div>
-            <div>
-              <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                DashCode
-              </h1>
-            </div>
           </div>
-        </Link> */}
-        <h6 className="text-white">LOGO</h6>
+        {/* </Link> */}
+        {/* <h6 className="text-white">LOGO</h6> */}
         <button
           type="button"
           onClick={() => setMobileMenu(!mobileMenu)}
