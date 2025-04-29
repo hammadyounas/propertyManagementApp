@@ -59,7 +59,7 @@ const PropertyDetailsUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="instrumentalNotary"
-              label="Instrumental Notary"
+              label="Instrumental Notary*"
               type="text"
               register={register}
               error={errors.instrumentalNotary}

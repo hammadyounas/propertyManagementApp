@@ -34,6 +34,7 @@ const InvoiceInformationUI = ({
               error={errors.invoiceDate}
               placeholder="Invoice Date"
               disabled={loading}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
         </div>

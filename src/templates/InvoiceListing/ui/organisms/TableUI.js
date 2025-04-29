@@ -6,6 +6,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
 import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
+import { dateFormat } from "../../../../libs/utils/helper";
 
 const TableUI = ({
   columns,
@@ -36,7 +37,7 @@ const TableUI = ({
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto -mx-6">
+      <div className="overflow-x-auto -mx-6 ">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden min-h-[30vh]">
             <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
@@ -49,7 +50,7 @@ const TableUI = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700 -z-10">
                 {loading ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
@@ -71,7 +72,7 @@ const TableUI = ({
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td">{row.invoiceNumber}</td>
-                      <td className="table-td whitespace-nowrap">{row.invoiceDate}</td>
+                      <td className="table-td whitespace-nowrap">{dateFormat(row.invoiceDate)}</td>
                       <td className="table-td">
                         <div className="flex items-center justify-center">
                           <span className="text-primary-default font-bold cursor-pointer text-center whitespace-nowrap">
