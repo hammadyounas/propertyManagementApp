@@ -42,7 +42,7 @@ const InvoiceInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="dueDate"
-              label="Payable upon Receipt*"
+              label="Due Date*"
               type="date"
               register={register}
               error={errors.dueDate}
