@@ -93,7 +93,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                 <div className="text-right ">
                   <p>
                     {selectedLanguage !== "en" ? "FACTURE" : "INVOICE"} :{" "}
-                    {invoiceData?.invoiceNumber || ""}{" "}
+                    INV-{invoiceData?.invoiceNumber || ""}{" "}
                   </p>
                   <p>DATE : {invoiceData?.invoiceDate || Date.now}</p>
                 </div>
@@ -168,7 +168,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                       : " Commission amount "}{" "}
                     :
                   </p>
-                  <p>${item?.price?.toFixed(2)}</p>
+                  <p>$ {item?.price?.toFixed(2)}</p>
 
                   <p className="font-medium">
                     {selectedLanguage !== "en"

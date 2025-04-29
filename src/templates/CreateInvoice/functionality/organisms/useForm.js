@@ -77,7 +77,7 @@ const useCreateInvoice = () => {
 
   const [invoiceStatus, setInvoiceStatus] = useState({
     label: "Pending",
-    value: "Pending",
+    value: "pending",
   });  
   const [clientName, setClientName] = useState("");
   const [salesPersonName, setSalespersonName] = useState("");
