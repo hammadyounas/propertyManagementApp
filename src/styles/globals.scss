@@ -172,6 +172,40 @@
   width: 100% !important;
 }
 
+#invoice {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 0;
+  margin: 0;
+  background: #faf1e6;
+}
+.page-break {
+  page-break-before: always;
+  page-break-inside: avoid;
+}
+
+@media print {
+  .invoice-item {
+    page-break-after: always;
+  }
+
+  .invoice-item:nth-child(2n) {
+    page-break-after: always;
+  }
+
+  header, footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  footer {
+    bottom: 0;
+  }
+}
+
+
 @layer components {
   @import "components/table.scss";
   @import "components/map.scss";
