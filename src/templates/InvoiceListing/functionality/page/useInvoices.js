@@ -13,10 +13,11 @@ const useInvoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
-  const fetchInvoices = async () => {
+  const fetchInvoices = async (searchValue = "") => {
     try {
       setLoading(true);
-      const response = await getRequest("invoices");
+      const queryParam = searchValue ? `?search=${searchValue}` : "";
+      const response = await getRequest(`invoices${queryParam}`);
       const filteredInvoices = response?.data?.filter(
         (invoice) => !invoice.isDeleted
       );
@@ -29,9 +30,9 @@ const useInvoices = () => {
   };
 
   useEffect(() => {
-    fetchInvoices();
+    fetchInvoices(globalFilter);
     // setInvoices(rows);
-  }, []);
+  }, [globalFilter]);
 
   // Calculate the paginated users
   const paginatedInvoices = useMemo(() => {
