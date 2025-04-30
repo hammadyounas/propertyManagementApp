@@ -24,10 +24,10 @@ const ItemsUI = ({
         {fields?.map((item, index) => {
           return (
             <div
-              className="w-full flex flex-wrap justify-between items-start mb-4"
+              className="w-full flex flex-wrap items-start mb-4 "
               key={index}
             >
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].itemName`}
                   label="Item Name"
@@ -38,7 +38,7 @@ const ItemsUI = ({
                   disabled={loading}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].description`}
                   label="Description"
@@ -67,7 +67,7 @@ const ItemsUI = ({
                   }}
                 />
               </div> */}
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].price`}
                   label="Price"
@@ -85,7 +85,7 @@ const ItemsUI = ({
                   }}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].gst`}
                   label="GST (5%)"
@@ -97,7 +97,7 @@ const ItemsUI = ({
                   //   value={getValues(`items[${index}]`).item_total}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].qst`}
                   label="QST (9.975%)"
@@ -109,7 +109,7 @@ const ItemsUI = ({
                   //   value={getValues(`items[${index}]`).item_total}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%]">
+              <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
                 <Textinput
                   name={`items[${index}].total`}
                   label="Total"
@@ -121,7 +121,7 @@ const ItemsUI = ({
                   //   value={getValues(`items[${index}]`).item_total}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[14%] h-16 xl:h-28 flex items-center pl-4">
+              <div className="w-full md:w-[33%] xl:w-[10%] h-16 xl:h-28 flex items-center pl-4">
                 <span className="cursor-pointer" onClick={() => remove(index)}>
                   <Icon icon="heroicons-outline:trash" width={25} />
                 </span>
