@@ -111,7 +111,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
             </p>
             <Border />
 
-            <div className="py-4 grid grid-cols-2 text-[0.9rem] gap-y-2">
+            <div className="py-4 grid grid-cols-2 text-[0.9rem] gap-y-2 capitalize">
               <p className="font-medium">
                 {selectedLanguage !== "en"
                   ? "Immeuble en Rubrique"
@@ -142,7 +142,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                   : " Transaction amount "}{" "}
                 :
               </p>
-              <p>$ {invoiceData?.buyer?.transactionAmount || ""}</p>
+              <p>$ {invoiceData?.totalCommissionPayable?.toFixed(2) || 0 }</p>
 
               <p className="font-medium">
                 {selectedLanguage !== "en"
@@ -150,7 +150,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                   : " Total commission payable "}{" "}
                 :
               </p>
-              <p>$ {invoiceData?.totalCommissionPayable?.toFixed(2)}</p>
+              <p>$ {invoiceData?.commissionAmount?.toFixed(2) || 0 }</p>
             </div>
 
             <Border />
@@ -174,7 +174,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TPS 5% "
                       : "  Plus 5% GST "}{" "}
-                    (__________) :
+                    ({invoiceData?.gstNumber || __________}) :
                   </p>
                   <p>$ {item?.gst?.toFixed(2)}</p>
 
@@ -182,7 +182,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TVQ 9,975%"
                       : " Plus 9.975% QST "}{" "}
-                    (__________):
+                    ({invoiceData?.qstNumber || __________}):
                   </p>
                   <p>$ {item?.qst?.toFixed(2)}</p>
 

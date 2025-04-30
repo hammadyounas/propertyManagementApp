@@ -147,11 +147,17 @@ const TableUI = ({
                             items={[
                               {
                                 label: "English",
-                                onClick: () => {downloadPDF("en", row);},
+                                onClick: (e) => {
+                                  downloadPDF("en", row);
+                                  e.stopPropagation();
+                                }
                               },
                               {
                                 label: "French",
-                                onClick: () => {downloadPDF("fr", row);},
+                                onClick: (e) => {
+                                  downloadPDF("fr", row);
+                                e.stopPropagation();
+                                },
                               },
                             ]}
                           />
