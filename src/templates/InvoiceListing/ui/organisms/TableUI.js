@@ -6,6 +6,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
 import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
+import { dateFormat } from "../../../../libs/utils/helper";
 
 const TableUI = ({
   columns,
@@ -22,8 +23,8 @@ const TableUI = ({
 }) => {
   return (
     <Card noborder>
-      <div className="flex justify-between items-center mb-6">
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      <div className="flex sm:justify-between max-sm:flex-col justify-end items-end sm:items-center mb-6">
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} className={'lg:w-[30%] sm:w-[40%] w-full max-sm:mb-2'} placeholder={"🔎︎ Search..."} />
         <div className="flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center">
             <span className="w-full">
@@ -36,9 +37,9 @@ const TableUI = ({
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto -mx-6">
+      <div className="overflow-x-auto -mx-6 ">
         <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden min-h-[30vh]">
+          <div className="overflow-x-auto overflow-visible min-h-[30vh]">
             <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
@@ -49,7 +50,7 @@ const TableUI = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700 -z-10">
                 {loading ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
@@ -70,8 +71,8 @@ const TableUI = ({
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
-                      <td className="table-td">{row.invoiceNumber}</td>
-                      <td className="table-td whitespace-nowrap">{row.invoiceDate}</td>
+                      <td className="table-td">INV-{row.invoiceNumber}</td>
+                      <td className="table-td whitespace-nowrap">{dateFormat(row.invoiceDate)}</td>
                       <td className="table-td">
                         <div className="flex items-center justify-center">
                           <span className="text-primary-default font-bold cursor-pointer text-center whitespace-nowrap">
@@ -108,7 +109,7 @@ const TableUI = ({
                             "text-gray-600 bg-gray-200"
                           }
                           ${
-                            row?.tatus === "overdue" &&
+                            row?.status === "overdue" &&
                             "text-orange-600 bg-orange-200"
                           }
                           ${

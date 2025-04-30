@@ -34,6 +34,7 @@ const InvoiceInformationUI = ({
               error={errors.invoiceDate}
               placeholder="Invoice Date"
               disabled={loading}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
         </div>
@@ -41,7 +42,7 @@ const InvoiceInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="dueDate"
-              label="Due Date"
+              label="Due Date*"
               type="date"
               register={register}
               error={errors.dueDate}
@@ -58,7 +59,7 @@ const InvoiceInformationUI = ({
                 onChange={handleSelectInvoiceStatus}
                 options={invoiceStatuses}
                 placeholder="Invoice Status"
-                isDisabled={loading}
+                isDisabled={true}
                 className="text-sm"
               />
               {errors?.status && !invoiceStatus && (

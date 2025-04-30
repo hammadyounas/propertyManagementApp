@@ -50,6 +50,7 @@ const useCreateInvoice = () => {
     seller: yup.string().required("Selling Broker is required"),
     property: yup.string().required("Property is required"),
     items: yup.array().of(itemSchema).min(1, "At least one item is required"),
+    instrumentalNotary: yup.string().required("Instrumental Notary is required"),
   });
 
   const {
@@ -64,6 +65,7 @@ const useCreateInvoice = () => {
     resolver: yupResolver(schema),
     mode: "all",
     defaultValues: {
+      status: "Pending",
       items: [],
     },
   });
@@ -73,7 +75,10 @@ const useCreateInvoice = () => {
     name: "items",
   });
 
-  const [invoiceStatus, setInvoiceStatus] = useState("");
+  const [invoiceStatus, setInvoiceStatus] = useState({
+    label: "Pending",
+    value: "pending",
+  });  
   const [clientName, setClientName] = useState("");
   const [salesPersonName, setSalespersonName] = useState("");
   const [listingBroker, setListingBroker] = useState("");
@@ -141,8 +146,23 @@ const useCreateInvoice = () => {
     }
   };
 
+  const fetchNextInvoiceNumber = async () => {
+    try {
+      const response = await getRequest("invoice/next-number");
+      const invoiceNumber = response?.data; // ensure you access correctly
+      if (invoiceNumber) {
+        setValue("invoiceNumber", invoiceNumber);
+        console.log("Next invoice number:", invoiceNumber);
+      }
+    } catch (error) {
+      console.error("Failed to fetch invoice number", error);
+    }
+  };
+  
+  
   useEffect(() => {
-    setValue("invoiceNumber", uuidv4());
+    // setValue("invoiceNumber", uuidv4());
+    fetchNextInvoiceNumber();
     fetchClients();
     fetchSalespersons();
     fetchProperties();
@@ -267,10 +287,9 @@ const useCreateInvoice = () => {
   };
 
   const onSubmit = async (data) => {
-    const { invoiceNumber, invoiceDate, dueDate, status, buyer, seller, property, instrumentalNotary, notes, items } = data;
+    const { invoiceDate, dueDate, status, buyer, seller, property, instrumentalNotary, notes, items } = data;
 
     const formData = {
-      invoiceNumber,
       invoiceDate,
       dueDate,
       status,

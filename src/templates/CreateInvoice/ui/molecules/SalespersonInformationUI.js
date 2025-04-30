@@ -17,7 +17,7 @@ const SalespersonInformationUI = ({
 }) => {
   return (
     <div className="mt-8">
-      <h6>Seller Information</h6>
+      <h6>Broker Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
           {/* <div className="mt-2 w-full md:w-[49%]">
@@ -65,7 +65,7 @@ const SalespersonInformationUI = ({
               value={salesPersonName}
               onChange={handleSelectSalespersonName}
               options={salesPersons}
-              placeholder="Salesperson Name"
+              placeholder="Broker Name"
               isDisabled={loading}
               className="text-sm"
             />
@@ -79,7 +79,7 @@ const SalespersonInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_address"
-              label="Seller Address"
+              label="Broker Address"
               type="text"
               register={register}
               error={errors.salesperson_address}
@@ -92,7 +92,7 @@ const SalespersonInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_email"
-              label="Seller Email"
+              label="Broker Email"
               type="text"
               register={register}
               error={errors.salesperson_email}
@@ -103,7 +103,7 @@ const SalespersonInformationUI = ({
           <div className="w-full md:w-[49%]">
             <Textinput
               name="salesperson_phone"
-              label="Seller Phone Number"
+              label="Broker Phone Number"
               type="text"
               register={register}
               error={errors.salesperson_phone}
