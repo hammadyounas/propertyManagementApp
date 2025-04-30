@@ -174,7 +174,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TPS 5% "
                       : "  Plus 5% GST "}{" "}
-                    ({invoiceData?.gstNumber || __________}) :
+                    ({invoiceData?.gstNumber || "N/A"}) :
                   </p>
                   <p>$ {item?.gst?.toFixed(2)}</p>
 
@@ -182,7 +182,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TVQ 9,975%"
                       : " Plus 9.975% QST "}{" "}
-                    ({invoiceData?.qstNumber || __________}):
+                      ({invoiceData?.qstNumber || "N/A"}) :
                   </p>
                   <p>$ {item?.qst?.toFixed(2)}</p>
 
