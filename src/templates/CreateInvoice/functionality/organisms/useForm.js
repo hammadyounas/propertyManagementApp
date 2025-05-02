@@ -43,7 +43,7 @@ const useCreateInvoice = () => {
   });
 
   const schema = yup.object({
-    dueDate: yup.string().required("Due Date is required"),
+    // dueDate: yup.string().required("Due Date is required"),
     invoiceDate: yup.string().required("Invoice Date is required"),
     gstNumber: yup.string().required("GST Number is required"),
     qstNumber: yup.string().required("QST Number is required"),
@@ -298,11 +298,10 @@ const useCreateInvoice = () => {
   };
 
   const onSubmit = async (data) => {
-    const { invoiceDate, dueDate, status, buyer, seller, property, instrumentalNotary, notes, items, gstNumber, qstNumber } = data;
+    const { invoiceDate, status, buyer, seller, property, instrumentalNotary, notes, items, gstNumber, qstNumber } = data;
 
     const formData = {
       invoiceDate,
-      dueDate,
       status,
       buyer,
       seller,

@@ -38,38 +38,6 @@ const InvoiceInformationUI = ({
             />
           </div>
         </div>
-        <div className="flex flex-wrap justify-between">
-          <div className="w-full md:w-[49%]">
-            <Textinput
-              name="dueDate"
-              label="Due Date*"
-              type="date"
-              register={register}
-              error={errors.dueDate}
-              placeholder="Due Date"
-              disabled={loading}
-            />
-          </div>
-          <div className="w-full md:w-[49%]">
-            <div className="mt-4">
-              <div className="my-2 text-sm font-medium">Invoice Status*</div>
-              <ReactSelect
-                name="status"
-                value={invoiceStatus}
-                onChange={handleSelectInvoiceStatus}
-                options={invoiceStatuses}
-                placeholder="Invoice Status"
-                isDisabled={true}
-                className="text-sm"
-              />
-              {errors?.status && !invoiceStatus && (
-                <p className="text-sm text-danger-500 mt-2">
-                  {errors?.status?.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
 
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
@@ -93,6 +61,39 @@ const InvoiceInformationUI = ({
               placeholder="QST Number"
               disabled={loading}
             />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap justify-between">
+          {/* <div className="w-full md:w-[49%]">
+            <Textinput
+              name="dueDate"
+              label="Due Date*"
+              type="date"
+              register={register}
+              error={errors.dueDate}
+              placeholder="Due Date"
+              disabled={loading}
+            />
+          </div> */}
+          <div className="w-full md:w-[49%]">
+            <div className="mt-4">
+              <div className="my-2 text-sm font-medium">Invoice Status*</div>
+              <ReactSelect
+                name="status"
+                value={invoiceStatus}
+                onChange={handleSelectInvoiceStatus}
+                options={invoiceStatuses}
+                placeholder="Invoice Status"
+                isDisabled={true}
+                className="text-sm"
+              />
+              {errors?.status && !invoiceStatus && (
+                <p className="text-sm text-danger-500 mt-2">
+                  {errors?.status?.message}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
