@@ -19,7 +19,7 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
           <div className="w-full md:w-[49%]">
             <Textinput
               name="size"
-              label="Size (square feet, marla, or kanal)*"
+              label="No of Units*"
               type="number"
               register={register}
               error={errors.size}
@@ -32,7 +32,7 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
           <div className="w-full md:w-[49%]">
             <Textinput
               name="bedrooms"
-              label="Bedrooms*"
+              label="Units Size*"
               type="number"
               register={register}
               error={errors.bedrooms}
@@ -43,11 +43,22 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
           <div className="w-full md:w-[49%]">
             <Textinput
               name="bathrooms"
-              label="Bathrooms*"
+              label="No of Garages*"
               type="number"
               register={register}
               error={errors.bathrooms}
               placeholder="Bathrooms"
+              disabled={loading}
+            />
+          </div>
+          <div className="w-full md:w-[49%]">
+            <Textinput
+              name="no_of_parking_places"
+              label="No of Parking Places*"
+              type="number"
+              register={register}
+              error={errors.no_of_parking_places}
+              placeholder="No of Parking Places"
               disabled={loading}
             />
           </div>

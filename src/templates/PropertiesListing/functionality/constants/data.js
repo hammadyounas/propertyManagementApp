@@ -13,7 +13,7 @@ export const columns = [
   },
   {
     
-    size: 2500,label: "Size",
+    label: "No of Units",
     field: "size",
   },
   {

@@ -45,7 +45,7 @@ const useCreateForm = () => {
     cadstre_number: yup.string().required("Cadstre Number is required"),
     city: yup.string().required("City is required"),
     area: yup.string().required("Area is required"),
-    neighborhood: yup.string().required("Neighborhood is required"),
+    // neighborhood: yup.string().required("Neighborhood is required"),
     price: yup
       .number()
       .required("Price is required")
@@ -62,6 +62,10 @@ const useCreateForm = () => {
       .number()
       .required("Bathrooms are required")
       .moreThan(0, "There must be at least 1 bathroom"),
+      no_of_parking_places: yup
+      .number()
+      .required("No of Parking Places are required")
+      .moreThan(0, "There must be at least 1 no of parking places"),
     // assigned_to: yup
     //   .array()
     //   .min(1, "At least one salesperson must be selected")
@@ -105,12 +109,13 @@ const useCreateForm = () => {
     defaultValues: {
       assigned_to: "",
       client: "",
-      price: "1000000",
-      size: "100",
-      bedrooms: "1",
-      bathrooms: "1",
-      no_of_units: "1",
+      price: "",
+      size: "",
+      bedrooms: "",
+      bathrooms: "",
+      no_of_units: "",
       location_map_url: "",
+      no_of_parking_places: "",
       // ownerDetailsStatus: ""
     },
   });
@@ -341,13 +346,14 @@ const useCreateForm = () => {
       formData.append("cadstre_number", data.cadstre_number);
       formData.append("city", data.city);
       formData.append("area", data.area);
-      formData.append("neighborhood", data.neighborhood);
+      // formData.append("neighborhood", data.neighborhood);
       formData.append("location_map_url", data.location_map_url);
       // formData.append("owner_status", data.ownerDetailsStatus);
       formData.append("price", data.price);
       formData.append("size", data.size);
       formData.append("bedrooms", data.bedrooms);
       formData.append("bathrooms", data.bathrooms);
+      formData.append("no_of_parking_places", data.no_of_parking_places);
       formData.append("owner_name", data.owner_name);
       formData.append("phone_number", data.phone_number);
       formData.append("email", data.email);
