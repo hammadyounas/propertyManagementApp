@@ -19,12 +19,13 @@ const InvoicesListingPage = () => {
     selectedInvoice,
     setSelectedInvoice,
     selectedLanguage,
+    totalCount,
   } = useInvoices();
 
   return (
     <>
       <Table
-        rows={paginatedInvoices} // Pass paginated properties to the Table
+        rows={invoices} // Pass paginated properties to the Table
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
@@ -36,12 +37,12 @@ const InvoicesListingPage = () => {
         setSelectedInvoice={setSelectedInvoice}
         selectedLanguage={selectedLanguage}
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${invoices?.length <= pageSize && "hidden"}`}>
+      <div className={`flex w-full justify-end mt-2 items-center ${totalCount <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
           breakLabel={"..."}
-          pageCount={Math.ceil(invoices.length / pageSize)} // Correctly calculate the number of pages
+          pageCount={Math.ceil(totalCount / pageSize)} // Correctly calculate the number of pages
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={({ selected }) => handlePageChange(selected)}

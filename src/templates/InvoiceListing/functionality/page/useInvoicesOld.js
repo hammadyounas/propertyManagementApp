@@ -2,52 +2,47 @@ import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
 import { getRequest } from "../../../../libs/utils/request_handler";
-import { useDispatch, useSelector } from "react-redux";
-import {fetchInvoices} from "../../../../store/features/invoices/invoicesSlice"; 
 
-const useInvoices = () => {
+const useInvoicesOld = () => {
   const [globalFilter, setGlobalFilter] = useState("");
-//   const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
-//   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
-//   const [totalCount, setTotalCount] = useState(0);
-  const dispatch = useDispatch();
-  const { invoices, totalCount, loading } = useSelector(
-    (state) => state.invoices
-  );
+  const [totalCount, setTotalCount] = useState(0);
 
-//   const fetchInvoicesold = async () => {
-//     try {
-//       setLoading(true);
-//       const queryParams = new URLSearchParams();
+  const fetchInvoices = async () => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams();
   
-//       if (globalFilter) {
-//         queryParams.append("search", globalFilter.trim() || ""); // ✅ FIXED
-//       }
-//       queryParams.append("page", currentPage.toString());
-//       queryParams.append("limit", pageSize.toString());
+      if (globalFilter) {
+        queryParams.append("search", globalFilter.trim() || ""); // ✅ FIXED
+      }
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", pageSize.toString());
   
-//       const response = await getRequest(`invoices?${queryParams.toString()}`);
-//       const filteredInvoices = response?.data?.invoices.filter(
-//         (invoice) => !invoice.isDeleted
-//       );
-//       setInvoices(filteredInvoices);
-//       setTotalCount(response?.data?.total || 0);
-//       console.log("Fetched invoices:", filteredInvoices);
-//       setLoading(false);
-//     } catch (error) {
-//       setLoading(false);
-//       console.error("Error fetching invoices:", error);
-//     }
-//   };
+      const response = await getRequest(`invoices?${queryParams.toString()}`);
+      const filteredInvoices = response?.data?.invoices.filter(
+        (invoice) => !invoice.isDeleted
+      );
+      setInvoices(filteredInvoices);
+      setTotalCount(response?.data?.total || 0);
+      console.log("Fetched invoices:", filteredInvoices);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching invoices:", error);
+    }
+  };
   
-useEffect(() => {
-    dispatch(fetchInvoices({ search: globalFilter, page: currentPage, limit: pageSize }));
-  }, [dispatch, globalFilter, currentPage]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [globalFilter, currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -139,7 +134,7 @@ useEffect(() => {
     globalFilter,
     setGlobalFilter,
     invoices,
-    // setInvoices,
+    setInvoices,
     // paginatedInvoices, // Return paginated users
     pageSize,
     handlePageChange,
@@ -154,4 +149,4 @@ useEffect(() => {
   };
 };
 
-export default useInvoices;
+export default useInvoicesOld;
