@@ -1,21 +1,12 @@
-import { getRequest } from "@/libs/utils/request_handler";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchInvoicesAPI } from "./invoiceAPI";
 
 // Thunk to fetch invoices
 export const fetchInvoices = createAsyncThunk(
   "invoices/fetchInvoices",
-  async ({ search = "", page, limit }) => {
+  async (params, thunkAPI) => {
     try {
-      const queryParams = new URLSearchParams();
-      if (search) queryParams.append("search", search.trim());
-      queryParams.append("page", page.toString());
-      queryParams.append("limit", limit.toString());
-
-      const response = await getRequest(`invoices?${queryParams.toString()}`);
-      const invoices = response?.data?.invoices?.filter((inv) => !inv.isDeleted);
-      const total = response?.data?.total || 0;
-
-      return { invoices, totalCount: total };
+      return await fetchInvoicesAPI(params);
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to fetch invoices");
     }
