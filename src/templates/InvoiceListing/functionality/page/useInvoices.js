@@ -3,10 +3,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchInvoices,
-  selectInvoices,
-  selectTotalCount,
-  selectInvoicesLoading,
 } from "../../../../store/features/invoices/invoicesSlice";
+import { selectInvoices, selectInvoicesLoading, selectTotalCount } from "../../../../store/features/invoices/invoiceSelectors";
 
 const useInvoices = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -29,6 +27,9 @@ const useInvoices = () => {
       })
     );
   }, [dispatch, globalFilter, currentPage]);
+
+  console.log("Invoices from Redux:", invoices);
+
 
   useEffect(() => {
     setCurrentPage(1);
