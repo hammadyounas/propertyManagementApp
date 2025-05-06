@@ -38,8 +38,34 @@ const InvoiceInformationUI = ({
             />
           </div>
         </div>
+
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
+            <Textinput
+              name="gstNumber"
+              label="GST Number*"
+              type="text"
+              register={register}
+              error={errors.gstNumber}
+              placeholder="GST Number"
+              disabled={loading}
+            />
+          </div>
+          <div className="w-full md:w-[49%]">
+          <Textinput
+              name="qstNumber"
+              label="QST Number*"
+              type="text"
+              register={register}
+              error={errors.qstNumber}
+              placeholder="QST Number"
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap justify-between">
+          {/* <div className="w-full md:w-[49%]">
             <Textinput
               name="dueDate"
               label="Due Date*"
@@ -49,7 +75,7 @@ const InvoiceInformationUI = ({
               placeholder="Due Date"
               disabled={loading}
             />
-          </div>
+          </div> */}
           <div className="w-full md:w-[49%]">
             <div className="mt-4">
               <div className="my-2 text-sm font-medium">Invoice Status*</div>

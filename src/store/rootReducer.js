@@ -6,6 +6,7 @@ import userReducer from "./features/users/userSlice";
 import clientReducer from "./features/clients/clientSlice";
 import dashboardReducer from "./features/dashboard/dashboardSlice";
 import propertiesReducer from "./features/properties/propertiesSlice";
+import invoicesReducer from "./features/invoices/invoicesSlice";
 
 const rootReducer = {
   layout,
@@ -15,5 +16,6 @@ const rootReducer = {
   clients: clientReducer,
   dashboard: dashboardReducer,
   properties: propertiesReducer,
+  invoices: invoicesReducer,
 };
 export default rootReducer;

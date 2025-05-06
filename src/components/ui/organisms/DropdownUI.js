@@ -10,7 +10,7 @@ const DropdownUI = ({
   children,
   classMenuItems,
   items,
-  classItem ,
+  classItem,
   className,
   onClick,
 }) => {
@@ -75,8 +75,14 @@ const DropdownUI = ({
                               )}
                             </Link>
                           ) : (
-                            <div
-                              className={`block cursor-pointer ${classItem}`}
+                            <button
+                              type="button"
+                              className={`block w-full text-left cursor-pointer ${classItem}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                item.onClick?.(e);
+                              }}
                             >
                               {item.icon ? (
                                 <div className="flex items-center">
@@ -92,7 +98,7 @@ const DropdownUI = ({
                                   {item.label}
                                 </span>
                               )}
-                            </div>
+                            </button>
                           )}
                         </div>
                       )}

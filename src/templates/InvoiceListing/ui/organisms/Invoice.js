@@ -13,7 +13,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
   };
 
   const ContactInfo = ({ label, value, link }) => (
-    <div className="grid grid-cols-3 text-[0.7rem] pl-2 text-black-500">
+    <div className="grid grid-cols-3 text-[0.7rem] text-black-500">
       <p className="font-medium ">{label}</p>
       {link ? (
         <a href={link} className="">
@@ -31,6 +31,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
 
   // Chunk the items into groups of 2
   const chunkedItems = chunkItems(invoiceData?.items || [], 2);
+  console.log("chunkedItems", chunkedItems);
 
   return (
     <div
@@ -52,17 +53,17 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
 
             <div className="relative flex justify-end text-black text-xs p-4 w-[40%]">
               {/* Background Image */}
-              <div className="absolute inset-0">
+              {/* <div className="absolute inset-0">
                 <img
                   src="/assets/images/all-img/invoice_bg.png"
                   alt="background"
                   className=""
                 />
-              </div>
+              </div> */}
 
               {/* Content */}
               <div className="absolute z-10 w-[70%]">
-                <h4 className="text-lg font-bold tracking-wider text-center">
+                <h4 className="text-lg font-bold tracking-wider">
                   Get In Touch
                 </h4>
                 <div className="mt-2 ">
@@ -95,7 +96,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en" ? "FACTURE" : "INVOICE"} :{" "}
                     INV-{invoiceData?.invoiceNumber || ""}{" "}
                   </p>
-                  <p>DATE : {invoiceData?.invoiceDate || Date.now}</p>
+                  <p>DATE : {invoiceData?.invoiceDate ? new Date(invoiceData.invoiceDate).toLocaleDateString('en-US') : new Date().toLocaleDateString('en-US')}</p>
                 </div>
               </div>
             )}
@@ -111,7 +112,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
             </p>
             <Border />
 
-            <div className="py-4 grid grid-cols-2 text-[0.9rem] gap-y-2">
+            <div className="py-4 grid grid-cols-2 text-[0.9rem] gap-y-2 capitalize">
               <p className="font-medium">
                 {selectedLanguage !== "en"
                   ? "Immeuble en Rubrique"
@@ -142,7 +143,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                   : " Transaction amount "}{" "}
                 :
               </p>
-              <p>$ {invoiceData?.buyer?.transactionAmount || ""}</p>
+              <p>$ {invoiceData?.totalCommissionPayable?.toFixed(2) || 0 }</p>
 
               <p className="font-medium">
                 {selectedLanguage !== "en"
@@ -150,7 +151,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                   : " Total commission payable "}{" "}
                 :
               </p>
-              <p>$ {invoiceData?.totalCommissionPayable?.toFixed(2)}</p>
+              <p>$ {invoiceData?.commissionAmount?.toFixed(2) || 0 }</p>
             </div>
 
             <Border />
@@ -174,7 +175,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TPS 5% "
                       : "  Plus 5% GST "}{" "}
-                    (__________) :
+                    ({invoiceData?.gstNumber || "N/A"}) :
                   </p>
                   <p>$ {item?.gst?.toFixed(2)}</p>
 
@@ -182,7 +183,7 @@ const Invoice = ({ invoiceData, selectedLanguage= "en" }) => {
                     {selectedLanguage !== "en"
                       ? "Plus TVQ 9,975%"
                       : " Plus 9.975% QST "}{" "}
-                    (__________):
+                      ({invoiceData?.qstNumber || "N/A"}) :
                   </p>
                   <p>$ {item?.qst?.toFixed(2)}</p>
 

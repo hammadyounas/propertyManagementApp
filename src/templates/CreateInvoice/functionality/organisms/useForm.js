@@ -43,8 +43,10 @@ const useCreateInvoice = () => {
   });
 
   const schema = yup.object({
-    dueDate: yup.string().required("Due Date is required"),
+    // dueDate: yup.string().required("Due Date is required"),
     invoiceDate: yup.string().required("Invoice Date is required"),
+    gstNumber: yup.string().required("GST Number is required"),
+    qstNumber: yup.string().required("QST Number is required"),
     status: yup.string().required("Invoice Status is required"),
     buyer: yup.string().required("Buyer is required"),
     seller: yup.string().required("Selling Broker is required"),
@@ -66,7 +68,16 @@ const useCreateInvoice = () => {
     mode: "all",
     defaultValues: {
       status: "Pending",
-      items: [],
+      items: [
+        {
+          itemName: "",
+          description: "",
+          price: 0,
+          gst: 0,
+          qst: 0,
+          total: 0,
+        },
+      ],
     },
   });
 
@@ -287,11 +298,10 @@ const useCreateInvoice = () => {
   };
 
   const onSubmit = async (data) => {
-    const { invoiceDate, dueDate, status, buyer, seller, property, instrumentalNotary, notes, items } = data;
+    const { invoiceDate, status, buyer, seller, property, instrumentalNotary, notes, items, gstNumber, qstNumber } = data;
 
     const formData = {
       invoiceDate,
-      dueDate,
       status,
       buyer,
       seller,
@@ -299,6 +309,8 @@ const useCreateInvoice = () => {
       instrumentalNotary,
       notes,
       items,
+      gstNumber,
+      qstNumber,
     };
 
     setLoading(true);
