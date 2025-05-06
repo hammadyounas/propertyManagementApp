@@ -26,7 +26,7 @@ const GeneralInformationUI = ({
       <h6>General Information</h6>
       <div className="my-4">
         <div className="flex flex-wrap justify-between">
-          <div className="w-full md:w-[49%]">
+          <div className="w-full md:w-full">
             <Textinput
               name="title"
               label="Property Title*"
@@ -37,7 +37,7 @@ const GeneralInformationUI = ({
               disabled={loading}
             />
           </div>
-          <div className="mt-[6px] w-full md:w-[49%]">
+          {/* <div className="mt-[6px] w-full md:w-[49%]">
             <div className="my-2 text-sm font-medium">Furnishing Status*</div>
             <ReactSelect
               name="furnishing_status"
@@ -53,19 +53,8 @@ const GeneralInformationUI = ({
                 {errors?.furnishing_status?.message}
               </p>
             )}
-          </div>
-          {/* <div className="w-full md:w-[49%] mt-2">
-            <Textarea
-              name="description"
-              label="Description*"
-              type="text"
-              register={register}
-              error={errors.description}
-              placeholder="Description"
-              row={5}
-              disabled={loading}
-            />
           </div> */}
+
         </div>
         {/* <div className="mt-2"></div> */}
         <div className="flex flex-wrap justify-between">

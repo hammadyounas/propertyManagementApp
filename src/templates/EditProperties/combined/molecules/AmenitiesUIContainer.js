@@ -1,8 +1,8 @@
 import AmenitiesUI from "../../ui/molecules/AmenitiesUI";
 
 const Amenities = ({
-  amenities,
-  handleSelectAmenities,
+  contract_type,
+  handleSelectContractType,
   availableFacilities,
   errors,
   loading,
@@ -12,8 +12,8 @@ const Amenities = ({
 }) => {
   return (
     <AmenitiesUI
-      amenities={amenities}
-      handleSelectAmenities={handleSelectAmenities}
+      contract_type={contract_type}
+      handleSelectContractType={handleSelectContractType}
       availableFacilities={availableFacilities}
       errors={errors}
       loading={loading}

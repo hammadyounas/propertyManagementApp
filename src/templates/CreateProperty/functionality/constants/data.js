@@ -99,25 +99,13 @@ export const furnishingStatus = [
 
 export const availableFacilities = [
   {
-    value: "parking",
-    label: "Parking",
+    value: "on market",
+    label: "On Market",
   },
   {
-    value: "security",
-    label: "Security",
-  },
-  {
-    value: "elevator",
-    label: "Elevator",
-  },
-  {
-    value: "pool",
-    label: "Pool",
-  },
-  {
-    value: "garden",
-    label: "Garden",
-  },
+    value: "off market",
+    label: "Off Market",
+  }
 ];
 
 export const salesPerson = [

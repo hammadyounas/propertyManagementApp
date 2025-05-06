@@ -17,7 +17,7 @@ export const columns = [
     field: "size",
   },
   {
-    label: "Owner @ Address",
+    label: "Owner & Address",
     field: "property_type",
   },
   {

@@ -5,7 +5,6 @@ import {
   getRequest,
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
-import { rows } from "../constants/data";
 
 const useProperty = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -16,6 +15,7 @@ const useProperty = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState();
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -58,18 +58,23 @@ const useProperty = () => {
       // console.log('Sales Persons Map:', salesPersonsMap);
 
       // Fetch properties
-      const response = await getRequest("properties");
-      const filteredResponse = response?.data
+      const params = new URLSearchParams();
+      params.append("page", currentPage);
+      params.append("limit", pageSize);
+      if (globalFilter) {
+        params.append("search", globalFilter.trim() || ""); // Backend should handle ?search=term
+
+      }
+      const response = await getRequest(`properties?${params.toString()}`);
+      const filteredResponse = response?.data?.properties
         ?.filter((property) => !property.isDeleted)
         ?.map((property) => ({
           ...property,
         }));
-
-      console.log("Filtered Properties:", filteredResponse);
-
       setProperties(filteredResponse);
+      setTotalCount(response?.data?.total);
     } catch (error) {
-      console.error("Error fetching clients:", error);
+      console.error("Error fetching properties:", error);
     } finally {
       setLoading(false);
     }
@@ -78,13 +83,7 @@ const useProperty = () => {
   useEffect(() => {
     fetchProperties();
     // setProperties(rows);
-  }, []);
-
-  // Calculate the paginated properties
-  const paginatedProperties = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return properties.slice(startIndex, startIndex + pageSize);
-  }, [properties, currentPage, pageSize]);
+  }, [globalFilter, currentPage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
@@ -114,7 +113,7 @@ const useProperty = () => {
     setGlobalFilter,
     properties,
     setProperties,
-    paginatedProperties, // Return paginated properties
+    // paginatedProperties, // Return paginated properties
     pageSize,
     handlePageChange,
     currentPage,
@@ -128,6 +127,7 @@ const useProperty = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    totalCount,
   };
 };
 

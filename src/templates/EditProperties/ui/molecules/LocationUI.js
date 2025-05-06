@@ -63,23 +63,12 @@ const LocationUI = ({ register, errors, loading }) => {
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="area"
-              label="Area*"
+              name="municipality"
+              label="Municipality*"
               type="text"
               register={register}
-              error={errors.area}
-              placeholder="Area"
-              disabled={loading}
-            />
-          </div>
-          <div className="w-full md:w-[49%]">
-            <Textinput
-              name="neighborhood"
-              label="Neighborhood*"
-              type="text"
-              register={register}
-              error={errors.neighborhood}
-              placeholder="Neighborhood"
+              error={errors.municipality}
+              placeholder="Municipality"
               disabled={loading}
             />
           </div>

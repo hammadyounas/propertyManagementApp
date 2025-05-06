@@ -47,11 +47,11 @@ const TableUI = ({
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700  text-center">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold">
+                    <th key={i} scope="col" className="table-th font-bold  text-center whitespace-nowrap">
                       {column.label}
                     </th>
                   ))}
@@ -80,7 +80,7 @@ const TableUI = ({
                     >
                       <td className="table-td ">{row.address}</td>
                       <td className="table-td ">{row.property_type}</td>
-                      <td className="table-td ">{row.size}</td>
+                      <td className="table-td ">{row.no_of_units}</td>
                       <td className="table-td ">
                         {row.owner_name}, {row.owner_address}
                         {/* {row.owneraddress} */}
@@ -89,7 +89,7 @@ const TableUI = ({
                         {row.phone_number || row.telno}
                       </td>
                       <td className="table-td ">
-                        <span className="block w-full">
+                        <span className="block w-full whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
@@ -145,7 +145,7 @@ const TableUI = ({
                                     "/assets/images/users/user-1.jpg"
                                   } // Replace with actual avatar URL if available
                                   alt={salesperson.name}
-                                  className="block w-8 h-8 object-cover rounded-full"
+                                  className="block w-8 h-8 object-cover rounded-full mx-auto"
                                 />
                               </Tooltip>
                             ))}

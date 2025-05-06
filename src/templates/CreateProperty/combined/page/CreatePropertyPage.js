@@ -17,8 +17,8 @@ const CreatePropertyPage = () => {
     propertyStatus,
     ownershipStatus,
     furnishingStatus,
-    amenities,
-    handleSelectAmenities,
+    contract_type,
+    handleSelectContractType,
     availableFacilities,
     salesPerson,
     clients,
@@ -77,8 +77,8 @@ const CreatePropertyPage = () => {
       <Location register={register} errors={errors} loading={loading} />
       <PricingAndSize register={register} errors={errors} loading={loading} />
       <Amenities
-        amenities={amenities}
-        handleSelectAmenities={handleSelectAmenities}
+        contract_type={contract_type}
+        handleSelectContractType={handleSelectContractType}
         selectedSalespersons={selectedSalespersons}
         handleSelectSalesperson={handleSelectSalesperson}
         salesPerson={salesPerson}
@@ -122,7 +122,7 @@ const CreatePropertyPage = () => {
         handleSelectSalesperson={handleSelectSalesperson}
         handleSelectClient={handleSelectClient}
       /> */}
-      <div className="flex justify-center md:justify-end mt-12">
+      <div className="flex justify-center md:justify-end mt-12 z-[9999]">
         <Button
           text={"Discard"}
           className={

@@ -33,7 +33,6 @@ const useCreateForm = () => {
       .number()
       .required("Number of Units is required")
       .moreThan(0, "Number of Units must be greater than 0"),
-    furnishing_status: yup.string().required("Furnishing Status is required"),
     address: yup.string().required("Address is required"),
     owner_name: yup.string().required("Owner Name is required"),
     phone_number: yup.string().required("Phone Number is required"),
@@ -46,24 +45,23 @@ const useCreateForm = () => {
     street_name: yup.string().required("Street Name is required"),
     cadstre_number: yup.string().required("Cadstre Number is required"),
     city: yup.string().required("City is required"),
-    area: yup.string().required("Area is required"),
-    neighborhood: yup.string().required("Neighborhood is required"),
+    municipality: yup.string().required("Municipality is required"),
     price: yup
       .number()
       .required("Price is required")
       .moreThan(0, "Price must be greater than 0"),
-    size: yup
+    unit_size: yup
       .number()
-      .required("Size is required")
-      .moreThan(0, "Size must be greater than 0"),
-    bedrooms: yup
-      .number()
-      .required("Bedrooms are required")
+      .required("Unit Size are required")
       .moreThan(0, "There must be at least 1 bedroom"),
-    bathrooms: yup
+    no_of_garages: yup
       .number()
-      .required("Bathrooms are required")
+      .required("No of Garages are required")
       .moreThan(0, "There must be at least 1 bathroom"),
+    no_of_parking_places: yup
+      .number()
+      .required("No of Parking Places are required")
+      .moreThan(0, "There must be at least 1 no of parking places"),
     // assigned_to: yup
     //   .array()
     //   .min(1, "At least one salesperson must be selected")
@@ -108,16 +106,15 @@ const useCreateForm = () => {
       assigned_to: "",
       client: "",
       price: "1000000",
-      size: "100",
-      bedrooms: "1",
-      bathrooms: "1",
+      unit_size: "1",
+      no_of_garages: "1",
       no_of_units: "1",
       location_map_url: "",
       // ownerDetailsStatus: ""
     },
   });
 
-  const [amenities, setAmenities] = useState([]);
+  const [contract_type, setContractType] = useState(null);
   const [selectedSalespersons, setSelectedSalespersons] = useState([]);
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
@@ -236,7 +233,7 @@ const useCreateForm = () => {
         // Form fields to be set
         const formFields = {
           title: propertyData?.title,
-          furnishing_status: propertyData?.furnishing_status,
+          // furnishing_status: propertyData?.furnishing_status,
           property_type: propertyData?.property_type,
           property_status: propertyData?.property_status,
           ownership_status: propertyData?.ownership_status,
@@ -247,14 +244,12 @@ const useCreateForm = () => {
           street_name: propertyData?.street_name,
           cadstre_number: propertyData?.cadstre_number,
           city: propertyData?.city,
-          area: propertyData?.area,
-          neighborhood: propertyData?.neighborhood,
+          municipality: propertyData?.municipality,
           location_map_url: propertyData?.location_map_url,
           owner_status: propertyData?.owner_status,
           price: propertyData?.price,
-          size: propertyData?.size,
-          bedrooms: propertyData?.bedrooms,
-          bathrooms: propertyData?.bathrooms,
+          unit_size: propertyData?.unit_size,
+          no_of_garages: propertyData?.no_of_garages,
           owner_name: propertyData?.owner_name,
           phone_number: propertyData?.phone_number,
           email: propertyData?.email,
@@ -285,9 +280,9 @@ const useCreateForm = () => {
           ) || ""
         );
         setSelectedSalespersons(salespersonDetails); // Correctly formatted for ReactSelect
-        setAmenities(
+        setContractType(
           availableFacilities.filter((channel) =>
-            propertyData.amenities.includes(channel.value)
+            propertyData.contract_type?.includes(channel.value)
           )
         ); // Assuming amenities is being set from a predefined list
         setOwnerDetails(
@@ -319,24 +314,22 @@ const useCreateForm = () => {
 
   // Sync external state with form values using setValue
   useEffect(() => {
-    setValue("amenities", amenities);
+    setValue("contract_type", contract_type);
     setValue("images", selectedImages);
     setValue("documents", selectedDocs);
     setValue("type", type?.value);
     setValue("status", status?.value);
     setValue("ownership_status", ownership?.value || "");
     setValue("ownerStatus", ownerDetailsStatus?.value || "");
-    setValue("furnishing_status", furnishing?.value || "");
     setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
   }, [
-    amenities,
+    contract_type,
     selectedImages,
     selectedDocs,
     type,
     status,
     ownership,
-    furnishing,
     selectedSalespersons,
     selectedClient,
     setValue,
@@ -413,8 +406,8 @@ const useCreateForm = () => {
     }
   };
 
-  const handleSelectAmenities = (selectedValues) => {
-    setAmenities(selectedValues);
+  const handleSelectContractType = (selectedValues) => {
+    setContractType(selectedValues);
   };
 
   const handleSelectSalesperson = (selectedValues) => {
@@ -448,10 +441,10 @@ const useCreateForm = () => {
 
       // Check if 'type' or other fields have values, otherwise default to empty strings
       formData.append("property_type", type && type.value ? type.value : "");
-      formData.append(
-        "furnishing_status",
-        furnishing && furnishing.value ? furnishing.value : ""
-      );
+      // formData.append(
+      //   "furnishing_status",
+      //   furnishing && furnishing.value ? furnishing.value : ""
+      // );
       formData.append(
         "property_status",
         status && status.value ? status.value : ""
@@ -471,28 +464,28 @@ const useCreateForm = () => {
       formData.append("street_name", data.street_name);
       formData.append("cadstre_number", data.cadstre_number || ""); // Ensure no undefined
       formData.append("city", data.city);
-      formData.append("area", data.area);
-      formData.append("neighborhood", data.neighborhood);
+      formData.append("municipality", data.municipality);
       formData.append("location_map_url", data.location_map_url);
       formData.append("price", data.price);
-      formData.append("size", data.size);
-      formData.append("bedrooms", data.bedrooms);
-      formData.append("bathrooms", data.bathrooms);
+      formData.append("unit_size", data.unit_size);
+      formData.append("no_of_garages", data.no_of_garages);
+      formData.append("no_of_parking_places", data.no_of_parking_places);
       formData.append("owner_name", data.owner_name);
       formData.append("phone_number", data.phone_number);
       formData.append("email", data.email);
       formData.append("owner_address", data.owner_address);
+      // formData.append("contract_type", data.contract_type.value);
 
       // Append amenities and assigned_to arrays
-      if (amenities?.length) {
-        amenities
+      if (contract_type?.length) {
+        contract_type
           .filter((amenity) => amenity && amenity.value)
           .forEach((amenity) => {
-            formData.append("amenities", amenity.value);
+            formData.append("contract_type", amenity.value);
           });
       }
       else {
-        formData.append("amenities", []);
+        formData.append("contract_type", []);
       }
 
       if (selectedSalespersons?.length) {
@@ -569,8 +562,8 @@ const useCreateForm = () => {
     ownershipStatus,
     furnishingStatus,
     availableFacilities,
-    amenities,
-    handleSelectAmenities,
+    contract_type,
+    handleSelectContractType,
     salesPerson,
     clients,
     selectedImages,

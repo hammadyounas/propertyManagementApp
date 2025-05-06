@@ -16,7 +16,7 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
               disabled={loading}
             />
           </div>
-          <div className="w-full md:w-[49%]">
+          {/* <div className="w-full md:w-[49%]">
             <Textinput
               name="size"
               label="No of Units*"
@@ -26,28 +26,28 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
               placeholder="Size"
               disabled={loading}
             />
+          </div> */}
+            <div className="w-full md:w-[49%]">
+            <Textinput
+              name="unit_size"
+              label="Unit Size*"
+              type="number"
+              register={register}
+              error={errors.unit_size}
+              placeholder="Unit Size"
+              disabled={loading}
+            />
           </div>
         </div>
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="bedrooms"
-              label="Units Size*"
-              type="number"
-              register={register}
-              error={errors.bedrooms}
-              placeholder="Bedrooms"
-              disabled={loading}
-            />
-          </div>
-          <div className="w-full md:w-[49%]">
-            <Textinput
-              name="bathrooms"
+              name="no_of_garages"
               label="No of Garages*"
               type="number"
               register={register}
-              error={errors.bathrooms}
-              placeholder="Bathrooms"
+              error={errors.no_of_garages}
+              placeholder="No of Garages"
               disabled={loading}
             />
           </div>
