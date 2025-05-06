@@ -5,6 +5,7 @@ import meetingsReducer from "./features/meetings/meetingSlice"
 import userReducer from "./features/users/userSlice";
 import clientReducer from "./features/clients/clientSlice";
 import dashboardReducer from "./features/dashboard/dashboardSlice";
+import propertiesReducer from "./features/properties/propertiesSlice";
 
 const rootReducer = {
   layout,
@@ -13,5 +14,6 @@ const rootReducer = {
   users: userReducer,
   clients: clientReducer,
   dashboard: dashboardReducer,
+  properties: propertiesReducer,
 };
 export default rootReducer;
