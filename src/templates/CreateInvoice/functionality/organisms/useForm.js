@@ -129,8 +129,8 @@ const useCreateInvoice = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await getRequest("properties");
-      const filteredProperties = response?.data?.filter(
+      const response = await getRequest("properties?all=true");
+      const filteredProperties = response?.data?.properties?.filter(
         (property) => !property.isDeleted
       );
       const formattedProperties = filteredProperties?.map((property) => ({
