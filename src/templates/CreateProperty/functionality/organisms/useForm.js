@@ -31,7 +31,6 @@ const useCreateForm = () => {
       .number()
       .required("Number of Units is required")
       .moreThan(0, "Number of Units must be greater than 0"),
-    furnishing_status: yup.string().required("Furnishing Status is required"),
     address: yup.string().required("Address is required"),
     owner_name: yup.string().required("Owner Name is required"),
     phone_number: yup.string().required("Phone Number is required"),
@@ -44,24 +43,24 @@ const useCreateForm = () => {
     street_name: yup.string().required("Street Name is required"),
     cadstre_number: yup.string().required("Cadstre Number is required"),
     city: yup.string().required("City is required"),
-    area: yup.string().required("Area is required"),
-    neighborhood: yup.string().required("Neighborhood is required"),
+    municipality: yup.string().required("Municipality is required"),
+    // neighborhood: yup.string().required("Neighborhood is required"),
     price: yup
       .number()
       .required("Price is required")
       .moreThan(0, "Price must be greater than 0"),
-    size: yup
+    unit_size: yup
       .number()
-      .required("Size is required")
-      .moreThan(0, "Size must be greater than 0"),
-    bedrooms: yup
-      .number()
-      .required("Bedrooms are required")
+      .required("Unit Size are required")
       .moreThan(0, "There must be at least 1 bedroom"),
-    bathrooms: yup
+    no_of_garages: yup
       .number()
-      .required("Bathrooms are required")
+      .required("No of Garages are required")
       .moreThan(0, "There must be at least 1 bathroom"),
+    no_of_parking_places: yup
+      .number()
+      .required("No of Parking Places are required")
+      .moreThan(0, "There must be at least 1 no of parking places"),
     // assigned_to: yup
     //   .array()
     //   .min(1, "At least one salesperson must be selected")
@@ -105,17 +104,17 @@ const useCreateForm = () => {
     defaultValues: {
       assigned_to: "",
       client: "",
-      price: "1000000",
-      size: "100",
-      bedrooms: "1",
-      bathrooms: "1",
-      no_of_units: "1",
+      price: "",
+      unit_size: "",
+      no_of_garages: "",
+      no_of_units: "",
       location_map_url: "",
+      no_of_parking_places: "",
       // ownerDetailsStatus: ""
     },
   });
 
-  const [amenities, setAmenities] = useState([]);
+  const [contract_type, setContractType] = useState(null);
   const [selectedSalespersons, setSelectedSalespersons] = useState([]);
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
@@ -165,7 +164,7 @@ const useCreateForm = () => {
     return files?.map((file, index) => {
       const fileURL = type == "image" ? URL.createObjectURL(file) : null;
       return (
-        <div className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
+        <div key={file.name + index} className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
           {type == "image" ? (
             <img
               src={fileURL}
@@ -198,18 +197,18 @@ const useCreateForm = () => {
 
   // Sync external state with form values using setValue
   useEffect(() => {
-    setValue("amenities", amenities);
+    setValue("contract_type", contract_type);
     setValue("images", selectedImages);
     setValue("documents", selectedDocs);
     setValue("type", type?.value);
     setValue("status", status?.value);
     setValue("ownership_status", ownership?.value || "");
     setValue("ownerStatus", ownerDetailsStatus?.value || "");
-    setValue("furnishing_status", furnishing?.value || "");
+    // setValue("furnishing_status", furnishing?.value || "");
     setValue("assigned_to", selectedSalespersons);
     setValue("client", selectedClient?.value || "");
   }, [
-    amenities,
+    contract_type,
     selectedImages,
     selectedDocs,
     type,
@@ -291,9 +290,9 @@ const useCreateForm = () => {
     }
   };
 
-  const handleSelectAmenities = (selectedValues) => {
-    setAmenities(selectedValues);
-  };
+  const handleSelectContractType = (selectedValue) => {
+    setContractType(selectedValue); // not an array
+  };  
 
   const handleSelectSalesperson = (selectedValues) => {
     setSelectedSalespersons(selectedValues);
@@ -319,17 +318,17 @@ const useCreateForm = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log("Submitting with data:", data); 
     setLoading(true);
     // toast.success("Property Added successfully!");
     // return push("/properties");
-
     try {
       // Create a new FormData instance
       const formData = new FormData();
 
       // Append regular form data (non-file fields)
       formData.append("title", data.title);
-      formData.append("furnishing_status", data.furnishing_status);
+      // formData.append("furnishing_status", data.furnishing_status);
       formData.append("property_type", data.type);
       formData.append("property_status", data.status);
       formData.append("ownership_status", data.ownership_status);
@@ -340,23 +339,25 @@ const useCreateForm = () => {
       formData.append("street_name", data.street_name);
       formData.append("cadstre_number", data.cadstre_number);
       formData.append("city", data.city);
-      formData.append("area", data.area);
-      formData.append("neighborhood", data.neighborhood);
+      formData.append("municipality", data.municipality);
+      // formData.append("neighborhood", data.neighborhood);
       formData.append("location_map_url", data.location_map_url);
       // formData.append("owner_status", data.ownerDetailsStatus);
       formData.append("price", data.price);
-      formData.append("size", data.size);
-      formData.append("bedrooms", data.bedrooms);
-      formData.append("bathrooms", data.bathrooms);
+      formData.append("unit_size", data.unit_size);
+      formData.append("no_of_garages", data.no_of_garages);
+      formData.append("no_of_parking_places", data.no_of_parking_places);
       formData.append("owner_name", data.owner_name);
       formData.append("phone_number", data.phone_number);
       formData.append("email", data.email);
       formData.append("owner_address", data.owner_address);
+      formData.append("contract_type", data.contract_type.value);
+      // if (contract_type) {
+      // }
 
       // Append arrays (e.g., amenities, assigned salespersons)
-      amenities?.forEach((amenity) => {
-        formData.append("amenities", amenity.value);
-      });
+      // contract_type?.forEach((type) => {
+      // });
 
       selectedSalespersons?.forEach((salesperson) => {
         formData.append("assigned_to", salesperson.value);
@@ -376,6 +377,7 @@ const useCreateForm = () => {
         console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
       }
 
+      console.log("FormData:", formData); // Debug FormData
       // Now, you can send the form data with the POST request
       const response = await postRequest("properties", formData, {
         headers: {
@@ -413,8 +415,8 @@ const useCreateForm = () => {
     ownershipStatus,
     furnishingStatus,
     availableFacilities,
-    amenities,
-    handleSelectAmenities,
+    contract_type,
+    handleSelectContractType,
     salesPerson,
     clients,
     selectedImages,

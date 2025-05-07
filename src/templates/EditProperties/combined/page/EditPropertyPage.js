@@ -17,8 +17,8 @@ const EditPropertyPage = () => {
     propertyStatus,
     ownershipStatus,
     furnishingStatus,
-    amenities,
-    handleSelectAmenities,
+    contract_type,
+    handleSelectContractType,
     availableFacilities,
     salesPerson,
     clients,
@@ -79,8 +79,8 @@ const EditPropertyPage = () => {
       <Location register={register} errors={errors} loading={loading} />
       <PricingAndSize register={register} errors={errors} loading={loading} />
       <Amenities
-        amenities={amenities}
-        handleSelectAmenities={handleSelectAmenities}
+        contract_type={contract_type}
+        handleSelectContractType={handleSelectContractType}
         selectedSalespersons={selectedSalespersons}
         handleSelectSalesperson={handleSelectSalesperson}
         salesPerson={salesPerson}

@@ -63,16 +63,16 @@ const LocationUI = ({ register, errors, loading }) => {
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="area"
-              label="Area*"
+              name="municipality"
+              label="Municipality*"
               type="text"
               register={register}
-              error={errors.area}
-              placeholder="Area"
+              error={errors.municipality}
+              placeholder="Municipality"
               disabled={loading}
             />
           </div>
-          <div className="w-full md:w-[49%]">
+          {/* <div className="w-full md:w-[49%]">
             <Textinput
               name="neighborhood"
               label="Neighborhood*"
@@ -82,7 +82,7 @@ const LocationUI = ({ register, errors, loading }) => {
               placeholder="Neighborhood"
               disabled={loading}
             />
-          </div>
+          </div> */}
           <div className="w-full md:w-[49%]">
             <Textinput
               name="location_map_url"

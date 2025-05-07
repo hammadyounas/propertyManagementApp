@@ -1,21 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  deleteRequest,
-  getRequest,
-} from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
-import { rows } from "../constants/data";
+import {
+  fetchProperties,
+  deleteProperty,
+} from "../../../../store/features/properties/propertiesSlice";
+import {
+  selectProperties,
+  selectPropertiesTotalCount,
+  selectPropertiesLoading,
+} from "../../../../store/features/properties/propertiesSelectors";
+import { useDispatch, useSelector } from "react-redux";
 
 const useProperty = () => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [properties, setProperties] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-
+  const [activeModal, setActiveModal] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const dispatch = useDispatch();
+  const properties = useSelector(selectProperties);
+  const loading = useSelector(selectPropertiesLoading);
+  const totalCount = useSelector(selectPropertiesTotalCount);
+  const pageSize = 10;
+  const { push } = useRouter();
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -27,11 +36,6 @@ const useProperty = () => {
     setShowDeleteModal(!showDeleteModal);
   };
 
-  const pageSize = 10;
-  const { push } = useRouter();
-
-  const [activeModal, setActiveModal] = useState(false);
-
   const closeModal = () => {
     setActiveModal(false);
   };
@@ -40,71 +44,50 @@ const useProperty = () => {
     setActiveModal(!activeModal);
   };
 
-  const fetchProperties = async () => {
-    setLoading(true);
-    try {
-      // // Fetch sales persons
-      // const salesPersonsResponse = await getRequest('users');
-      // const salesPersonsData = salesPersonsResponse.data.map((salesPerson) => ({
-      //   id: salesPerson._id,
-      //   name: salesPerson.name,
-      // }));
-
-      // // Create a map for quick lookup of user names by their ID
-      // const salesPersonsMap = Object.fromEntries(
-      //   salesPersonsData.map((user) => [user.id, user.name])
-      // );
-
-      // console.log('Sales Persons Map:', salesPersonsMap);
-
-      // Fetch properties
-      const response = await getRequest("properties");
-      const filteredResponse = response?.data
-        ?.filter((property) => !property.isDeleted)
-        ?.map((property) => ({
-          ...property,
-        }));
-
-      console.log("Filtered Properties:", filteredResponse);
-
-      setProperties(filteredResponse);
-    } catch (error) {
-      console.error("Error fetching clients:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  //   call the fetch properties function
   useEffect(() => {
-    fetchProperties();
-    // setProperties(rows);
-  }, []);
+    dispatch(
+      fetchProperties({
+        search: globalFilter,
+        page: currentPage,
+        limit: pageSize,
+      })
+    );
+  }, [dispatch, globalFilter, currentPage]);
 
-  // Calculate the paginated properties
-  const paginatedProperties = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return properties.slice(startIndex, startIndex + pageSize);
-  }, [properties, currentPage, pageSize]);
+  //   reset the page to 1
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [globalFilter]);
 
+  //   page change handling
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
+  //   delete function
   const handleDelete = async () => {
     try {
       setDeleteLoading(true);
-      await deleteRequest(`properties/${currentItem}`);
-      setDeleteLoading(false);
-      closeDeleteModal();
-      fetchProperties();
-      toast.success("Property deleted successfully.");
+      const resultAction = await dispatch(deleteProperty(currentItem));
+
+      if (deleteProperty.fulfilled.match(resultAction)) {
+        toast.success("Property Deleted Successfully.");
+        dispatch(
+          fetchProperties({
+            search: globalFilter,
+            page: currentPage,
+            limit: pageSize,
+          })
+        );
+        closeDeleteModal();
+      } else {
+        throw new Error(resultAction.payload || "Failed to delete property.");
+      }
     } catch (error) {
       console.error("Error deleting property:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Error deleting property!"
-      );
+      toast.error(error.message || "Error deleting property!");
+    } finally {
       setDeleteLoading(false);
     }
   };
@@ -113,8 +96,6 @@ const useProperty = () => {
     globalFilter,
     setGlobalFilter,
     properties,
-    setProperties,
-    paginatedProperties, // Return paginated properties
     pageSize,
     handlePageChange,
     currentPage,
@@ -128,6 +109,7 @@ const useProperty = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    totalCount,
   };
 };
 

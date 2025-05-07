@@ -1,6 +1,7 @@
 import Modal from "../../../../components/combined/organisms/ModalUIContainer";
 import Button from "../../../../components/ui/molecules/Button";
 import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
+import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 import useProperty from "../../functionality/page/useProperty";
 import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
@@ -10,7 +11,7 @@ const PropertiesListingPage = () => {
   const {
     globalFilter,
     setGlobalFilter,
-    paginatedProperties, // Use paginated properties here
+    // paginatedProperties, // Use paginated properties here
     pageSize,
     handlePageChange,
     currentPage,
@@ -25,12 +26,13 @@ const PropertiesListingPage = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    totalCount,
   } = useProperty();
 
   return (
     <>
       <Table
-        rows={paginatedProperties} // Pass paginated properties to the Table
+        rows={properties} // Pass paginated properties to the Table
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         openModal={openModal}
@@ -39,18 +41,14 @@ const PropertiesListingPage = () => {
         loading={loading}
         properties={properties}
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${properties?.length <= pageSize && "hidden"}`}>
-        <ReactPaginate
-          previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
-          nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
-          breakLabel={"..."}
-          pageCount={Math.ceil(properties.length / pageSize)} // Correctly calculate the number of pages
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+      <div
+        className={`flex w-full justify-end mt-2 items-center ${
+          totalCount <= pageSize && "hidden"
+        }`}
+      >
+        <PaginationUI
+          pageCount={Math.ceil(totalCount / pageSize)}
           onPageChange={({ selected }) => handlePageChange(selected)}
-          containerClassName={"pagination"}
-          subContainerClassName={"pages pagination"}
-          activeClassName={"active"}
           initialPage={currentPage - 1}
         />
       </div>

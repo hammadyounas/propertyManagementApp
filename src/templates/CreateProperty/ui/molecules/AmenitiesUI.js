@@ -1,8 +1,8 @@
 import ReactSelect from "react-select";
 
 const AmenitiesUI = ({
-  amenities,
-  handleSelectAmenities,
+  contract_type,
+  handleSelectContractType,
   availableFacilities,
   errors,
   loading,
@@ -12,31 +12,30 @@ const AmenitiesUI = ({
 }) => {
   return (
     <div className="mt-8">
-      <h6>Amenities & Salesperson</h6>
+      <h6>Contract Type & Broker</h6>
       <div className="flex flex-wrap justify-between">
         <div className="w-full md:w-[49%]">
           <div className="my-4">
-            <div className="my-2 text-sm font-medium">Amenities (Optional)</div>
+            <div className="my-2 text-sm font-medium">Contract Type</div>
             <ReactSelect
-              name="amenities"
-              isMulti
-              value={amenities}
-              onChange={handleSelectAmenities}
+              name="contract_type"
+              value={contract_type}
+              onChange={handleSelectContractType}
               options={availableFacilities}
-              placeholder="Amenities"
+              placeholder="Contract Type"
               isDisabled={loading}
               className="text-sm"
             />
-            {errors?.amenities && amenities.length == 0 && (
+            {errors?.contract_type && contract_type.length == 0 && (
               <p className="text-sm text-danger-500 mt-2">
-                {errors?.amenities?.message}
+                {errors?.contract_type?.message}
               </p>
             )}
           </div>
         </div>
         <div className="w-full md:w-[49%]">
           <div className="my-4">
-            <div className="my-2 text-sm font-medium">Salesperson*</div>
+            <div className="my-2 text-sm font-medium">Broker*</div>
             <ReactSelect
               name="assigned_to"
               isMulti
@@ -46,7 +45,7 @@ const AmenitiesUI = ({
                 label: person.name,
                 value: person._id, // Use a unique identifier for value
               }))}
-              placeholder="Salesperson"
+              placeholder="Broker"
               isDisabled={loading}
               className="text-sm"
             />

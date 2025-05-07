@@ -16,14 +16,25 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
               disabled={loading}
             />
           </div>
-          <div className="w-full md:w-[49%]">
+          {/* <div className="w-full md:w-[49%]">
             <Textinput
               name="size"
-              label="Size (square feet, marla, or kanal)*"
+              label="No of Units*"
               type="number"
               register={register}
               error={errors.size}
               placeholder="Size"
+              disabled={loading}
+            />
+          </div> */}
+            <div className="w-full md:w-[49%]">
+            <Textinput
+              name="unit_size"
+              label="Unit Size*"
+              type="number"
+              register={register}
+              error={errors.unit_size}
+              placeholder="Unit Size"
               disabled={loading}
             />
           </div>
@@ -31,23 +42,23 @@ const PricingAndSizeUI = ({ register, errors, loading }) => {
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="bedrooms"
-              label="Bedrooms*"
+              name="no_of_garages"
+              label="No of Garages*"
               type="number"
               register={register}
-              error={errors.bedrooms}
-              placeholder="Bedrooms"
+              error={errors.no_of_garages}
+              placeholder="No of Garages"
               disabled={loading}
             />
           </div>
           <div className="w-full md:w-[49%]">
             <Textinput
-              name="bathrooms"
-              label="Bathrooms*"
+              name="no_of_parking_places"
+              label="No of Parking Places*"
               type="number"
               register={register}
-              error={errors.bathrooms}
-              placeholder="Bathrooms"
+              error={errors.no_of_parking_places}
+              placeholder="No of Parking Places"
               disabled={loading}
             />
           </div>
