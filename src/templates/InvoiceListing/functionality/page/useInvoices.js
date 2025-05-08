@@ -39,7 +39,11 @@ const useInvoices = () => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
-  const downloadPDF = async (language, invoice) => {
+  const downloadPDF = async (e, language, invoice) => {
+    e.preventDefault(); 
+    e.stopPropagation(); // Prevent event bubbling
+    console.log("Dropdown item clicked", e);
+
     const html2pdf = (await import("html2pdf.js")).default;
     if (!invoice) {
       console.error("No invoice selected!");
