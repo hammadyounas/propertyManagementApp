@@ -23,7 +23,7 @@ const ClientInformationUI = ({
               value={clientName}
               onChange={handleSelectClientName}
               options={clients}
-              placeholder="Client Name"
+              placeholder="Buyer Name"
               isDisabled={loading}
               className="text-sm"
             />
