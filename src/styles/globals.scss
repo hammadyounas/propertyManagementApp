@@ -113,8 +113,8 @@
 // }
 
 ::-webkit-scrollbar {
-  width: 4px !important;
-  height: 4px !important;
+  width: 1px !important;
+  height: 1px !important;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -124,6 +124,10 @@
 
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1;
+}
+
+.text-first-letter::first-letter {
+  text-transform: uppercase;
 }
 
 
