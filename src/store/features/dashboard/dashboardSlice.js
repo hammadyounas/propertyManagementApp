@@ -52,6 +52,26 @@ export const fetchDashboardEntriesById = createAsyncThunk(
   }
 );
 
+export const fetchBrokers = createAsyncThunk(
+  "dashboard/fetchBrokers",
+  async () => {
+    const response = await getRequest("users"); // <- Make sure this endpoint returns [{ name, _id }]
+    const filteredBrokers = response.data.filter((user) => !user.isDeleted);
+    console.log("Response:", response.data); // Log the response for debugging
+    console.log(
+      "Brokers:",
+      filteredBrokers.map((b) => b.name)
+    );
+    return [
+      { label: "All", value: "all" },
+      ...filteredBrokers.map((user) => ({
+        label: user.name,
+        value: user.name,
+      })),
+    ];
+  }
+);
+
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState: {
@@ -95,18 +115,18 @@ const dashboardSlice = createSlice({
       .addCase(fetchDashboardEntries.fulfilled, (state, action) => {
         const { data, createdByNames, totalCount } = action.payload;
 
-        if (state.brokerOptions.length <= 1) {
-          const uniqueBrokerOptions =
-            createdByNames?.map((name) => ({
-              label: name,
-              value: name,
-            })) || [];
+        // if (state.brokerOptions.length <= 1) {
+        //   const uniqueBrokerOptions =
+        //     createdByNames?.map((name) => ({
+        //       label: name,
+        //       value: name,
+        //     })) || [];
 
-          state.brokerOptions = [
-            { label: "All", value: "all" },
-            ...uniqueBrokerOptions,
-          ];
-        }
+        //   state.brokerOptions = [
+        //     { label: "All", value: "all" },
+        //     ...uniqueBrokerOptions,
+        //   ];
+        // }
 
         state.dashboardEntries =
           data?.filter((entry) => !entry.isDeleted) || [];
@@ -130,6 +150,10 @@ const dashboardSlice = createSlice({
       .addCase(fetchDashboardEntriesById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      .addCase(fetchBrokers.fulfilled, (state, action) => {
+        state.brokerOptions = action.payload;
       });
   },
 });
