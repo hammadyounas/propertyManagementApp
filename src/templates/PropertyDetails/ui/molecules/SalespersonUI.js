@@ -33,7 +33,7 @@ function SalespersonUI({ salesperosonDataRows, salespersonColumns }) {
                   >
                     <td
                       className="table-td text-primary-default font-semibold cursor-pointer"
-                      onClick={() => router.push(`/sales-team/view/${row._id}`)}
+                      onClick={() => router.push(`/broker/view/${row._id}`)}
                     >
                       {row.name}
                     </td>

@@ -21,7 +21,7 @@ export const menuItems = [
     title: "Brokers",
     isHide: false,
     icon: "heroicons:users",
-    link: "/sales-team",
+    link: "/broker",
   },
   {
     title: "Clients",

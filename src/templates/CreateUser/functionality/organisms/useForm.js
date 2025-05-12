@@ -121,7 +121,7 @@ const useCreateForm = () => {
       if (response) {
         toast.success("User registered successfully!");
         console.log(response.data); // Log the API response if needed
-        push("/sales-team"); // Redirect after successful registration
+        push("/broker"); // Redirect after successful registration
       } else {
         toast.error("Registration failed");
         throw new Error("Registration failed");

@@ -142,7 +142,7 @@ const useEditSalesTeam = () => {
       const response = await patchRequest(`user/${userId}`, formData);
       if (response) {
         toast.success("User updated successfully!");
-        push("/sales-team");
+        push("/broker");
       } else {
         throw new Error("Failed to update user.");
       }

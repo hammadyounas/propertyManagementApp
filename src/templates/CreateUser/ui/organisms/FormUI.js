@@ -234,7 +234,7 @@ const FormUI = ({
                 className={
                   "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                 }
-                onClick={() => push("/sales-team")}
+                onClick={() => push("/broker")}
                 loading={loading}
               />
               <Button
