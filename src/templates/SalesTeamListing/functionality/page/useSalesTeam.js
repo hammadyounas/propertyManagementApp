@@ -58,7 +58,10 @@ const useSalesTeam = () => {
         }
 
       const response = await getRequest(url);
-      setUsers(response.data);
+      const filteredUsers = response.data.filter(
+        (user) => user.role !== "ADMIN"
+      ); // Filter out deleted users
+      setUsers(filteredUsers);
 
     } catch (error) {
       console.error("Error fetching users:", error);

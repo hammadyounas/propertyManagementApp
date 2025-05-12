@@ -52,7 +52,7 @@ const HeaderUI = ({
               )}
               {width < breakpoints.xl && <LogoUIContainer />}
               {/* open mobile menu handlaer*/}
-              {width < breakpoints.xl && width >= breakpoints.md && (
+              {width < breakpoints.xl && width >= breakpoints.lg && (
                 <div
                   className="cursor-pointer text-slate-900 dark:text-white text-2xl"
                   onClick={handleOpenMobileMenu}
