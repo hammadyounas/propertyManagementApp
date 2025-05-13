@@ -250,6 +250,7 @@ const useCreateForm = () => {
           price: propertyData?.price,
           unit_size: propertyData?.unit_size,
           no_of_garages: propertyData?.no_of_garages,
+          no_of_parking_places: propertyData?.no_of_parking_places,
           owner_name: propertyData?.owner_name,
           phone_number: propertyData?.phone_number,
           email: propertyData?.email,

@@ -19,8 +19,8 @@ import {
   getRequest,
   postRequest,
 } from "../../../../libs/utils/request_handler";
-  import { useDropzone } from "react-dropzone";
-    import Papa from 'papaparse';
+import { useDropzone } from "react-dropzone";
+import Papa from "papaparse";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -31,6 +31,10 @@ const useCreateForm = () => {
     ownership_status: yup.string().required("Ownership Status is required"),
     no_of_units: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Number of Units is required")
       .required("Number of Units is required")
       .moreThan(0, "Number of Units must be greater than 0"),
     address: yup.string().required("Address is required"),
@@ -49,24 +53,40 @@ const useCreateForm = () => {
     // neighborhood: yup.string().required("Neighborhood is required"),
     price: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Price is required")
       .required("Price is required")
       .moreThan(0, "Price must be greater than 0"),
     unit_size: yup
       .number()
-      .required("Unit Size are required")
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Unit Size is required")
+      .required("Unit Size is required")
       .moreThan(0, "There must be at least 1 bedroom"),
     no_of_garages: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("No of Garages is required")
       .required("No of Garages are required")
       .moreThan(0, "There must be at least 1 bathroom"),
     no_of_parking_places: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("No of Parking Places is required")
       .required("No of Parking Places are required")
       .moreThan(0, "There must be at least 1 no of parking places"),
-    // assigned_to: yup
-    //   .array()
-    //   .min(1, "At least one salesperson must be selected")
-    //   .required("Salesperson is required"),
+    assigned_to: yup
+      .array()
+      .min(1, "At least one salesperson must be selected")
+      .required("Salesperson is required"),
     images: yup
       .array()
       .min(1, "At least one image must be uploaded")
@@ -132,74 +152,70 @@ const useCreateForm = () => {
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
-      const [inputType, setInputType] = useState("manual"); 
-          const [csvData, setCsvData] = useState(null);
+  const [inputType, setInputType] = useState("manual");
+  const [csvData, setCsvData] = useState(null);
 
   const imageInputRef = useRef(null);
   const docInputRef = useRef(null);
 
-      const handleFileUpload = (file) => {
-        if (!file) return;
-      
-        Papa.parse(file, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            console.log("Raw CSV Parsed Data:", results.data);
-      
-            if (!results.data || results.data.length === 0) {
-              toast.error("Uploaded CSV is empty or invalid.");
-              return;
-            }
-      
-            // Ensure CSV has correct keys and valid data
-            const formattedData = results.data.map((row, index) => ({
-              title: row["title"],
-              address: row["address"],
-              property_type: row["property_type"],
-              no_of_units: row["no_of_units"],
-              owner_name: row["owner_name"],
-              owner_address: row["owner_address"],
-              phone_number: row["phone_number"],
-              email: row["email"],
-              property_status: row["property_status"],
-              assigned_to: row["assigned_to"],
+  const handleFileUpload = (file) => {
+    if (!file) return;
 
-              ownership_status: row["ownership_status"],
-              street_number: row["street_number"],
-              street_name: row["street_name"],
-              cadstre_number: row["cadstre_number"],
-              city: row["city"],
-              municipality: row["municipality"],
-              price: row["price"],
-              unit_size: row["unit_size"],
-              no_of_garages: row["no_of_garages"],
-              no_of_parking_places: row["no_of_parking_places"],
-              location_map_url: row["location_map_url"] || "",
-            }));
-      
-            console.log("Formatted CSV Data Before Submit:", formattedData);
-            setCsvData(formattedData);
-          },
-        });
-      };
-      
-      
-      
-      const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
-        accept: { "text/csv": [".csv"] },
-        onDrop: (acceptedFiles) => {
-          if (acceptedFiles.length > 0) {
-            handleFileUpload(acceptedFiles[0]); // Pass first file
-          }
-        },
-      });
-      
-  
-      const handleRemoveCSV = () => {
-        setCsvData(null);
-      };
-      
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        console.log("Raw CSV Parsed Data:", results.data);
+
+        if (!results.data || results.data.length === 0) {
+          toast.error("Uploaded CSV is empty or invalid.");
+          return;
+        }
+
+        // Ensure CSV has correct keys and valid data
+        const formattedData = results.data.map((row, index) => ({
+          title: row["title"],
+          address: row["address"],
+          property_type: row["property_type"],
+          no_of_units: row["no_of_units"],
+          owner_name: row["owner_name"],
+          owner_address: row["owner_address"],
+          phone_number: row["phone_number"],
+          email: row["email"],
+          property_status: row["property_status"],
+          assigned_to: row["assigned_to"],
+
+          ownership_status: row["ownership_status"],
+          street_number: row["street_number"],
+          street_name: row["street_name"],
+          cadstre_number: row["cadstre_number"],
+          city: row["city"],
+          municipality: row["municipality"],
+          price: row["price"],
+          unit_size: row["unit_size"],
+          no_of_garages: row["no_of_garages"],
+          no_of_parking_places: row["no_of_parking_places"],
+          location_map_url: row["location_map_url"] || "",
+        }));
+
+        console.log("Formatted CSV Data Before Submit:", formattedData);
+        setCsvData(formattedData);
+      },
+    });
+  };
+
+  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
+    accept: { "text/csv": [".csv"] },
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        handleFileUpload(acceptedFiles[0]); // Pass first file
+      }
+    },
+  });
+
+  const handleRemoveCSV = () => {
+    setCsvData(null);
+  };
 
   const triggerImageFileInput = (inputRef) => {
     if (inputRef.current) {
@@ -231,7 +247,10 @@ const useCreateForm = () => {
     return files?.map((file, index) => {
       const fileURL = type == "image" ? URL.createObjectURL(file) : null;
       return (
-        <div key={file.name + index} className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
+        <div
+          key={file.name + index}
+          className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4"
+        >
           {type == "image" ? (
             <img
               src={fileURL}
@@ -359,7 +378,7 @@ const useCreateForm = () => {
 
   const handleSelectContractType = (selectedValue) => {
     setContractType(selectedValue); // not an array
-  };  
+  };
 
   const handleSelectSalesperson = (selectedValues) => {
     setSelectedSalespersons(selectedValues);
@@ -386,7 +405,7 @@ const useCreateForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-  
+
     try {
       // If CSV mode, loop through and create each property
       if (inputType === "csv") {
@@ -395,30 +414,30 @@ const useCreateForm = () => {
           setLoading(false);
           return;
         }
-  
+
         for (const row of csvData) {
           const formData = new FormData();
-  
+
           // Append CSV fields
           Object.entries(row).forEach(([key, value]) => {
             formData.append(key, value);
           });
-  
+
           const response = await postRequest("properties", formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-  
+
           if (!response) throw new Error(`Failed to upload row: ${row.title}`);
         }
-        
+
         toast.success("Properties from CSV added successfully!");
         push("/properties");
       }
-  
+
       // If manual input
       else {
         const formData = new FormData();
-        
+
         formData.append("title", data.title);
         formData.append("property_type", data.type);
         formData.append("property_status", data.status);
@@ -441,29 +460,29 @@ const useCreateForm = () => {
         formData.append("email", data.email);
         formData.append("owner_address", data.owner_address);
         formData.append("contract_type", data.contract_type?.value || "");
-  
+
         selectedSalespersons?.forEach((salesperson) => {
           formData.append("assigned_to", salesperson.value);
         });
-  
+
         selectedImages?.forEach((image) => {
           formData.append("images", image);
         });
-  
+
         selectedDocs?.forEach((doc) => {
           formData.append("documents", doc);
         });
-  
+
         const response = await postRequest("properties", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-  
+
         if (!response) {
           throw new Error("Manual property creation failed");
         }
-  
+
         toast.success("Property added successfully!");
         push("/properties");
       }
@@ -471,14 +490,13 @@ const useCreateForm = () => {
       console.error("Error adding property:", error);
       toast.error(
         error?.response?.data?.message ||
-        error?.message ||
-        "Failed to add property!"
+          error?.message ||
+          "Failed to add property!"
       );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return {
     register,
