@@ -5,6 +5,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import { ToastContainer } from "react-toastify";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 
 const TableUI = ({
   columns,
@@ -16,29 +17,43 @@ const TableUI = ({
   openDeleteModal,
   loading,
   properties,
+  selectedFilter,
+  setSelectedFilter,
+  setStatusFilter,
+  statusFilter,
 }) => {
   return (
     <Card noborder>
       <ToastContainer />
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-        <div className="flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
-            <div
-              onClick={openModal}
-              className="flex items-center mr-3 p-3 cursor-pointer"
-            >
-              <Icon
-                className="cursor-pointer text-[20px] mr-2"
-                icon={"heroicons:funnel"}
-              />
-              <span>Filters</span>
-            </div>
-            <span className="w-full">
+        <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
+          <div className="w-full flex items-center gap-2 whitespace-nowrap text-sm">
+            <DropdownUINew
+              label={statusFilter || "Property Status"}
+              wrapperClass="sm:w-48"
+              labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              classMenuItems="left-0 max-sm:w-32 text-sm"
+              classItem="p-2"
+              onSelect={(value) => {
+                setStatusFilter(value);
+              }}
+              items={[
+                { label: "All", value: "" },
+                { label: "Available", value: "available" },
+                { label: "Under Contract", value: "under contract" },
+                { label: "Leased", value: "leased" },
+                { label: "Coming soon", value: "Coming soon" },
+                { label: "Withdraw", value: "withdrawn" },
+                { label: "Sold", value: "sold" },
+                { label: "Expired", value: "expired" },
+              ]}
+            />
+            <span className="">
               <Button
                 text="Add Property"
                 onClick={() => push("/properties/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
           </div>
@@ -51,7 +66,7 @@ const TableUI = ({
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold  text-center whitespace-nowrap">
+                    <th key={i} scope="col" className="table-th font-bold  px-4 py-4 text-center whitespace-nowrap">
                       {column.label}
                     </th>
                   ))}
@@ -78,17 +93,17 @@ const TableUI = ({
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
-                      <td className="table-td ">{row.address}</td>
-                      <td className="table-td ">{row.property_type}</td>
-                      <td className="table-td ">{row.no_of_units}</td>
-                      <td className="table-td ">
+                      <td className="table-td sm:p-4 p-2">{row.address}</td>
+                      <td className="table-td sm:p-4 p-2">{row.property_type}</td>
+                      <td className="table-td sm:p-4 p-2">{row.no_of_units}</td>
+                      <td className="table-td sm:p-4 p-2">
                         {row.owner_name}, {row.owner_address}
                         {/* {row.owneraddress} */}
                       </td>
-                      <td className="table-td ">
+                      <td className="table-td sm:p-4 p-2">
                         {row.phone_number || row.telno}
                       </td>
-                      <td className="table-td ">
+                      <td className="table-td sm:p-4 p-2">
                         <span className="block w-full whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
@@ -129,9 +144,9 @@ const TableUI = ({
                           </span>
                         </span>
                       </td>
-                      <td className="table-td ">
+                      <td className="table-td sm:p-4 p-2">
                         {row.assigned_to && row?.assigned_to?.length > 0 ? (
-                          <div className="flex">
+                          <div className="inline-flex gap-2">
                             {row?.assigned_to?.map((salesperson, index) => (
                               <Tooltip
                                 key={index}
@@ -155,7 +170,7 @@ const TableUI = ({
                         )}
                         {/* {row.assigned_salesperson} */}
                       </td>
-                      <td className="table-td ">
+                      <td className="table-td sm:p-4 p-2">
                         <div className="flex">
                           <Icon
                             onClick={() => push(`/properties/view/${row?._id}`)}

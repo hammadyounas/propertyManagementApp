@@ -25,6 +25,7 @@ const useProperty = () => {
   const totalCount = useSelector(selectPropertiesTotalCount);
   const pageSize = 10;
   const { push } = useRouter();
+  const [statusFilter, setStatusFilter] = useState("");
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -51,9 +52,10 @@ const useProperty = () => {
         search: globalFilter,
         page: currentPage,
         limit: pageSize,
+        statusFilter,
       })
     );
-  }, [dispatch, globalFilter, currentPage]);
+  }, [dispatch, globalFilter, currentPage, statusFilter]);
 
   //   reset the page to 1
   useEffect(() => {
@@ -110,6 +112,8 @@ const useProperty = () => {
     closeDeleteModal,
     deleteLoading,
     totalCount,
+    setStatusFilter,
+  statusFilter,
   };
 };
 

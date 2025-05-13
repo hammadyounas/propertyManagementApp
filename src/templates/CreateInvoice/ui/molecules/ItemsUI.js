@@ -24,7 +24,7 @@ const ItemsUI = ({
         {fields?.map((item, index) => {
           return (
             <div
-              className="w-full flex flex-wrap items-start mb-4 "
+              className="w-full flex flex-wrap items-start mb-4 whitespace-nowrap "
               key={index}
             >
               <div className="w-full md:w-[33%] xl:w-[15%] border p-2">
@@ -121,15 +121,15 @@ const ItemsUI = ({
                   //   value={getValues(`items[${index}]`).item_total}
                 />
               </div>
-              <div className="w-full md:w-[33%] xl:w-[10%] h-16 xl:h-28 flex items-center pl-4">
-                <span className="cursor-pointer" onClick={() => remove(index)}>
-                  <Icon icon="heroicons-outline:trash" width={25} />
+              <div className="w-full md:w-[33%] xl:w-[10%] h-16 xl:h-28 flex justify-center items-center">
+                <span className="cursor-pointer " onClick={() => remove(index)}>
+                  <Icon icon="heroicons-outline:trash"  width={25} />
                 </span>
               </div>
             </div>
           );
         })}
-        <button
+        {/* <button
           className="font-bold"
           type="button"
           onClick={() =>
@@ -147,7 +147,7 @@ const ItemsUI = ({
           }
         >
           + Add New
-        </button>
+        </button> */}
       </div>
     </div>
   );

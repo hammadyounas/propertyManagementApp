@@ -27,6 +27,8 @@ const PropertiesListingPage = () => {
     closeDeleteModal,
     deleteLoading,
     totalCount,
+      setStatusFilter,
+  statusFilter,
   } = useProperty();
 
   return (
@@ -40,6 +42,8 @@ const PropertiesListingPage = () => {
         openDeleteModal={openDeleteModal}
         loading={loading}
         properties={properties}
+        setStatusFilter={setStatusFilter}
+        statusFilter={statusFilter}
       />
       <div
         className={`flex w-full justify-end mt-2 items-center ${
