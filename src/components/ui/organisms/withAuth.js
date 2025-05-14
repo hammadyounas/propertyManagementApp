@@ -46,7 +46,7 @@ const withAuth = (Component) => {
         "/meetings",
         "/properties",
         "/dashboard",
-        "/sales-team",
+        "/broker",
         "/clients",
         "/invoices",
         "/send-email",

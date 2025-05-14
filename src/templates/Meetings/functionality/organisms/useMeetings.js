@@ -231,6 +231,8 @@
 
     };
 
+    console.log("Clients:", clients);
+
     const openModal = async () => {
       
       await dispatch(fetchUserById(userId)); 

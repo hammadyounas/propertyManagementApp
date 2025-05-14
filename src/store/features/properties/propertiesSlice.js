@@ -34,6 +34,7 @@ const propertiesSlice = createSlice({
         search: "",
         page: 1,
         limit: 10,
+        statusFilter: "",
     },
     extraReducers: (builder) => {
         builder

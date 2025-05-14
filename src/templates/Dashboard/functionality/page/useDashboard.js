@@ -9,6 +9,7 @@ import {
   setCurrentPage,
   handleOpenCommentModal,
   handleCloseModal,
+  fetchBrokers,
 } from "../../../../store/features/dashboard/dashboardSlice";
 
 const useDashboard = () => {
@@ -40,6 +41,10 @@ const useDashboard = () => {
       })
     );
   }, [dispatch, currentPage, statusFilter, selectedBroker, globalFilter]);
+
+  useEffect(() => {
+    dispatch(fetchBrokers());
+  }, [dispatch]);
 
   const handlePageChange = (page) => {
     dispatch(setCurrentPage(page + 1)); // For 1-based page indexing

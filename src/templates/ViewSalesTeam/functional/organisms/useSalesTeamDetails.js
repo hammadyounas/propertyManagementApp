@@ -30,7 +30,7 @@ export default function useSalesTeamDetails() {
   }, [userId]);
 
   const handleEdit = () => {
-    router.push(`/sales-team/edit/${userId}`);
+    router.push(`/broker/edit/${userId}`);
   };
 
   return { salesteamData, assignedProperties, handleEdit };

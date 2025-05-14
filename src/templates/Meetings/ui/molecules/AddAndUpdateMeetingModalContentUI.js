@@ -151,25 +151,47 @@ const AddAndUpdateMeetingModalContentUI = ({
       <div className="mt-8">
         <h6>Participants</h6>
         <div className="flex flex-wrap justify-between">
-          <div className="w-full">
-            <div className="my-4">
+          <div className="w-full md:w-[49%]">
+            <div className="">
               <div className="my-2 text-sm font-medium">Broker *</div>
               <ReactSelect
                 name="salespersons"
-                // isMulti
                 value={selectedSalesPersons}
                 onChange={handleSelectSalesperson}
                 options={salespersons?.map((salesPerson) => ({
                   label: salesPerson.name,
                   value: salesPerson._id,
                 }))}
-                placeholder={"Select Broker"}
-                isDisabled={currentMeetingId? isOtherFieldsDisabled : isSalespersonDisabled}
+                placeholder="Select Broker"
+                isDisabled={
+                  currentMeetingId
+                    ? isOtherFieldsDisabled
+                    : isSalespersonDisabled
+                }
                 className="text-sm capitalize"
+                menuPlacement="bottom" // <-- Force it to always open downward
+                menuPosition="absolute" // default, but safe to include
+                styles={{
+                  menu: (provided) => ({
+                    ...provided,
+                    zIndex: 9999,
+                    maxHeight: "90px",
+                  }),
+                  menuList: (provided) => ({
+                    ...provided,
+                    maxHeight: "90px",
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    height: 30,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                  }),
+                }}
               />
             </div>
           </div>
-          <div className="w-full">
+          <div className="w-full md:w-[49%]">
             <div className="">
               <div className="my-2 text-sm font-medium">Client *</div>
               <ReactSelect
@@ -184,6 +206,25 @@ const AddAndUpdateMeetingModalContentUI = ({
                 placeholder="Select Client"
                 isDisabled={isOtherFieldsDisabled}
                 className="text-sm capitalize"
+                menuPlacement="bottom" // <-- Force it to always open downward
+                menuPosition="absolute" // default, but safe to include
+                styles={{
+                  menu: (provided) => ({
+                    ...provided,
+                    zIndex: 9999,
+                    maxHeight: "90px",
+                  }),
+                  menuList: (provided) => ({
+                    ...provided,
+                    maxHeight: "90px",
+                  }),
+                  option: (provided) => ({
+                    ...provided,
+                    height: 30,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                  }),
+                }}
               />
             </div>
           </div>

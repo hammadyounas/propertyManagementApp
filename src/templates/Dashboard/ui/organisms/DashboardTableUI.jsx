@@ -48,7 +48,7 @@ const DashboardTableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={"🔎︎ Search..."} className={'md:w-[30%] w-full'} /> */}
         <div className="w-full flex gap-2">
           {/*search by react select  */}

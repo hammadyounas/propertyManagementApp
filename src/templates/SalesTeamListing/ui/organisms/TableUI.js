@@ -29,7 +29,7 @@ const TableUI = ({
             <DropdownUINew
               label={selectedFilter}
               wrapperClass="w-40"
-              labelClass="btn-secondary bg-gray-950 flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="w-40 left-0"
               classItem="p-2"
               onSelect={(value) => {
@@ -45,7 +45,7 @@ const TableUI = ({
             <span className="w-full">
               <Button
                 text="Add Broker"
-                onClick={() => push("/sales-team/create")}
+                onClick={() => push("/broker/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>
@@ -126,12 +126,12 @@ const TableUI = ({
                       <td className="table-td ">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => push(`/sales-team/view/${row._id}`)}
+                            onClick={() => push(`/broker/view/${row._id}`)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
                           <Icon
-                            onClick={() => push(`/sales-team/edit/${row._id}`)}
+                            onClick={() => push(`/broker/edit/${row._id}`)}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:pencil-square"}
                           />

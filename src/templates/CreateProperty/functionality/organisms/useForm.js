@@ -19,6 +19,8 @@ import {
   getRequest,
   postRequest,
 } from "../../../../libs/utils/request_handler";
+import { useDropzone } from "react-dropzone";
+import Papa from "papaparse";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -29,6 +31,10 @@ const useCreateForm = () => {
     ownership_status: yup.string().required("Ownership Status is required"),
     no_of_units: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Number of Units is required")
       .required("Number of Units is required")
       .moreThan(0, "Number of Units must be greater than 0"),
     address: yup.string().required("Address is required"),
@@ -47,24 +53,40 @@ const useCreateForm = () => {
     // neighborhood: yup.string().required("Neighborhood is required"),
     price: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Price is required")
       .required("Price is required")
       .moreThan(0, "Price must be greater than 0"),
     unit_size: yup
       .number()
-      .required("Unit Size are required")
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("Unit Size is required")
+      .required("Unit Size is required")
       .moreThan(0, "There must be at least 1 bedroom"),
     no_of_garages: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("No of Garages is required")
       .required("No of Garages are required")
       .moreThan(0, "There must be at least 1 bathroom"),
     no_of_parking_places: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      )
+      .typeError("No of Parking Places is required")
       .required("No of Parking Places are required")
       .moreThan(0, "There must be at least 1 no of parking places"),
-    // assigned_to: yup
-    //   .array()
-    //   .min(1, "At least one salesperson must be selected")
-    //   .required("Salesperson is required"),
+    assigned_to: yup
+      .array()
+      .min(1, "At least one salesperson must be selected")
+      .required("Salesperson is required"),
     images: yup
       .array()
       .min(1, "At least one image must be uploaded")
@@ -130,9 +152,70 @@ const useCreateForm = () => {
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
+  const [inputType, setInputType] = useState("manual");
+  const [csvData, setCsvData] = useState(null);
 
   const imageInputRef = useRef(null);
   const docInputRef = useRef(null);
+
+  const handleFileUpload = (file) => {
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        console.log("Raw CSV Parsed Data:", results.data);
+
+        if (!results.data || results.data.length === 0) {
+          toast.error("Uploaded CSV is empty or invalid.");
+          return;
+        }
+
+        // Ensure CSV has correct keys and valid data
+        const formattedData = results.data.map((row, index) => ({
+          title: row["title"],
+          address: row["address"],
+          property_type: row["property_type"],
+          no_of_units: row["no_of_units"],
+          owner_name: row["owner_name"],
+          owner_address: row["owner_address"],
+          phone_number: row["phone_number"],
+          email: row["email"],
+          property_status: row["property_status"],
+          assigned_to: row["assigned_to"],
+
+          ownership_status: row["ownership_status"],
+          street_number: row["street_number"],
+          street_name: row["street_name"],
+          cadstre_number: row["cadstre_number"],
+          city: row["city"],
+          municipality: row["municipality"],
+          price: row["price"],
+          unit_size: row["unit_size"],
+          no_of_garages: row["no_of_garages"],
+          no_of_parking_places: row["no_of_parking_places"],
+          location_map_url: row["location_map_url"] || "",
+        }));
+
+        console.log("Formatted CSV Data Before Submit:", formattedData);
+        setCsvData(formattedData);
+      },
+    });
+  };
+
+  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
+    accept: { "text/csv": [".csv"] },
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        handleFileUpload(acceptedFiles[0]); // Pass first file
+      }
+    },
+  });
+
+  const handleRemoveCSV = () => {
+    setCsvData(null);
+  };
 
   const triggerImageFileInput = (inputRef) => {
     if (inputRef.current) {
@@ -164,7 +247,10 @@ const useCreateForm = () => {
     return files?.map((file, index) => {
       const fileURL = type == "image" ? URL.createObjectURL(file) : null;
       return (
-        <div key={file.name + index} className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4">
+        <div
+          key={file.name + index}
+          className="flex flex-col items-center border border-1 border-dashed mt-4 mr-4 p-4"
+        >
           {type == "image" ? (
             <img
               src={fileURL}
@@ -292,7 +378,7 @@ const useCreateForm = () => {
 
   const handleSelectContractType = (selectedValue) => {
     setContractType(selectedValue); // not an array
-  };  
+  };
 
   const handleSelectSalesperson = (selectedValues) => {
     setSelectedSalespersons(selectedValues);
@@ -318,89 +404,94 @@ const useCreateForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("Submitting with data:", data); 
     setLoading(true);
-    // toast.success("Property Added successfully!");
-    // return push("/properties");
+
     try {
-      // Create a new FormData instance
-      const formData = new FormData();
+      // If CSV mode, loop through and create each property
+      if (inputType === "csv") {
+        if (!csvData || csvData.length === 0) {
+          toast.error("CSV data is empty or invalid");
+          setLoading(false);
+          return;
+        }
 
-      // Append regular form data (non-file fields)
-      formData.append("title", data.title);
-      // formData.append("furnishing_status", data.furnishing_status);
-      formData.append("property_type", data.type);
-      formData.append("property_status", data.status);
-      formData.append("ownership_status", data.ownership_status);
-      formData.append("no_of_units", data.no_of_units);
-      formData.append("description", data.description);
-      formData.append("address", data.address);
-      formData.append("street_number", data.street_number);
-      formData.append("street_name", data.street_name);
-      formData.append("cadstre_number", data.cadstre_number);
-      formData.append("city", data.city);
-      formData.append("municipality", data.municipality);
-      // formData.append("neighborhood", data.neighborhood);
-      formData.append("location_map_url", data.location_map_url);
-      // formData.append("owner_status", data.ownerDetailsStatus);
-      formData.append("price", data.price);
-      formData.append("unit_size", data.unit_size);
-      formData.append("no_of_garages", data.no_of_garages);
-      formData.append("no_of_parking_places", data.no_of_parking_places);
-      formData.append("owner_name", data.owner_name);
-      formData.append("phone_number", data.phone_number);
-      formData.append("email", data.email);
-      formData.append("owner_address", data.owner_address);
-      formData.append("contract_type", data.contract_type.value);
-      // if (contract_type) {
-      // }
+        for (const row of csvData) {
+          const formData = new FormData();
 
-      // Append arrays (e.g., amenities, assigned salespersons)
-      // contract_type?.forEach((type) => {
-      // });
+          // Append CSV fields
+          Object.entries(row).forEach(([key, value]) => {
+            formData.append(key, value);
+          });
 
-      selectedSalespersons?.forEach((salesperson) => {
-        formData.append("assigned_to", salesperson.value);
-      });
+          const response = await postRequest("properties", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-      // Append images and documents (files)
-      selectedImages?.forEach((image) => {
-        formData.append("images", image); // Append each file object
-        console.log("Image:", image); // Debugging
-      });
+          if (!response) throw new Error(`Failed to upload row: ${row.title}`);
+        }
 
-      selectedDocs?.forEach((doc) => {
-        formData.append("documents", doc); // Append each file object
-      });
-
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
+        toast.success("Properties from CSV added successfully!");
+        push("/properties");
       }
 
-      console.log("FormData:", formData); // Debug FormData
-      // Now, you can send the form data with the POST request
-      const response = await postRequest("properties", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure the content type is set to multipart/form-data
-        },
-      });
+      // If manual input
+      else {
+        const formData = new FormData();
 
-      console.log("API Response:", response); // Debug API response
+        formData.append("title", data.title);
+        formData.append("property_type", data.type);
+        formData.append("property_status", data.status);
+        formData.append("ownership_status", data.ownership_status);
+        formData.append("no_of_units", data.no_of_units);
+        formData.append("description", data.description);
+        formData.append("address", data.address);
+        formData.append("street_number", data.street_number);
+        formData.append("street_name", data.street_name);
+        formData.append("cadstre_number", data.cadstre_number);
+        formData.append("city", data.city);
+        formData.append("municipality", data.municipality);
+        formData.append("location_map_url", data.location_map_url);
+        formData.append("price", data.price);
+        formData.append("unit_size", data.unit_size);
+        formData.append("no_of_garages", data.no_of_garages);
+        formData.append("no_of_parking_places", data.no_of_parking_places);
+        formData.append("owner_name", data.owner_name);
+        formData.append("phone_number", data.phone_number);
+        formData.append("email", data.email);
+        formData.append("owner_address", data.owner_address);
+        formData.append("contract_type", data.contract_type?.value || "");
 
-      if (response) {
-        toast.success("Property Added successfully!");
-        // Redirect after successful submission if necessary
+        selectedSalespersons?.forEach((salesperson) => {
+          formData.append("assigned_to", salesperson.value);
+        });
+
+        selectedImages?.forEach((image) => {
+          formData.append("images", image);
+        });
+
+        selectedDocs?.forEach((doc) => {
+          formData.append("documents", doc);
+        });
+
+        const response = await postRequest("properties", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        if (!response) {
+          throw new Error("Manual property creation failed");
+        }
+
+        toast.success("Property added successfully!");
         push("/properties");
-      } else {
-        toast.error("Create Property failed");
-        throw new Error("Create Property failed");
       }
     } catch (error) {
       console.error("Error adding property:", error);
       toast.error(
         error?.response?.data?.message ||
           error?.message ||
-          "Error adding property!"
+          "Failed to add property!"
       );
     } finally {
       setLoading(false);
@@ -450,6 +541,14 @@ const useCreateForm = () => {
     selectedSalespersons,
     handleSelectSalesperson,
     ownerDetailsStatus,
+    handleFileUpload,
+    csvData,
+    handleRemoveCSV,
+    getRootProps,
+    getInputProps,
+    acceptedFiles,
+    inputType,
+    setInputType,
   };
 };
 
