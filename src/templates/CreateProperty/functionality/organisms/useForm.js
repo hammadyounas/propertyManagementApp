@@ -85,7 +85,7 @@ const useCreateForm = () => {
       .moreThan(0, "There must be at least 1 no of parking places"),
     assigned_to: yup
       .array()
-      .min(1, "At least one salesperson must be selected")
+      .min(1, "At least one broker must be selected")
       .required("Salesperson is required"),
     images: yup
       .array()

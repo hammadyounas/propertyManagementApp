@@ -7,6 +7,7 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
 import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
 import { dateFormat } from "../../../../libs/utils/helper";
+import Dropdown from "../../../../components/ui/organisms/Dropdown";
 
 const TableUI = ({
   columns,
@@ -131,14 +132,10 @@ const TableUI = ({
                       </td>
                       <td className="table-td">
                         <div className="flex justify-center items-center relative">
-                          <DropdownUI
+                          <Dropdown
                             label={
                               <>
                                 Download{" "}
-                                <Icon
-                                  className="cursor-pointer text-[20px]"
-                                  icon="heroicons:chevron-down"
-                                />
                               </>
                             }
                             labelClass="flex items-center gap-2"
@@ -148,8 +145,6 @@ const TableUI = ({
                               {
                                 label: "English",
                                 onClick: (e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
                                   downloadPDF(e, "en", row);
                                 }
                                 
@@ -157,8 +152,6 @@ const TableUI = ({
                               {
                                 label: "French",
                                 onClick: (e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
                                   downloadPDF(e, "fr", row);
                                 }                                
                               },
