@@ -60,7 +60,7 @@ const useProperty = () => {
   //   reset the page to 1
   useEffect(() => {
     setCurrentPage(1);
-  }, [globalFilter]);
+  }, [globalFilter, statusFilter]);
 
   //   page change handling
   const handlePageChange = (page) => {
