@@ -3,7 +3,8 @@ import useSidebar from "@/hooks/useSidebar";
 import useSemiDark from "@/hooks/useSemiDark";
 import useSkin from "@/hooks/useSkin";
 import { useEffect, useRef, useState } from "react";
-import { menuItems } from "../constants/data";
+import {menuItems as rawMenuItems} from "../constants/data";
+import { useSelector } from "react-redux";
 const useSidebarCustom = () => {
   const scrollableNodeRef = useRef();
   const [scroll, setScroll] = useState(false);
@@ -26,6 +27,17 @@ const useSidebarCustom = () => {
   const [isSemiDark] = useSemiDark();
   // skin
   const [skin] = useSkin();
+
+    // 🔐 Get user from store (or context)
+    const user = useSelector((state) => state.auth.user); // modify this based on how you access user
+
+    // 🧠 Filter menu items based on role
+    const menuItems = rawMenuItems.filter((item) => {
+      if (user?.role === "BROKER" && item.title === "Brokers") {
+        return false;
+      }
+      return true;
+    });  
 
   return {
     scroll,
