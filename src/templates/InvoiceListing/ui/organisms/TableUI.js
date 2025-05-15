@@ -7,6 +7,7 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
 import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
 import { dateFormat } from "../../../../libs/utils/helper";
+import Dropdown from "../../../../components/ui/organisms/Dropdown";
 
 const TableUI = ({
   columns,
@@ -40,7 +41,7 @@ const TableUI = ({
       <div className="overflow-x-auto -mx-6 ">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-x-auto overflow-visible min-h-[30vh]">
-            <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
+            <table className="min-w-full text-center divide-y divide-slate-100 table-fixed dark:divide-slate-700">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
@@ -50,7 +51,7 @@ const TableUI = ({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700 -z-10">
+              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                 {loading ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4">
@@ -130,34 +131,29 @@ const TableUI = ({
                         </span>
                       </td>
                       <td className="table-td">
-                        <div className="flex justify-center relative">
-                          <DropdownUI
+                        <div className="flex justify-center items-center relative">
+                          <Dropdown
                             label={
                               <>
                                 Download{" "}
-                                <Icon
-                                  className="cursor-pointer text-[20px]"
-                                  icon="heroicons:chevron-down"
-                                />
                               </>
                             }
                             labelClass="flex items-center gap-2"
-                            classMenuItems="w-32 min-w-[120px] top-full mt-1 z-[9999] overflow-visible"
-                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 z-[9999]"
+                            classMenuItems="w-32 min-w-[120px] top-full mt-1"
+                            classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                             items={[
                               {
                                 label: "English",
                                 onClick: (e) => {
-                                  downloadPDF("en", row);
-                                  e.stopPropagation();
+                                  downloadPDF(e, "en", row);
                                 }
+                                
                               },
                               {
                                 label: "French",
                                 onClick: (e) => {
-                                  downloadPDF("fr", row);
-                                e.stopPropagation();
-                                },
+                                  downloadPDF(e, "fr", row);
+                                }                                
                               },
                             ]}
                           />

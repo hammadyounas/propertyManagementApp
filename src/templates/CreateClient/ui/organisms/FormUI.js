@@ -186,7 +186,7 @@ const FormUI = ({
                   <div className="w-full md:w-[49%]">
                     <div className="mt-4">
                       <div className="my-2 text-sm font-medium">
-                        Assigned Salesperson
+                        Assigned Broker
                       </div>
                       <ReactSelect
                         name="assigned_salesperson"
@@ -194,7 +194,7 @@ const FormUI = ({
                         value={salesPersonAssigned}
                         onChange={handleSelectAssignedSalesperson}
                         options={salesPersons}
-                        placeholder="Assigned Salesperson"
+                        placeholder="Assigned Broker"
                         isDisabled={loading}
                         className="text-sm"
                       />

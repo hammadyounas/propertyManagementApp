@@ -281,7 +281,7 @@ const DashboardTableUI = ({
                         />
                         {row?.created_by?.name}
                       </td>
-                      <td className="table-td sm:p-4 p-2">
+                      <td className="table-td sm:p-4 p-2 first-letter:uppercase">
                         {row.comment ? (
                           <div className="flex justify-center items-center gap-2">
                             <Button text='View' onClick={() => handleOpenCommentModal(row.comment)} className="bg-transparent text-green-600 hover:border-b border-green-600 py-0 px-0 text-center rounded-none" />

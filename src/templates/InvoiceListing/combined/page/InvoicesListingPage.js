@@ -1,7 +1,6 @@
 import Table from "../organisms/TableUIContainer";
-import { Icon } from "@iconify/react";
-import ReactPaginate from "react-paginate";
 import useInvoices from "../../functionality/page/useInvoices";
+import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 
 const InvoicesListingPage = () => {
   const {
@@ -9,7 +8,6 @@ const InvoicesListingPage = () => {
     setGlobalFilter,
     invoices,
     setInvoices,
-    paginatedInvoices, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,
@@ -37,18 +35,14 @@ const InvoicesListingPage = () => {
         setSelectedInvoice={setSelectedInvoice}
         selectedLanguage={selectedLanguage}
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${totalCount <= pageSize && "hidden"}`}>
-        <ReactPaginate
-          previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
-          nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
-          breakLabel={"..."}
-          pageCount={Math.ceil(totalCount / pageSize)} // Correctly calculate the number of pages
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+      <div
+        className={`flex w-full justify-end mt-2 items-center ${
+          totalCount <= pageSize && "hidden"
+        }`}
+      >
+        <PaginationUI
+          pageCount={Math.ceil(totalCount / pageSize)}
           onPageChange={({ selected }) => handlePageChange(selected)}
-          containerClassName={"pagination"}
-          subContainerClassName={"pages pagination"}
-          activeClassName={"active"}
           initialPage={currentPage - 1}
         />
       </div>

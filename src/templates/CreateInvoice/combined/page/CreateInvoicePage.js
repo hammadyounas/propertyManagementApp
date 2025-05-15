@@ -40,6 +40,7 @@ const CreateInvoicePage = () => {
     append,
     remove,
     total,
+    user,
   } = useCreateInvoice();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit}>
@@ -72,6 +73,7 @@ const CreateInvoicePage = () => {
         sellingBrokerName={sellingBrokerName}
         handleSelectSellingBroker={handleSelectSellingBroker}
         sellingBrokers={sellingBrokers}
+        user={user}
       />
       <PropertyDetails
         register={register}

@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
+import { useSelector } from "react-redux";
 
 const useCreateInvoice = () => {
   const itemSchema = yup.object({
@@ -101,6 +102,7 @@ const useCreateInvoice = () => {
   const [clients, setClients] = useState([]);
   const [salesPersons, setSalesPersons] = useState([]);
   const [properties, setProperties] = useState([]);
+  const user = useSelector((state) => state.auth.user);
 
   const fetchClients = async () => {
     try {
@@ -179,6 +181,19 @@ const useCreateInvoice = () => {
     fetchProperties();
   }, []);
 
+  useEffect(() => {
+    if (user?.role === "BROKER") {
+      setSalespersonName({
+        value: user?._id,
+        label: user?.name,
+        address: user?.address,
+        email: user?.email,
+        phone: user?.contact_number,
+      });
+    }
+  }, [user]);
+  
+
   // Sync external state with form values using setValue
   useEffect(() => {
     setValue("status", invoiceStatus?.value || "");
@@ -187,10 +202,11 @@ const useCreateInvoice = () => {
     setValue("client_email", clientName?.email || "");
     setValue("client_phone", clientName?.phone || "");
 
-    setValue("seller", salesPersonName?.value || "");
-    setValue("salesperson_address", salesPersonName?.address || "");
-    setValue("salesperson_email", salesPersonName?.email || "");
-    setValue("salesperson_phone", salesPersonName?.phone || "");
+      // If not a broker, allow manual salesperson selection
+      setValue("seller", salesPersonName?.value || "");
+      setValue("salesperson_address", salesPersonName?.address || "");
+      setValue("salesperson_email", salesPersonName?.email || "");
+      setValue("salesperson_phone", salesPersonName?.phone || "");
 
     // setValue("listing_broker_id", listingBroker?.value || "");
     // setValue("selling_broker_id", sellingBroker?.value || "");
@@ -199,7 +215,7 @@ const useCreateInvoice = () => {
     setValue("property_address", selectedProperty?.address || "");
     setValue("property_type", selectedProperty?.type || "");
     setValue("property_description", selectedProperty?.description || "");
-  }, [invoiceStatus, clientName, salesPersonName, selectedProperty, setValue]);
+  }, [invoiceStatus, clientName, salesPersonName, selectedProperty, setValue, user]);
 
   // Function to calculate item_total based on item_quantity and item_price
   useEffect(() => {
@@ -364,6 +380,7 @@ const useCreateInvoice = () => {
     append,
     remove,
     total,
+    user,
   };
 };
 
