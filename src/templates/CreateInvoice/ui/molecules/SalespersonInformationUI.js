@@ -14,6 +14,7 @@ const SalespersonInformationUI = ({
   sellingBrokerName,
   handleSelectSellingBroker,
   sellingBrokers,
+  user,
 }) => {
   return (
     <div className="mt-8">
@@ -66,7 +67,7 @@ const SalespersonInformationUI = ({
               onChange={handleSelectSalespersonName}
               options={salesPersons}
               placeholder="Broker Name"
-              isDisabled={loading}
+              isDisabled={user?.role === "BROKER" ? true : false}
               className="text-sm"
             />
             {errors?.seller && !salesPersonName && (
