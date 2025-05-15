@@ -7,18 +7,16 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, openDeleteModal, loading, users }) => {
   return (
     <Card noborder>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
-            <span className="w-full">
+            <span className="">
               <Button
                 text="Add Client"
                 onClick={() => push("/clients/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>
-          </div>
         </div>
       </div>
       <div className="overflow-x-auto -mx-6">

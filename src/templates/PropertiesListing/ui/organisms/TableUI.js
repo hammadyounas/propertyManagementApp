@@ -28,7 +28,7 @@ const TableUI = ({
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
-          <div className="w-full flex items-center gap-2 whitespace-nowrap text-sm">
+          <div className="w-full flex items-center justify-end gap-2 whitespace-nowrap text-sm">
             <DropdownUINew
               label={statusFilter || "Property Status"}
               wrapperClass="sm:w-48"
