@@ -1,6 +1,7 @@
 import moment from "moment";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
+import { getStatusClasses } from "../../../../libs/utils/helper";
 
 const MeetingDetailsUI = ({
   setModalOpen,
@@ -93,7 +94,7 @@ const MeetingDetailsUI = ({
                 </div>
                 <div className="flex flex-col mt-2 w-[48%] pl-[10px]">
                   <label className="font-semibold text-[16px] text-black-500">Status</label>
-                  <span className="text-[14px] flex items-center gap-1"><span className={` text-green-700 text-xs`}>⬤</span> {currentMeeting?.status}</span>
+                  <span className={`text-[14px] flex items-center gap-1 ${getStatusClasses(currentMeeting?.status)}`}><span className={`text-xs`}>⬤</span> {currentMeeting?.status}</span>
                 </div>
               </div>
             </Card>
