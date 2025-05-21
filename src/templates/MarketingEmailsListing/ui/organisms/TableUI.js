@@ -27,11 +27,11 @@ const TableUI = ({
 
   return (
     <Card noborder>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
-            <span className="w-full">
+          <div className="w-full flex items-center justify-end">
+            <span className="">
               <Button
                 text="Send Email"
                 onClick={() => push("/marketing-emails/send")}

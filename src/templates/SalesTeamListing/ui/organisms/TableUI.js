@@ -22,7 +22,7 @@ const TableUI = ({
   return (
     <Card noborder>
       <ToastContainer />
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center gap-2">
