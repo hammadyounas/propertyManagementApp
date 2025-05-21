@@ -26,24 +26,34 @@ const useCalendar = ({
     }
   };
 
-  const renderEventContent = (eventInfo, e) => {
-    return (
-      <div
-        style={{
-          backgroundColor: eventInfo.backgroundColor,
-          color: "white",
-          width: "100%",
-          padding: "5px",
-          cursor: "pointer",
-          textWrap: "wrap",
-        }}
-      >
-        <p>
-          <span>Title: </span> <span>{eventInfo.event.title}</span>
-        </p>
-      </div>
-    );
-  };
+  const toTitleCase = (str) => {
+  return str.replace(/\w\S*/g, (txt) =>
+    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+};
+
+
+const renderEventContent = (eventInfo) => {
+  return (
+    <div
+      style={{
+        backgroundColor: eventInfo.backgroundColor,
+        color: "white",
+        border: "0px", // ✅ fixed
+        width: "100%",
+        padding: "5px",
+        cursor: "pointer",
+        wordWrap: "break-word", // use this instead of textWrap
+      }}
+    >
+      <p className="sm:text-sm text-xs">
+        <span className="">Title: </span>{" "}
+        <span>{toTitleCase(eventInfo.event.title)}</span>
+      </p>
+    </div>
+  );
+};
+
 
   const handleMonthChange = (e) => {
     const selectedDate = e.view.currentStart;
