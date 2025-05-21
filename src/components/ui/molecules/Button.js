@@ -6,7 +6,7 @@ function Button({
   type = "button",
   isLoading,
   disabled,
-  className = "bg-primary-500 text-white",
+  className = "bg-primary-500 text-white font-normal",
   children,
   icon,
   loadingClass = "unset-classname",

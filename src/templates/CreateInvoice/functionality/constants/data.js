@@ -4,28 +4,12 @@ export const invoiceStatuses = [
     label: "Pending",
   },
   {
-    value: "sent",
-    label: "Sent",
+    value: "approved",
+    label: "Approved",
   },
   {
-    value: "paid",
-    label: "Paid",
-  },
-  {
-    value: "partially paid",
-    label: "Partially Paid",
-  },
-  {
-    value: "overdue",
-    label: "Overdue",
-  },
-  {
-    value: "cancelled",
-    label: "Cancelled",
-  },
-  {
-    value: "refunded",
-    label: "Refunded",
+    value: "rejected",
+    label: "Rejected",
   },
 ];
 

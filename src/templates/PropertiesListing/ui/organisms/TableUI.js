@@ -17,8 +17,6 @@ const TableUI = ({
   openDeleteModal,
   loading,
   properties,
-  selectedFilter,
-  setSelectedFilter,
   setStatusFilter,
   statusFilter,
 }) => {

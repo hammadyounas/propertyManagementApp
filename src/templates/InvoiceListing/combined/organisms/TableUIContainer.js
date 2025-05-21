@@ -1,8 +1,22 @@
 import useTable from "../../functionality/organisms/useTable";
 import TableUI from "../../ui/organisms/TableUI";
 
-const Table = ({ rows, globalFilter, setGlobalFilter, push, loading, invoices, setInvoices, downloadPDF, selectedInvoice,
-  setSelectedInvoice, selectedLanguage }) => {
+const Table = ({
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  push,
+  loading,
+  invoices,
+  setInvoices,
+  downloadPDF,
+  selectedInvoice,
+  setSelectedInvoice,
+  selectedLanguage,
+  handleStatusChange,
+  setStatusFilter,
+  statusFilter,
+}) => {
   const { columns } = useTable();
   return (
     <TableUI
@@ -18,6 +32,9 @@ const Table = ({ rows, globalFilter, setGlobalFilter, push, loading, invoices, s
       selectedInvoice={selectedInvoice}
       setSelectedInvoice={setSelectedInvoice}
       selectedLanguage={selectedLanguage}
+      handleStatusChange={handleStatusChange}
+      setStatusFilter={setStatusFilter}
+      statusFilter={statusFilter}
     />
   );
 };

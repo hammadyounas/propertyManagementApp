@@ -33,7 +33,7 @@ const CalendarUI = ({
             closeModal();
             openModal();
           }}
-          className="btn-primary bg-primary-default"
+          className="btn-primary bg-primary-default font-normal"
         />
       </div>
       <FullCalendar

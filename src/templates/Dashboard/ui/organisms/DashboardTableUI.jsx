@@ -54,7 +54,7 @@ const DashboardTableUI = ({
           {/*search by react select  */}
           <ReactSelect
             placeholder="Select Broker"
-            className="xl:w-[50%] md:w-[50%] w-full capitalize"
+            className="xl:w-[50%] md:w-[50%] w-full capitalize font-normal text-sm"
             value={selectedBroker}
             onChange={(option) => {
               if (option?.value === "all") {
@@ -99,7 +99,7 @@ const DashboardTableUI = ({
             wrapperClass="sm:w-40"
             labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 sm:py-3 py-2 rounded cursor-pointer"
             classMenuItems="w-40 left-0"
-            classItem="p-2"
+            classItem="p-2 text-sm"
             onSelect={(value) => {
               if (value === "all") {
                 setSelectedFilter("All");
@@ -125,7 +125,7 @@ const DashboardTableUI = ({
             <Button
               text="Add Entry"
               onClick={() => push("/dashboard/add")}
-              className="btn-primary bg-primary-default w-full"
+              className="btn-primary bg-primary-default w-full font-normal"
             />
           </span>
         </div>
