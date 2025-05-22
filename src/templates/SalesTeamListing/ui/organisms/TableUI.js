@@ -29,9 +29,9 @@ const TableUI = ({
             <DropdownUINew
               label={selectedFilter}
               wrapperClass="w-40"
-              labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              labelClass="btn-secondary bg-primary-default font-normal flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="w-40 left-0"
-              classItem="p-2"
+              classItem="p-2 text-sm"
               onSelect={(value) => {
                 setSelectedFilter(value === "active" ? "Active" : "Inactive");
                 setStatusFilter(value);
@@ -46,7 +46,7 @@ const TableUI = ({
               <Button
                 text="Add Broker"
                 onClick={() => push("/broker/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary bg-primary-default w-full font-normal"
               />
             </span>
           </div>

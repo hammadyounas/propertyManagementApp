@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
 
-const Dropdown = ({ label, labelClass = "", classMenuItems = "", classItem = "", items = [] }) => {
+const Dropdown = ({ label, labelClass = "bg-transparent text-slate-600", classMenuItems = "", classItem = "", items = [], iconClass = "text-slate-600" }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -19,10 +19,10 @@ const Dropdown = ({ label, labelClass = "", classMenuItems = "", classItem = "",
     <div ref={ref} className="relative inline-block text-left">
       <button
         onClick={() => setOpen(!open)}
-        className={`bg-transparent text-slate-600 px-4 py-2 rounded-md flex items-center gap-2  transition ${labelClass}`}
+        className={` px-4 py-2 rounded-md flex items-center gap-2  transition ${labelClass}`}
       >
         {label}
-        <Icon icon="heroicons:chevron-down" className="text-slate-600 text-lg" />
+        <Icon icon="heroicons:chevron-down" className={` text-lg ${iconClass}`} />
       </button>
 
       {open && (

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchInvoicesAPI } from "./invoiceAPI";
+import { fetchInvoicesAPI, updateInvoiceStatusAPI } from "./invoiceAPI";
 
 // Thunk to fetch invoices
 export const fetchInvoices = createAsyncThunk(
@@ -9,6 +9,17 @@ export const fetchInvoices = createAsyncThunk(
       return await fetchInvoicesAPI(params);
     } catch (err) {
       return thunkAPI.rejectWithValue("Failed to fetch invoices");
+    }
+  }
+);
+
+export const updateInvoice = createAsyncThunk(
+  "invoices/updateInvoiceStatus",
+  async ({ invoiceId, status }, thunkAPI) => {
+    try {
+      return await updateInvoiceStatusAPI({ invoiceId, status });
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Failed to update invoice status");
     }
   }
 );
@@ -33,6 +44,25 @@ const invoicesSlice = createSlice({
         state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchInvoices.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      // update invoice status
+      .addCase(updateInvoice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateInvoice.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.invoices.findIndex(
+          (inv) => inv._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.invoices[index] = action.payload;
+        }
+      })
+      .addCase(updateInvoice.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
       });

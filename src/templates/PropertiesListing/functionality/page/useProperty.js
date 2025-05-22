@@ -113,7 +113,7 @@ const useProperty = () => {
     deleteLoading,
     totalCount,
     setStatusFilter,
-  statusFilter,
+    statusFilter,
   };
 };
 

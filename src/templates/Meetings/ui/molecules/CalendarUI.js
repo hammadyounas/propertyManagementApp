@@ -7,6 +7,8 @@ import listPlugin from "@fullcalendar/list";
 import moment from "moment";
 import Button from "../../../../components/ui/molecules/Button";
 
+
+
 const CalendarUI = ({
   setCurrentMeetingId,
   renderEventContent,
@@ -33,7 +35,7 @@ const CalendarUI = ({
             closeModal();
             openModal();
           }}
-          className="btn-primary bg-primary-default"
+          className="btn-primary bg-primary-default font-normal"
         />
       </div>
       <FullCalendar

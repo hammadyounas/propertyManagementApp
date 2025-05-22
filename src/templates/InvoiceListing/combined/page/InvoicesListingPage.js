@@ -18,6 +18,9 @@ const InvoicesListingPage = () => {
     setSelectedInvoice,
     selectedLanguage,
     totalCount,
+    handleStatusChange,
+    setStatusFilter,
+    statusFilter,
   } = useInvoices();
 
   return (
@@ -34,6 +37,9 @@ const InvoicesListingPage = () => {
         selectedInvoice={selectedInvoice}
         setSelectedInvoice={setSelectedInvoice}
         selectedLanguage={selectedLanguage}
+        handleStatusChange={handleStatusChange}
+        setStatusFilter={setStatusFilter}
+        statusFilter={statusFilter}
       />
       <div
         className={`flex w-full justify-end mt-2 items-center ${

@@ -6,8 +6,9 @@ import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Invoice from "./Invoice";
 import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
-import { dateFormat } from "../../../../libs/utils/helper";
+import { dateFormat, getStatusClasses } from "../../../../libs/utils/helper";
 import Dropdown from "../../../../components/ui/organisms/Dropdown";
+import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 
 const TableUI = ({
   columns,
@@ -17,22 +18,40 @@ const TableUI = ({
   push,
   loading,
   invoices,
-  setInvoices,
   downloadPDF,
   selectedInvoice,
   selectedLanguage,
+  handleStatusChange,
+  setStatusFilter,
+  statusFilter,
 }) => {
   return (
     <Card noborder>
       <div className="flex sm:justify-between max-sm:flex-col justify-end items-end sm:items-center mb-6">
-        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} className={'lg:w-[30%] sm:w-[40%] w-full max-sm:mb-2'} placeholder={"🔎︎ Search..."} />
-        <div className="flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center">
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
+          <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
+            <DropdownUINew
+              label={statusFilter || "Invoice Status"}
+              wrapperClass="sm:w-48"
+              labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              classMenuItems="left-0 max-sm:w-32 text-sm"
+              classItem="p-2"
+              onSelect={(value) => {
+                setStatusFilter(value);
+              }}
+              items={[
+                { label: "All", value: "" },
+                { label: "Approved", value: "approved" },
+                { label: "Rejected", value: "rejected" },
+                { label: "Pending", value: "pending" },
+              ]}
+            />
             <span className="w-full">
               <Button
                 text="Create Invoice"
                 onClick={() => push("/invoices/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary bg-primary-default w-full font-normal"
               />
             </span>
           </div>
@@ -45,7 +64,11 @@ const TableUI = ({
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold text-center">
+                    <th
+                      key={i}
+                      scope="col"
+                      className="table-th font-bold text-center"
+                    >
                       {column.label}
                     </th>
                   ))}
@@ -73,10 +96,12 @@ const TableUI = ({
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td">INV-{row.invoiceNumber}</td>
-                      <td className="table-td whitespace-nowrap">{dateFormat(row.invoiceDate)}</td>
+                      <td className="table-td whitespace-nowrap">
+                        {dateFormat(row.invoiceDate)}
+                      </td>
                       <td className="table-td">
                         <div className="flex items-center justify-center">
-                          <span className="text-primary-default font-bold cursor-pointer text-center whitespace-nowrap">
+                          <span className="text-primary-default font-bold text-center whitespace-nowrap">
                             {row.client_name || row?.buyer?.name}
                           </span>
                         </div>
@@ -85,41 +110,25 @@ const TableUI = ({
                         {row.client_address || row?.buyer?.address}
                       </td>
                       <td className="table-td whitespace-nowrap">
-                        {row.responsible_broker || row?.seller?.name || 'N/A'}
+                        {row.responsible_broker || row?.seller?.name || "N/A"}
                       </td>
                       <td className={`table-td`}>
-                        {row.notary_date || row?.instrumentalNotary || 'N/A'}
+                        {row.notary_date || row?.instrumentalNotary || "N/A"}
                       </td>
                       <td className="table-td">
                         {row.commissions_payable || row?.totalCommissionPayable}
                       </td>
-                      <td className="table-td">
+                      {/* <td className="table-td">
                         <span className="block w-full  whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
-                            row?.status === "partially paid" &&
-                            "text-blue-600 bg-blue-200"
+                            row?.status === "approved" &&
+                            "text-green-600 bg-green-200"
                           }
                           ${
-                            row?.status === "refunded" &&
-                            "text-purple-600 bg-purple-200"
-                          }
-                          ${
-                            row?.status === "cancelled" &&
-                            "text-gray-600 bg-gray-200"
-                          }
-                          ${
-                            row?.status === "overdue" &&
-                            "text-orange-600 bg-orange-200"
-                          }
-                          ${
-                            row?.status === "paid" &&
-                            "text-teal-600 bg-teal-200"
-                          }
-                          ${
-                            row?.status === "sent" &&
-                            "text-indigo-600 bg-indigo-200"
+                            row?.status === "rejected" &&
+                            "text-red-600 bg-red-200"
                           }
                           ${
                             row?.status === "pending" &&
@@ -129,15 +138,40 @@ const TableUI = ({
                             {row?.status}
                           </span>
                         </span>
+                      </td> */}
+                      <td className="table-td">
+                        <Dropdown
+                          label={row.status}
+                          labelClass={`capitalize inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${getStatusClasses(
+                            row.status
+                          )}`}
+                          iconClass={`${getStatusClasses(row.status)}`}
+                          classMenuItems="w-32 min-w-[120px] top-full mt-1"
+                          classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                          items={[
+                            {
+                              label: "Approved",
+                              onClick: () =>
+                                handleStatusChange(row._id, "approved"),
+                            },
+                            {
+                              label: "Pending",
+                              onClick: () =>
+                                handleStatusChange(row._id, "pending"),
+                            },
+                            {
+                              label: "Rejected",
+                              onClick: () =>
+                                handleStatusChange(row._id, "rejected"),
+                            },
+                          ]}
+                        />
                       </td>
+
                       <td className="table-td">
                         <div className="flex justify-center items-center relative">
                           <Dropdown
-                            label={
-                              <>
-                                Download{" "}
-                              </>
-                            }
+                            label={<>Download </>}
                             labelClass="flex items-center gap-2"
                             classMenuItems="w-32 min-w-[120px] top-full mt-1"
                             classItem="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -146,14 +180,13 @@ const TableUI = ({
                                 label: "English",
                                 onClick: (e) => {
                                   downloadPDF(e, "en", row);
-                                }
-                                
+                                },
                               },
                               {
                                 label: "French",
                                 onClick: (e) => {
                                   downloadPDF(e, "fr", row);
-                                }                                
+                                },
                               },
                             ]}
                           />

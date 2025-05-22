@@ -23,7 +23,7 @@ const TableUI = ({
               <Button
                 text="Add Client"
                 onClick={() => push("/clients/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary bg-primary-default w-full font-normal"
               />
             </span>
         </div>
@@ -73,7 +73,7 @@ const TableUI = ({
                             alt=""
                             className="block w-8 h-8 object-cover rounded-full mr-2"
                           /> */}
-                          <span className="text-primary-default font-bold cursor-pointer">
+                          <span className="text-primary-default font-bold">
                             {row.name}
                           </span>
                         </div>

@@ -3,8 +3,13 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchInvoices,
+  updateInvoice,
 } from "../../../../store/features/invoices/invoicesSlice";
-import { selectInvoices, selectInvoicesLoading, selectTotalCount } from "../../../../store/features/invoices/invoiceSelectors";
+import {
+  selectInvoices,
+  selectInvoicesLoading,
+  selectTotalCount,
+} from "../../../../store/features/invoices/invoiceSelectors";
 
 const useInvoices = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -17,6 +22,7 @@ const useInvoices = () => {
   const invoices = useSelector(selectInvoices);
   const totalCount = useSelector(selectTotalCount);
   const loading = useSelector(selectInvoicesLoading);
+  const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     dispatch(
@@ -24,23 +30,33 @@ const useInvoices = () => {
         search: globalFilter,
         page: currentPage,
         limit: pageSize,
+        statusFilter,
       })
     );
-  }, [dispatch, globalFilter, currentPage]);
+  }, [dispatch, globalFilter, currentPage, statusFilter]);
 
   console.log("Invoices from Redux:", invoices);
 
-
   useEffect(() => {
     setCurrentPage(1);
-  }, [globalFilter]);
+  }, [globalFilter, statusFilter]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
   };
 
+const handleStatusChange = async (invoiceId, status) => {
+  try {
+    await dispatch(updateInvoice({ invoiceId, status })).unwrap(); // wait for update to complete
+    dispatch(fetchInvoices({ search: globalFilter, page: currentPage, limit: pageSize }));
+  } catch (error) {
+    console.error("Error updating invoice status:", error);
+  }
+};
+
+
   const downloadPDF = async (e, language, invoice) => {
-    e.preventDefault(); 
+    e.preventDefault();
     e.stopPropagation(); // Prevent event bubbling
     console.log("Dropdown item clicked", e);
 
@@ -100,6 +116,9 @@ const useInvoices = () => {
     downloadPDF,
     selectedLanguage,
     totalCount,
+    handleStatusChange,
+    setStatusFilter,
+    statusFilter,
   };
 };
 
