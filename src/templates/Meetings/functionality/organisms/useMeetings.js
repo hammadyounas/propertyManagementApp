@@ -22,16 +22,16 @@ const useMeetings = () => {
   const schema = yup.object({
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
-  start_time: yup
-    .string()
-    .required("Start Time is required")
-    .test(
-      "is-future-time",
-      "Start time cannot be in the past.",
-      function (value) {
-        return new Date(value) > new Date();
-      }
-    ),
+    start_time: yup
+      .string()
+      .required("Start Time is required")
+      .test(
+        "is-future-time",
+        "Start time cannot be in the past.",
+        function (value) {
+          return new Date(value) > new Date();
+        }
+      ),
     end_time: yup
       .string()
       .required("End Time is required")
@@ -76,7 +76,7 @@ const useMeetings = () => {
     control,
   } = useForm({
     resolver: yupResolver(schema),
-    // mode: "all",
+    mode: "onChange",
   });
 
   const watchedStatus = useWatch({ control, name: "status" });
@@ -94,7 +94,7 @@ const useMeetings = () => {
     startDate: moment(new Date()).startOf("month").format("YYYY-MM-DD"),
     endDate: moment(new Date()).endOf("month").format("YYYY-MM-DD"),
   });
-  
+
   useEffect(() => {
     if (users && users.length > 0) {
       setSalespersons(users); // ✅ This is the list for the ReactSelect options
@@ -218,15 +218,17 @@ const useMeetings = () => {
 
   const handleSelectStatus = (e) => {
     setStatus(e);
+    setValue("status", e.value, { shouldValidate: true });
   };
 
   const handleSelectSalesperson = (selectedValues) => {
     setSelectedSalespersons(selectedValues);
-    setValue("salespersons", selectedValues);
+    setValue("salespersons", selectedValues, { shouldValidate: true });
   };
 
   const handleSelectClients = (selectedValues) => {
     setSelectedClients(selectedValues);
+    setValue("clients", selectedValues, { shouldValidate: true });
   };
 
   const [activeModal, setActiveModal] = useState(false);
