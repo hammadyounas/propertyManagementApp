@@ -1,19 +1,23 @@
 export const columns = [
   {
-    label: "Date Sold",
-    field: "Date Sold",
+    label: "Sold Date",
+    field: "Sold Date",
   },
   {
-    label: "Number of Units",
-    field: "Number of Units",
+    label: "Property",
+    field: "Property", 
   },
   {
-    label: "Year Built",
-    field: "Year Built",
+    label: "Number of Units Sold",
+    field: "Number of Units Sold",
   },
   {
-    label: "Gross Revenue (k)",
-    field: "Gross Revenue (k)",
+    label: "Sale Price",
+    field: "Sale Price",
+  },
+  {
+    label: "Net Operating Income",
+    field: "Net Operating Income",
   },
   {
     label: "Cap Rate (%)",

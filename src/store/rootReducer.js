@@ -7,6 +7,7 @@ import clientReducer from "./features/clients/clientSlice";
 import dashboardReducer from "./features/dashboard/dashboardSlice";
 import propertiesReducer from "./features/properties/propertiesSlice";
 import invoicesReducer from "./features/invoices/invoicesSlice";
+import acmReducer from "./features/acm/acmSlice";
 
 const rootReducer = {
   layout,
@@ -17,5 +18,6 @@ const rootReducer = {
   dashboard: dashboardReducer,
   properties: propertiesReducer,
   invoices: invoicesReducer,
+  acm: acmReducer,
 };
 export default rootReducer;

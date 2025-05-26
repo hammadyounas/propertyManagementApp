@@ -1,8 +1,8 @@
 import withAuth from "../../../components/ui/organisms/withAuth"
 import CreateACMPage from "../../../templates/ACMListing/combined/page/CreateACMPage"
 
-const ACM = () => {
+const CreateACM = () => {
     return <CreateACMPage />
 }
 
-export default withAuth(ACM)
+export default withAuth(CreateACM)

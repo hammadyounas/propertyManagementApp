@@ -31,7 +31,7 @@ const useCreateACM = () => {
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange",
+    mode: "all",
   });
 
   const [selectedProperty, setSelectedProperty] = useState(null);
