@@ -41,7 +41,6 @@ const TableUI = ({
                 { label: "Inactive", value: "inactive" },
               ]}
             />
-            ;
             <span className="w-full">
               <Button
                 text="Add Broker"
