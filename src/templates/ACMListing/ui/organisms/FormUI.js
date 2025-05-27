@@ -99,10 +99,11 @@ export default function FormUI({
                 loading={loading}
               />
               <Button
-                text={"Submit"}
+                text={loading ? "Submitting..." : "Submit"}
                 className={"bg-primary-default text-white md:!w-36"}
                 type="submit"
                 loading={loading}
+                disabled={loading}
               />
             </div>
           </div>

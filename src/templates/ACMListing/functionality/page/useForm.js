@@ -1,12 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { fetchProperties } from "../../../../store/features/properties/propertiesSlice";
-import { postRequest } from "../../../../libs/utils/request_handler";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import {
+  selectACMCreateSuccess,
+  selectACMError,
+  selectACMLoading,
+} from "../../../../store/features/acm/acmSelectors";
+import {
+  createACM,
+  clearACMCreateStatus,
+} from "../../../../store/features/acm/acmSlice";
 
 const useCreateACM = () => {
   const schema = yup.object({
@@ -36,9 +44,11 @@ const useCreateACM = () => {
 
   const [selectedProperty, setSelectedProperty] = useState(null);
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { properties } = useSelector((state) => state.properties);
+  const loading = useSelector(selectACMLoading);
+  const error = useSelector(selectACMError);
+  const createSuccess = useSelector(selectACMCreateSuccess);
 
   useEffect(() => {
     dispatch(fetchProperties({ all: true }));
@@ -54,31 +64,47 @@ const useCreateACM = () => {
     setValue("property", selectedOption?.value);
   };
 
-  const onSubmit = async (data) => {
-    setLoading(true);
-    try {
-      const formData = {
-        ...data,
-      };
-
-      const response = await postRequest("acm", formData);
-      if (response) {
-        toast.success("Form submitted successfully");
-        push("/acms");
-      } else {
-        toast.error("Invoice creation failed");
-        throw new Error("Invoices creation failed");
-      }
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error.message ||
-          "An error occurred while creating invoice."
-      );
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (createSuccess) {
+      toast.success("Form Submitted Successfully");
+      dispatch(clearACMCreateStatus());
+      push("/acms");
     }
+
+    if (error) {
+      toast.error(error);
+      dispatch(clearACMCreateStatus());
+    }
+  }, [createSuccess, error, dispatch]);
+
+  const onSubmit = (data) => {
+    dispatch(createACM(data));
   };
+  // const onSubmit = async (data) => {
+  //   setLoading(true);
+  //   try {
+  //     const formData = {
+  //       ...data,
+  //     };
+
+  //     const response = await postRequest("acm", formData);
+  //     if (response) {
+  //       toast.success("Form submitted successfully");
+  //       push("/acms");
+  //     } else {
+  //       toast.error("Invoice creation failed");
+  //       throw new Error("Invoices creation failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error(
+  //       error?.response?.data?.message ||
+  //         error.message ||
+  //         "An error occurred while creating invoice."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return {
     register,

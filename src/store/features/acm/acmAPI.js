@@ -1,4 +1,4 @@
-import { getRequest, patchRequest } from "../../../libs/utils/request_handler";
+import { getRequest, patchRequest, postRequest } from "../../../libs/utils/request_handler";
 
 export const fetchACMAPI = async ({search = "", page, limit}) => {
     const queryParams = new URLSearchParams();
@@ -11,6 +11,11 @@ export const fetchACMAPI = async ({search = "", page, limit}) => {
     const totalCount = response?.data?.totalCount || 0;
 
     return { acm, totalCount };
+}
+
+export const createACMAPI = async (data) => {
+    const response = await postRequest("acm", data);
+    return response?.data?.acm;
 }
 
 // export const updateACMDataAPI = async ({ acmId, data }) => {
