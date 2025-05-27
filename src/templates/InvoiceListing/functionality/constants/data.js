@@ -1,6 +1,6 @@
 export const columns = [
   {
-    label: "Invoice Number",
+    label: "Invoice No",
     field: "invoiceNumber",
   },
   {

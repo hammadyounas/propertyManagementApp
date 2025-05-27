@@ -13,7 +13,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
+import {
+  getRequest,
+  postRequest,
+} from "../../../../libs/utils/request_handler";
 import { useSelector } from "react-redux";
 
 const useCreateInvoice = () => {
@@ -53,7 +56,9 @@ const useCreateInvoice = () => {
     seller: yup.string().required("Selling Broker is required"),
     property: yup.string().required("Property is required"),
     items: yup.array().of(itemSchema).min(1, "At least one item is required"),
-    instrumentalNotary: yup.string().required("Instrumental Notary is required"),
+    instrumentalNotary: yup
+      .string()
+      .required("Instrumental Notary is required"),
   });
 
   const {
@@ -90,7 +95,7 @@ const useCreateInvoice = () => {
   const [invoiceStatus, setInvoiceStatus] = useState({
     label: "Pending",
     value: "pending",
-  });  
+  });
   const [clientName, setClientName] = useState("");
   const [salesPersonName, setSalespersonName] = useState("");
   const [listingBroker, setListingBroker] = useState("");
@@ -165,14 +170,12 @@ const useCreateInvoice = () => {
       const invoiceNumber = response?.data; // ensure you access correctly
       if (invoiceNumber) {
         setValue("invoiceNumber", invoiceNumber);
-        console.log("Next invoice number:", invoiceNumber);
       }
     } catch (error) {
       console.error("Failed to fetch invoice number", error);
     }
   };
-  
-  
+
   useEffect(() => {
     // setValue("invoiceNumber", uuidv4());
     fetchNextInvoiceNumber();
@@ -192,7 +195,6 @@ const useCreateInvoice = () => {
       });
     }
   }, [user]);
-  
 
   // Sync external state with form values using setValue
   useEffect(() => {
@@ -202,11 +204,11 @@ const useCreateInvoice = () => {
     setValue("client_email", clientName?.email || "");
     setValue("client_phone", clientName?.phone || "");
 
-      // If not a broker, allow manual salesperson selection
-      setValue("seller", salesPersonName?.value || "");
-      setValue("salesperson_address", salesPersonName?.address || "");
-      setValue("salesperson_email", salesPersonName?.email || "");
-      setValue("salesperson_phone", salesPersonName?.phone || "");
+    // If not a broker, allow manual salesperson selection
+    setValue("seller", salesPersonName?.value || "");
+    setValue("salesperson_address", salesPersonName?.address || "");
+    setValue("salesperson_email", salesPersonName?.email || "");
+    setValue("salesperson_phone", salesPersonName?.phone || "");
 
     // setValue("listing_broker_id", listingBroker?.value || "");
     // setValue("selling_broker_id", sellingBroker?.value || "");
@@ -215,7 +217,14 @@ const useCreateInvoice = () => {
     setValue("property_address", selectedProperty?.address || "");
     setValue("property_type", selectedProperty?.type || "");
     setValue("property_description", selectedProperty?.description || "");
-  }, [invoiceStatus, clientName, salesPersonName, selectedProperty, setValue, user]);
+  }, [
+    invoiceStatus,
+    clientName,
+    salesPersonName,
+    selectedProperty,
+    setValue,
+    user,
+  ]);
 
   // Function to calculate item_total based on item_quantity and item_price
   useEffect(() => {
@@ -314,7 +323,18 @@ const useCreateInvoice = () => {
   };
 
   const onSubmit = async (data) => {
-    const { invoiceDate, status, buyer, seller, property, instrumentalNotary, notes, items, gstNumber, qstNumber } = data;
+    const {
+      invoiceDate,
+      status,
+      buyer,
+      seller,
+      property,
+      instrumentalNotary,
+      notes,
+      items,
+      gstNumber,
+      qstNumber,
+    } = data;
 
     const formData = {
       invoiceDate,

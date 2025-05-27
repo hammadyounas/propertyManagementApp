@@ -97,7 +97,7 @@ const TableUI = ({
                         </div>
                       </td>
                       <td className="table-td ">{row.contact_number}</td>
-                      <td className="table-td ">{row.email}</td>
+                      <td className="table-td lowercase">{row.email}</td>
                       <td className="table-td ">{row.licence_number}</td>
                       <td className="table-td ">
                         {dateFormat(row.joining_date)}

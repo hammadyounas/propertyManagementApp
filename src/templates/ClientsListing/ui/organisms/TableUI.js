@@ -19,13 +19,13 @@ const TableUI = ({
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className=" flex flex-wrap items-center justify-end">
-            <span className="">
-              <Button
-                text="Add Client"
-                onClick={() => push("/clients/create")}
-                className="btn-primary bg-primary-default w-full font-normal"
-              />
-            </span>
+          <span className="">
+            <Button
+              text="Add Client"
+              onClick={() => push("/clients/create")}
+              className="btn-primary bg-primary-default w-full font-normal"
+            />
+          </span>
         </div>
       </div>
       <div className="overflow-x-auto -mx-6">
@@ -79,7 +79,7 @@ const TableUI = ({
                         </div>
                       </td>
                       <td className="table-td">{row.phoneNumber}</td>
-                      <td className="table-td">{row.email}</td>
+                      <td className="table-td lowercase">{row.email}</td>
                       <td className="table-td">{row.type}</td>
                       <td className="table-td">
                         <span className="block w-full">
