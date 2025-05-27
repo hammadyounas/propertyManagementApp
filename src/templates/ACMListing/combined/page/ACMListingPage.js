@@ -2,18 +2,20 @@ import Table from "../organisms/TableUIContainer";
 import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
 import useAcm from "../../functionality/page/useAcm";
+import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 
 const ACMListingPage = () => {
   const {
     globalFilter,
     setGlobalFilter,
     acms,
-    setAcms,
     paginatedAcms, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,
     push,
+    totalCount,
+    loading,
   } = useAcm();
 
   return (
@@ -23,22 +25,21 @@ const ACMListingPage = () => {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
+        acms={acms}
+        totalCount={totalCount}
+        loading={loading}
       />
-      <div className="flex w-full justify-end mt-2 items-center">
-        <ReactPaginate
-          previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
-          nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
-          breakLabel={"..."}
-          pageCount={Math.ceil(acms.length / pageSize)} // Correctly calculate the number of pages
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={({ selected }) => handlePageChange(selected)}
-          containerClassName={"pagination"}
-          subContainerClassName={"pages pagination"}
-          activeClassName={"active"}
-          initialPage={currentPage - 1}
-        />
-      </div>
+      <div
+           className={`flex w-full justify-end mt-2 items-center ${
+             totalCount <= pageSize && "hidden"
+           }`}
+         >
+           <PaginationUI
+             pageCount={Math.ceil(totalCount / pageSize)}
+             onPageChange={({ selected }) => handlePageChange(selected)}
+             initialPage={currentPage - 1}
+           />
+         </div>
     </>
   );
 };

@@ -49,7 +49,7 @@ const propertiesSlice = createSlice({
             })
             .addCase(fetchProperties.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.error || "Failed to fetch properties";
+                state.error = action.payload?.error || "Failed to fetch properties";
             })
 
             // delete property

@@ -1,17 +1,39 @@
 import { useEffect, useMemo, useState } from "react";
 import { rows } from "../constants/data";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import {fetchACM} from "../../../../store/features/acm/acmSlice"
+import { selectACM, selectACMLoading, selectTotalCount } from "../../../../store/features/acm/acmSelectors";
 
 const useAcm = () => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [acms, setAcms] = useState([]);
+  // const [acms, setAcms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
+  const dispatch = useDispatch();
+  const acms = useSelector(selectACM);
+  const totalCount = useSelector(selectTotalCount);
+  const loading = useSelector(selectACMLoading);
 
-  useEffect(() => {
-    setAcms(rows);
-  }, []);
+
+  // useEffect(() => {
+  //   setAcms(rows);
+  // }, []);
+
+    useEffect(() => {
+      dispatch(
+        fetchACM({
+          search: globalFilter,
+          page: currentPage,
+          limit: pageSize,
+        })
+      );
+    }, [dispatch, globalFilter, currentPage]);
+
+      useEffect(() => {
+    setCurrentPage(1);
+  }, [globalFilter]);
 
   // Calculate the paginated users
   const paginatedAcms = useMemo(() => {
@@ -27,12 +49,13 @@ const useAcm = () => {
     globalFilter,
     setGlobalFilter,
     acms,
-    setAcms,
-    paginatedAcms, // Return paginated users
+    // paginatedAcms, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,
     push,
+    totalCount,
+    loading,
   };
 };
 

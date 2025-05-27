@@ -3,8 +3,9 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
+import { dateFormat } from "../../../../libs/utils/helper";
 
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
+const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, acms }) => {
   return (
     <Card noborder>
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
@@ -14,7 +15,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
             <span className="">
               <Button
                 text="Add ACM"
-                onClick={() => {}}
+                onClick={() => push("/acms/create")}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>
@@ -24,23 +25,24 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
       <div className="overflow-x-auto -mx-6">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 text-center">
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold">
+                    <th key={i} scope="col" className="table-th font-bold text-center">
                       {column.label}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {rows?.map((row, i) => (
+                {acms?.map((row, i) => (
                   <tr key={i} className="even:bg-slate-200 dark:even:bg-slate-700">
-                    <td className="table-td">{row.date_sold}</td>
-                    <td className="table-td">{row.number_of_units}</td>
-                    <td className="table-td">{row.year_built}</td>
-                    <td className="table-td">{row.gross_revenue}</td>
+                    <td className="table-td">{dateFormat(row.date_of_sale) }</td>
+                    <td className="table-td">{row.property.title}</td>
+                    <td className="table-td">{row.unit_sold}</td>
+                    <td className="table-td">$ {row.sale_price}</td>
+                    <td className="table-td">$ {row.net_operating_income}</td>
                     <td className="table-td">{row.cap_rate}</td>
                     <td className="table-td">
                       <div className="flex">
