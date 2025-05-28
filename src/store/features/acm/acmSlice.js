@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import { fetchACMAPI, updateACMDataAPI } from "./invoiceAPI";
-import { fetchACMAPI } from "./acmAPI";
+import { createACMAPI, fetchACMAPI } from "./acmAPI";
 
 // Thunk to fetch acm
 export const fetchACM = createAsyncThunk(
@@ -13,6 +12,22 @@ export const fetchACM = createAsyncThunk(
     }
   }
 );
+
+export const createACM = createAsyncThunk(
+  "acm/createACM",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await createACMAPI(formData);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "An error occurred while creating ACM."
+      );
+    }
+  }
+)
 
 // export const updateInvoice = createAsyncThunk(
 //   "acm/updateacmtatus",
@@ -32,6 +47,13 @@ const acmSlice = createSlice({
     totalCount: 0,
     loading: false,
     error: null,
+    createSuccess: false,
+  },
+  reducers: {
+    clearACMCreateStatus: (state) => {
+      state.createSuccess = false;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -48,6 +70,21 @@ const acmSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Something went wrong";
       })
+
+            // Create ACM
+      .addCase(createACM.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.createSuccess = false;
+      })
+      .addCase(createACM.fulfilled, (state) => {
+        state.loading = false;
+        state.createSuccess = true;
+      })
+      .addCase(createACM.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to create ACM";
+      });
 
       // update invoice status
     //   .addCase(updateInvoice.pending, (state) => {
@@ -70,4 +107,5 @@ const acmSlice = createSlice({
   },
 });
 
+export const { clearACMCreateStatus} = acmSlice.actions;
 export default acmSlice.reducer;

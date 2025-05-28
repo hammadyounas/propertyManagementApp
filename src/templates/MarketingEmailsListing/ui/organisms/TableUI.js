@@ -86,14 +86,14 @@ const TableUI = ({
                           <span>{row.description}</span>
                         </div>
                       </td>
-                      <td className="table-td">
+                      <td className="table-td lowercase">
                         {row?.recipients
                           ?.slice(
                             0,
                             expandedRows[row._id] ? row?.recipients.length : 1
                           )
                           .map((receipt, index) => (
-                            <p key={index}>{receipt}</p>
+                            <p className="lowercase" key={index}>{receipt}</p>
                           ))}
                         {row?.recipients?.length > 1 && (
                           <p

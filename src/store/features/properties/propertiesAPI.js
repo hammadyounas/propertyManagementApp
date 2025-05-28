@@ -39,9 +39,7 @@ export const fetchPropertiesAPI = async ({
   const properties = response?.data?.properties?.filter(
     (property) => !property.isDeleted
   );
-  console.log("Properties fetched:", properties);
   const totalCount = response?.data?.total || 0;
-  console.log("Total count of properties:", totalCount);
 
   return { properties, totalCount };
 };
