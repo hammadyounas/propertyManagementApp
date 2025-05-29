@@ -52,8 +52,8 @@ const TableUI = ({
               key={row._id || i}
               className="sm:p-2 border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2"
             >
-              {/* card header */}
               <div className="flex flex-col gap-2">
+              {/* card header */}
                 <div className="flex items-center justify-between capitalize">
                   <div className="flex items-center gap-4">
                     <img
