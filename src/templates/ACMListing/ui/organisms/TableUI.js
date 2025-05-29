@@ -37,19 +37,19 @@ const TableUI = ({
           {acms.map((row, i) => (
             <Card
               key={row._id || i}
-              className="sm:p-2 border rounded-xl shadow-sm text-sm max-sm:mb-2"
+              className="sm:p-2 border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2"
             >
               {/* card header */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between capitalize">
                   <div className="flex items-center gap-4">
                     <img
-                      src={row.subject_property.images[0]}
-                      alt={row.subject_property.images[0]}
+                      src={row.subject_property?.images[0]}
+                      alt={row.subject_property?.images[0]}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
                     <h1 className="sm:text-lg text-base font-medium">
-                      {row.subject_property.title}
+                      {row.subject_property?.title}
                     </h1>
                   </div>
 
@@ -63,7 +63,7 @@ const TableUI = ({
                 </div>
 
                 {/* details */}
-                <div className="mt-10">
+                <div className="mt-10 sm:w-[80%] w-full mx-auto">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-gray-500">Sold Date</p>
@@ -74,7 +74,7 @@ const TableUI = ({
                       <p>{row.unit_sold}</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-4 mt-2">
+                  <div className="flex items-center justify-between gap-4 mt-3">
                     <div>
                       <p className="text-gray-500">Sale Price</p>
                       <p>{row.sale_price}</p>
@@ -84,7 +84,7 @@ const TableUI = ({
                       <p>{row.cap_rate}</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-4 mt-2">
+                  <div className="flex items-center justify-between gap-4 mt-3">
                     <div>
                       <p className="text-gray-500">Net Operating Income</p>
                       <p>{row.cap_rate}</p>
