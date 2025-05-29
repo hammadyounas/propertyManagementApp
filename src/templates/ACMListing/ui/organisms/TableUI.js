@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-import { dateFormat } from "../../../../libs/utils/helper";
+import { calculateAverage, dateFormat } from "../../../../libs/utils/helper";
 
 const TableUI = ({
   columns,
@@ -19,6 +19,16 @@ const TableUI = ({
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center justify-end">
+              <div className="mr-10 text-sm font-medium text-gray-500">
+              <p className="font-semibold">Average</p>
+              <p>$ {calculateAverage("sale_price", acms).toLocaleString(
+                  undefined,
+                  {
+                    maximumFractionDigits: 2,
+                  }
+                )}
+              </p>
+            </div>
             <span>
               <Button
                 text="Add ACM"
