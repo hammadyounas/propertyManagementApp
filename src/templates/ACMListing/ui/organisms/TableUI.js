@@ -46,7 +46,7 @@ const TableUI = ({
       {acms?.length === 0 ? (
         <div className="text-center p-4">No ACM's found.</div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 sm:gap-4 sm:px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 lg:gap-10 sm:gap-4 sm:px-4">
           {acms.map((row, i) => (
             <Card
               key={row._id || i}
@@ -61,15 +61,15 @@ const TableUI = ({
                       alt={row.subject_property?.images[0]}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
-                    <h1 className="sm:text-lg text-base font-medium">
+                    <h1 className="lg:text-lg text-base font-medium">
                       {row.subject_property?.title}
                     </h1>
                   </div>
 
                   <div>
                     <DropdownMenu
-                    //   onEdit={() => push(`/acms/edit/${row._id}`)}
-                    //   onDelete={() => handleDelete(row._id)}
+                      //   onEdit={() => push(`/acms/edit/${row._id}`)}
+                      //   onDelete={() => handleDelete(row._id)}
                       onEdit={() => push(``)}
                       onDelete={() => {}}
                     />
@@ -77,7 +77,7 @@ const TableUI = ({
                 </div>
 
                 {/* details */}
-                <div className="mt-10 sm:w-[80%] w-full mx-auto">
+                <div className="mt-10  w-full mx-auto">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-gray-500">Sold Date</p>
