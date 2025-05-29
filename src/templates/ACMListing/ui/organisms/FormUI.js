@@ -13,6 +13,8 @@ export default function FormUI({
   push,
   handleSubmit,
   onSubmit,
+  selectedSubjectProperty,
+  handleSelectSubjectProperty,
 }) {
   return (
     <div className="w-full lg:w-[75%]">
@@ -32,13 +34,14 @@ export default function FormUI({
                 />
               </div>
               <div className="w-full md:w-[49%]">
-                <div className="my-2 text-sm font-medium">Property Name*</div>
+                <div className="my-2 text-sm font-medium">Property Title*</div>
                 <ReactSelect
                   name="property"
+                  isMulti
                   value={selectedProperty}
                   onChange={handleSelectProperty}
                   options={properties}
-                  placeholder="Property Name"
+                  placeholder="Property Title"
                   isDisabled={loading}
                   className="text-sm"
                 />
@@ -63,19 +66,38 @@ export default function FormUI({
                 />
               </div>
               <div className="w-full md:w-[49%]">
+                <div className="my-2 text-sm font-medium">
+                  Subject Property*
+                </div>
+                <ReactSelect
+                  name="subject_property"
+                  value={selectedSubjectProperty}
+                  onChange={handleSelectSubjectProperty}
+                  options={properties}
+                  placeholder="Subject Property"
+                  isDisabled={loading}
+                  className="text-sm"
+                />
+                {errors.subject_property && (
+                  <p className="text-sm text-danger-500 mt-2">
+                    {errors.subject_property.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <div className="w-full md:w-[49%]">
                 <Textinput
                   name="sale_price"
                   label="Sale Price*"
                   type="number"
                   register={register}
-                  error={errors.email}
+                  error={errors.sale_price}
                   placeholder="Sale Price"
                   disabled={loading}
                 />
               </div>
-            </div>
-
-            <div className="flex flex-wrap justify-between">
               <div className="w-full md:w-[49%]">
                 <Textinput
                   name="net_operating_income"

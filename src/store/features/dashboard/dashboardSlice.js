@@ -32,7 +32,6 @@ export const fetchDashboardEntries = createAsyncThunk(
       }
 
       const response = await getRequest(url);
-      console.log("Response:", response.data); // Log the response for debugging
       return response.data; // Return the response data for Redux to store
     } catch (error) {
       throw new Error("Error fetching dashboard entries:", error); // Handle errors
@@ -57,11 +56,6 @@ export const fetchBrokers = createAsyncThunk(
   async () => {
     const response = await getRequest("users"); // <- Make sure this endpoint returns [{ name, _id }]
     const filteredBrokers = response.data.filter((user) => !user.isDeleted);
-    console.log("Response:", response.data); // Log the response for debugging
-    console.log(
-      "Brokers:",
-      filteredBrokers.map((b) => b.name)
-    );
     return [
       { label: "All", value: "all" },
       ...filteredBrokers.map((user) => ({
@@ -105,7 +99,7 @@ const dashboardSlice = createSlice({
     },
     handleCloseModal: (state) => {
       state.isModalOpen = false;
-    },
+    },  
   },
   extraReducers: (builder) => {
     builder

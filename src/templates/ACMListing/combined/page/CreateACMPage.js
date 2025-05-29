@@ -14,6 +14,8 @@ export default function CreateACMPage() {
     selectedProperty,
     handleSelectProperty,
     push,
+    selectedSubjectProperty,
+    handleSelectSubjectProperty,
   } = useForm();
   return (
     <CreateACM
@@ -28,6 +30,8 @@ export default function CreateACMPage() {
       selectedProperty={selectedProperty}
       handleSelectProperty={handleSelectProperty}
       push={push}
+      selectedSubjectProperty={selectedSubjectProperty}
+      handleSelectSubjectProperty={handleSelectSubjectProperty}
     />
   );
 }
