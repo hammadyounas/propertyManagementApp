@@ -34,7 +34,7 @@ const useClients = () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams();
-      if (globalFilter) queryParams.append("search", search.trim());
+      if (globalFilter) queryParams.append("search", globalFilter.trim());
       queryParams.append("page", currentPage.toString());
       queryParams.append("limit", pageSize.toString());
       const response = await getRequest(`clients?${queryParams.toString()}`);
@@ -57,6 +57,10 @@ const useClients = () => {
     fetchClients();
     // setUsers(rows);
   }, [globalFilter, currentPage]);
+
+    useEffect(() => {
+    setCurrentPage(1);
+  }, [globalFilter]);
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
