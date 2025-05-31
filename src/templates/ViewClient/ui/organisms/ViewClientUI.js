@@ -1,22 +1,5 @@
-import React from "react";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
-import { Icon } from "@iconify/react";
 import DropdownMenu from "../../../../components/ui/organisms/DropdownMenu";
-
-const clientFields = [
-  { label: "Full name", valueKey: "name" },
-  { label: "Email address", valueKey: "email" },
-  { label: "Phone number", valueKey: "phoneNumber" },
-  { label: "Address", valueKey: "address" },
-  { label: "Client Type", valueKey: "type" },
-  { label: "Status", valueKey: "status" },
-  {
-    label: "Preferred Communication Channel",
-    valueKey: "preferredCommunicationChannel",
-  },
-  { label: "Assigned Salesperson", valueKey: "assignedSalesperson" },
-  { label: "Notes", valueKey: "notes" },
-];
 
 export default function ViewClientUI({ clientData = {}, handleEdit }) {
   const clientFields = [

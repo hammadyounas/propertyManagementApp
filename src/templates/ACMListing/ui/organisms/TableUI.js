@@ -50,7 +50,7 @@ const TableUI = ({
           {acms.map((row, i) => (
             <Card
               key={row._id || i}
-              className="sm:p-2 border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2"
+              className="sm:p-2 bg-gray-100 rounded-lg shadow-sm text-sm max-sm:mb-2"
             >
               <div className="flex flex-col gap-2">
               {/* card header */}

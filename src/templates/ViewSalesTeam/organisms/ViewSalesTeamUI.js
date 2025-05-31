@@ -74,7 +74,7 @@ export default function ViewSalesTeamUI({
                   <dd className="mt-1 text-sm text-gray-900 text-center sm:col-span-2 mx-auto">
                     {assignedProperties.length
                       ? assignedProperties
-                          .map((property) => property.label)
+                          .map((property) => property.title) 
                           .join(", ")
                       : "N/A"}
                   </dd>
