@@ -1,24 +1,33 @@
-import { useEffect, useMemo, useState } from "react";
-import { rows } from "../constants/data";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   deleteRequest,
-  getRequest,
 } from "../../../../libs/utils/request_handler";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClients } from "../../../../store/features/clients/clientSlice";
+import { clientLoading, selectClient, selectClientsTotalCount } from "../../../../store/features/clients/clientSelectors";
 
 const useClients = () => {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { push } = useRouter();
-
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
+  const dispatch = useDispatch();
+  const users = useSelector(selectClient);
+  const loading = useSelector(clientLoading);
+  const totalCount = useSelector(selectClientsTotalCount);
+
+  useEffect(() => {
+    dispatch(fetchClients({ search: globalFilter, page: currentPage, limit: pageSize }));
+  }, [globalFilter, currentPage, dispatch]);
+
+    useEffect(() => {
+    setCurrentPage(1);
+  }, [globalFilter]);
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -30,56 +39,16 @@ const useClients = () => {
     setShowDeleteModal(!showDeleteModal);
   };
 
-  const fetchClients = async () => {
-    try {
-      setLoading(true);
-      const queryParams = new URLSearchParams();
-      if (globalFilter) queryParams.append("search", globalFilter.trim());
-      queryParams.append("page", currentPage.toString());
-      queryParams.append("limit", pageSize.toString());
-      const response = await getRequest(`clients?${queryParams.toString()}`);
-      console.log(response);
-      const filteredUsers = response?.data?.clients.filter(
-        (user) => !user.isDeleted
-      );
-      console.log(filteredUsers);
-      setUsers(filteredUsers);
-      const totalCount = response?.data?.total || 0;
-      setTotalCount(totalCount);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error fetching clients:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchClients();
-    // setUsers(rows);
-  }, [globalFilter, currentPage]);
-
-    useEffect(() => {
-    setCurrentPage(1);
-  }, [globalFilter]);
-
-  // Calculate the paginated users
-  const paginatedUsers = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return users?.slice(startIndex, startIndex + pageSize);
-  }, [users, currentPage, pageSize]);
-
   const handlePageChange = (page) => {
-    setCurrentPage(page + 1); // Increment by 1 for 1-based page indexing
-  };
+    setCurrentPage(page + 1);
+  }
 
   const deleteClientById = async () => {
     try {
       setDeleteLoading(true);
-
       const response = await deleteRequest(`clients/${currentItem}`);
       if (response) {
-        // setUsers(users.filter((user) => user.id !== id));
-        fetchClients();
+        dispatch(fetchClients());
         closeDeleteModal();
         console.log(response);
         toast.success("Client deleted successfully!");
@@ -102,8 +71,6 @@ const useClients = () => {
     globalFilter,
     setGlobalFilter,
     users,
-    setUsers,
-    paginatedUsers, // Return paginated users
     pageSize,
     handlePageChange,
     currentPage,

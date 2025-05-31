@@ -8,7 +8,6 @@ const ClientsListingPage = () => {
   const {
     globalFilter,
     setGlobalFilter,
-    paginatedUsers, // Use paginated properties here
     pageSize,
     handlePageChange,
     currentPage,
@@ -26,7 +25,7 @@ const ClientsListingPage = () => {
   return (
     <>
       <Table
-        rows={paginatedUsers} // Pass paginated properties to the Table
+        rows={users} // Pass paginated properties to the Table
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
