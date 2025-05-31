@@ -1,12 +1,9 @@
-import React from "react";
-import { Icon } from "@iconify/react";
 import Card from "../../../components/combined/molecules/CardUIContainer";
 import Link from "next/link";
 import DropdownMenu from "../../../components/ui/organisms/DropdownMenu";
 
 export default function ViewSalesTeamUI({
   salesteamData = {},
-  assignedProperties = [],
   handleEdit,
 }) {
   const userDataFields = [
@@ -23,15 +20,14 @@ export default function ViewSalesTeamUI({
     { label: "Communication Channel", valueKey: "communication_channel" },
     { label: "Notes", valueKey: "notes" },
   ];
-
-  console.log("salesteamData", salesteamData.avatar);
   return (
     <Card>
       <Card className="sm:p-2 lg:w-[40%] sm:w-[50%] border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2 w-full">
+        {/* card header */}
         <div className="flex items-center justify-between capitalize">
           <div className="flex items-center gap-4">
             <img
-              src={salesteamData.avatar || "/assets/images/users/default.jpg"}
+              src={salesteamData?.avatar || "/assets/images/users/default.jpg"}
               alt={salesteamData?.name}
               className="w-12 h-12 object-cover rounded-lg"
             />
@@ -45,6 +41,7 @@ export default function ViewSalesTeamUI({
           </div>
         </div>
 
+        {/* user details */}
         <div className="mt-10">
           {userDataFields?.map(({ label, valueKey }) => (
             <div
@@ -80,7 +77,7 @@ export default function ViewSalesTeamUI({
                           className="w-8 h-8 object-cover rounded-full"
                         />
                         <span className="text-gray-600 hover:border-b border-blue-500 hover:text-blue-500">
-                          {property.title}
+                          {property?.title}
                         </span>{" "}
                       </p>
                     </Link>

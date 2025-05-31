@@ -1,16 +1,10 @@
-import React from "react";
 import ViewSalesTeamUI from "../../organisms/ViewSalesTeamUI";
 import useSalesTeamDetails from "../../functional/organisms/useSalesTeamDetails";
 
 export default function ViewSalesTeamPage() {
-  const { salesteamData, handleEdit, assignedProperties } =
-    useSalesTeamDetails();
+  const { salesteamData, handleEdit } = useSalesTeamDetails();
 
   return (
-    <ViewSalesTeamUI
-      salesteamData={salesteamData}
-      handleEdit={handleEdit}
-      assignedProperties={assignedProperties}
-    />
+    <ViewSalesTeamUI salesteamData={salesteamData} handleEdit={handleEdit} />
   );
 }
