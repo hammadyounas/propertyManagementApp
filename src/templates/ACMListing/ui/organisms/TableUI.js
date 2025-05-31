@@ -61,7 +61,7 @@ const TableUI = ({
                       alt={row.subject_property?.images[0]}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
-                    <h1 className="lg:text-lg text-base font-medium">
+                    <h1 className="lg:text-base text-sm font-medium">
                       {row.subject_property?.title}
                     </h1>
                   </div>
