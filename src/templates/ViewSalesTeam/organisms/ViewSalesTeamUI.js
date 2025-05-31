@@ -72,8 +72,8 @@ export default function ViewSalesTeamUI({
                     >
                       <p className="flex items-center gap-2 ">
                         <img
-                          src={property?.images[0]}
-                          alt={property?.images[0]}
+                          src={property?.images?.[0]}
+                          alt={property?.title}
                           className="w-8 h-8 object-cover rounded-full"
                         />
                         <span className="text-gray-600 hover:border-b border-blue-500 hover:text-blue-500">
