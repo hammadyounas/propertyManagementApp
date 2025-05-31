@@ -1,6 +1,8 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import Card from "../../../components/combined/molecules/CardUIContainer";
+import Link from "next/link";
+import DropdownMenu from "../../../components/ui/organisms/DropdownMenu";
 
 export default function ViewSalesTeamUI({
   salesteamData = {},
@@ -22,68 +24,73 @@ export default function ViewSalesTeamUI({
     { label: "Notes", valueKey: "notes" },
   ];
 
+  console.log("salesteamData", salesteamData.avatar);
   return (
-    <Card title={salesteamData?.name} subtitle={salesteamData?.email}>
-      <div className="flex items-center text-green-700">
-        <span className="w-full flex justify-end items-center">
-          <p>Edit</p>
-          <Icon
-            onClick={() => handleEdit()}
-            className="cursor-pointer text-[20px] mx-4"
-            icon="heroicons:pencil-square"
-          />
-        </span>
-      </div>
-      <div className="overflow-x-auto -mx-6">
-        <div className="inline-block w-full xl:w-[80%] align-middle">
-          <div className="overflow-hidden">
-            <div className="px-4 sm:-py-5 sm:px-6">
-              <div>
-                <p></p>
-                <img src={salesteamData?.name} alt="" /> 
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-4 capitalize ">
-                {userDataFields?.map(({ label, valueKey }) => (
-                  <div
-                    key={valueKey}
-                    className={`${
-                      salesteamData?.[valueKey]?.toString().trim()
-                        ? "sm:grid sm:grid-cols-3 sm:gap-4"
-                        : "hidden"
-                    }`}
-                  >
-                    <dt className="text-sm font-medium text-gray-500 py-2">
-                      {label}
-                    </dt>
-                    <dd className="mt-1 text-sm w-full bg-gray-200 rounded-sm text-center py-2 text-gray-700 sm:col-span-2 mx-auto">
-                      {salesteamData?.[valueKey] || "N/A"}
-                    </dd>
-                  </div>
-                ))}
-                {/* Assigned Properties */}
-                <div
-                  className={`${
-                    assignedProperties.length
-                      ? "sm:grid sm:grid-cols-3 sm:gap-4"
-                      : "hidden"
-                  }`}
-                >
-                  <dt className="text-sm font-medium text-gray-500">
-                    Assigned Properties
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900 text-center sm:col-span-2 mx-auto">
-                    {assignedProperties.length
-                      ? assignedProperties
-                          .map((property) => property.title) 
-                          .join(", ")
-                      : "N/A"}
-                  </dd>
-                </div>
-              </div>
-            </div>
+    <Card>
+      <Card className="sm:p-2 lg:w-[40%] sm:w-[50%] border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2 w-full">
+        <div className="flex items-center justify-between capitalize">
+          <div className="flex items-center gap-4">
+            <img
+              src={salesteamData.avatar || "/assets/images/users/default.jpg"}
+              alt={salesteamData?.name}
+              className="w-12 h-12 object-cover rounded-lg"
+            />
+            <h1 className="lg:text-lg text-base font-medium">
+              {salesteamData?.name}
+            </h1>
+          </div>
+
+          <div>
+            <DropdownMenu onEdit={() => handleEdit()} showEdit={true} />
           </div>
         </div>
-      </div>
+
+        <div className="mt-10">
+          {userDataFields?.map(({ label, valueKey }) => (
+            <div
+              key={valueKey}
+              className={`${
+                salesteamData?.[valueKey]?.toString().trim()
+                  ? "py-3 sm:py-2 sm:grid sm:grid-cols-2 sm:gap-4"
+                  : "hidden"
+              }`}
+            >
+              <dt className="text-sm font-medium text-gray-500">{label}</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1 capitalize">
+                {salesteamData?.[valueKey] || "N/A"}
+              </dd>
+            </div>
+          ))}
+          {salesteamData?.assigned_properties?.length > 0 && (
+            <div className="py-3 sm:py-2 sm:grid sm:grid-cols-2 sm:gap-4">
+              <dt className="text-sm font-medium text-gray-500">
+                Assigned Properties
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1 capitalize space-y-1">
+                {salesteamData.assigned_properties.map((property, index) => (
+                  <div key={property._id || index}>
+                    <Link
+                      href={`/properties/view/${property._id}`}
+                      className=""
+                    >
+                      <p className="flex items-center gap-2 ">
+                        <img
+                          src={property?.images[0]}
+                          alt={property?.images[0]}
+                          className="w-8 h-8 object-cover rounded-full"
+                        />
+                        <span className="text-gray-600 hover:border-b border-blue-500 hover:text-blue-500">
+                          {property.title}
+                        </span>{" "}
+                      </p>
+                    </Link>
+                  </div>
+                ))}
+              </dd>
+            </div>
+          )}
+        </div>
+      </Card>
     </Card>
   );
 }

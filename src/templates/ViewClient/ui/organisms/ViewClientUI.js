@@ -18,17 +18,7 @@ export default function ViewClientUI({ clientData = {}, handleEdit }) {
   ];
 
   return (
-    <Card title="Client Details">
-      {/* <div className="flex items-center text-green-700">
-        <span className="w-full flex justify-end items-center">
-          <p>Edit</p>
-          <Icon
-            onClick={() => handleEdit()}
-            className="cursor-pointer text-[20px] mx-4"
-            icon="heroicons:pencil-square"
-          />
-        </span>
-      </div> */}
+    <Card>
       <Card className="sm:p-2 lg:w-[40%] sm:w-[50%] border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2 w-full">
         <div className="flex items-center justify-between capitalize">
           <div className="flex items-center gap-4">
@@ -43,7 +33,7 @@ export default function ViewClientUI({ clientData = {}, handleEdit }) {
           </div>
 
           <div>
-            <DropdownMenu onEdit={() => handleEdit()} />
+            <DropdownMenu onEdit={() => handleEdit()} showEdit={true} />
           </div>
         </div>
 

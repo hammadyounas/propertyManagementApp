@@ -3,11 +3,12 @@ import ViewSalesTeamUI from "../../organisms/ViewSalesTeamUI";
 import useSalesTeamDetails from "../../functional/organisms/useSalesTeamDetails";
 
 export default function ViewSalesTeamPage() {
-  const { salesteamData, handleEdit, assignedProperties } = useSalesTeamDetails();
+  const { salesteamData, handleEdit, assignedProperties } =
+    useSalesTeamDetails();
 
   return (
     <ViewSalesTeamUI
-    salesteamData={salesteamData}
+      salesteamData={salesteamData}
       handleEdit={handleEdit}
       assignedProperties={assignedProperties}
     />

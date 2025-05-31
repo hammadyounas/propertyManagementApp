@@ -72,6 +72,8 @@ const TableUI = ({
                       //   onDelete={() => handleDelete(row._id)}
                       onEdit={() => push(``)}
                       onDelete={() => {}}
+                      showEdit={true}
+                      showDelete={true}
                     />
                   </div>
                 </div>
