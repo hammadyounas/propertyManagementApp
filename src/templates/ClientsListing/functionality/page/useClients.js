@@ -17,7 +17,7 @@ const useClients = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
 
   const closeDeleteModal = () => {
@@ -32,17 +32,23 @@ const useClients = () => {
 
   const fetchClients = async () => {
     try {
-      setLoading(true)
-      const response = await getRequest("clients");
+      setLoading(true);
+      const queryParams = new URLSearchParams();
+      if (globalFilter) queryParams.append("search", search.trim());
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", pageSize.toString());
+      const response = await getRequest(`clients?${queryParams.toString()}`);
       console.log(response);
-      const filteredUsers = response?.data?.clients.filter((user) => !user.isDeleted);
+      const filteredUsers = response?.data?.clients.filter(
+        (user) => !user.isDeleted
+      );
       console.log(filteredUsers);
       setUsers(filteredUsers);
       const totalCount = response?.data?.total || 0;
       setTotalCount(totalCount);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.error("Error fetching clients:", error);
     }
   };
@@ -50,7 +56,7 @@ const useClients = () => {
   useEffect(() => {
     fetchClients();
     // setUsers(rows);
-  }, []);
+  }, [globalFilter, currentPage]);
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
@@ -65,6 +71,7 @@ const useClients = () => {
   const deleteClientById = async () => {
     try {
       setDeleteLoading(true);
+
       const response = await deleteRequest(`clients/${currentItem}`);
       if (response) {
         // setUsers(users.filter((user) => user.id !== id));
@@ -103,7 +110,7 @@ const useClients = () => {
     closeDeleteModal,
     deleteLoading,
     loading,
-    totalCount
+    totalCount,
   };
 };
 
