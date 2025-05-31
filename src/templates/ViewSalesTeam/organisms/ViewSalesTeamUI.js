@@ -64,8 +64,8 @@ export default function ViewSalesTeamUI({
                 Assigned Properties
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1 capitalize space-y-1">
-                {salesteamData.assigned_properties.map((property, index) => (
-                  <div key={property._id || index}>
+                {salesteamData.assigned_properties?.map((property, index) => (
+                  <div key={index}>
                     <Link
                       href={`/properties/view/${property._id}`}
                       className=""
@@ -77,7 +77,7 @@ export default function ViewSalesTeamUI({
                           className="w-8 h-8 object-cover rounded-full"
                         />
                         <span className="text-gray-600 hover:border-b border-blue-500 hover:text-blue-500">
-                          {property?.title}
+                          {property.title}
                         </span>{" "}
                       </p>
                     </Link>
