@@ -6,7 +6,6 @@ export const fetchClientAPI = async ({ search = "", page, limit }) => {
   const response = await getRequest(`clients?${queryParams.toString()}`);
   const clients = response?.data?.clients?.filter((client) => !client.isDeleted);
   const totalCount = response?.data?.totalCount || 0;
-  console.log("Fetched clients:", clients);
 
   return { clients, totalCount };
 };
