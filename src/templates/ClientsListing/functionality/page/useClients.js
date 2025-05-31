@@ -18,6 +18,7 @@ const useClients = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false)
+  const [totalCount, setTotalCount] = useState(0);
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -34,9 +35,11 @@ const useClients = () => {
       setLoading(true)
       const response = await getRequest("clients");
       console.log(response);
-      const filteredUsers = response?.data?.filter((user) => !user.isDeleted);
+      const filteredUsers = response?.data?.clients.filter((user) => !user.isDeleted);
       console.log(filteredUsers);
       setUsers(filteredUsers);
+      const totalCount = response?.data?.total || 0;
+      setTotalCount(totalCount);
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -99,7 +102,8 @@ const useClients = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
-    loading
+    loading,
+    totalCount
   };
 };
 
