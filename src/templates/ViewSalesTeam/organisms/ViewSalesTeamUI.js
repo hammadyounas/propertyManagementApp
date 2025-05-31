@@ -72,7 +72,7 @@ export default function ViewSalesTeamUI({
                     >
                       <p className="flex items-center gap-2 ">
                         <img
-                          src={property?.images?.[0]}
+                          src={property?.images[0]}
                           alt={property?.title}
                           className="w-8 h-8 object-cover rounded-full"
                         />
