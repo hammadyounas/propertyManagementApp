@@ -12,6 +12,8 @@ const CreateACM = ({
   selectedProperty,
   handleSelectProperty,
   push,
+  selectedSubjectProperty,
+  handleSelectSubjectProperty,
 }) => {
   return (
     <FormUI
@@ -26,6 +28,8 @@ const CreateACM = ({
       onSubmit={onSubmit}
       setValue={setValue}
       push={push}
+      selectedSubjectProperty={selectedSubjectProperty}
+      handleSelectSubjectProperty={handleSelectSubjectProperty}
     />
   );
 };

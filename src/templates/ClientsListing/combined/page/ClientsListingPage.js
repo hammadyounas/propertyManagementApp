@@ -8,7 +8,6 @@ const ClientsListingPage = () => {
   const {
     globalFilter,
     setGlobalFilter,
-    paginatedUsers, // Use paginated properties here
     pageSize,
     handlePageChange,
     currentPage,
@@ -19,13 +18,14 @@ const ClientsListingPage = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
-    loading
+    loading,
+    totalCount,
   } = useClients();
 
   return (
     <>
       <Table
-        rows={paginatedUsers} // Pass paginated properties to the Table
+        rows={users} // Pass paginated properties to the Table
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         push={push}
@@ -33,12 +33,12 @@ const ClientsListingPage = () => {
         loading={loading}
         users={users}
       />
-      <div className={`flex w-full justify-end mt-2 items-center ${users?.length <= pageSize && "hidden"}`}>
+      <div className={`flex w-full justify-end mt-2 items-center ${totalCount <= pageSize && "hidden"}`}>
         <ReactPaginate
           previousLabel={<Icon icon="heroicons-outline:chevron-left" />}
           nextLabel={<Icon icon="heroicons-outline:chevron-right" />}
           breakLabel={"..."}
-          pageCount={Math.ceil(users?.length / pageSize)} // Correctly calculate the number of pages
+          pageCount={Math.ceil(totalCount / pageSize)} // Correctly calculate the number of pages
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={({ selected }) => handlePageChange(selected)}

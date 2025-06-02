@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { fetchProperties } from "../../../../store/features/properties/propertiesSlice";
@@ -19,14 +19,40 @@ import {
 const useCreateACM = () => {
   const schema = yup.object({
     date_of_sale: yup.string().required("Date of Sale is required"),
-    property: yup.string().required("Property Name is required"),
+    property: yup
+      .array()
+      .min(1, "At least one Property is required")
+      .of(yup.string().required("Property is required")),
+      // .required("Property is required"),
+
+    subject_property: yup
+      .string()
+      .required("Subject Property is required")
+      .test(
+        "not-in-property",
+        "Subject Property cannot be one of the selected Properties",
+        function (value) {
+          const { property } = this.parent;
+          if (!value || !Array.isArray(property)) return true;
+          return !property.includes(value);
+        }
+      ),
     unit_sold: yup.string().required("Unit Sold is required"),
     sale_price: yup
       .number()
+      .transform((value, originalValue) =>
+        String(originalValue).trim() === "" ? undefined : value
+      )
+      .typeError("Sale Price must be a number")
       .required("Sale Price is required")
       .positive("Sale Price must be a positive number"),
+
     net_operating_income: yup
       .number()
+      .transform((value, originalValue) =>
+        String(originalValue).trim() === "" ? undefined : value
+      )
+      .typeError("Net Operating Income must be a number")
       .required("Net Operating Income is required")
       .positive("Net Operating Income must be a positive number"),
   });
@@ -42,13 +68,14 @@ const useCreateACM = () => {
     mode: "all",
   });
 
-  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState([]);
   const { push } = useRouter();
   const dispatch = useDispatch();
   const { properties } = useSelector((state) => state.properties);
   const loading = useSelector(selectACMLoading);
   const error = useSelector(selectACMError);
   const createSuccess = useSelector(selectACMCreateSuccess);
+  const [selectedSubjectProperty, setSelectedSubjectProperty] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProperties({ all: true }));
@@ -59,9 +86,15 @@ const useCreateACM = () => {
     label: property.title,
   }));
 
-  const handleSelectProperty = (selectedOption) => {
-    setSelectedProperty(selectedOption);
-    setValue("property", selectedOption?.value);
+  const handleSelectProperty = (selectedOptions) => {
+    setSelectedProperty(selectedOptions);
+    const values = selectedOptions?.map((opt) => opt.value) || [];
+    setValue("property", values);
+  };
+
+  const handleSelectSubjectProperty = (selectedOption) => {
+    setSelectedSubjectProperty(selectedOption);
+    setValue("subject_property", selectedOption?.value || "");
   };
 
   useEffect(() => {
@@ -118,6 +151,8 @@ const useCreateACM = () => {
     selectedProperty,
     handleSelectProperty,
     push,
+    selectedSubjectProperty,
+    handleSelectSubjectProperty,
   };
 };
 

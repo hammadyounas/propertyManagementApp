@@ -3,84 +3,145 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-import { dateFormat } from "../../../../libs/utils/helper";
+import { calculateAverage, dateFormat } from "../../../../libs/utils/helper";
+import DropdownMenu from "../../../../components/ui/organisms/DropdownMenu";
 
-const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push, acms }) => {
+const TableUI = ({
+  columns,
+  rows,
+  globalFilter,
+  setGlobalFilter,
+  push,
+  acms,
+}) => {
   return (
     <Card noborder>
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center justify-end">
-            <span className="">
+            <div className="mr-10 text-sm font-medium text-gray-500">
+              <p className="font-semibold">Average</p>
+              <p>
+                ${" "}
+                {calculateAverage("sale_price", acms).toLocaleString(
+                  undefined,
+                  {
+                    maximumFractionDigits: 2,
+                  }
+                )}
+              </p>
+            </div>
+            <span>
               <Button
                 text="Add ACM"
                 onClick={() => push("/acms/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary bg-primary-default w-full font-normal text-sm"
               />
             </span>
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto -mx-6">
-        <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 text-center">
-              <thead className="bg-slate-200 dark:bg-slate-700">
-                <tr>
-                  {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold text-center">
-                      {column.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {acms?.map((row, i) => (
-                  <tr key={i} className="even:bg-slate-200 dark:even:bg-slate-700">
-                    <td className="table-td">{dateFormat(row.date_of_sale) }</td>
-                    <td className="table-td">{row.property.title}</td>
-                    <td className="table-td">{row.unit_sold}</td>
-                    <td className="table-td">$ {row.sale_price}</td>
-                    <td className="table-td">$ {row.net_operating_income}</td>
-                    <td className="table-td">{row.cap_rate}</td>
-                    <td className="table-td">
-                      <div className="flex">
-                        <Icon
-                          onClick={() => {}}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons:eye"}
-                        />
-                        <Icon
-                          onClick={() => {}}
-                          className="cursor-pointer text-[20px] mx-4"
-                          icon={"heroicons:pencil-square"}
-                        />
-                        <Icon
-                          onClick={() => {}}
-                          className="cursor-pointer text-[20px]"
-                          icon={"heroicons-outline:trash"}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot className="bg-slate-100 dark:bg-slate-700">
-                <tr>
-                  {columns?.map((column, i) => (
-                    <td key={i} className="table-td font-semibold">
-                      {i === 0 ? <p>Average</p> : ""}
-                      {i === 3 ? <p>2000</p> : ""}
-                      {i === 4 ? <p>4.1%</p> : ""}
-                    </td>
-                  ))}
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+
+      {acms?.length === 0 ? (
+        <div className="text-center p-4">No ACM's found.</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 lg:gap-10 sm:gap-4 sm:px-4">
+          {acms.map((row, i) => (
+            <Card
+              key={row._id || i}
+              className="bg-gray-100 rounded-lg shadow-sm text-sm max-sm:mb-2"
+            >
+              <div className="flex flex-col gap-2">
+              {/* card header */}
+                <div className="flex items-center justify-between capitalize">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={row.subject_property?.images[0]}
+                      alt={row.subject_property?.images[0]}
+                      className="w-12 h-12 object-cover rounded-lg"
+                    />
+                    <h1 className="lg:text-base text-sm font-medium">
+                      {row.subject_property?.title}
+                    </h1>
+                  </div>
+
+                  <div>
+                    <DropdownMenu
+                      //   onEdit={() => push(`/acms/edit/${row._id}`)}
+                      //   onDelete={() => handleDelete(row._id)}
+                      onEdit={() => push(``)}
+                      onDelete={() => {}}
+                      showEdit={true}
+                      showDelete={true}
+                    />
+                  </div>
+                </div>
+
+                {/* details */}
+                <div className="mt-10  w-full mx-auto">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-gray-500">Sold Date</p>
+                      <p>{dateFormat(row.date_of_sale)}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">Unit Sold</p>
+                      <p>{row.unit_sold}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mt-3">
+                    <div>
+                      <p className="text-gray-500">Sale Price</p>
+                      <p>{row.sale_price}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">Cap Rate</p>
+                      <p>{row.cap_rate}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 mt-3">
+                    <div>
+                      <p className="text-gray-500">Net Operating Income</p>
+                      <p>{row.cap_rate}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* properties */}
+                <div className="mt-5">
+                  <p className=" text-gray-500 mb-2">Selected Properties</p>
+                  {row.property && row?.property?.length > 0 ? (
+                    <div className="inline-flex -gap-4">
+                      {row?.property?.map((property, index) => (
+                        <Tooltip
+                          key={index}
+                          placement="top"
+                          arrow
+                          content={property?.title}
+                        >
+                          <img
+                            src={
+                              property?.images[0] ||
+                              "/assets/images/users/user-1.jpg"
+                            } // Replace with actual avatar URL if available
+                            alt={property.title}
+                            className={`w-8 h-8 object-cover rounded-full ${
+                              index !== 0 ? "-ml-1" : ""
+                            }`}
+                          />
+                        </Tooltip>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-gray-400">--</div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
-      </div>
+      )}
     </Card>
   );
 };

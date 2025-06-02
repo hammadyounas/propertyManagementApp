@@ -72,7 +72,6 @@ const useSalesTeam = () => {
 
 
   useEffect(() => {
-    console.log("Fetching users for status:", statusFilter); // Debug log
     fetchUsers();
   }, [statusFilter, globalFilter]); // ✅ Ensure useEffect listens for changes in statusFilter
 

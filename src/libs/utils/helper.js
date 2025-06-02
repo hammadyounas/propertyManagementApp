@@ -13,6 +13,16 @@ export const dateFormat = (dateString) => {
   });
 };
 
+const calculateTotal = (key, db) => {
+    return db.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+  };
+  // Calculate average sale price
+export const calculateAverage = (key, db) => {
+    if (!db || db.length === 0) return 0;
+    const total = calculateTotal(key, db);
+    return total / db.length;
+  };
+
 export const getStatusClasses = (status) => {
   switch (status) {
     case "approved":
