@@ -1,10 +1,10 @@
 import { getRequest, postRequest, searchParams } from "../../../libs/utils/request_handler";
 
-export const fetchClientAPI = async ({ search = "", page, limit }) => {
-  const queryParams = searchParams({ search, page, limit });
+export const fetchClientAPI = async ({ search = "", page, limit, all = true }) => {
+  const queryParams = searchParams({ search, page, limit, all });
 
   const response = await getRequest(`clients?${queryParams.toString()}`);
-  const clients = response?.data?.clients?.filter((client) => !client.isDeleted);
+  const clients = response?.data?.clients.filter((client) => !client.isDeleted);
   const totalCount = response?.data?.totalCount || 0;
 
   return { clients, totalCount };

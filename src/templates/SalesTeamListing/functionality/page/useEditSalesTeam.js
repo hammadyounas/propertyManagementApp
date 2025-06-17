@@ -11,17 +11,8 @@ import {
 import { getAllPropertiesByTitle } from "../../../../libs/api/properties";
 
 const useEditSalesTeam = () => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-  } = useForm({
-    resolver: yupResolver(
-      yup.object().shape({
-        name: yup.string().required("Name is required"),
+  const schema = yup.object({
+     name: yup.string().required("Name is required"),
         email: yup
           .string()
           .email("Enter a valid email")
@@ -30,10 +21,23 @@ const useEditSalesTeam = () => {
         address: yup.string().required("Address is required"),
         licence_number: yup.string().required("License number is required"),
         licence_type: yup.string().required("License type is required"),
-        status: yup.string().required("Status is required"),
-        // assigned_properties: yup.array().min(1, "Assign at least one property"),
-      })
-    ),
+        status: yup
+  .mixed()
+  .required("Status is required")
+  .test("is-valid-status", "Invalid status.", value => {
+    return typeof value === "string" || (value?.value && typeof value.value === "string");
+  }),
+
+  })
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+  } = useForm({
+      resolver: yupResolver(schema),
   });
 
   const salespersonStatus = [
@@ -135,7 +139,7 @@ const useEditSalesTeam = () => {
         // assigned_properties: propertiesAssigned.map(
         //   (property) => property.value
         // ),
-        status: data.status,
+          status: data.status?.value || data.status,
         joining_date: data.joining_date,
       };
 

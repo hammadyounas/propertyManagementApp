@@ -40,9 +40,16 @@
     color: #fff !important;
   }
 
+.fc .fc-daygrid-day.fc-day-today {
+  border: 2px solid #a4a5a6 !important;
+  border-radius: 6px;
+}
+
+
+
   .fc .fc-button-primary:disabled {
     background: #a0aec0 !important;
-    border-color: #a0aec0 !important;
+    border-color: #a0aec0 !important; 
     @apply cursor-not-allowed;
   }
 
