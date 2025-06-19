@@ -10,7 +10,9 @@ import { postRequest } from "../../../../libs/utils/request_handler";
 
 // Define validation schema using Yup
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email address").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
 
@@ -34,7 +36,9 @@ export const useForm = () => {
     validationSchema
       .validateAt(name, { [name]: value })
       .then(() => setErrors((errors) => ({ ...errors, [name]: "" })))
-      .catch((error) => setErrors((errors) => ({ ...errors, [name]: error.message })));
+      .catch((error) =>
+        setErrors((errors) => ({ ...errors, [name]: error.message }))
+      );
   };
 
   const handleSubmit = async (e) => {
@@ -65,8 +69,19 @@ export const useForm = () => {
         const { data, status } = error.response;
         console.error("Server error:", data);
         if (status === 403) {
-          // Show a popup if the account is deleted
-          toast.error("Your account has been deactivated. Please contact the administrator.");
+          const message = data.message?.toLowerCase();
+
+          if (message.includes("joining date")) {
+            toast.error("You cannot login before your joining date.");
+          } else if (message.includes("deactivated")) {
+            toast.error(
+              "Your account has been deactivated. Please contact the administrator."
+            );
+          } else {
+            toast.error(
+              data.message || "Access denied. Please contact support."
+            );
+          }
         } else {
           toast.error(data.message || "Invalid credentials. Please try again.");
         }
