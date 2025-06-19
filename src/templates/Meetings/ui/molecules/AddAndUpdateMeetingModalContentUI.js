@@ -73,9 +73,13 @@ const AddAndUpdateMeetingModalContentUI = ({
               placeholder="Start Time"
               disabled={isStartTimeDisabled}
               min={
-                !currentMeetingId || currentMeeting?.status === "rescheduled" // create mode → restrict
-                  ? new Date().toISOString().slice(0, 16)
-                  : undefined // edit mode & not rescheduled → no restriction
+                !currentMeetingId || currentMeeting?.status === "rescheduled"
+                  ? new Date(
+                      Date.now() - new Date().getTimezoneOffset() * 60000
+                    )
+                      .toISOString()
+                      .slice(0, 16)
+                  : undefined
               }
             />
           </div>
@@ -90,7 +94,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               disabled={isEndTimeDisabled}
               min={
                 !currentMeetingId
-                  ? new Date().toISOString().slice(0, 16)
+                  ? new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
                   : undefined
               }
             />

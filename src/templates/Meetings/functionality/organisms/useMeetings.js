@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useWatch } from "react-hook-form";
@@ -25,28 +25,41 @@ const useMeetings = () => {
     start_time: yup
       .string()
       .required("Start Time is required")
-      .test(
-        "is-future-time",
-        "Start time cannot be in the past.",
-        function (value) {
-          return new Date(value) > new Date();
-        }
-      ),
+    .test(
+      "is-future-time",
+      "Start time cannot be in the past.",
+      function (value) {
+        if (!value) return false;
+
+        const inputTime = new Date(value);
+        const now = new Date();
+
+        return inputTime > now;
+      }
+    ),
     end_time: yup
       .string()
       .required("End Time is required")
-      .test(
-        "is-after-start",
-        "End time cannot be earlier than start time. Please select a valid time range.",
-        function (value) {
-          const { start_time } = this.parent;
-          return new Date(value) > new Date(start_time);
-        }
-      ),
+     .test(
+      "is-after-start",
+      "End time must be after start time.",
+      function (value) {
+        const { start_time } = this.parent;
+
+        if (!value || !start_time) return false;
+
+        const start = new Date(start_time);
+        const end = new Date(value);
+
+        return end > start;
+      }
+    ),
     location_status: yup.string().required("Location is required"),
     location: yup.string().required("Location is required"),
     status: yup.string().required("Status is required"),
   });
+
+  console.log(new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16));
 
   const dispatch = useDispatch();
   const {
@@ -95,11 +108,36 @@ const useMeetings = () => {
     endDate: moment(new Date()).endOf("month").format("YYYY-MM-DD"),
   });
 
+  //   const filteredUsers = useMemo(() => {
+  // return users.filter(user => {
+  //   if (!user.joining_date) return false;
+  //   const joiningDate = new Date(user.joining_date);
+  //   const today = new Date();
+
+  //   joiningDate.setHours(0, 0, 0, 0);
+  //   today.setHours(0, 0, 0, 0);
+
+  //   return joiningDate <= today;
+  // });
+  // }, [users]);
+
+  const filteredUsers = useMemo(() => {
+  return users.filter(user => {
+    if (!user.joining_date) return false;
+
+    const joiningDate = moment(user.joining_date, "YYYY-MM-DD").startOf("day");
+    const today = moment().startOf("day");
+
+    return joiningDate.isSameOrBefore(today);
+  });
+}, [users]);
+
+
   useEffect(() => {
-    if (users && users.length > 0) {
-      setSalespersons(users); // ✅ This is the list for the ReactSelect options
+    if (filteredUsers && filteredUsers.length > 0) {
+      setSalespersons(filteredUsers); // ✅ This is the list for the ReactSelect options
     }
-  }, [users]);
+  }, [filteredUsers]);
 
   useEffect(() => {
     // Skip this logic if we're editing an existing meeting
@@ -130,9 +168,14 @@ const useMeetings = () => {
   // Fetch all necessary data on mount
   useEffect(() => {
     dispatch(fetchUsers());
-    dispatch(fetchClients());
+    dispatch(fetchClients({all: true}));
     dispatch(fetchUserById(userId));
+
+    
   }, [dispatch, userId]);
+
+
+  console.log("filtered users data", filteredUsers);
 
   const onSubmit = async (data) => {
     // setError(null);
@@ -244,8 +287,6 @@ const useMeetings = () => {
     setSelectedSalespersons(null);
     setSelectedClients(null);
   };
-
-  console.log("Clients:", clients);
 
   const openModal = async () => {
     await dispatch(fetchUserById(userId));

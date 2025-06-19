@@ -7,8 +7,6 @@ import listPlugin from "@fullcalendar/list";
 import moment from "moment";
 import Button from "../../../../components/ui/molecules/Button";
 
-
-
 const CalendarUI = ({
   setCurrentMeetingId,
   renderEventContent,
@@ -40,6 +38,12 @@ const CalendarUI = ({
       </div>
       <FullCalendar
         // ref={calendarRef}
+    dayCellClassNames={(arg) => {
+  return moment(arg.date).isSame(moment(), "day")
+    ? ["fc-day-today", "today-highlight"]
+    : [];
+}}
+
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
         headerToolbar={{
           left: "prev,next today",
@@ -77,24 +81,24 @@ const CalendarUI = ({
 
         select={(info) => {
           const selectedDate = moment(info.start);
-        
+
           // Check if selected date is in the past
           const now = moment().startOf("day");
           if (selectedDate.isBefore(now)) {
             return; // Don't open modal
           }
-        
+
           closeModal(); // Close if an edit modal is open
           setCurrentMeetingId(null); // Reset currentMeetingId for new meeting
           openModal(); // Open modal
-        
+
           setValue("start_time", selectedDate.format("YYYY-MM-DDTHH:mm"));
           const endDate = moment(info.start).add(1, "hour").format("YYYY-MM-DDTHH:mm");
           setValue("end_time", endDate);
-        
+
           scrollToDiv(); // Scroll if needed
         }}
-        
+
       />
     </Card>
   );

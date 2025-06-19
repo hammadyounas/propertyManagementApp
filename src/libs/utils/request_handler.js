@@ -41,12 +41,14 @@ export const deleteRequest = async (url) => {
   }
 };
 
-export const searchParams = ({ search = "", page, limit }) => {  
+export const searchParams = ({ search = "", page, limit, all }) => {  
   const queryParams = new URLSearchParams();
 
   if (search) queryParams.append("search", search.trim());
   if (page !== undefined) queryParams.append("page", page.toString());
   if (limit !== undefined) queryParams.append("limit", limit.toString());
+  if (all !== undefined) queryParams.append("all", all.toString());
+
 
   return queryParams;
 };
