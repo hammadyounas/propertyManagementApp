@@ -83,7 +83,7 @@ const useCreateForm = () => {
     try {
       const response = await getRequest("clients");
       if (response) {
-        const clientsData = response?.data?.map((client) => ({
+        const clientsData = response?.data?.clients.map((client) => ({
           value: client.email,
           label: client.email,
         }));
