@@ -41,18 +41,18 @@ export const menuItems = [
   //   icon: "heroicons:at-symbol",
   //   link: "/marketing-emails",
   // },
-  {
-    title: "Marketing Emails",
-    icon: "heroicons:at-symbol",
-    isHide: false,
-    link: "/marketing-emails",
-  },
-  {
-    title: "Market Analysis (ACM)",
-    isHide: false,
-    icon: "heroicons:arrow-trending-up",
-    link: "/acms",
-  },
+  // {
+  //   title: "Marketing Emails",
+  //   icon: "heroicons:at-symbol",
+  //   isHide: false,
+  //   link: "/marketing-emails",
+  // },
+  // {
+  //   title: "Market Analysis (ACM)",
+  //   isHide: false,
+  //   icon: "heroicons:arrow-trending-up",
+  //   link: "/acms",
+  // },
 ];
 
 export const topMenu = [

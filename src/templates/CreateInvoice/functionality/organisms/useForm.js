@@ -112,7 +112,7 @@ const useCreateInvoice = () => {
   const fetchClients = async () => {
     try {
       const response = await getRequest("clients");
-      const filteredClients = response?.data?.filter(
+      const filteredClients = response?.data?.clients?.filter(
         (client) => !client.isDeleted
       );
       const formattedClients = filteredClients?.map((client) => ({
