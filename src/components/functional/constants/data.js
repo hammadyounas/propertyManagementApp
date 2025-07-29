@@ -45,7 +45,7 @@ export const menuItems = [
     title: "Marketing Emails",
     icon: "heroicons:at-symbol",
     isHide: false,
-    link: "#",
+    link: "/marketing-emails",
   },
   {
     title: "Market Analysis (ACM)",
