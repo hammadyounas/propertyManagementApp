@@ -351,23 +351,14 @@ const useCreateInvoice = () => {
 
     setLoading(true);
     try {
-    // 1. Create the invoice
-    const response = await postRequest("invoices", formData);
-
-    if (response?.data?._id) {
-      toast.success("Invoice created successfully! Email will be sent shortly.");
-
-      // 2. Trigger background processing using postRequest
-      await postRequest("invoice/process", {
-        invoiceId: response.data._id,
-      });
-
-      // 3. Redirect user to invoices list
-      push("/invoices");
-    } else {
-      toast.error("Invoice creation failed");
-      throw new Error("Invoice creation failed");
-    }
+      const response = await postRequest("invoices", formData);
+      if (response) {
+        toast.success("Invoice created successfully!");
+        push("/invoices");
+      } else {
+        toast.error("Invoice creation failed");
+        throw new Error("Invoices creation failed");
+      }
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
