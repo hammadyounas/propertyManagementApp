@@ -47,7 +47,7 @@ const useCreateForm = () => {
     owner_address: yup.string().required("Owner Address is required"),
     street_number: yup.string().required("Street Number is required"),
     street_name: yup.string().required("Street Name is required"),
-    cadstre_number: yup.string().required("Cadstre Number is required"),
+    cadastral_number: yup.string().required("Cadastral Number is required"),
     city: yup.string().required("City is required"),
     municipality: yup.string().required("Municipality is required"),
     // neighborhood: yup.string().required("Neighborhood is required"),
@@ -188,7 +188,7 @@ const useCreateForm = () => {
           ownership_status: row["ownership_status"],
           street_number: row["street_number"],
           street_name: row["street_name"],
-          cadstre_number: row["cadstre_number"],
+          cadastral_number: row["cadastral_number"],
           city: row["city"],
           municipality: row["municipality"],
           price: row["price"],
@@ -447,7 +447,7 @@ const useCreateForm = () => {
         formData.append("address", data.address);
         formData.append("street_number", data.street_number);
         formData.append("street_name", data.street_name);
-        formData.append("cadstre_number", data.cadstre_number);
+        formData.append("cadastral_number", data.cadastral_number);
         formData.append("city", data.city);
         formData.append("municipality", data.municipality);
         formData.append("location_map_url", data.location_map_url);
