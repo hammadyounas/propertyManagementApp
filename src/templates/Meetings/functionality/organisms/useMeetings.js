@@ -92,9 +92,12 @@ const useMeetings = () => {
     mode: "onChange",
   });
 
+  
+
   const watchedStatus = useWatch({ control, name: "status" });
   const [salespersons, setSalespersons] = useState();
-  const userId = localStorage.getItem("user_id");
+  const userId = useSelector((state) => state.auth.user?._id);
+  // const userId = localStorage.getItem("user_id");
   const [status, setStatus] = useState("");
   const [selectedSalesPersons, setSelectedSalespersons] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
