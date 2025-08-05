@@ -1,6 +1,6 @@
 import React from "react";
-import CreatePropertyPage from "../../../templates/CreateProperty/combined/page/CreatePropertyPage";
 import withAuth from "../../../components/ui/organisms/withAuth";
+import CreatePropertyPage from "../../../templates/CreateProperty/combined/page/CreateProperty";
 
 const CreateProperty = () => {
   return <CreatePropertyPage />;
