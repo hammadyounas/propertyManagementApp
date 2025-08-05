@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import { ProgressBar } from "../../../../components/ui/atoms/ProgressBar";
 import { usePropertyForm } from "../../functionality/organisms/usePropertyForm";
@@ -36,6 +37,7 @@ const CreatePropertyPage = () => {
 
   return ( 
     <Card className="w-full bg-white" title="Create Property">
+      <ToastContainer />
 
       <div className="space-y-6">
         {formSections.map((section, index) => (

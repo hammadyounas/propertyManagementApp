@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { formSections } from "../constants/form_data";
 import { postRequest } from "../../../../libs/utils/request_handler";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export const usePropertyForm = () => {
   const [formData, setFormData] = useState({});
@@ -13,6 +15,8 @@ export const usePropertyForm = () => {
       return acc;
     }, {})
   );
+
+  const router = useRouter();
 
   const toggleSection = (index) => {
     setExpandedSections((prev) => ({
@@ -209,6 +213,8 @@ export const usePropertyForm = () => {
 
       console.log("Form submitted successfully:", response);
       setSubmitStatus("success");
+      toast.success("Property created successfully!");
+      router.push("/properties"); // Redirect to properties list
 
       return {
         success: true,
@@ -216,55 +222,12 @@ export const usePropertyForm = () => {
         data: response,
       };
     } catch (error) {
-      console.error("Form submission error:", error);
-      setSubmitStatus("error");
-
-      // Handle different types of errors
-      let errorMessage =
-        "Failed to submit property information. Please try again.";
-
-      if (error.response) {
-        // Server responded with error status
-        const status = error.response.status;
-        const data = error.response.data;
-
-        switch (status) {
-          case 400:
-            errorMessage =
-              data.message ||
-              "Invalid data provided. Please check your inputs.";
-            break;
-          case 401:
-            errorMessage = "You are not authorized to perform this action.";
-            break;
-          case 413:
-            errorMessage = "File size too large. Please use smaller files.";
-            break;
-          case 422:
-            errorMessage = "Validation failed. Please check your inputs.";
-            // Handle field-specific errors if provided by backend
-            if (data.errors) {
-              setErrors(data.errors);
-              expandSectionsWithErrors();
-            }
-            break;
-          case 500:
-            errorMessage = "Server error occurred. Please try again later.";
-            break;
-          default:
-            errorMessage = data.message || errorMessage;
-        }
-      } else if (error.request) {
-        // Network error
-        errorMessage =
-          "Network error. Please check your connection and try again.";
-      }
-
-      return {
-        success: false,
-        message: errorMessage,
-        error: error,
-      };
+      console.error("Error adding property:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to add property!"
+      );
     } finally {
       setLoading(false);
     }
