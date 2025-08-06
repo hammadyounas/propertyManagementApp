@@ -3,6 +3,7 @@ import { formSections } from "../constants/form_data";
 import { postRequest } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Papa from "papaparse";
 
 export const usePropertyForm = () => {
   const [formData, setFormData] = useState({});
@@ -15,6 +16,12 @@ export const usePropertyForm = () => {
       return acc;
     }, {})
   );
+  const [inputType, setInputType] = useState("manual"); // 'manual' or 'csv'
+  const [csvData, setCsvData] = useState(null);
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvErrors, setCsvErrors] = useState([]);
+  const [csvPreview, setCsvPreview] = useState(null);
+  const [csvProcessing, setCsvProcessing] = useState(false);
 
   const router = useRouter();
 
@@ -23,6 +30,18 @@ export const usePropertyForm = () => {
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const handleInputTypeChange = (type) => {
+    setInputType(type);
+    // Clear form data and errors when switching modes
+    setFormData({});
+    setErrors({});
+    setCsvData(null);
+    setCsvFile(null);
+    setCsvErrors([]);
+    setCsvPreview(null);
+    setSubmitStatus(null);
   };
 
   const handleInputChange = (name, value) => {
@@ -65,7 +84,208 @@ export const usePropertyForm = () => {
     }, obj);
   };
 
+  // CSV Processing Functions
+  const generateCsvTemplate = () => {
+    const headers = [];
+    
+    formSections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.type !== 'file') { // Exclude file fields from CSV template
+          headers.push(field.name);
+        }
+      });
+    });
+
+    const csv = Papa.unparse([headers]);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'property_template.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const validateCsvHeaders = (headers) => {
+    const requiredFields = [];
+    const optionalFields = [];
+    
+    formSections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.type !== 'file') { // Exclude file fields
+          if (field.required) {
+            requiredFields.push(field.name);
+          } else {
+            optionalFields.push(field.name);
+          }
+        }
+      });
+    });
+
+    const missingRequired = requiredFields.filter(field => !headers.includes(field));
+    const invalidHeaders = headers.filter(header => 
+      ![...requiredFields, ...optionalFields].includes(header)
+    );
+
+    return {
+      isValid: missingRequired.length === 0 && invalidHeaders.length === 0,
+      missingRequired,
+      invalidHeaders,
+      requiredFields,
+      optionalFields
+    };
+  };
+
+  const validateCsvRow = (row, rowIndex) => {
+    const rowErrors = [];
+
+    formSections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.type === 'file') return; // Skip file fields
+
+        const value = row[field.name];
+
+        // Check required fields
+        if (field.required && (!value || value.trim() === "")) {
+          rowErrors.push({
+            field: field.name,
+            message: `${field.label} is required`,
+            row: rowIndex + 1
+          });
+        }
+
+        // Additional validation for specific field types
+        if (value && value.trim() !== "") {
+          switch (field.type) {
+            case "email":
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(value)) {
+                rowErrors.push({
+                  field: field.name,
+                  message: `Invalid email format`,
+                  row: rowIndex + 1
+                });
+              }
+              break;
+            case "tel":
+              const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+              if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
+                rowErrors.push({
+                  field: field.name,
+                  message: `Invalid phone number format`,
+                  row: rowIndex + 1
+                });
+              }
+              break;
+            case "number":
+              if (isNaN(value) || parseFloat(value) < 0) {
+                rowErrors.push({
+                  field: field.name,
+                  message: `Must be a valid positive number`,
+                  row: rowIndex + 1
+                });
+              }
+              break;
+          }
+        }
+      });
+    });
+
+    return rowErrors;
+  };
+
+  const handleCsvUpload = async (file) => {
+    setCsvProcessing(true);
+    setCsvFile(file);
+    setCsvErrors([]);
+    setCsvData(null);
+    setCsvPreview(null);
+
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          const { data, errors: parseErrors, meta } = results;
+
+          if (parseErrors.length > 0) {
+            setCsvErrors(parseErrors.map(err => ({
+              type: 'parse',
+              message: `Parse error at row ${err.row}: ${err.message}`
+            })));
+            setCsvProcessing(false);
+            resolve(false);
+            return;
+          }
+
+          // Validate headers
+          const headerValidation = validateCsvHeaders(meta.fields);
+          if (!headerValidation.isValid) {
+            const headerErrors = [];
+            if (headerValidation.missingRequired.length > 0) {
+              headerErrors.push({
+                type: 'header',
+                message: `Missing required columns: ${headerValidation.missingRequired.join(', ')}`
+              });
+            }
+            if (headerValidation.invalidHeaders.length > 0) {
+              headerErrors.push({
+                type: 'header',
+                message: `Invalid columns: ${headerValidation.invalidHeaders.join(', ')}`
+              });
+            }
+            setCsvErrors(headerErrors);
+            setCsvProcessing(false);
+            resolve(false);
+            return;
+          }
+
+          // Validate each row
+          const allRowErrors = [];
+          const validRows = [];
+
+          data.forEach((row, index) => {
+            const rowErrors = validateCsvRow(row, index);
+            if (rowErrors.length > 0) {
+              allRowErrors.push(...rowErrors);
+            } else {
+              validRows.push(row);
+            }
+          });
+
+          if (allRowErrors.length > 0) {
+            setCsvErrors(allRowErrors);
+            setCsvProcessing(false);
+            resolve(false);
+            return;
+          }
+
+          // If all validation passes
+          setCsvData(validRows);
+          setCsvPreview(validRows.slice(0, 5)); // Show first 5 rows as preview
+          setCsvProcessing(false);
+          toast.success(`CSV processed successfully! ${validRows.length} properties ready for upload.`);
+          resolve(true);
+        },
+        error: (error) => {
+          setCsvErrors([{
+            type: 'parse',
+            message: `Failed to parse CSV: ${error.message}`
+          }]);
+          setCsvProcessing(false);
+          resolve(false);
+        }
+      });
+    });
+  };
+
   const validateForm = () => {
+    if (inputType === "csv") {
+      return csvData && csvData.length > 0 && csvErrors.length === 0;
+    }
+
     const newErrors = {};
 
     formSections.forEach((section) => {
@@ -93,7 +313,6 @@ export const usePropertyForm = () => {
               }
               break;
             case "tel":
-              // Basic phone number validation (adjust regex as needed)
               const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
               if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
                 newErrors[field.name] = `Please enter a valid phone number`;
@@ -183,51 +402,81 @@ export const usePropertyForm = () => {
 
       // Validate form
       if (!validateForm()) {
-        expandSectionsWithErrors();
+        if (inputType === "manual") {
+          expandSectionsWithErrors();
+        }
         setSubmitStatus("error");
         return {
           success: false,
-          message:
-            "Please fill in all required fields and fix validation errors.",
-          errors: errors,
+          message: inputType === "csv" 
+            ? "Please upload a valid CSV file with property data."
+            : "Please fill in all required fields and fix validation errors.",
+          errors: inputType === "csv" ? csvErrors : errors,
         };
       }
 
       setLoading(true);
 
-      // Prepare form data
-      const formDataToSubmit = prepareFormDataForSubmission();
+      if (inputType === "csv") {
+        // Handle CSV bulk upload
+        const response = await postRequest("properties/bulk", {
+          properties: csvData
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      // Log form data for debugging (optional)
-      console.log("Submitting form data:");
-      for (let [key, value] of formDataToSubmit.entries()) {
-        console.log(key, value);
+        toast.success(`${csvData.length} properties created successfully!`);
+        console.log("Bulk properties submitted successfully:", response);
+        setSubmitStatus("success");
+        router.push("/properties");
+
+        return {
+          success: true,
+          message: `${csvData.length} properties uploaded successfully!`,
+          data: response,
+        };
+      } else {
+        // Handle manual single property creation
+        const formDataToSubmit = prepareFormDataForSubmission();
+
+        for (let [key, value] of formDataToSubmit.entries()) {
+          console.log(key, value);
+        }
+
+        // Submit to backend
+        const response = await postRequest("properties", formDataToSubmit, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        toast.success("Property created successfully!");
+        console.log("Form submitted successfully:", response);
+        setSubmitStatus("success");
+        router.push("/properties");
+
+        return {
+          success: true,
+          message: "Property information submitted successfully!",
+          data: response,
+        };
       }
-
-      // Submit to backend
-      const response = await postRequest("properties", formDataToSubmit, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Form submitted successfully:", response);
-      setSubmitStatus("success");
-      toast.success("Property created successfully!");
-      router.push("/properties"); // Redirect to properties list
-
-      return {
-        success: true,
-        message: "Property information submitted successfully!",
-        data: response,
-      };
     } catch (error) {
       console.error("Error adding property:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Failed to add property!"
-      );
+      const errorMessage = error?.response?.data?.message ||
+        error?.message ||
+        (inputType === "csv" ? "Failed to upload properties!" : "Failed to add property!");
+      
+      toast.error(errorMessage);
+      setSubmitStatus("error");
+      
+      return {
+        success: false,
+        message: errorMessage,
+        error: error,
+      };
     } finally {
       setLoading(false);
     }
@@ -236,6 +485,10 @@ export const usePropertyForm = () => {
   const clearForm = () => {
     setFormData({});
     setErrors({});
+    setCsvData(null);
+    setCsvFile(null);
+    setCsvErrors([]);
+    setCsvPreview(null);
     setSubmitStatus(null);
   };
 
@@ -293,6 +546,9 @@ export const usePropertyForm = () => {
 
   // Check if form has unsaved changes
   const hasUnsavedChanges = () => {
+    if (inputType === "csv") {
+      return csvData && csvData.length > 0 && submitStatus !== "success";
+    }
     return Object.keys(formData).length > 0 && submitStatus !== "success";
   };
 
@@ -303,6 +559,12 @@ export const usePropertyForm = () => {
     loading,
     expandedSections,
     submitStatus,
+    inputType,
+    csvData,
+    csvFile,
+    csvErrors,
+    csvPreview,
+    csvProcessing,
 
     // Actions
     handleInputChange,
@@ -310,6 +572,9 @@ export const usePropertyForm = () => {
     clearForm,
     resetForm,
     toggleSection,
+    handleInputTypeChange,
+    handleCsvUpload,
+    generateCsvTemplate,
 
     // Utilities
     getNestedValue,
@@ -319,6 +584,7 @@ export const usePropertyForm = () => {
     getSectionErrors,
     getSectionProgress,
     hasUnsavedChanges,
+    validateForm,
 
     // Data
     formSections,
