@@ -91,7 +91,7 @@ export const usePropertyForm = () => {
     formSections.forEach((section) => {
       section.fields.forEach((field) => {
         if (field.type !== 'file') { // Exclude file fields from CSV template
-          headers.push(field.name);
+          headers.push(field.label);
         }
       });
     });
@@ -107,6 +107,7 @@ export const usePropertyForm = () => {
     link.click();
     document.body.removeChild(link);
   };
+  
 
   const validateCsvHeaders = (headers) => {
     const requiredFields = [];
@@ -116,9 +117,9 @@ export const usePropertyForm = () => {
       section.fields.forEach((field) => {
         if (field.type !== 'file') { // Exclude file fields
           if (field.required) {
-            requiredFields.push(field.name);
+            requiredFields.push(field.label);
           } else {
-            optionalFields.push(field.name);
+            optionalFields.push(field.label);
           }
         }
       });
@@ -169,16 +170,16 @@ export const usePropertyForm = () => {
                 });
               }
               break;
-            case "tel":
-              const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-              if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
-                rowErrors.push({
-                  field: field.name,
-                  message: `Invalid phone number format`,
-                  row: rowIndex + 1
-                });
-              }
-              break;
+            // case "tel":
+            //   const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            //   if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
+            //     rowErrors.push({
+            //       field: field.name,
+            //       message: `Invalid phone number format`,
+            //       row: rowIndex + 1
+            //     });
+            //   }
+            //   break;
             case "number":
               if (isNaN(value) || parseFloat(value) < 0) {
                 rowErrors.push({
@@ -312,12 +313,12 @@ export const usePropertyForm = () => {
                 newErrors[field.name] = `Please enter a valid email address`;
               }
               break;
-            case "tel":
-              const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-              if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
-                newErrors[field.name] = `Please enter a valid phone number`;
-              }
-              break;
+            // case "tel":
+            //   const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            //   if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ""))) {
+            //     newErrors[field.name] = `Please enter a valid phone number`;
+            //   }
+            //   break;
             case "number":
               if (isNaN(value) || value < 0) {
                 newErrors[field.name] = `Please enter a valid positive number`;
