@@ -400,33 +400,73 @@ export const usePropertyForm = () => {
       type: file.type
     });
     
-    return new Promise((resolve) => {
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        dynamicTyping: false, // Keep as strings initially for better control
-        transformHeader: (header) => {
-          // Clean headers by trimming whitespace
-          return header.trim();
-        },
-        complete: (results) => {
-          console.log('📊 Papa Parse Results:', results);
+              return new Promise((resolve) => {
+                Papa.parse(file, {
+           header: true,
+           skipEmptyLines: true,
+           dynamicTyping: false, // Keep as strings initially for better control
+           transformHeader: (header) => {
+             // Clean headers by trimming whitespace
+             return header.trim();
+           },
+           // Make parsing more lenient to handle missing fields
+           error: (error) => {
+             console.warn('⚠️ Papa Parse warning (continuing):', error.message);
+           },
+           // Use more lenient parsing options
+           fastMode: false,
+           // Add these options to handle missing fields gracefully
+           transform: (value, field) => {
+             // Return empty string for undefined/null values to maintain column count
+             return value === undefined || value === null ? '' : value;
+           },
+           complete: (results) => {
+                     console.log('📊 Papa Parse Results:', results);
+           
+           const { data, errors: parseErrors, meta } = results;
+           
+           // Handle missing fields by padding rows to match header count
+           if (meta.fields && data.length > 0) {
+             const expectedFieldCount = meta.fields.length;
+             console.log(`📊 Expected field count: ${expectedFieldCount}`);
+             
+             data.forEach((row, rowIndex) => {
+               const actualFieldCount = Object.keys(row).length;
+               console.log(`📊 Row ${rowIndex + 1} has ${actualFieldCount} fields`);
+               
+               // Pad missing fields with empty strings
+               meta.fields.forEach(field => {
+                 if (!(field in row)) {
+                   row[field] = '';
+                   console.log(`📝 Added missing field "${field}" to row ${rowIndex + 1}`);
+                 }
+               });
+             });
+           }
           
-          const { data, errors: parseErrors, meta } = results;
-          
-          if (parseErrors.length > 0) {
-            console.error('❌ Parse errors:', parseErrors);
-            setCsvErrors(
-              parseErrors.map((err) => ({
-                type: 'parse',
-                message: `Parse error at row ${err.row + 1}: ${err.message}`,
-                severity: 'error'
-              }))
-            );
-            setCsvProcessing(false);
-            resolve(false);
-            return;
-          }
+                     // Filter out "Too few fields" errors for optional fields
+           const criticalErrors = parseErrors.filter(err => {
+             // Allow "Too few fields" errors to pass through - they're handled by padding
+             if (err.message.includes('Too few fields')) {
+               console.warn(`⚠️  Row ${err.row + 1}: ${err.message} - will be handled by padding`);
+               return false; // Don't treat this as a critical error
+             }
+             return true; // Keep other errors as critical
+           });
+           
+           if (criticalErrors.length > 0) {
+             console.error('❌ Critical parse errors:', criticalErrors);
+             setCsvErrors(
+               criticalErrors.map((err) => ({
+                 type: 'parse',
+                 message: `Parse error at row ${err.row + 1}: ${err.message}`,
+                 severity: 'error'
+               }))
+             );
+             setCsvProcessing(false);
+             resolve(false);
+             return;
+           }
           
           console.log('📋 CSV Headers found:', meta.fields);
           console.log('📝 Sample data (first 3 rows):', data.slice(0, 3));
@@ -1027,6 +1067,7 @@ export const usePropertyForm = () => {
 
      // Download sample CSV with example data
    const downloadSampleCsv = () => {
+     // Use the comprehensive sample data from the fixed CSV file
      const sampleData = [
        {
          "Property Title": "Downtown Luxury Apartments",
