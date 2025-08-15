@@ -9,6 +9,8 @@ export const FormFieldRenderer = ({
   error,
   onChange
 }) => {
+  // Extract error message from react-hook-form error object
+  const errorMessage = error?.message || error;
 
   const { userOptions, loading } = useUserOptions();
 
@@ -27,10 +29,10 @@ export const FormFieldRenderer = ({
           isClearable
           isSearchable
           classNamePrefix="react-select"
-          className={error ? 'react-select-error' : 'text-sm'}
+          className={errorMessage ? 'react-select-error' : 'text-sm'}
         />
-        {error && (
-          <div className="text-red-500 text-sm mt-1">{error}</div>
+        {errorMessage && (
+          <div className="text-red-500 text-sm mt-1">{errorMessage}</div>
         )}
       </div>
     );
@@ -59,10 +61,10 @@ export const FormFieldRenderer = ({
           isClearable
           isSearchable
           // classNamePrefix="react-select"
-          className={error ? 'react-select-error' : 'text-sm capitalize'}
+          className={errorMessage ? 'react-select-error' : 'text-sm capitalize'}
         />
-        {error && (
-          <div className="text-red-500 text-sm mt-1">{error}</div>
+        {errorMessage && (
+          <div className="text-red-500 text-sm mt-1">{errorMessage}</div>
         )}
       </div>
     );
@@ -76,7 +78,7 @@ export const FormFieldRenderer = ({
         label={field.label}
         value={value}
         onChange={(files) => onChange(field.name, files)}
-        error={error}
+        error={errorMessage}
         required={field.required}
         multiple={field.multiple}
         accept={field.accept}
@@ -94,7 +96,7 @@ export const FormFieldRenderer = ({
         </label>
         <textarea
           className={`w-full px-3 py-2 border text-sm border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 resize-none ${
-            error ? 'border-red-500' : ''
+            errorMessage ? 'border-red-500' : ''
           }`}
           placeholder={field.placeholder}
           rows={3}
@@ -102,8 +104,8 @@ export const FormFieldRenderer = ({
           onChange={(e) => onChange(field.name, e.target.value)}
           required={field.required}
         />
-        {error && (
-          <div className="text-red-500 text-sm mt-1">{error}</div>
+        {errorMessage && (
+          <div className="text-red-500 text-sm mt-1">{errorMessage}</div>
         )}
       </div>
     );
@@ -119,7 +121,7 @@ export const FormFieldRenderer = ({
         name={field.name}
         value={value || ''}
         onChange={(e) => onChange(field.name, e.target.value)}
-        error={error}
+        error={errorMessage}
         hasicon={field.type === 'password'}
         required={field.required}
         className='text-sm'

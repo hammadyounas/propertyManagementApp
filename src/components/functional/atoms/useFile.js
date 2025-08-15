@@ -18,7 +18,7 @@ const useFile = () => {
       case "image":
         return (
           <img
-            src={URL.createObjectURL(file)}
+            src={file instanceof File || file instanceof Blob ? URL.createObjectURL(file) : file}
             className="w-full h-full block rounded object-contain  p-2 border-slate-200"
             alt={file.name}
           />

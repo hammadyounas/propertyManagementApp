@@ -93,7 +93,7 @@ const FormUI = ({
                     {selectedImage ? (
                       <div className="relative flex items-center flex-col">
                         <img
-                          src={URL.createObjectURL(selectedImage)}
+                          src={selectedImage instanceof File || selectedImage instanceof Blob ? URL.createObjectURL(selectedImage) : selectedImage}
                           alt="Selected Preview"
                           className="w-24 h-24 object-cover rounded-md shadow-md"
                         />

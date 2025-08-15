@@ -60,12 +60,12 @@ export const FileUpload = ({
       <div key={index} className="w-36 h-28 border border-gray-300 rounded-md mt-4 mr-4 relative overflow-hidden bg-white">
         {isImageField ? (
           <img
-            src={URL.createObjectURL(file) || file}
+            src={file instanceof File || file instanceof Blob ? URL.createObjectURL(file) : file}
             alt={`Preview ${index}`}
             className="w-full h-full object-cover"
             onLoad={() => {
               // Cleanup object URL to prevent memory leaks
-              if (file) {
+              if (file instanceof File || file instanceof Blob) {
                 URL.revokeObjectURL(file);
               }
             }}

@@ -21,13 +21,14 @@ import {
 } from "../../../../libs/utils/request_handler";
 import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
 import { getAllUsersByName } from "../../../../libs/api/users";
+import { formSections } from "../../../CreateProperty/functionality/constants/form_data";
 
 const useCreateForm = () => {
   const schema = yup.object({
     title: yup.string().required("Property Title is required"),
     description: yup.string().required("Property Description is required"),
-    type: yup.string().required("Property Type is required"),
-    status: yup.string().required("Property Status is required"),
+    property_type: yup.string().required("Property Type is required"),
+    property_status: yup.string().required("Property Status is required"),
     ownership_status: yup.string().required("Ownership Status is required"),
     no_of_units: yup
       .number()
@@ -54,14 +55,6 @@ const useCreateForm = () => {
       .number()
       .required("Unit Size are required")
       .moreThan(0, "There must be at least 1 bedroom"),
-    no_of_garages: yup
-      .number()
-      .required("No of Garages are required")
-      .moreThan(0, "There must be at least 1 bathroom"),
-    no_of_parking_places: yup
-      .number()
-      .required("No of Parking Places are required")
-      .moreThan(0, "There must be at least 1 no of parking places"),
     // assigned_to: yup
     //   .array()
     //   .min(1, "At least one salesperson must be selected")
@@ -129,6 +122,16 @@ const useCreateForm = () => {
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false)
+  
+  // Add missing state variables for FormSection approach
+  const [formData, setFormData] = useState({});
+  const [expandedSections, setExpandedSections] = useState(
+    formSections.reduce((acc, section, index) => {
+      acc[index] = section.defaultExpanded;
+      return acc;
+    }, {})
+  );
+  
   const { push } = useRouter();
   const router = useRouter();
   const propertyId = router.query.id;
@@ -230,33 +233,110 @@ const useCreateForm = () => {
             value: person._id,
           })) || [];
 
-        // Form fields to be set
+        // Form fields to be set - include all fields from form sections
         const formFields = {
+          // Basic Property Information
           title: propertyData?.title,
-          // furnishing_status: propertyData?.furnishing_status,
+          description: propertyData?.description,
           property_type: propertyData?.property_type,
           property_status: propertyData?.property_status,
           ownership_status: propertyData?.ownership_status,
-          no_of_units: propertyData?.no_of_units,
-          description: propertyData?.description,
+          contract_type: propertyData?.contract_type,
+          
+          // Location & Address
           address: propertyData?.address,
           street_number: propertyData?.street_number,
           street_name: propertyData?.street_name,
-          cadastral_number: propertyData?.cadastral_number,
           city: propertyData?.city,
           municipality: propertyData?.municipality,
+          cadastral_number: propertyData?.cadastral_number,
           location_map_url: propertyData?.location_map_url,
-          owner_status: propertyData?.owner_status,
-          price: propertyData?.price,
+          
+          // Building Specifications
+          no_of_units: propertyData?.no_of_units,
           unit_size: propertyData?.unit_size,
+          year_built: propertyData?.year_built,
+          building_type: propertyData?.building_type,
+          construction_type: propertyData?.construction_type,
+          building_stories: propertyData?.building_stories,
+          land_area: propertyData?.land_area,
+          
+          // Parking & Garages
           no_of_garages: propertyData?.no_of_garages,
           no_of_parking_places: propertyData?.no_of_parking_places,
+          parking_surface: propertyData?.parking_surface,
+          
+          // Utilities & Systems
+          responsibility_of_heating: propertyData?.responsibility_of_heating,
+          heating_system: propertyData?.heating_system,
+          responsible_of_hot_water: propertyData?.responsible_of_hot_water,
+          hot_water_system: propertyData?.hot_water_system,
+          responsibility_of_appliances: propertyData?.responsibility_of_appliances,
+          electrical_panels: propertyData?.electrical_panels,
+          plumbing: propertyData?.plumbing,
+          washer_dryer_installation: propertyData?.washer_dryer_installation,
+          laundry: propertyData?.laundry,
+          
+          // Building Conditions
+          condition_of_roof: propertyData?.condition_of_roof,
+          condition_of_kitchens: propertyData?.condition_of_kitchens,
+          condition_of_bathrooms: propertyData?.condition_of_bathrooms,
+          condition_of_flooring: propertyData?.condition_of_flooring,
+          condition_of_balconies: propertyData?.condition_of_balconies,
+          condition_of_doors: propertyData?.condition_of_doors,
+          condition_of_windows: propertyData?.condition_of_windows,
+          siding: propertyData?.siding,
+          
+          // Building Features
+          intercom_system: propertyData?.intercom_system,
+          fire_alarm_system: propertyData?.fire_alarm_system,
+          janitor_agreement: propertyData?.janitor_agreement,
+          
+          // Environmental Studies
+          environmental_study: propertyData?.environmental_study,
+          environmental_study_date: propertyData?.environmental_study_date,
+          
+          // Recent Capital Expenditures
+          recent_capital_expenditures: propertyData?.recent_capital_expenditures,
+          
+          // Municipal Assessments
+          municipal_assessment_land: propertyData?.municipal_assessment_land,
+          municipal_assessment_building: propertyData?.municipal_assessment_building,
+          total_municipal_evaluation: propertyData?.total_municipal_evaluation,
+          
+          // Financial Information
+          price: propertyData?.price,
+          
+          // Revenue Breakdown
+          revenue: propertyData?.revenue,
+          
+          // Expenses Breakdown
+          expenses: propertyData?.expenses,
+          
+          // Financial Analysis
+          financial_analysis: propertyData?.financial_analysis,
+          
+          // Financing Information
+          financing: propertyData?.financing,
+          
+          // Cash Flow Analysis
+          cash_flow: propertyData?.cash_flow,
+          
+          // ROI Analysis
+          roi_analysis: propertyData?.roi_analysis,
+          
+          // Media
+          images: propertyData?.images || [],
+          
+                     // Ownership & Management
+           assigned_to: salespersonDetails?.map(person => person.value) || [],
           owner_name: propertyData?.owner_name,
           phone_number: propertyData?.phone_number,
           email: propertyData?.email,
           owner_address: propertyData?.owner_address,
-          assigned_to: salespersonDetails, // Set names instead of IDs
-          images: propertyData?.images || [],
+          
+          // Additional Information
+          other_information: propertyData?.other_information,
         };
 
         // Set values using the corresponding state setters
@@ -300,6 +380,9 @@ const useCreateForm = () => {
         // Set additional states for images and documents
         setSelectedImages(propertyData.images || []);
         setSelectedDocs(propertyData.documents || []);
+
+        // Populate formData state for FormSection approach
+        setFormData(formFields);
       }
       setGetDataLoading(false)
     } catch (error) {
@@ -318,11 +401,13 @@ const useCreateForm = () => {
     setValue("contract_type", contract_type);
     setValue("images", selectedImages);
     setValue("documents", selectedDocs);
-    setValue("type", type?.value);
-    setValue("status", status?.value);
+    setValue("property_type", type?.value);
+    setValue("property_status", status?.value);
     setValue("ownership_status", ownership?.value || "");
     setValue("ownerStatus", ownerDetailsStatus?.value || "");
-    setValue("assigned_to", selectedSalespersons);
+    // For assigned_to, we need to extract just the values from the selectedSalespersons array
+    const assignedToValues = selectedSalespersons?.map(person => person.value) || [];
+    setValue("assigned_to", assignedToValues);
     setValue("client", selectedClient?.value || "");
   }, [
     contract_type,
@@ -412,7 +497,7 @@ const useCreateForm = () => {
   };
 
   const handleSelectSalesperson = (selectedValues) => {
-    setSelectedSalespersons(selectedValues) || [];
+    setSelectedSalespersons(selectedValues || []);
   };
 
   const handleSelectType = (e) => {
@@ -436,6 +521,10 @@ const useCreateForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+
+    // Debug: Log the form data
+    console.log("Form data from react-hook-form:", data);
+    console.log("selectedSalespersons state:", selectedSalespersons);
 
     try {
       const formData = new FormData();
@@ -479,35 +568,45 @@ const useCreateForm = () => {
 
       // Append amenities and assigned_to arrays
       if (contract_type?.length) {
-        contract_type
-          .filter((amenity) => amenity && amenity.value)
-          .forEach((amenity) => {
+        const validContractTypes = contract_type
+          .filter((amenity) => amenity && amenity.value && amenity.value.trim() !== '');
+        
+        if (validContractTypes.length > 0) {
+          validContractTypes.forEach((amenity) => {
             formData.append("contract_type", amenity.value);
           });
+        }
       }
-      else {
-        formData.append("contract_type", []);
-      }
+      // Don't append contract_type if it's empty - let the backend handle it
 
-      if (selectedSalespersons?.length) {
-        selectedSalespersons
-          .filter((salesperson) => salesperson && salesperson.value)
-          .forEach((salesperson) => {
-            formData.append("assigned_to", salesperson.value);
+      // Debug: Log selectedSalespersons state
+      console.log("selectedSalespersons:", selectedSalespersons);
+      console.log("data.assigned_to from form:", data.assigned_to);
+      
+      // Use the assigned_to value from the form data if available, otherwise use selectedSalespersons
+      const assignedToValues = data.assigned_to || selectedSalespersons?.map(person => person.value) || [];
+      console.log("assignedToValues to be sent:", assignedToValues);
+      
+      if (assignedToValues?.length) {
+        const validSalespersons = assignedToValues
+          .filter((value) => value && value.trim() !== '');
+        
+        console.log("validSalespersons:", validSalespersons);
+        
+        if (validSalespersons.length > 0) {
+          validSalespersons.forEach((value) => {
+            formData.append("assigned_to", value);
           });
+        }
       }
-      else {
-         formData.append("assigned_to", []);
-      }
+      // Don't append assigned_to if it's empty - let the backend handle it
 
       if (removedImages?.length) {
         removedImages.forEach((img) => {
           formData.append("removeImages", img);
         });
       }
-      else {
-        formData.append("removeImages", []);
-      }
+      // Don't append removeImages if it's empty - let the backend handle it
 
       // Append selected images
       selectedImages?.forEach((image) => {
@@ -521,9 +620,12 @@ const useCreateForm = () => {
         console.log("Doc:", doc);
       });
 
+      // Debug: Log FormData entries
+      console.log("=== FormData Debug ===");
       for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]); // Log all FormData entries
+        console.log(`${pair[0]}:`, pair[1]);
       }
+      console.log("=== End FormData Debug ===");
 
       // Make PUT request with FormData
       const response = await patchRequest(
@@ -553,6 +655,69 @@ const useCreateForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Add missing functions for FormSection approach
+  const toggleSection = (index) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const handleInputChange = (name, value) => {
+    // Handle nested object paths (e.g., "revenue.residential.yearly")
+    const setNestedValue = (obj, path, value) => {
+      const keys = path.split(".");
+      let current = obj;
+
+      for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+        if (!current[key] || typeof current[key] !== "object") {
+          current[key] = {};
+        }
+        current = current[key];
+      }
+
+      current[keys[keys.length - 1]] = value;
+      return { ...obj };
+    };
+
+    // Debug: Log assigned_to changes
+    if (name === "assigned_to") {
+      console.log("assigned_to changed:", value);
+    }
+
+    setFormData((prev) => setNestedValue(prev, name, value));
+
+    // Also update react-hook-form value
+    setValue(name, value);
+  };
+
+  const getNestedValue = (obj, path) => {
+    // First try to get value from react-hook-form
+    const formValues = getValues();
+    const formValue = path.split(".").reduce((current, key) => {
+      return current && current[key] !== undefined ? current[key] : "";
+    }, formValues);
+    
+    if (formValue !== "") {
+      return formValue;
+    }
+    
+    // Fall back to formData state
+    const formDataValue = path.split(".").reduce((current, key) => {
+      return current && current[key] !== undefined ? current[key] : "";
+    }, obj);
+    
+    return formDataValue;
+  };
+
+  const getSectionErrors = (section) => {
+    return section.fields.filter((field) => {
+      const fieldError = errors[field.name];
+      return fieldError && (fieldError.message || fieldError);
+    }).length;
   };
 
   return {
@@ -599,7 +764,14 @@ const useCreateForm = () => {
     handleSelectSalesperson,
     ownerDetailsStatus,
     ownerDetails,
-    getDataLoading
+    getDataLoading,
+    // Add missing variables for FormSection approach
+    formData,
+    expandedSections,
+    toggleSection,
+    handleInputChange,
+    getNestedValue,
+    getSectionErrors
   };
 };
 
