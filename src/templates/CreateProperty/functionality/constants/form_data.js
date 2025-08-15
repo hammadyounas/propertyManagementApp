@@ -54,7 +54,7 @@ export const formSections = [
     title: "Basic Property Information",
     fields: [
       { name: "title", label: "Property Title", type: "text", required: true, placeholder: "Enter property title" },
-      { name: "description", label: "Property Description", type: "textarea", required: true, placeholder: "Enter detailed property description" },
+      { name: "description", label: "Description", type: "textarea", required: true, placeholder: "Enter detailed property description" },
       { name: "property_type", label: "Property Type", type: "select", required: true, options: propertyTypes, placeholder: "Select property type" },
       { name: "property_status", label: "Property Status", type: "select", required: true, options: propertyStatus, placeholder: "Select property status" },
       { name: "ownership_status", label: "Ownership Status", type: "select", required: true, options: ownershipStatus, placeholder: "Select ownership status" },
@@ -79,7 +79,7 @@ export const formSections = [
     title: "Building Specifications",
     fields: [
       { name: "no_of_units", label: "Number of Units", type: "text", required: true, placeholder: "Enter number of units" },
-      { name: "unit_size", label: "Unit Size (sq ft)", type: "text", required: true, placeholder: "Enter unit size" },
+      { name: "unit_size", label: "Unit Size", type: "text", required: true, placeholder: "Enter unit size" },
       { name: "year_built", label: "Year Built", type: "text", required: false, placeholder: "Enter year built" },
       { name: "building_type", label: "Building Type", type: "text", required: false, placeholder: "Enter building type" },
       { name: "construction_type", label: "Construction Type", type: "text", required: false, placeholder: "Enter construction type" },
@@ -91,8 +91,8 @@ export const formSections = [
   {
     title: "Parking & Garages",
     fields: [
-      { name: "no_of_garages", label: "Number of Garages", type: "text", required: true, placeholder: "Enter number of garages" },
-      { name: "no_of_parking_places", label: "Number of Parking Places", type: "text", required: true, placeholder: "Enter parking places" },
+      { name: "no_of_garages", label: "Number of Garages", type: "text", required: false, placeholder: "Enter number of garages" },
+      { name: "no_of_parking_places", label: "Number of Parking Places", type: "text", required: false, placeholder: "Enter parking places" },
       { name: "parking_surface", label: "Parking Surface", type: "text", required: false, placeholder: "Enter parking surface type" }
     ],
     defaultExpanded: false
@@ -102,13 +102,13 @@ export const formSections = [
     fields: [
       { name: "responsibility_of_heating", label: "Responsibility of Heating", type: "text", required: false, placeholder: "Enter heating responsibility" },
       { name: "heating_system", label: "Heating System", type: "text", required: false, placeholder: "Enter heating system type" },
-      { name: "responsible_of_hot_heating", label: "Responsible of Hot Water", type: "select", required: false, options: responsibleOfHotHeating, required: false, placeholder: "Enter hot water responsibility" },
+      { name: "responsible_of_hot_heating", label: "Responsible of Hot Water", type: "select", required: false, options: responsibleOfHotHeating, placeholder: "Enter hot water responsibility" },
       { name: "hot_water_system", label: "Hot Water System", type: "text", required: false, placeholder: "Enter hot water system" },
-      { name: "responsibility_of_appliances", label: "Responsibility of Appliances", type: "select", required: false, options: responsibilityOfAppliances, required: false, placeholder: "Enter appliances responsibility" },
+      { name: "responsibility_of_appliances", label: "Responsibility of Appliances", type: "select", required: false, options: responsibilityOfAppliances, placeholder: "Enter appliances responsibility" },
       { name: "electrical_panels", label: "Electrical Panels", type: "text", required: false, placeholder: "Enter electrical panels info" },
       { name: "plumbing", label: "Plumbing", type: "text", required: false, placeholder: "Enter plumbing details" },
-      { name: "washer_dryer_installation", label: "Washer/Dryer Installation", type: "select", required: false, options: washerDryerInstallation, required: false, placeholder: "Enter washer/dryer info" },
-      { name: "laundry", label: "Laundry", type: "select", required: true, options: laundryOptions, required: false, placeholder: "Enter laundry details" }
+      { name: "washer_dryer_installation", label: "Washer/Dryer Installation", type: "select", required: false, options: washerDryerInstallation, placeholder: "Enter washer/dryer info" },
+      { name: "laundry", label: "Laundry", type: "select", required: false, options: laundryOptions, placeholder: "Enter laundry details" }
     ],
     defaultExpanded: false
   },
