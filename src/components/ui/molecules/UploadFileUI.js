@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Plus, File as FileIcon } from 'lucide-react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -16,6 +16,7 @@ export const FileUpload = ({
   const fileInputRef = useRef(null);
   const isImageField = accept.includes('image');
   const isDocumentField = accept.includes('.pdf') || accept.includes('.doc');
+  const [objectUrls, setObjectUrls] = useState(new Map());
 
     const validateFileType = (file, type) => {
     const files = ["image/jpeg", "image/png", "image/gif"];
@@ -51,43 +52,74 @@ export const FileUpload = ({
     }
   };
 
+  // Manage object URLs when files change
+  useEffect(() => {
+    const newObjectUrls = new Map();
+    
+    if (value && Array.isArray(value) && value.length > 0) {
+      value.forEach((file, index) => {
+        if (file instanceof File || file instanceof Blob) {
+          const objectUrl = URL.createObjectURL(file);
+          newObjectUrls.set(index, objectUrl);
+        }
+      });
+    }
+    
+    // Cleanup old object URLs
+    objectUrls.forEach(url => {
+      URL.revokeObjectURL(url);
+    });
+    
+    setObjectUrls(newObjectUrls);
+    
+    // Cleanup function for component unmount
+    return () => {
+      newObjectUrls.forEach(url => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [value]);
+
   const renderFilePreview = () => {
     if (!value || (Array.isArray(value) && value.length === 0)) return null;
     
     const fileArray = Array.isArray(value) ? value : [value];
     
-    return fileArray.map((file, index) => (
-      <div key={index} className="w-36 h-28 border border-gray-300 rounded-md mt-4 mr-4 relative overflow-hidden bg-white">
-        {isImageField ? (
-          <img
-            src={file instanceof File || file instanceof Blob ? URL.createObjectURL(file) : file}
-            alt={`Preview ${index}`}
-            className="w-full h-full object-cover"
-            onLoad={() => {
-              // Cleanup object URL to prevent memory leaks
-              if (file instanceof File || file instanceof Blob) {
-                URL.revokeObjectURL(file);
-              }
-            }}
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col justify-center items-center bg-gray-50">
-            <FileIcon size={40} className="text-gray-400" />
-            <p className="text-xs text-gray-600 mt-2 px-2 text-center truncate w-full">
-              {file instanceof File ? file.name : file.split('/').pop()}
-            </p>
-          </div>
-        )}
-        <button
-          type="button"
-          onClick={() => handleFileRemove(index)}
-          className="absolute top-2 right-2 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-          title="Remove file"
-        >
-          <Icon icon="charm:cross" />
-        </button>
-      </div>
-    ));
+    return fileArray.map((file, index) => {
+      // Create object URL for File/Blob objects
+      let imageSrc = file;
+      if (file instanceof File || file instanceof Blob) {
+        // Get the object URL for this file index
+        imageSrc = objectUrls.get(index) || file;
+      }
+      
+      return (
+        <div key={index} className="w-36 h-28 border border-gray-300 rounded-md mt-4 mr-4 relative overflow-hidden bg-white">
+          {isImageField ? (
+            <img
+              src={imageSrc}
+              alt={`Preview ${index}`}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col justify-center items-center bg-gray-50">
+              <FileIcon size={40} className="text-gray-400" />
+              <p className="text-xs text-gray-600 mt-2 px-2 text-center truncate w-full">
+                {file instanceof File ? file.name : file.split('/').pop()}
+              </p>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => handleFileRemove(index)}
+            className="absolute top-2 right-2 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+            title="Remove file"
+          >
+            <Icon icon="charm:cross" />
+          </button>
+        </div>
+      );
+    });
   };
 
   const getFormatHint = () => {

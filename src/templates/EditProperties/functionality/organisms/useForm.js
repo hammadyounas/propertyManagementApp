@@ -688,6 +688,11 @@ const useCreateForm = () => {
       console.log("assigned_to changed:", value);
     }
 
+    // Special handling for images field
+    if (name === "images") {
+      setSelectedImages(value || []);
+    }
+
     setFormData((prev) => setNestedValue(prev, name, value));
 
     // Also update react-hook-form value
@@ -695,6 +700,11 @@ const useCreateForm = () => {
   };
 
   const getNestedValue = (obj, path) => {
+    // Special handling for images field - return from selectedImages state
+    if (path === "images") {
+      return selectedImages;
+    }
+    
     // First try to get value from react-hook-form
     const formValues = getValues();
     const formValue = path.split(".").reduce((current, key) => {
