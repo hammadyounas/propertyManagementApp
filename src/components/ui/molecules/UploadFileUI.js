@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Plus, File } from 'lucide-react';
+import { Plus, File as FileIcon } from 'lucide-react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export const FileUpload = ({
@@ -72,7 +72,7 @@ export const FileUpload = ({
           />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center bg-gray-50">
-            <File size={40} className="text-gray-400" />
+            <FileIcon size={40} className="text-gray-400" />
             <p className="text-xs text-gray-600 mt-2 px-2 text-center truncate w-full">
               {file instanceof File ? file.name : file.split('/').pop()}
             </p>
