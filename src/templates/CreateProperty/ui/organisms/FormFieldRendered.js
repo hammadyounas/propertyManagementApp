@@ -7,7 +7,8 @@ export const FormFieldRenderer = ({
   field,
   value,
   error,
-  onChange
+  onChange,
+  isTableField = false
 }) => {
   // Extract error message from react-hook-form error object
   const errorMessage = error?.message || error;
@@ -112,6 +113,26 @@ export const FormFieldRenderer = ({
   }
 
   // Handle all other input types (text, number, email, tel, date, etc.)
+  if (isTableField) {
+    return (
+      <div key={field.name} className="w-full">
+        <input
+          type={field.type}
+          placeholder={field.placeholder}
+          value={value || ''}
+          onChange={(e) => onChange(field.name, e.target.value)}
+          className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
+            errorMessage ? 'border-red-500' : ''
+          }`}
+          required={field.required}
+        />
+        {errorMessage && (
+          <div className="text-red-500 text-xs mt-1">{errorMessage}</div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div key={field.name} className="mb-4">
       <Textinput

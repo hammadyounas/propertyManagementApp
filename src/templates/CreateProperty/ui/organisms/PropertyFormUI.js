@@ -237,9 +237,84 @@ const PropertyForm = () => {
               
               {expandedSections[index] && (
                 <div className="px-6 py-4 bg-white border-t">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
-                    {section.fields.map(renderField)}
-                  </div>
+                  {section.layout === "table" ? (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="border-t-2 border-yellow-400 mb-4"></div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr>
+                              <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/3"></th>
+                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">CMHC Loan Option</th>
+                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">Current Mortgage</th>
+                            </tr>
+                          </thead>
+                                                     <tbody>
+                             {(() => {
+                               // Dynamically determine the number of rows based on the section
+                               const maxRow = Math.max(...section.fields.map(field => field.row));
+                               const rowNumbers = Array.from({length: maxRow}, (_, i) => i + 1);
+                               
+                               return rowNumbers.map(rowNum => {
+                                 const rowFields = section.fields.filter(field => field.row === rowNum);
+                                 const labelField = rowFields[0]; // Get the first field to extract the label
+                              
+                              return (
+                                <tr key={rowNum} className="border-b border-gray-200">
+                                  <td className="py-3 px-4 font-bold text-black text-sm">
+                                    {labelField?.label}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    {rowFields.filter(field => field.column === 2).map(field => (
+                                      <div key={field.name} className="w-full">
+                                        <input
+                                          type={field.type}
+                                          placeholder={field.placeholder}
+                                          value={getNestedValue(formData, field.name) || ''}
+                                          onChange={(e) => handleInputChange(field.name, e.target.value)}
+                                          className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
+                                            errors[field.name] ? 'border-red-500' : ''
+                                          }`}
+                                          required={field.required}
+                                        />
+                                        {errors[field.name] && (
+                                          <div className="text-red-500 text-xs mt-1">{errors[field.name]}</div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    {rowFields.filter(field => field.column === 3).map(field => (
+                                      <div key={field.name} className="w-full">
+                                        <input
+                                          type={field.type}
+                                          placeholder={field.placeholder}
+                                          value={getNestedValue(formData, field.name) || ''}
+                                          onChange={(e) => handleInputChange(field.name, e.target.value)}
+                                          className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
+                                            errors[field.name] ? 'border-red-500' : ''
+                                          }`}
+                                          required={field.required}
+                                        />
+                                        {errors[field.name] && (
+                                          <div className="text-red-500 text-xs mt-1">{errors[field.name]}</div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          })()}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
+                      {section.fields.map(renderField)}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
