@@ -11,7 +11,8 @@ export const FileUpload = ({
   multiple = true,
   accept = "image/*",
   placeholder,
-  className = ""
+  className = "",
+  name
 }) => {
   const fileInputRef = useRef(null);
   const isImageField = accept.includes('image');
@@ -138,18 +139,20 @@ export const FileUpload = ({
     <div className={`mb-4 w-full ${className}`}>
       <h6 className=''>{label}</h6>
       <h6 className="text-sm font-semibold my-4">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label} 
+        {/* {required && <span className="text-red-500">*</span>} */}
         {getFormatHint()}
       </h6>
       
       <input
         type="file"
         ref={fileInputRef}
+        name={name}
         accept={accept}
         multiple={multiple}
         onChange={handleFileChange}
         className="hidden"
-        required={required}
+        // required={required}
       />
       
       <div className="mt-4 flex flex-wrap items-start">

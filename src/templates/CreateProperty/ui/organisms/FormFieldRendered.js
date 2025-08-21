@@ -76,6 +76,7 @@ export const FormFieldRenderer = ({
     return (
       <FileUpload
         key={field.name}
+        name={field.name}
         label={field.label}
         value={value}
         onChange={(files) => onChange(field.name, files)}
@@ -117,6 +118,7 @@ export const FormFieldRenderer = ({
     return (
       <div key={field.name} className="w-full">
         <input
+          name={field.name}
           type={field.type}
           placeholder={field.placeholder}
           value={value || ''}

@@ -264,9 +264,9 @@ export const formSections = [
       { name: "financial_analysis.net_income", label: "Net Income", type: "number", required: false, placeholder: "Enter net income" },
       { name: "financial_analysis.net_income_per_unit", label: "Net Income Per Unit", type: "number", required: false, placeholder: "Enter net income per unit" },
       { name: "financial_analysis.cap_rate", label: "Cap Rate", type: "number", required: false, placeholder: "Enter cap rate" },
-      { name: "financial_analysis.gross_income_multiplier", label: "Gross Income Multiplier", type: "number", required: false, placeholder: "Enter gross income multiplier" },
       { name: "financial_analysis.suggested_market_price", label: "Suggested Market Price", type: "number", required: false, placeholder: "Enter suggested market price" },
-      { name: "financial_analysis.price_per_unit", label: "Price Per Unit", type: "number", required: false, placeholder: "Enter price per unit" }
+      { name: "financial_analysis.gross_income_multiplier", label: "Gross Income Multiplier (GIM)", type: "number", required: false, placeholder: "Enter gross income multiplier" },
+      { name: "financial_analysis.price_per_unit", label: "Price Per Unit (PPU)", type: "number", required: false, placeholder: "Enter price per unit" }
     ],
     defaultExpanded: false
   },
@@ -292,8 +292,8 @@ export const formSections = [
       { name: "financing.loan_amount.cmhc_loan_option", label: "LOAN AMOUNT", type: "number", required: false, placeholder: "Enter loan amount", row: 6, column: 2 },
       { name: "financing.loan_amount.current_mortgage", label: "LOAN AMOUNT", type: "number", required: false, placeholder: "Enter loan amount", row: 6, column: 3 },
       // Loan to Value %
-      { name: "financing.loan_to_value.cmhc_loan_option", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 2 },
-      { name: "financing.loan_to_value.current_mortgage", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 3 },
+      { name: "financing.loan_to_value_percentage.cmhc_loan_option", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 2 },
+      { name: "financing.loan_to_value_percentage.current_mortgage", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 3 },
       // Debt Coverage Ratio
       { name: "financing.debt_coverage_ratio.cmhc_loan_option", label: "DEBT COVERAGE RATIO", type: "number", required: false, placeholder: "Enter debt coverage ratio", row: 8, column: 2 },
       { name: "financing.debt_coverage_ratio.current_mortgage", label: "DEBT COVERAGE RATIO", type: "number", required: false, placeholder: "Enter debt coverage ratio", row: 8, column: 3 },
@@ -327,11 +327,11 @@ export const formSections = [
       { name: "roi_analysis.cash_on_cash_return.cmhc_loan_option", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 2 },
       { name: "roi_analysis.cash_on_cash_return.current_mortgage", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 3 },
       // Cash Plus Principal
-      { name: "roi_analysis.cash_plus_principal.cmhc_loan_option", label: "CASH PLUS PRINCIPAL", type: "number", required: false, placeholder: "Enter cash plus principal", row: 2, column: 2 },
-      { name: "roi_analysis.cash_plus_principal.current_mortgage", label: "CASH PLUS PRINCIPAL", type: "number", required: false, placeholder: "Enter cash plus principal", row: 2, column: 3 },
+      { name: "roi_analysis.cash_plus_principal.cmhc_loan_option", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 2 },
+      { name: "roi_analysis.cash_plus_principal.current_mortgage", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 3 },
       // IRR with Market Appreciation
-      { name: "roi_analysis.irr_with_market_appreciation.cmhc_loan_option", label: "IRR WITH MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with market appreciation", row: 3, column: 2 },
-      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with market appreciation", row: 3, column: 3 }
+      { name: "roi_analysis.irr_with_market_appreciation.cmhc_loan_option", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 2 },
+      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 3 }
     ],
     defaultExpanded: false,
     layout: "table"
