@@ -51,8 +51,8 @@ export const FormSection = ({
                   <thead>
                     <tr>
                       <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/3"></th>
-                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">CMHC Loan Option</th>
-                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">Current Mortgage</th>
+                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">CMHC Loan</th>
+                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">Conventional Loan</th>
                     </tr>
                   </thead>
                   <tbody>

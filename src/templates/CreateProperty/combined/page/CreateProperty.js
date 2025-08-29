@@ -9,6 +9,7 @@ import { ProgressBar } from "../../../../components/ui/atoms/ProgressBar";
 import { usePropertyForm } from "../../functionality/organisms/usePropertyForm";
 import { FormActions } from "../../ui/organisms/FormActions";
 import { FormSection } from "../../ui/organisms/FormSections";
+import { AutoSaveStatus } from "../../../../components/ui/molecules/AutoSaveStatus";
 
 const CreatePropertyPage = () => {
   const {
@@ -43,6 +44,18 @@ const CreatePropertyPage = () => {
     getSectionProgress,
     hasUnsavedChanges,
     validateForm,
+
+    // Auto-save functionality
+    lastSaved,
+    isSaving,
+    hasUnsavedChanges: autoSaveHasUnsavedChanges,
+    autoSaveEnabled,
+    saveToStorage,
+    loadFromStorage,
+    clearAutoSave,
+    setAutoSaveEnabled,
+    getAutoSaveStatus,
+    isLocalStorageAvailable,
 
     // Data
     formSections,
@@ -80,6 +93,29 @@ const CreatePropertyPage = () => {
     // Clear CSV data and reset
     clearForm();
   };
+
+  // Auto-save handlers
+  const handleManualSave = () => {
+    saveToStorage();
+  };
+
+  const handleToggleAutoSave = () => {
+    setAutoSaveEnabled(!autoSaveEnabled);
+  };
+
+  const handleRestoreData = () => {
+    const savedData = loadFromStorage();
+    if (savedData && Object.keys(savedData).length > 0) {
+      // This will be handled by the usePropertyForm hook's useEffect
+      toast.info('Data restored from auto-save', {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const autoSaveStatus = getAutoSaveStatus();
+  const hasRestoreData = isLocalStorageAvailable && lastSaved;
 
   // Render CSV Upload Section
   const renderCsvUploadSection = () => (
@@ -228,6 +264,18 @@ const CreatePropertyPage = () => {
       <ToastContainer />
 
       <div className="space-y-6">
+        {/* Auto-save status indicator - only show for manual entry */}
+        {inputType === "manual" && (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <AutoSaveStatus
+              status={autoSaveStatus}
+              onManualSave={handleManualSave}
+              onToggleAutoSave={handleToggleAutoSave}
+              onRestoreData={handleRestoreData}
+              hasRestoreData={hasRestoreData}
+            />
+          </div>
+        )}
         {/* Input Type Toggle - Fixed Radio Button Implementation */}
         <div className="bg-gray-100 p-1 rounded-lg w-fit">
           <div className="flex space-x-1">

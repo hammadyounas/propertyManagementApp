@@ -59,10 +59,10 @@ const useCreateForm = () => {
     //   .array()
     //   .min(1, "At least one salesperson must be selected")
     //   .required("Salesperson is required"),
-    images: yup
-      .array()
-      .min(1, "At least one image must be uploaded")
-      .required("Images are required"),
+    // images: yup
+    //   .array()
+    //   .min(1, "At least one image must be uploaded")
+    //   .required("Images are required"),
     location_map_url: yup
       .string()
       .notRequired() // Make it optional
@@ -338,7 +338,7 @@ const useCreateForm = () => {
           // Additional Information
           other_information: propertyData?.other_information,
         };
-
+        console.log("salespersonDetails", salespersonDetails),
         // Set values using the corresponding state setters
         setType(
           propertyTypes.find(

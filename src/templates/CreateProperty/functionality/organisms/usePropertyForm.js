@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formSections } from "../constants/form_data";
 import { postRequest } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { csvHeaderMap } from "../constants/data";
+import { useAutoSave } from "../../../../hooks/useAutoSave";
 
 export const usePropertyForm = () => {
   const [formData, setFormData] = useState({});
@@ -24,8 +25,38 @@ export const usePropertyForm = () => {
   const [csvPreview, setCsvPreview] = useState(null);
   const [csvProcessing, setCsvProcessing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, message: '' });
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const router = useRouter();
+
+  // Auto-save functionality
+  const {
+    lastSaved,
+    isSaving,
+    hasUnsavedChanges: autoSaveHasUnsavedChanges,
+    autoSaveEnabled,
+    saveToStorage,
+    loadFromStorage,
+    clearAutoSave,
+    setAutoSaveEnabled,
+    getAutoSaveStatus,
+    isLocalStorageAvailable
+  } = useAutoSave(formData, inputType);
+
+  // Initialize auto-save and restore data on component mount
+  useEffect(() => {
+    if (!isInitialized && inputType === 'manual') {
+      const savedData = loadFromStorage();
+      if (savedData && Object.keys(savedData).length > 0) {
+        setFormData(savedData);
+        toast.info('Restored previous form data', {
+          position: 'bottom-right',
+          autoClose: 3000,
+        });
+      }
+      setIsInitialized(true);
+    }
+  }, [isInitialized, inputType, loadFromStorage]);
 
   const toggleSection = (index) => {
     setExpandedSections((prev) => ({
@@ -901,6 +932,7 @@ export const usePropertyForm = () => {
         
         console.log('✅ Individual properties submitted successfully:', response);
         setSubmitStatus('success');
+        clearAutoSave(); // Clear auto-save data after successful submission
         router.push('/properties');
         
         return {
@@ -921,6 +953,7 @@ export const usePropertyForm = () => {
         toast.success('Property created successfully!');
         console.log('✅ Form submitted successfully:', response);
         setSubmitStatus('success');
+        clearAutoSave(); // Clear auto-save data after successful submission
         router.push('/properties');
         
         return {
@@ -964,6 +997,7 @@ export const usePropertyForm = () => {
     setCsvErrors([]);
     setCsvPreview(null);
     setSubmitStatus(null);
+    clearAutoSave(); // Clear auto-save data when form is cleared
   };
 
   const resetForm = () => {
@@ -1269,6 +1303,18 @@ export const usePropertyForm = () => {
     getCsvValidationSummary,
     getRequiredCsvHeaders,
     getAllCsvHeaders,
+
+    // Auto-save functionality
+    lastSaved,
+    isSaving,
+    hasUnsavedChanges: autoSaveHasUnsavedChanges,
+    autoSaveEnabled,
+    saveToStorage,
+    loadFromStorage,
+    clearAutoSave,
+    setAutoSaveEnabled,
+    getAutoSaveStatus,
+    isLocalStorageAvailable,
 
     // Data
     formSections,

@@ -360,6 +360,6 @@ export const csvHeaderMap = {
   "IRR with Market Appreciation - CMHC Loan Option": "roi_analysis.irr_with_market_appreciation.cmhc_loan_option",
   
   // Additional Information
-  "Broker": "assigned_to",
+  // "Broker": "assigned_to",
   "Other Information": "other_information"
 };
