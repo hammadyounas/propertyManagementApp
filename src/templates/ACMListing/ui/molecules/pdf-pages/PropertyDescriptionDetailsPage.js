@@ -35,7 +35,7 @@ const PropertyDescriptionDetailsPage = ({ acmData }) => {
   };
 
   return (
-    <div className="w-full h-screen bg-white p-8" style={{ minHeight: '297mm', width: '210mm' }}>
+    <div className="w-full bg-gray-200 min-h-screen p-8 flex flex-col" style={{ minHeight: '1023px', width: '794px' }}>
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">

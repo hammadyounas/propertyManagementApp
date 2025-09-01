@@ -11,7 +11,7 @@ const ACMReportTemplate = ({ acmData }) => {
   return (
     <div id="acm-report" className="bg-white text-gray-900 font-sans" style={{ width: '100%', overflow: 'hidden' }}>
       {/* Page 1: Cover Page */}
-      <div className="page-container page-1">
+      <div className="">
         <CoverPage acmData={acmData} />
       </div>
 

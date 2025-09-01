@@ -11,7 +11,7 @@ const CoverPage = ({ acmData }) => {
   };
 
   return (
-    <div className="w-full h-screen bg-white p-8 flex flex-col" style={{ minHeight: '297mm', width: '210mm' }}>
+    <div className="w-full bg-red-200 min-h-screen border-2 border-black p-8 flex flex-col" style={{ minHeight: '1023px', width: '794px' }}>
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">

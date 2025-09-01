@@ -1,8 +1,8 @@
 /* PDF-specific styles for ACM Report */
-@page {
+/* @page {
   size: A4;
   margin: 0.5in;
-}
+} */
 
 /* Page break utilities */
 .page-break-before {
@@ -34,6 +34,7 @@
   .page-container {
     page-break-after: always !important;
     page-break-inside: avoid !important;
+    width: 100% !important;
     height: 100vh !important;
     overflow: hidden !important;
   }
@@ -78,10 +79,10 @@
 
 /* Page Container Styles */
 .page-container {
-  width: 100%;
+  width: 100%;  /* A4 width at 96 DPI */
   height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
+  /* min-height: 100vh;
+  max-height: 100vh; */
   display: flex;
   flex-direction: column;
   page-break-after: always;
