@@ -1,0 +1,661 @@
+/* PDF-specific styles for ACM Report */
+@page {
+  size: A4;
+  margin: 0.5in;
+}
+
+/* Page break utilities */
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+.no-break {
+  page-break-inside: avoid;
+}
+
+/* Print-specific styles */
+@media print {
+  .page-break-before {
+    page-break-before: always !important;
+  }
+  
+  .page-break-after {
+    page-break-after: always !important;
+  }
+  
+  .no-break {
+    page-break-inside: avoid !important;
+  }
+  
+  .page-container {
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+  
+  /* Hide any interactive elements */
+  button, input, select, textarea {
+    display: none !important;
+  }
+  
+  /* Ensure text is readable */
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Force page breaks */
+  .page-1 { page-break-after: always !important; }
+  .page-2 { page-break-after: always !important; }
+  .page-3 { page-break-after: always !important; }
+  .page-4 { page-break-after: always !important; }
+  .page-5 { page-break-after: always !important; }
+  .page-6 { page-break-after: always !important; }
+  .page-7 { page-break-after: always !important; }
+  .page-8 { page-break-after: auto !important; }
+}
+
+/* Base styles for ACM Report */
+#acm-report {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: white;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure each page is completely separate */
+.page-container + .page-container {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Page Container Styles */
+.page-container {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  page-break-after: always;
+  page-break-inside: avoid;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.page-content {
+  padding: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Page 1: Cover Page Styles */
+.page-1 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.page-1 .page-content {
+  justify-content: space-between;
+}
+
+.cover-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.logo-section {
+  margin-bottom: 40px;
+}
+
+.company-logo {
+  height: 80px;
+  width: auto;
+}
+
+.title-section {
+  margin-bottom: 40px;
+}
+
+.main-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.title-underline {
+  width: 200px;
+  height: 4px;
+  background: white;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.cover-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.base-property-card, .report-info-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.property-grid, .info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.property-item, .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.property-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: 14px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.cover-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.confidential-notice {
+  font-size: 14px;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Page 2: Executive Summary Styles */
+.page-2 {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-number {
+  font-size: 18px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.summary-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.summary-text {
+  flex: 1;
+}
+
+.summary-paragraph {
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  text-align: justify;
+}
+
+.metrics-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.metrics-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.metric-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.metric-icon.blue {
+  background: #3b82f6;
+}
+
+.metric-icon.indigo {
+  background: #6366f1;
+}
+
+.metric-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Page 3: Market Overview Styles */
+.page-3 {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.market-content {
+  flex: 1;
+}
+
+.market-analysis {
+  height: 100%;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  height: calc(100% - 80px);
+}
+
+.analysis-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-card .card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.card-text {
+  font-size: 16px;
+  line-height: 1.6;
+  flex: 1;
+  text-align: justify;
+}
+
+/* Page 4-6: Property Comparison Styles */
+.page-4, .page-5, .page-6 {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: white;
+}
+
+.comparison-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.comparison-table {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.comparison-table-inner {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+
+.table-label {
+  padding: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  width: 25%;
+}
+
+.table-value {
+  padding: 16px;
+  font-size: 14px;
+  color: white;
+}
+
+.alt-row .table-label,
+.alt-row .table-value {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.analysis-notes {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 4px solid #fbbf24;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.notes-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.notes-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: white;
+  text-align: justify;
+}
+
+/* Page 7: Investment Analysis Styles */
+.page-7 {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #1f2937;
+}
+
+.investment-content {
+  flex: 1;
+}
+
+.investment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  height: 100%;
+}
+
+.investment-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.investment-card .card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.investment-card .card-text {
+  font-size: 16px;
+  line-height: 1.6;
+  flex: 1;
+  text-align: justify;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.rating-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.rating-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Page 8: Recommendations & Contact Styles */
+.page-8 {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #1f2937;
+}
+
+.recommendations-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.recommendations-section {
+  flex: 1;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.recommendation-item {
+  display: flex;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-number {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.recommendation-content {
+  flex: 1;
+}
+
+.recommendation-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.recommendation-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #374151;
+  text-align: justify;
+}
+
+.contact-section {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-info {
+  text-align: center;
+}
+
+.contact-text {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.contact-system {
+  font-size: 14px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.contact-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.contact-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.contact-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.report-footer {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.footer-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.footer-disclaimer {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+}

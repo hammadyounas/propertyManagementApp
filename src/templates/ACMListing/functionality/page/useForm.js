@@ -15,46 +15,27 @@ import {
   createACM,
   clearACMCreateStatus,
 } from "../../../../store/features/acm/acmSlice";
+import { generateACMPDF } from "../../../../libs/utils/acm_template";
 
 const useCreateACM = () => {
   const schema = yup.object({
-    date_of_sale: yup.string().required("Date of Sale is required"),
-    property: yup
-      .array()
-      .min(1, "At least one Property is required")
-      .of(yup.string().required("Property is required")),
-      // .required("Property is required"),
-
-    subject_property: yup
+    base_property: yup
       .string()
-      .required("Subject Property is required")
+      .required("Base Property is required")
       .test(
-        "not-in-property",
-        "Subject Property cannot be one of the selected Properties",
+        "not-in-compare-property",
+        "Base Property cannot be one of the compare properties",
         function (value) {
-          const { property } = this.parent;
-          if (!value || !Array.isArray(property)) return true;
-          return !property.includes(value);
+          const { compare_property } = this.parent;
+          if (!value || !Array.isArray(compare_property)) return true;
+          return !compare_property.includes(value);
         }
       ),
-    unit_sold: yup.string().required("Unit Sold is required"),
-    sale_price: yup
-      .number()
-      .transform((value, originalValue) =>
-        String(originalValue).trim() === "" ? undefined : value
-      )
-      .typeError("Sale Price must be a number")
-      .required("Sale Price is required")
-      .positive("Sale Price must be a positive number"),
-
-    net_operating_income: yup
-      .number()
-      .transform((value, originalValue) =>
-        String(originalValue).trim() === "" ? undefined : value
-      )
-      .typeError("Net Operating Income must be a number")
-      .required("Net Operating Income is required")
-      .positive("Net Operating Income must be a positive number"),
+    compare_property: yup
+      .array()
+      .min(3, "At least three compare properties are required")
+      .of(yup.string().required("Compare Property is required"))
+      .required("Compare Properties are required"),
   });
 
   const {
@@ -68,14 +49,14 @@ const useCreateACM = () => {
     mode: "all",
   });
 
-  const [selectedProperty, setSelectedProperty] = useState([]);
+  const [selectedBaseProperty, setSelectedBaseProperty] = useState(null);
+  const [selectedCompareProperties, setSelectedCompareProperties] = useState([]);
   const { push } = useRouter();
   const dispatch = useDispatch();
   const { properties } = useSelector((state) => state.properties);
   const loading = useSelector(selectACMLoading);
   const error = useSelector(selectACMError);
   const createSuccess = useSelector(selectACMCreateSuccess);
-  const [selectedSubjectProperty, setSelectedSubjectProperty] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProperties({ all: true }));
@@ -86,22 +67,34 @@ const useCreateACM = () => {
     label: property.title,
   }));
 
-  const handleSelectProperty = (selectedOptions) => {
-    setSelectedProperty(selectedOptions);
-    const values = selectedOptions?.map((opt) => opt.value) || [];
-    setValue("property", values);
+  const handleSelectBaseProperty = (selectedOption) => {
+    setSelectedBaseProperty(selectedOption);
+    setValue("base_property", selectedOption?.value || "");
+    
+    // Clear compare properties if the selected base property is in the compare list
+    if (selectedCompareProperties.some(prop => prop.value === selectedOption?.value)) {
+      setSelectedCompareProperties([]);
+      setValue("compare_property", []);
+    }
   };
 
-  const handleSelectSubjectProperty = (selectedOption) => {
-    setSelectedSubjectProperty(selectedOption);
-    setValue("subject_property", selectedOption?.value || "");
+  const handleSelectCompareProperties = (selectedOptions) => {
+    setSelectedCompareProperties(selectedOptions);
+    const values = selectedOptions?.map((opt) => opt.value) || [];
+    setValue("compare_property", values);
   };
+
+  // Filter out base property from compare properties options
+  const filteredCompareProperties = propertyOptions.filter(
+    (property) => property.value !== selectedBaseProperty?.value
+  );
 
   useEffect(() => {
     if (createSuccess) {
-      toast.success("Form Submitted Successfully");
-      dispatch(clearACMCreateStatus());
-      push("/acms");
+      // Don't redirect immediately - let the onSubmit handle PDF generation
+      // toast.success("Form Submitted Successfully");
+      // dispatch(clearACMCreateStatus());
+      // push("/acms");
     }
 
     if (error) {
@@ -110,8 +103,50 @@ const useCreateACM = () => {
     }
   }, [createSuccess, error, dispatch]);
 
-  const onSubmit = (data) => {
-    dispatch(createACM(data));
+  const onSubmit = async (data) => {
+    try {
+      // First, save the ACM data to the database
+      const result = await dispatch(createACM(data));
+      
+      if (result.type === 'acm/createACM/fulfilled') {
+        // Get the saved ACM data with populated properties
+        const savedACM = result.payload;
+        
+        // Prepare data for PDF generation
+        const pdfData = {
+          ...savedACM,
+          base_property: properties.find(p => p._id === data.base_property),
+          compare_property: data.compare_property.map(id => 
+            properties.find(p => p._id === id)
+          ).filter(Boolean),
+          created_by: { name: "Current User" } // You can get this from auth state
+        };
+        
+        // Generate and download the PDF report
+        setTimeout(async () => {
+          try {
+            await generateACMPDF(pdfData);
+            toast.success("ACM saved and PDF report generated successfully!");
+            
+            // Clear status and redirect after PDF generation
+            dispatch(clearACMCreateStatus());
+            setTimeout(() => {
+              push("/acms");
+            }, 1000);
+          } catch (error) {
+            console.error("PDF generation error:", error);
+            toast.error("ACM saved but PDF generation failed. Please try again.");
+            dispatch(clearACMCreateStatus());
+            setTimeout(() => {
+              push("/acms");
+            }, 2000);
+          }
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Error in ACM submission:", error);
+      toast.error("Failed to save ACM or generate report");
+    }
   };
   // const onSubmit = async (data) => {
   //   setLoading(true);
@@ -148,11 +183,12 @@ const useCreateACM = () => {
     setValue,
     loading,
     properties: propertyOptions,
-    selectedProperty,
-    handleSelectProperty,
+    filteredCompareProperties,
+    selectedBaseProperty,
+    handleSelectBaseProperty,
+    selectedCompareProperties,
+    handleSelectCompareProperties,
     push,
-    selectedSubjectProperty,
-    handleSelectSubjectProperty,
   };
 };
 

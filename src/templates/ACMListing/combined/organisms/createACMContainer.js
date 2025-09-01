@@ -9,11 +9,12 @@ const CreateACM = ({
   setValue,
   loading,
   properties,
-  selectedProperty,
-  handleSelectProperty,
+  filteredCompareProperties,
+  selectedBaseProperty,
+  handleSelectBaseProperty,
+  selectedCompareProperties,
+  handleSelectCompareProperties,
   push,
-  selectedSubjectProperty,
-  handleSelectSubjectProperty,
 }) => {
   return (
     <FormUI
@@ -21,15 +22,16 @@ const CreateACM = ({
       errors={errors}
       loading={loading}
       properties={properties}
-      selectedProperty={selectedProperty}
-      handleSelectProperty={handleSelectProperty}
+      filteredCompareProperties={filteredCompareProperties}
+      selectedBaseProperty={selectedBaseProperty}
+      handleSelectBaseProperty={handleSelectBaseProperty}
+      selectedCompareProperties={selectedCompareProperties}
+      handleSelectCompareProperties={handleSelectCompareProperties}
       handleSubmit={handleSubmit}
       reset={reset}
       onSubmit={onSubmit}
       setValue={setValue}
       push={push}
-      selectedSubjectProperty={selectedSubjectProperty}
-      handleSelectSubjectProperty={handleSelectSubjectProperty}
     />
   );
 };
