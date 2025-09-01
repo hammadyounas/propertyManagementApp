@@ -1,5 +1,4 @@
   import React from 'react';
-  import html2pdf from 'html2pdf.js';
   import ACMReportTemplate from './ACMReportTemplate';
 
   const PDFGenerator = ({ acmData, onGenerated, onError }) => {

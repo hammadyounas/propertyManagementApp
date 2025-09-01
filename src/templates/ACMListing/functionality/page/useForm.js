@@ -15,7 +15,7 @@ import {
   createACM,
   clearACMCreateStatus,
 } from "../../../../store/features/acm/acmSlice";
-import { generateACMPDF } from "../../../../libs/utils/acm_template";
+// import { generateACMPDF } from "../../../../libs/utils/acm_template"; // Moved to dynamic import
 
 const useCreateACM = () => {
   const schema = yup.object({
@@ -125,6 +125,7 @@ const useCreateACM = () => {
         // Generate and download the PDF report
         setTimeout(async () => {
           try {
+            const { generateACMPDF } = await import("../../../../libs/utils/acm_template");
             await generateACMPDF(pdfData);
             toast.success("ACM saved and PDF report generated successfully!");
             
