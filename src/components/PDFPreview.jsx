@@ -4,6 +4,7 @@ import ACMReportTemplate from './ACMReportTemplate';
 const PDFPreview = ({ acmData, isOpen, onClose }) => {
   const [scale, setScale] = useState(0.8); // Default scale for preview
 
+
   // Mock data for preview if no real data provided
   const mockData = {
     _id: "preview-123",

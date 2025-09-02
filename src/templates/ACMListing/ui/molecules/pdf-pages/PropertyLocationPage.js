@@ -4,6 +4,7 @@ import React from 'react';
 const PropertyLocationPage = ({ acmData }) => {
   return (
     <div className="w-full bg-yellow-200 min-h-screen p-8 flex flex-col" style={{ height: '1120px', width: '794px' }}>
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">

@@ -56,6 +56,7 @@ const FinancialAnalysisDetailsPage = ({ acmData }) => {
 
   return (
     <div className="w-full bg-green-200 min-h-screen border-2 border-black p-8 flex flex-col" style={{ height: '1120px', width: '794px' }}>
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">

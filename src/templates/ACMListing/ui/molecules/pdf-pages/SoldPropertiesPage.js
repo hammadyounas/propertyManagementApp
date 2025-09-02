@@ -70,7 +70,7 @@ const SoldPropertiesPage = ({ acmData }) => {
     <div className="w-full bg-purple-200 min-h-screen p-8 flex flex-col" style={{ height: '1120px', width: '794px' }}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">  
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
           {acmData.base_property.address?.toUpperCase() || '8105 NOTRE- DAME E, MERCIER (MONTREAL)'}
         </h1>
         <div className="flex justify-between items-center">

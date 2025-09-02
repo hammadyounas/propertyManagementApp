@@ -45,6 +45,7 @@ const CoverPage = ({ acmData }) => {
       <div className="flex-1 flex">
         <div>
           <img src={acmData.base_property.image} alt="property image" className='w-full h-full object-cover' />
+
         </div>
       </div>
     </div>
