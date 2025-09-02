@@ -49,7 +49,6 @@ export const useForm = () => {
 
       setLoading(true);
       const response = await postRequest(`login`, formValues);
-      console.log("Axios response:", response);
 
       if (response.status) {
         const { data } = response;

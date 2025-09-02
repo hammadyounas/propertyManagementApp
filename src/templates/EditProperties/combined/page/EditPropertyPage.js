@@ -8,6 +8,8 @@ import Location from "../molecules/LocationUIContainer";
 import PricingAndSize from "../molecules/PricingAndSizeUIContainer";
 import OwnerDetails from "../molecules/OwnersDetailsUIContainer";
 import SalesInformation from "../molecules/SalesInformationUIContainer";
+import { formSections } from "../../../CreateProperty/functionality/constants/form_data";
+import { FormSection } from "../../../CreateProperty/ui/organisms/FormSections";
 
 const EditPropertyPage = () => {
   const {
@@ -55,77 +57,34 @@ const EditPropertyPage = () => {
     ownerDetailsStatus,
     ownerDetails,
     getDataLoading,
+    // Add missing variables for FormSection approach
+    formData,
+    expandedSections,
+    toggleSection,
+    handleInputChange,
+    getNestedValue,
+    getSectionErrors,
   } = useForm();
   return (
     <FormUI handleSubmit={handleSubmit} onSubmit={onSubmit} getDataLoading={getDataLoading}>
-      <GeneralInformation
-        register={register}
-        control={control}
-        propertyTypes={propertyTypes}
-        propertyStatus={propertyStatus}
-        ownershipStatus={ownershipStatus}
-        furnishingStatus={furnishingStatus}
-        errors={errors}
-        loading={loading}
-        type={type}
-        status={status}
-        ownership={ownership}
-        furnishing={furnishing}
-        handleSelectType={handleSelectType}
-        handleSelectStatus={handleSelectStatus}
-        handleSelectOwnershipStatus={handleSelectOwnershipStatus}
-        handleSelectFurnishingStatus={handleSelectFurnishingStatus}
-      />
-      <Location register={register} errors={errors} loading={loading} />
-      <PricingAndSize register={register} errors={errors} loading={loading} />
-      <Amenities
-        contract_type={contract_type}
-        handleSelectContractType={handleSelectContractType}
-        selectedSalespersons={selectedSalespersons}
-        handleSelectSalesperson={handleSelectSalesperson}
-        salesPerson={salesPerson}
-        availableFacilities={availableFacilities}
-        errors={errors}
-        loading={loading}
-      />
-      <OwnerDetails 
-      register={register}
-      errors={errors}
-      loading={loading}
-      handleSelectOwnersDetailsStatus={handleSelectOwnersDetailsStatus}
-      // ownersDetailstatus={ownersDetailstatus}
-      ownerDetailsStatus={ownerDetailsStatus}
-      ownerDetails={ownerDetails}
-      />
+      <div>
+        {formSections.map((section, index) => (
+          <FormSection
+            key={index}
+            section={section}
+            index={index}
+            isExpanded={expandedSections[index]}
+            onToggle={toggleSection}
+            errors={errors}
+            formData={formData}
+            onInputChange={handleInputChange}
+            getNestedValue={getNestedValue}
+            getSectionErrors={getSectionErrors}
+          />
+        ))}
+      </div>
       
-      <ImagesAndDocuments
-        selectedImages={selectedImages}
-        selectedDocs={selectedDocs}
-        handleImagesChange={handleImagesChange}
-        handleDocsChange={handleDocsChange}
-        handleFileRemove={handleFileRemove}
-        errors={errors}
-        loading={loading}
-        imageInputRef={imageInputRef}
-        docInputRef={docInputRef}
-        triggerImageFileInput={triggerImageFileInput}
-        triggerDocFileInput={triggerDocFileInput}
-        renderPreview={renderPreview}
-      />
-      {/* <SalesInformation
-        register={register}
-        control={control}
-        salesPerson={salesPerson}
-        clients={clients}
-        errors={errors}
-        loading={loading}
-        getValues={getValues}
-        selectedSalesperson={selectedSalesperson}
-        selectedClient={selectedClient}
-        handleSelectSalesperson={handleSelectSalesperson}
-        handleSelectClient={handleSelectClient}
-      /> */}
-      <div className="flex justify-center md:justify-end mt-12">
+      <div className="flex justify-center md:justify-end mt-12 z-[9999]">
         <Button
           text={"Discard"}
           className={
@@ -135,7 +94,7 @@ const EditPropertyPage = () => {
           loading={loading}
         />
         <Button
-          text={"Submit"}
+          text={"Update Property"}
           className={"md:!w-36"}
           type="submit"
           loading={loading}

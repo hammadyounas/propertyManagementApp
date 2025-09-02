@@ -36,7 +36,7 @@ const EmailPreviewModal = ({
         {emailData.image && (
           <div className="flex justify-center mb-4">
             <img
-              src={URL.createObjectURL(emailData.image)}
+              src={emailData.image instanceof File || emailData.image instanceof Blob ? URL.createObjectURL(emailData.image) : emailData.image}
               alt="Email Banner"
               className="rounded-lg w-full max-h-60 object-cover"
             />
