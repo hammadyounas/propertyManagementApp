@@ -1,56 +1,42 @@
 // components/pdf-pages/PropertyLocationPage.js
 import React from 'react';
+import PdfHeader from '../../../../../components/ui/molecules/PdfHeader';
+import Image from 'next/image';
 
 const PropertyLocationPage = ({ acmData }) => {
   return (
-    <div className="w-full bg-yellow-200 min-h-screen p-8 flex flex-col" style={{ height: '1120px', width: '794px' }}>
+    <div className="w-full bg-gray-100 min-h-screen p-8 flex flex-col" style={{ height: '1120px', width: '794px' }}>
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          {acmData.base_property.address?.toUpperCase() || '8105 NOTRE- DAME E, MERCIER (MONTREAL)'}
-        </h1>
-        <div className="flex justify-between items-center">
-          <div>
-            <span className="text-lg font-semibold">ADDRESS: </span>
-            <span className="text-lg">{acmData.base_property.address || '8105 NOTRE-DAME E, MERCIER (MONTREAL)'}</span>
-          </div>
-          <div>
-            <span className="text-lg font-semibold">UNITS: </span>
-            <span className="text-lg">{acmData.base_property.no_of_units || 18}</span>
-          </div>
-        </div>
-      </div>
+      <PdfHeader acmData={acmData} />
 
       {/* Main Content */}
-      <div className="mb-12">
-        <h2 className="text-xl font-bold text-gray-700 mb-6">PROPERTY LOCATION ON THE MAP</h2>
-        
+      <div className="my-5">
+        <h2 className="text-xl font-bold mb-2">PICTURE OF THE PROPERTY</h2>
         {/* Map Placeholder */}
-        <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center mb-8">
-          <div className="text-center">
-            <div className="text-6xl text-gray-400 mb-4">🗺️</div>
-            <span className="text-gray-500 text-lg">Interactive Map View</span>
-            <p className="text-sm text-gray-400 mt-2">
-              Property Location: {acmData.base_property.address}
-            </p>
-          </div>
+        {/* <div className="flex items-center mb-5">
+          <iframe src={acmData?.base_property?.location_map_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2665.3790385044963!2d-73.6638109!3d45.50075239999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13!1!3m3!1m2!1s0x4cc918327e279583%3A0x48be5c7beb5c9f4b!2s8500%20Decarie%20Blvd%203rd%20Floor%2C%20Mount%20Royal%2C%20QC%20H4P%202N2%2C%20Canada!5e1!3m2!1sen!2s!4v1756816662381!5m2!1sen!2s"} width="730" height="350" style={{border: 0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+        </div> */}
+          <div className="bg-gray-200 h-84 rounded-lg flex items-center justify-center mt-2">
+          <img
+            src={acmData?.base_property?.images?.[0] || "/assets/images/all-img/property.jpeg"}
+            alt="Property Image"
+            className="w-[730px] h-[350px] object-cover"
+          />
         </div>
       </div>
 
       {/* Property Image */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-700 mb-6">PICTURE OF THE PROPERTY</h2>
-        
+      <div className="mb-2">
+        {/* <h2 className="text-xl font-bold text-gray-700 mb-6">PICTURE OF THE PROPERTY</h2> */}
+
         {/* Property Image Placeholder */}
-        <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl text-gray-400 mb-4">🏢</div>
-            <span className="text-gray-500 text-lg">Property Image</span>
-            <p className="text-sm text-gray-400 mt-2">
-              {acmData.base_property.no_of_units || 18} Units Building
-            </p>
-          </div>
+        <div className="bg-gray-200 h-84 rounded-lg flex items-center justify-center mt-2">
+          <img
+            src={acmData?.base_property?.images?.[1] || "/assets/images/all-img/post-1.png"}
+            alt="Property Image"
+            className="w-[730px] h-[350px] object-cover"
+          />
         </div>
       </div>
 
