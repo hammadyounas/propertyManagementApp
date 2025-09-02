@@ -76,11 +76,7 @@ export const generateACMPDF = async (acmData) => {
 
     // Configure PDF options
     const opt = {
-<<<<<<< HEAD
       margin: 0,
-=======
-      margin: 0.5,
->>>>>>> eee5d97c3b32723f37083ec470d73c3070ce3acb
       filename: `ACM_Report_${acmData.base_property?.title?.replace(/\s+/g, '_') || 'Property'}_${new Date().toISOString().split('T')[0]}.pdf`,
       image: {
         type: 'jpeg',
