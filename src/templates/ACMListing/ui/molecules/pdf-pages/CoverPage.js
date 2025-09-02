@@ -46,7 +46,7 @@ const CoverPage = ({ acmData }) => {
           <img 
             src={acmData.base_property.image || '/assets/images/pdf-img/CoverPageImage.webp'} 
             alt="property image" 
-            className='w-full h-full object-cover' 
+            className='w-full h-full object-contain object-cover' 
           />
         </div>
 
