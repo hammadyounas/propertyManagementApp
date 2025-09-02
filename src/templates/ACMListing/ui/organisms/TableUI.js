@@ -1,9 +1,8 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
-import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
-import { calculateAverage, dateFormat } from "../../../../libs/utils/helper";
+import { dateFormat } from "../../../../libs/utils/helper";
 import DropdownMenu from "../../../../components/ui/organisms/DropdownMenu";
 
 const TableUI = ({
@@ -21,18 +20,17 @@ const TableUI = ({
         <div className="flex flex-wrap items-center justify-end">
           <div className="w-full flex items-center justify-end">
             <div className="mr-10 text-sm font-medium text-gray-500">
-              <p className="font-semibold">Average</p>
+              <p className="font-semibold">Total ACMs</p>
               <p>
-                ${" "}
-                {calculateAverage("sale_price", acms).toLocaleString(
-                  undefined,
-                  {
-                    maximumFractionDigits: 2,
-                  }
-                )}
+                {acms?.length || 0} ACM{acms?.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <span>
+            <span className="flex gap-2">
+              <Button
+                text="Preview PDF"
+                onClick={() => push("/acm-preview")}
+                className="btn-secondary bg-green-600 hover:bg-green-700 w-full font-normal text-sm"
+              />
               <Button
                 text="Add ACM"
                 onClick={() => push("/acms/create")}
@@ -55,14 +53,14 @@ const TableUI = ({
               <div className="flex flex-col gap-2">
               {/* card header */}
                 <div className="flex items-center justify-between capitalize">
-                  <div className="flex items-center gap-4">
+                  <div className={`flex items-center gap-4 ${!row?.base_property?.images?.[0] ? "hidden" : ""}`}>
                     <img
-                      src={row.subject_property?.images[0]}
-                      alt={row.subject_property?.images[0]}
+                      src={row?.base_property?.images?.[0] || "/assets/images/users/default.jpg"}
+                      alt={row?.base_property?.title || "Default Image"}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
                     <h1 className="lg:text-base text-sm font-medium">
-                      {row.subject_property?.title}
+                      {row.base_property?.title || "Base Property"}
                     </h1>
                   </div>
 
@@ -79,41 +77,37 @@ const TableUI = ({
                 </div>
 
                 {/* details */}
-                <div className="mt-10  w-full mx-auto">
+                <div className="mt-10 w-full mx-auto">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-gray-500">Sold Date</p>
-                      <p>{dateFormat(row.date_of_sale)}</p>
+                      <p className="text-gray-500">Created</p>
+                      <p>{dateFormat(row.createdAt)}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Unit Sold</p>
-                      <p>{row.unit_sold}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between gap-4 mt-3">
-                    <div>
-                      <p className="text-gray-500">Sale Price</p>
-                      <p>{row.sale_price}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500">Cap Rate</p>
-                      <p>{row.cap_rate}</p>
+                      <p className="text-gray-500">Compare Properties</p>
+                      <p>{row.compare_property?.length || 0}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-4 mt-3">
                     <div>
-                      <p className="text-gray-500">Net Operating Income</p>
-                      <p>{row.cap_rate}</p>
+                      <p className="text-gray-500">Created By</p>
+                      <p>{row.created_by?.name || "System"}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">Status</p>
+                      <p className={`px-2 py-1 rounded text-xs ${row.isDeleted ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                        {row.isDeleted ? 'Deleted' : 'Active'}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 {/* properties */}
                 <div className="mt-5">
-                  <p className=" text-gray-500 mb-2">Selected Properties</p>
-                  {row.property && row?.property?.length > 0 ? (
+                  <p className="text-gray-500 mb-2">Compare Properties</p>
+                  {row.compare_property && row?.compare_property?.length > 0 ? (
                     <div className="inline-flex -gap-4">
-                      {row?.property?.map((property, index) => (
+                      {row?.compare_property?.slice(0, 4).map((property, index) => (
                         <Tooltip
                           key={index}
                           placement="top"
@@ -122,19 +116,24 @@ const TableUI = ({
                         >
                           <img
                             src={
-                              property?.images[0] ||
+                              property?.images?.[0] ||
                               "/assets/images/users/user-1.jpg"
-                            } // Replace with actual avatar URL if available
-                            alt={property.title}
+                            }
+                            alt={property?.title || "Property"}
                             className={`w-8 h-8 object-cover rounded-full ${
                               index !== 0 ? "-ml-1" : ""
                             }`}
                           />
                         </Tooltip>
                       ))}
+                      {row.compare_property.length > 4 && (
+                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium -ml-1">
+                          +{row.compare_property.length - 4}
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className="text-gray-400">--</div>
+                    <div className="text-gray-400">No compare properties</div>
                   )}
                 </div>
               </div>
@@ -147,3 +146,4 @@ const TableUI = ({
 };
 
 export default TableUI;
+

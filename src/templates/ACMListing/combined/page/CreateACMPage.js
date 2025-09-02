@@ -11,11 +11,12 @@ export default function CreateACMPage() {
     setValue,
     loading,
     properties,
-    selectedProperty,
-    handleSelectProperty,
+    filteredCompareProperties,
+    selectedBaseProperty,
+    handleSelectBaseProperty,
+    selectedCompareProperties,
+    handleSelectCompareProperties,
     push,
-    selectedSubjectProperty,
-    handleSelectSubjectProperty,
   } = useForm();
   return (
     <CreateACM
@@ -27,11 +28,12 @@ export default function CreateACMPage() {
       setValue={setValue}
       loading={loading}
       properties={properties}
-      selectedProperty={selectedProperty}
-      handleSelectProperty={handleSelectProperty}
+      filteredCompareProperties={filteredCompareProperties}
+      selectedBaseProperty={selectedBaseProperty}
+      handleSelectBaseProperty={handleSelectBaseProperty}
+      selectedCompareProperties={selectedCompareProperties}
+      handleSelectCompareProperties={handleSelectCompareProperties}
       push={push}
-      selectedSubjectProperty={selectedSubjectProperty}
-      handleSelectSubjectProperty={handleSelectSubjectProperty}
     />
   );
 }
