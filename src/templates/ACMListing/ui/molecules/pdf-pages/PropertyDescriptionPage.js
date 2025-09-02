@@ -20,7 +20,7 @@ const PropertyDescriptionPage = ({ acmData }) => {
           {propertyDescriptionLeftColumnFields.map((field, index) => (
             <div key={index} className="flex justify-between items-center border-b pb-2">
               <span className="font-semibold">{field.label}</span>
-              <span className={`whitespace-nowrap ${baseProperty[field.key] ? 'border-b-2 border-black-500' : 'border-none'}`}>{baseProperty[field.key] || field.default}</span>
+              <span className={`whitespace-nowrap capitalize ${baseProperty[field.key] ? '' : 'border-none'}`}>{baseProperty[field.key] || field.default}</span>
             </div>
           ))}
         </div>
@@ -30,7 +30,7 @@ const PropertyDescriptionPage = ({ acmData }) => {
           {propertyDescriptionRightColumnFields.map((field, index) => (
             <div key={index} className="flex justify-between items-center border-b pb-2">
               <span className="font-semibold">{field.label}</span>
-              <span className={`whitespace-nowrap ${baseProperty[field.key] ? 'border-b-2 border-black-500' : 'border-none'}`}>{baseProperty[field.key] || field.default}</span>
+              <span className={`whitespace-nowrap capitalize ${baseProperty[field.key] ? '' : 'border-none'}`}>{baseProperty[field.key] || field.default}</span>
             </div>
           ))}
         </div>

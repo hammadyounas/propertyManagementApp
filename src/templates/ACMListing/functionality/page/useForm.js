@@ -54,6 +54,7 @@ const useCreateACM = () => {
   const { push } = useRouter();
   const dispatch = useDispatch();
   const { properties } = useSelector((state) => state.properties);
+  const { user } = useSelector((state) => state.auth);
   const loading = useSelector(selectACMLoading);
   const error = useSelector(selectACMError);
   const createSuccess = useSelector(selectACMCreateSuccess);
@@ -119,7 +120,11 @@ const useCreateACM = () => {
           compare_property: data.compare_property.map(id => 
             properties.find(p => p._id === id)
           ).filter(Boolean),
-          created_by: { name: "Current User" } // You can get this from auth state
+          created_by: { 
+            name: user?.name || "User Not Found",
+            email: user?.email || "email@example.com",
+            contact_number: user?.phone || user?.contact_number || "N/A"
+          }
         };
         
         // Generate and download the PDF report

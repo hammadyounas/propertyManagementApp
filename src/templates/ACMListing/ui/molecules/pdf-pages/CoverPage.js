@@ -89,15 +89,15 @@ const CoverPage = ({ acmData }) => {
         {/* other right side content */}
         <div className='mt-28 p-5 uppercase'> 
           <h6 className='text-lg'>PREPARED FOR</h6>
-          <p className='font-bold text-3xl'>{acmData.created_by.name || 'ABC Client'} </p>
+          <p className='font-bold text-3xl'>{acmData.created_by?.name || 'Client Name'} </p>
           <p>{formatDate(acmData.createdAt) || '2025-01-01'}</p>
         </div>
 
         <div className='mt-8 p-5 uppercase'> 
           <h6 className='text-lg'>PREPARED BY</h6>
-          <p className='font-bold text-3xl'>{acmData.created_by.name || 'YELENA KRUTOUS'} </p>
-          <p className='text-base'><span className='font-bold'>E-mail:</span> {acmData.created_by.email || 'yelena@gmail.com'}</p>
-          <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by.contact_number || '123-456-7890'}</p>
+          <p className='font-bold text-3xl'>{acmData.created_by?.name || 'User Name'} </p>
+          <p className='text-base'><span className='font-bold'>E-mail:</span> {acmData.created_by?.email || 'email@example.com'}</p>
+          <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by?.contact_number || 'Phone Number'}</p>
         </div>
 
         </div>
