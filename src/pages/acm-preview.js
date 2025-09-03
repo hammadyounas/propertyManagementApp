@@ -13,6 +13,10 @@ const ACMPreviewPage = () => {
       address: "123 Business District, Downtown, City 12345",
       description: "A premium commercial office building located in the heart of the business district. Features modern amenities, excellent accessibility, and prime location with high foot traffic.",
       no_of_units: 45,
+      images: [
+        "/assets/images/all-img/property.jpeg",
+        "/assets/images/all-img/post-2.png"
+      ],
       property_status: "Active"
     },
     compare_property: [

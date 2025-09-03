@@ -4,11 +4,25 @@ import React from 'react';
 
 const CoverPage = ({ acmData }) => {
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
+    if (!date) return new Date().toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: '2-digit'
     }).toUpperCase();
+    
+    try {
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+      }).toUpperCase();
+    } catch (error) {
+      return new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+      }).toUpperCase();
+    }
   };
 
   return (
@@ -25,10 +39,10 @@ const CoverPage = ({ acmData }) => {
           </div>
           <div>
             <ul className='text-lg font-medium'>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="basil:phone-solid" /><a href="tel:+15149297355" className='text-gray-800'> +1 514-929-7355</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="heroicons-outline:envelope" /><a href="mailto:Info@Buzzrealties.Ca" className='text-gray-800'> Info@Buzzrealties.Ca</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="stash:globe-solid" /><a href="https://www.Buzzrealties.ca" target='_blank' className='text-gray-800'> www.Buzzrealties.ca</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="heroicons:map-pin-16-solid" /> 8500 boul Décarie, 3rd floor, Montreal H4P 2N2</li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="basil:phone-solid" /><a href="tel:+15149297355" className='text-gray-800'> +1 514-929-7355</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="heroicons-outline:envelope" /><a href="mailto:Info@Buzzrealties.Ca" className='text-gray-800'> Info@Buzzrealties.Ca</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="stash:globe-solid" /><a href="https://www.Buzzrealties.ca" target='_blank' className='text-gray-800'> www.Buzzrealties.ca</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="heroicons:map-pin-16-solid" /> 8500 boul Décarie, 3rd floor, Montreal H4P 2N2</li>
             </ul>
           </div>
         </div>
@@ -50,58 +64,54 @@ const CoverPage = ({ acmData }) => {
           />
         </div>
 
-        {/* Left side - transparent to show background */}
-        <div className='col-span-1 relative z-10'>
-          {/* This space intentionally left empty to show the background image */}
         {/* Right side - Blurred overlay with content */}
-        <div className="w-[400px] -ml-20 mt-24 relative z-10">
-          <div className="">
-            {/* Glass morphism container */}
-            <div className="relative w-full">
-              {/* Backdrop blur effect */}
-              <div 
-                className="absolute inset-0 rounded-l-2xl"
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                }}
-              ></div>
-              
-              {/* Content overlay */}
-              <div className="relative z-10 p-5 uppercase">
-                <div className="">
-                  <h2 className="text-3xl font-bold text-primary-default">
-                    COMPARATIVE
-                  </h2>
-                  <h3 className="text-4xl font-bold text-white">
-                    MARKET
-                  </h3>
-                  <h4 className="text-4xl font-bold text-white pb-2">
-                    ANALYSIS
-                  </h4>
+        <div className="col-span-1 relative z-10">
+          <div className="w-[400px] -ml-20 mt-24 relative z-10">
+            <div className="">
+              {/* Glass morphism container */}
+              <div className="relative w-full">
+                {/* Backdrop blur effect */}
+                <div 
+                  className="absolute inset-0 rounded-l-2xl"
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                  }}
+                ></div>
+                
+                {/* Content overlay */}
+                <div className="relative z-10 p-5 uppercase">
+                  <div className="">
+                    <h2 className="text-3xl font-bold text-primary-default">
+                      COMPARATIVE
+                    </h2>
+                    <h3 className="text-4xl font-bold text-white">
+                      MARKET
+                    </h3>
+                    <h4 className="text-4xl font-bold text-white pb-2">
+                      ANALYSIS
+                    </h4>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* other right side content */}
-        <div className='mt-28 p-5 uppercase'> 
-          <h6 className='text-lg'>PREPARED FOR</h6>
-          <p className='font-bold text-3xl'>{acmData.created_by?.name || 'Client Name'} </p>
-          <p>{formatDate(acmData.createdAt) || '2025-01-01'}</p>
-        </div>
+          {/* other right side content */}
+          <div className='mt-28 p-5 uppercase'> 
+            <h6 className='text-lg'>PREPARED FOR</h6>
+            <p className='font-bold text-3xl'>{acmData.created_by?.name || 'Client Name'} </p>
+            <p>{formatDate(acmData.createdAt)}</p>
+          </div>
 
-        <div className='mt-8 p-5 uppercase'> 
-          <h6 className='text-lg'>PREPARED BY</h6>
-          <p className='font-bold text-3xl'>{acmData.created_by?.name || 'User Name'} </p>
-          <p className='text-base'><span className='font-bold'>E-mail:</span> {acmData.created_by?.email || 'email@example.com'}</p>
-          <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by?.contact_number || 'Phone Number'}</p>
+          <div className='mt-8 p-5 uppercase'> 
+            <h6 className='text-lg'>PREPARED BY</h6>
+            <p className='font-bold text-3xl'>{acmData.created_by?.name || 'User Name'} </p>
+            <p className='text-base'><span className='font-bold'>E-mail:</span> {acmData.created_by?.email || 'email@example.com'}</p>
+            <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by?.contact_number || 'Phone Number'}</p>
+          </div>
         </div>
-
-        </div>
-
       </div>
     </div>
   );

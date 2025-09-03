@@ -14,6 +14,12 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
       address: "123 Business District, Downtown, City 12345",
       description: "A premium commercial office building located in the heart of the business district. Features modern amenities, excellent accessibility, and prime location with high foot traffic.",
       no_of_units: 45,
+      rooftop_year: "2020",
+      furnace_hot_water_tank_year: "2021",
+      images: [
+        "/assets/images/all-img/property.jpeg",
+        "/assets/images/all-img/post-2.png"
+      ],
       property_status: "Active"
     },
     compare_property: [
@@ -43,7 +49,7 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
       }
     ],
     created_by: {
-      name: "John Smith - Senior Analyst"
+      name: "John Smith"
     },
     createdAt: new Date(),
     updated_at: new Date(),

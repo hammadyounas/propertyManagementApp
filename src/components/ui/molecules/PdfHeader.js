@@ -29,10 +29,10 @@ const PdfHeader = ({ acmData, title, titleClass }) => {
           </div>
           <div>
             <ul className='text-lg font-medium'>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="basil:phone-solid" /><a href="tel:+15149297355" className='text-gray-800'> +1 514-929-7355</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="heroicons-outline:envelope" /><a href="mailto:Info@Buzzrealties.Ca" className='text-gray-800'> Info@Buzzrealties.Ca</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="stash:globe-solid" /><a href="https://www.Buzzrealties.ca" target='_blank' className='text-gray-800'> www.Buzzrealties.ca</a></li>
-              <li className='flex items-center gap-2'><Icon className='text-2xl' icon="heroicons:map-pin-16-solid" /> 8500 boul Décarie, 3rd floor, Montreal H4P 2N2</li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="basil:phone-solid" /><a href="tel:+15149297355" className='text-gray-800'> +1 514-929-7355</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="heroicons-outline:envelope" /><a href="mailto:Info@Buzzrealties.Ca" className='text-gray-800'> Info@Buzzrealties.Ca</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="stash:globe-solid" /><a href="https://www.Buzzrealties.ca" target='_blank' className='text-gray-800'> www.Buzzrealties.ca</a></li>
+              <li className='flex items-center gap-2'><Icon className='text-2xl flex items-center' icon="heroicons:map-pin-16-solid" /> 8500 boul Décarie, 3rd floor, Montreal H4P 2N2</li>
             </ul>
           </div>
         </div>
