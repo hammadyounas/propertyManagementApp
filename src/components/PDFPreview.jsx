@@ -29,7 +29,11 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
         address: "456 Corporate Avenue, Downtown, City 12345",
         description: "Modern office complex with state-of-the-art facilities, conference rooms, and premium amenities.",
         no_of_units: 60,
-        property_status: "Active"
+        property_status: "Active",
+        images: [
+          "/assets/images/all-img/property.jpeg",
+          "/assets/images/all-img/post-2.png"
+        ],
       },
       {
         title: "Executive Business Center",
@@ -37,7 +41,11 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
         address: "789 Executive Boulevard, Downtown, City 12345",
         description: "Premium business center with luxury finishes, executive suites, and top-tier amenities.",
         no_of_units: 35,
-        property_status: "Active"
+        property_status: "Active",
+        images: [
+          "/assets/images/all-img/property.jpeg",
+          "/assets/images/all-img/post-2.png"
+        ],
       },
       {
         title: "Innovation Hub Plaza",
@@ -45,7 +53,11 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
         address: "321 Innovation Street, Downtown, City 12345",
         description: "Contemporary office space designed for tech companies and startups with flexible layouts.",
         no_of_units: 25,
-        property_status: "Active"
+        property_status: "Active",
+        images: [
+          "/assets/images/all-img/property.jpeg",
+          "/assets/images/all-img/post-2.png"
+        ],
       }
     ],
     created_by: {

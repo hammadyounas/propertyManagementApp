@@ -6,7 +6,6 @@ import PdfHeader from '../../../../../components/ui/molecules/PdfHeader';
 const PropertyDescriptionDetailsPage = ({ acmData }) => {
   const baseProperty = acmData.base_property || {};
 
-  console.log(baseProperty);
   return (
     <div
       className="w-full bg-gray-100 min-h-screen p-8 flex flex-col"
@@ -22,7 +21,7 @@ const PropertyDescriptionDetailsPage = ({ acmData }) => {
         </div>
 
         <div className='flex justify-center py-2'>
-          <h3 className='text-lg fort-bold text-center border-b-2 border-primary-default'>RECENT CAPITAL EXPENDITURES</h3>
+          <h3 className='text-lg fort-bold text-center border-b-2 border-primary-default pb-2'>RECENT CAPITAL EXPENDITURES</h3>
         </div>
       </div>
       <div>

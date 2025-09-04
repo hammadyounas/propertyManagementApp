@@ -37,8 +37,8 @@ const PdfHeader = ({ acmData, title, titleClass }) => {
           </div>
         </div>
 
-        <div className={`${titleClass} ${title ? 'flex justify-center mt-10' : 'hidden'}`}>
-        <h2 className="text-3xl font-semibold text-black-500 border-b-2 border-primary-default pb-2 tracking-wider text-center">
+        <div className={`${titleClass} ${title ? 'flex justify-center mt-6' : 'hidden'}`}>
+        <h2 className="text-3xl font-semibold text-black-500 border-b-2 border-primary-default pb-4 tracking-wider text-center">
           {title}
         </h2>
       </div>

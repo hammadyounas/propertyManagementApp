@@ -218,3 +218,177 @@ export const EXPENSES_CONFIG = [
   'wagesJanitor',
   'furnitureReserve'
 ];
+
+
+export const getFinancingData = (acmData) => {
+  const baseProperty = acmData?.base_property || {};
+  const financing = baseProperty.financing || {};
+  const cash_flow = baseProperty.cash_flow || {};
+  const roi_analysis = baseProperty.roi_analysis || {};
+  const financial_analysis = baseProperty.financial_analysis || {};
+  const toNumber = (val) => Number(val);
+
+  return {
+    financing: {
+      institution: {
+        title: 'Institution',
+        cmhc_loan_option: financing.institution?.cmhc_loan_option || '',
+        current_mortgage: financing.institution?.current_mortgage || '',
+        format: 'string'
+      },
+      rate: {
+        title: 'Rate',
+        cmhc_loan_option: toNumber(financing.rate?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.rate?.current_mortgage) || 0,
+        format: 'percent'
+      },
+      amortization: {
+        title: 'Amortization',
+        cmhc_loan_option: toNumber(financing.amortization?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.amortization?.current_mortgage) || 0,
+        format: 'number'
+      },
+      term: {
+        title: 'Term',
+        cmhc_loan_option: toNumber(financing.term?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.term?.current_mortgage) || 0,
+        format: 'number'
+      },
+      cap_rate: {
+        title: 'Cap Rate',
+        cmhc_loan_option: toNumber(financing.cap_rate?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.cap_rate?.current_mortgage) || 0,
+        format: 'percent'
+      },
+      loan_amount: {
+        title: 'Loan Amount',
+        cmhc_loan_option: toNumber(financing.loan_amount?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.loan_amount?.current_mortgage) || 0,
+        format: 'currency'
+      },
+      loan_to_value_percentage: {
+        title: 'Loan to Value %',
+        cmhc_loan_option: toNumber(financing.loan_to_value_percentage?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.loan_to_value_percentage?.current_mortgage) || 0,
+        format: 'percent'
+      },
+      debt_coverage_ratio: {
+        title: 'Debt Coverage Ratio',
+        cmhc_loan_option: toNumber(financing.debt_coverage_ratio?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.debt_coverage_ratio?.current_mortgage) || 0,
+        format: 'number'
+      },
+      down_payment: {
+        title: 'Down Payment',
+        cmhc_loan_option: toNumber(financing.down_payment?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(financing.down_payment?.current_mortgage) || 0,
+        format: 'currency'
+      },
+    },
+    cash_flow: {
+      net_income: {
+        title: 'Net Income',
+        cmhc_loan_option: toNumber(cash_flow.net_income?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(cash_flow.net_income?.current_mortgage) || 0,
+        format: 'currency'
+      },
+      annual_mortgage_cost: {
+        title: 'Annual Mortgage Cost',
+        cmhc_loan_option: toNumber(cash_flow.annual_mortgage_cost?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(cash_flow.annual_mortgage_cost?.current_mortgage) || 0,
+        format: 'currency'
+      },
+      net_cash_after_mortgage: {
+        title: 'Net Cash After Mortgage',
+        cmhc_loan_option: toNumber(cash_flow.net_cash_after_mortgage?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(cash_flow.net_cash_after_mortgage?.current_mortgage) || 0,
+        format: 'currency'
+      },
+    },
+    roi_analysis: {
+      cash_on_cash_return: {
+        title: 'Cash on Cash Return',
+        cmhc_loan_option: toNumber(roi_analysis.cash_on_cash_return?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(roi_analysis.cash_on_cash_return?.current_mortgage) || 0,
+        format: 'percent'
+      },
+      cash_plus_principal: {
+        title: 'Cash + Principal',
+        cmhc_loan_option: toNumber(roi_analysis.cash_plus_principal?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(roi_analysis.cash_plus_principal?.current_mortgage) || 0,
+        format: 'percent'
+      },
+      irr_with_market_appreciation: {
+        title: 'IRR WITH 2% MARKET APPRECIATION',
+        cmhc_loan_option: toNumber(roi_analysis.irr_with_market_appreciation?.cmhc_loan_option) || 0,
+        current_mortgage: toNumber(roi_analysis.irr_with_market_appreciation?.current_mortgage) || 0,
+        format: 'percent'
+      },
+    },
+    financial_analysis: {
+      suggested_market_price: toNumber(financial_analysis?.suggested_market_price) || 0,
+      ppu: toNumber(financial_analysis?.price_per_unit) || 0,
+      gim: toNumber(financial_analysis?.gross_income_multiplier) || 0,
+      format: 'currency'
+    }
+  };
+};
+
+export const FINANCING_CONFIG = [
+  'institution',
+  'rate',
+  'amortization',
+  'term',
+  'cap_rate',
+  'loan_amount',
+  'loan_to_value_percentage',
+  'debt_coverage_ratio',
+  'down_payment'
+];
+
+export const CASH_FLOW_CONFIG = [
+  'net_income',
+  'annual_mortgage_cost',
+  'net_cash_after_mortgage'
+];
+
+export const ROI_ANALYSIS_CONFIG = [  
+  'cash_on_cash_return',
+  'cash_plus_principal',
+  'irr_with_market_appreciation'
+];
+
+export const getSoldPropertiesData = (acmData) => {
+  const baseProperty = acmData?.base_property || {};
+  const compareProperties = acmData?.compare_property || [];
+
+  const toNumber = (val) => Number(val) || 0;
+
+  const formatProperty = (property) => ({
+    address: property?.address || '',
+    street_name: property?.street_name || '',
+    street_number: property?.street_number || '',
+    city: property?.city || '',
+    price: toNumber(property?.price),
+    date_sold: property?.createdAt || '',
+    cost_per_unit: toNumber(property?.expenses?.total_expenses_per_unit),
+    gross_income_multiplier: toNumber(property?.financial_analysis?.gross_income_multiplier),
+    cap_rate: toNumber(property?.financial_analysis?.cap_rate),
+    no_of_units: toNumber(property?.no_of_units),
+    unit_size: toNumber(property?.unit_size),
+    year_of_construction: toNumber(property?.year_built),
+    heating_responsibility: property?.responsibility_of_heating || '',
+    hot_water_responsibility: property?.responsible_of_hot_heating || '',
+    distance: property?.distance || '', // Added missing distance field
+    images: property?.images?.[0] || ''
+  });
+
+  return {
+    propertiesData: [
+      formatProperty(baseProperty),
+      formatProperty(compareProperties[0] || {}),
+      formatProperty(compareProperties[1] || {}),
+      formatProperty(compareProperties[2] || {})
+    ]
+  };
+};

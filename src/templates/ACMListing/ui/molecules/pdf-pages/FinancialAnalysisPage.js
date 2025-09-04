@@ -2,21 +2,11 @@
 import React from 'react';
 import PdfHeader from '../../../../../components/ui/molecules/PdfHeader';
 import {getFinancialData,  REVENUE_CONFIG, EXPENSES_CONFIG } from '../../../functionality/pdfDataConstant';
+import { formatCurrency, formatPercentage } from '../../../../../libs/utils/pdfFormats';
 
 const FinancialAnalysisPage = ({ acmData }) => {
   // ✅ Get structured financial data
   const financialData = getFinancialData(acmData);
-
-  // ✅ Helper Functions
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-    }).format(Number(value) || 0);
-  };
-
-  const formatPercentage = (value) => `${(Number(value) || 0).toFixed(2)}%`;
 
   // ✅ Calculate totals from mapped data
   const totalRevenue = REVENUE_CONFIG.reduce(
@@ -46,7 +36,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
 
   // ✅ Reusable Table Row Component
   const TableRow = ({ item, isTotal = false, colorClass = 'text-gray-600', bgClass = '' }) => (
-    <div className={`grid grid-cols-4 gap-4 p-1 text-sm uppercase ${bgClass} ${isTotal ? 'font-bold' : ''}`}>
+    <div className={`grid grid-cols-4 gap-4 p-1 text-xs uppercase ${bgClass} ${isTotal ? 'font-bold' : 'font-semibold'}`}>
       <div className={`${isTotal ? 'font-bold' : 'text-gray-800 font-semibold'}`}>
         {item.title}
       </div>
@@ -64,7 +54,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
 
   // ✅ Table Header Component
   const TableHeader = ({second, third, fourth}) => (
-    <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-b border-primary-default">
+    <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-b border-primary-default pb-2">
       <div></div>
       <div className="text-center">{second}</div>
       <div className="text-center">{third}</div>
@@ -74,7 +64,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
 
     // ✅ Table Header Component
     const TableFooter = ({first, second, fourth}) => (
-      <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-y border-primary-default">
+      <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-t border-primary-default pb-2">
         <div>{first}</div>
         <div className="text-center flex items-center justify-center">{second}</div>
         <div className="text-center flex items-center justify-center"></div>
@@ -90,7 +80,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
 
       {/* ✅ Revenue Section */}
       <div className="mt-3">
-        <h2 className="text-xl font-bold">REVENUE</h2>
+        <h2 className="text-xl font-bold border-b border-primary-default pb-2">REVENUE</h2>
         <div className="border border-gray-200 rounded-lg mt-2">
           <TableHeader second="YEARLY" third="% GR" fourth="RPU(M)" />
           <div className="divide-y divide-gray-200">
@@ -112,7 +102,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
 
       {/* ✅ Expenses Section */}
       <div className="mt-3">
-        <h2 className="text-xl font-bold">EXPENSES</h2>
+        <h2 className="text-xl font-bold border-b border-primary-default pb-2">EXPENSES</h2>
         <div className="border border-gray-200 rounded-lg mt-2">
           <TableHeader second="ASSESSMENT" third="% ON GR" fourth="YEARLY CPU" />
           <div className="divide-y divide-gray-200">
