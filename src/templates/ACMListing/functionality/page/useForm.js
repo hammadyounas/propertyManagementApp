@@ -34,6 +34,7 @@ const useCreateACM = () => {
     compare_property: yup
       .array()
       .min(3, "At least three compare properties are required")
+      .max(3, "Three compare properties are allowed")
       .of(yup.string().required("Compare Property is required"))
       .required("Compare Properties are required"),
   });

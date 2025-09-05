@@ -107,7 +107,7 @@ export default function FormUI({
                 )}
               </div>
               <div className="w-full md:w-[49%]">
-                <div className="my-2 text-sm font-medium">Compare Properties* (Minimum 3)</div>
+                <div className="my-2 text-sm font-medium">Compare Properties* (Total 3)</div>
                 <ReactSelect
                   name="compare_property"
                   isMulti
@@ -116,7 +116,7 @@ export default function FormUI({
                   options={filteredCompareProperties}
                   placeholder="Select Compare Properties"
                   isDisabled={loading}
-                  className="text-sm"
+                  className="text-sm focus:ring-1 focus:ring-primary-default"
                 />
                 {errors?.compare_property && (
                   <p className="text-sm text-danger-500 mt-2">
@@ -126,14 +126,14 @@ export default function FormUI({
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h4 className="text-sm font-medium text-blue-800 mb-2">ACM Information</h4>
-              <p className="text-sm text-blue-700">
+            {/* <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <h4 className="text-sm font-medium text-primary-default mb-2">ACM Information</h4>
+              <p className="text-sm text-primary-default">
                 <strong>Base Property:</strong> The main property for comparison analysis<br/>
                 <strong>Compare Properties:</strong> At least 3 properties to compare against the base property<br/>
                 <strong>Report Generation:</strong> Clicking "Save & Generate Report" will save the ACM data and automatically generate a comprehensive multi-page PDF report
               </p>
-            </div>
+            </div> */}
 
             <div className="flex justify-center md:justify-end mt-12 gap-4">
               <Button

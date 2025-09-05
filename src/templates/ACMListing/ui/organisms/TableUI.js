@@ -90,13 +90,14 @@ const TableUI = ({
                         <td className="table-td">
                           <div className="flex justify-center">
                             <img
-                              src={row.base_property?.images?.[0] || "/assets/images/users/user-1.jpg"}
+                              src={row.base_property?.images?.[0] || "/assets/images/all-img/no-img.jpg"}
                               alt=""
-                              className="block w-8 h-8 object-cover rounded-full mr-2"
+                              className="block w-8 h-8 object-cover rounded-md mr-2"
                             />
                           </div>
                         </td>
                         <td className="table-td">{row.base_property?.title}</td>
+                        <td className="table-td">{row.base_property?.address + ", " + row.base_property?.street_name + ", " + row.base_property?.street_number + ", " + row.base_property?.city}</td>
                         <td className="table-td">
                           <div className="mt-5">
                             {row.compare_property && row?.compare_property?.length > 0 ? (
@@ -110,7 +111,7 @@ const TableUI = ({
                                   >
                                     <img
                                       src={
-                                        property?.images[0] || "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"
+                                        property?.images[0] || "/assets/images/all-img/no-img.jpg"
                                       }
                                       alt={property?.title || "Property"}
                                       className={`w-8 h-8 object-cover rounded-full ${index !== 0 ? "-ml-1" : ""
