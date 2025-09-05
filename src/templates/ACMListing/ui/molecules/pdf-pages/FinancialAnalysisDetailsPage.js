@@ -56,7 +56,7 @@ const FinancialAnalysisDetailsPage = ({ acmData }) => {
   return (
     <div className="w-full bg-gray-100 min-h-screen p-8 flex flex-col overflow-hidden"
       style={{ height: '1120px', width: '794px' }}>
-      <PdfHeader title="FINANCIAL ANALYSIS" />
+      <PdfHeader title="FINANCIAL ANALYSIS" acmData={acmData} />
 
       {/* ✅ Financing Section */}
       <div className="mt-3">

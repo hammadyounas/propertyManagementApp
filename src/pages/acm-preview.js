@@ -58,7 +58,7 @@ const ACMPreviewPage = () => {
       }
     ],
     created_by: {
-      name: "John Smith - Senior Analyst"
+      name: "John Smith"
     },
     createdAt: new Date(),
     updated_at: new Date(),

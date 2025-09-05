@@ -1,7 +1,5 @@
-// components/pdf-pages/PropertyLocationPage.js
 import React from 'react';
 import PdfHeader from '../../../../../components/ui/molecules/PdfHeader';
-import Image from 'next/image';
 
 const PropertyLocationPage = ({ acmData }) => {
   return (
@@ -17,7 +15,7 @@ const PropertyLocationPage = ({ acmData }) => {
         {/* <div className="flex items-center mb-5">
           <iframe src={acmData?.base_property?.location_map_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2665.3790385044963!2d-73.6638109!3d45.50075239999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13!1!3m3!1m2!1s0x4cc918327e279583%3A0x48be5c7beb5c9f4b!2s8500%20Decarie%20Blvd%203rd%20Floor%2C%20Mount%20Royal%2C%20QC%20H4P%202N2%2C%20Canada!5e1!3m2!1sen!2s!4v1756816662381!5m2!1sen!2s"} width="730" height="350" style={{border: 0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
         </div> */}
-          <div className="bg-gray-200 h-84 rounded-lg flex items-center justify-center mt-2">
+        <div className="bg-gray-200 h-84 rounded-lg flex items-center justify-center mt-2">
           <img
             src={acmData?.base_property?.images?.[0] || "/assets/images/all-img/property.jpeg"}
             alt="Property Image"
@@ -37,15 +35,6 @@ const PropertyLocationPage = ({ acmData }) => {
             alt="Property Image"
             className="w-[730px] h-[350px] object-cover"
           />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="absolute bottom-8 left-8 right-8">
-        <div className="text-center text-sm text-gray-600 border-t pt-4">
-          <p className="font-semibold">+1 514-929-7355</p>
-          <p>Info@Buzzrealties.Ca | www.Buzzrealties.ca</p>
-          <p>8500 boul Décarie, 3rd floor, Montreal H4P 2N2</p>
         </div>
       </div>
     </div>

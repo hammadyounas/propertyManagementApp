@@ -1,48 +1,48 @@
 export const propertyDescriptionLeftColumnFields = [
-    { label: 'CADASTRAL NUMBER', key: 'cadastral_number', default: '____________' },
-    { label: 'LAND AREA', key: 'land_area', default: '____________' },
-    { label: 'NUMBER OF UNITS', key: 'no_of_units', default: '____________' },
-    { label: 'NUMBER OF PARKINGS', key: 'no_of_parking_places', default: '____________' },
-    { label: 'RESPONSIBILITY OF HEATING', key: 'responsibility_of_heating', default: '____________' },
-    { label: 'RESPONSIBLE OF HOT HEATING', key: 'responsible_of_hot_heating', default: '____________' },
-    { label: 'RESPONSIBILITY OF APPLIANCES', key: 'responsibility_of_appliances', default: '____________' },
-    { label: 'WASHER/DRYER INSTALLATION', key: 'washer_dryer_installation', default: '____________' },
-    { label: 'LAUNDRY', key: 'laundry', default: '____________' },
-  ];
-  
-  export const propertyDescriptionRightColumnFields = [
-    { label: 'MUNICIPAL ASSESSMENT - LAND', key: 'municipal_assessment_land', default: '____________' },
-    { label: 'MUNICIPAL ASSESSMENT - BUILDING', key: 'municipal_assessment_building', default: '____________' },
-    { label: 'TOTAL MUNICIPAL EVALUATION', key: 'total_municipal_evaluation', default: '____________' },
-    { label: 'YEAR BUILT', key: 'year_built', default: '____________' },
-    { label: 'BUILDING TYPE', key: 'property_type', default: '____________' },
-    { label: 'CONSTRUCTION TYPE', key: 'construction_type', default: '____________' },
-    { label: 'BUILDING STORIES', key: 'building_stories', default: '____________' },
-    { label: 'OTHER INFORMATION', key: 'other_information', default: '____________' },
-  ];
-  
-  export const propertyExpendituresLeftColumnFields = [
-    { label: 'Heating System', key: 'heating_system', default: '____________' },
-    { label: 'Hot Water System', key: 'hot_water_system', default: '____________' },
-    { label: 'Electrical Panels', key: 'electrical_panels', default: '____________' },
-    { label: 'Plumbing', key: 'plumbing', default: '____________' },
-    { label: 'Siding', key: 'siding', default: '____________' },
-    { label: 'Parking Surface', key: 'parking_surface', default: '____________' },
-    { label: 'Environmental Study', key: 'environmental_study', default: '____________' },
-    { label: 'Janitor Agreement', key: 'janitor_agreement', default: '____________' },
-    { label: 'Fire Alarm System', key: 'fire_alarm_system', default: '____________' },
-  ];
+  { label: 'CADASTRAL NUMBER', key: 'cadastral_number', default: '____________' },
+  { label: 'LAND AREA', key: 'land_area', default: '____________' },
+  { label: 'NUMBER OF UNITS', key: 'no_of_units', default: '____________' },
+  { label: 'NUMBER OF PARKINGS', key: 'no_of_parking_places', default: '____________' },
+  { label: 'RESPONSIBILITY OF HEATING', key: 'responsibility_of_heating', default: '____________' },
+  { label: 'RESPONSIBLE OF HOT HEATING', key: 'responsible_of_hot_heating', default: '____________' },
+  { label: 'RESPONSIBILITY OF APPLIANCES', key: 'responsibility_of_appliances', default: '____________' },
+  { label: 'WASHER/DRYER INSTALLATION', key: 'washer_dryer_installation', default: '____________' },
+  { label: 'LAUNDRY', key: 'laundry', default: '____________' },
+];
 
-  export const propertyExpendituresRightColumnFields = [
-    { label: 'Condition of Roof', key: 'condition_of_roof', default: '____________' },
-    { label: 'Condition of the Kitchen', key: 'condition_of_kitchens', default: '____________' },
-    { label: 'Condition of the Bathrooms', key: 'condition_of_bathrooms', default: '____________' },
-    { label: 'Condition of Flooring', key: 'condition_of_flooring', default: '____________' },
-    { label: 'Condition of the Balconies', key: 'condition_of_balconies', default: '____________' },
-    { label: 'Condition of Doors', key: 'condition_of_doors', default: '____________' },
-    { label: 'Condition of Windows', key: 'condition_of_windows', default: '____________' },
-    { label: 'Intercom System', key: 'intercom_system', default: '____________' },
-  ];
+export const propertyDescriptionRightColumnFields = [
+  { label: 'MUNICIPAL ASSESSMENT - LAND', key: 'municipal_assessment_land', default: '____________' },
+  { label: 'MUNICIPAL ASSESSMENT - BUILDING', key: 'municipal_assessment_building', default: '____________' },
+  { label: 'TOTAL MUNICIPAL EVALUATION', key: 'total_municipal_evaluation', default: '____________' },
+  { label: 'YEAR BUILT', key: 'year_built', default: '____________' },
+  { label: 'BUILDING TYPE', key: 'property_type', default: '____________' },
+  { label: 'CONSTRUCTION TYPE', key: 'construction_type', default: '____________' },
+  { label: 'BUILDING STORIES', key: 'building_stories', default: '____________' },
+  { label: 'OTHER INFORMATION', key: 'other_information', default: '____________' },
+];
+
+export const propertyExpendituresLeftColumnFields = [
+  { label: 'Heating System', key: 'heating_system', default: '____________' },
+  { label: 'Hot Water System', key: 'hot_water_system', default: '____________' },
+  { label: 'Electrical Panels', key: 'electrical_panels', default: '____________' },
+  { label: 'Plumbing', key: 'plumbing', default: '____________' },
+  { label: 'Siding', key: 'siding', default: '____________' },
+  { label: 'Parking Surface', key: 'parking_surface', default: '____________' },
+  { label: 'Environmental Study', key: 'environmental_study', default: '____________' },
+  { label: 'Janitor Agreement', key: 'janitor_agreement', default: '____________' },
+  { label: 'Fire Alarm System', key: 'fire_alarm_system', default: '____________' },
+];
+
+export const propertyExpendituresRightColumnFields = [
+  { label: 'Condition of Roof', key: 'condition_of_roof', default: '____________' },
+  { label: 'Condition of the Kitchen', key: 'condition_of_kitchens', default: '____________' },
+  { label: 'Condition of the Bathrooms', key: 'condition_of_bathrooms', default: '____________' },
+  { label: 'Condition of Flooring', key: 'condition_of_flooring', default: '____________' },
+  { label: 'Condition of the Balconies', key: 'condition_of_balconies', default: '____________' },
+  { label: 'Condition of Doors', key: 'condition_of_doors', default: '____________' },
+  { label: 'Condition of Windows', key: 'condition_of_windows', default: '____________' },
+  { label: 'Intercom System', key: 'intercom_system', default: '____________' },
+];
 
 // financialDataConstant.js
 
@@ -352,7 +352,7 @@ export const CASH_FLOW_CONFIG = [
   'net_cash_after_mortgage'
 ];
 
-export const ROI_ANALYSIS_CONFIG = [  
+export const ROI_ANALYSIS_CONFIG = [
   'cash_on_cash_return',
   'cash_plus_principal',
   'irr_with_market_appreciation'
@@ -392,3 +392,42 @@ export const getSoldPropertiesData = (acmData) => {
     ]
   };
 };
+
+export const summaryData = [
+  {
+    pricePerUnit: [
+      { area: ['Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic'] },
+      { address: ['10701-10707 Grande Allee', '10800-10802 Lajeunesse', '620 Du Mont-Cassin', '10185 Berri', '1759 Henn-Bourassa E'] },
+      { units: ['19', '8', '7', '12', '18'] },
+      { sale_price: ['1,900,000', '1,200,000', '1,100,000', '1,500,000', '2,200,000'] },
+      { ppu: ['100,000', '150,000', '157,143', '125,000', '122,222'] },
+      { unit_breakdown: ['12x5.5+6x4.5+1', '12x studio', '13x4.5+2x3.5', '12x5.5+6x4.5+1', '12x5.5+6x4.5+1'] },
+      { sold_date: ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01'] },
+    ]
+  },
+  {
+    grossRevenueMultip: [
+      { area: ['Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic'] },
+      { address: ['10701-10707 Grande Allee', '10800-10802 Lajeunesse', '620 Du Mont-Cassin', '10185 Berri', '1759 Henn-Bourassa E'] },
+      { units: ['19', '8', '7', '12', '18'] },
+      { sale_price: ['1,900,000', '1,200,000', '1,100,000', '1,500,000', '2,200,000'] },
+      { grm: ['17, 2', '15, 9', '17, 2', '15, 9', '17, 2'] },
+      { heating: ['Local', 'Owner', 'Local', 'Local', 'Local'] },
+      { hot_water: ['Owner', 'Local', 'Owner', 'Owner', 'Local'] },
+      { sold_date: ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01'] },
+    ]
+  },
+  {
+    capRate: [
+      { area: ['Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic', 'Ahuntsic'] },
+      { address: ['10701-10707 Grande Allee', '10800-10802 Lajeunesse', '620 Du Mont-Cassin', '10185 Berri', '1759 Henn-Bourassa E'] },
+      { units: ['19', '8', '7', '12', '18'] },
+      { sale_price: ['1,900,000', '1,200,000', '1,100,000', '1,500,000', '2,200,000'] },
+      { ppu: ['100,000', '150,000', '157,143', '125,000', '122,222'] },
+      { grm: ['17, 2', '15, 9', '17, 2', '15, 9', '17, 2'] },
+      { cap_rate: ['4.9%', '4.9%', '4.9%', '4.9%', '4.9%'] },
+      { nrm: ['26,9', '25,0', '23,0', '22,7', '22,1'] },
+      { sold_date: ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01'] },
+    ]
+  }
+]

@@ -1,7 +1,7 @@
 // FinancialAnalysisPage.jsx
 import React from 'react';
 import PdfHeader from '../../../../../components/ui/molecules/PdfHeader';
-import {getFinancialData,  REVENUE_CONFIG, EXPENSES_CONFIG } from '../../../functionality/pdfDataConstant';
+import { getFinancialData, REVENUE_CONFIG, EXPENSES_CONFIG } from '../../../functionality/pdfDataConstant';
 import { formatCurrency, formatPercentage } from '../../../../../libs/utils/pdfFormats';
 
 const FinancialAnalysisPage = ({ acmData }) => {
@@ -14,11 +14,11 @@ const FinancialAnalysisPage = ({ acmData }) => {
     0
   );
 
-    // ✅ Calculate totals from mapped data
-    const totalRevenuePerUnit = REVENUE_CONFIG.reduce(
-      (sum, key) => sum + (financialData.revenue[key]?.rpu || 0),
-      0
-    );
+  // ✅ Calculate totals from mapped data
+  const totalRevenuePerUnit = REVENUE_CONFIG.reduce(
+    (sum, key) => sum + (financialData.revenue[key]?.rpu || 0),
+    0
+  );
 
   const totalExpenses = EXPENSES_CONFIG.reduce(
     (sum, key) => sum + (financialData.expenses[key]?.assessment || 0),
@@ -53,7 +53,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
   );
 
   // ✅ Table Header Component
-  const TableHeader = ({second, third, fourth}) => (
+  const TableHeader = ({ second, third, fourth }) => (
     <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-b border-primary-default pb-2">
       <div></div>
       <div className="text-center">{second}</div>
@@ -62,21 +62,21 @@ const FinancialAnalysisPage = ({ acmData }) => {
     </div>
   );
 
-    // ✅ Table Header Component
-    const TableFooter = ({first, second, fourth}) => (
-      <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-t border-primary-default pb-2">
-        <div>{first}</div>
-        <div className="text-center flex items-center justify-center">{second}</div>
-        <div className="text-center flex items-center justify-center"></div>
-        <div className="text-center flex items-center justify-center">{fourth}</div>
-      </div>
-    );
+  // ✅ Table Header Component
+  const TableFooter = ({ first, second, fourth }) => (
+    <div className="grid grid-cols-4 gap-4 p-1 bg-gray-100 font-bold text-sm uppercase tracking-wide border-t border-primary-default pb-2">
+      <div>{first}</div>
+      <div className="text-center flex items-center justify-center">{second}</div>
+      <div className="text-center flex items-center justify-center"></div>
+      <div className="text-center flex items-center justify-center">{fourth}</div>
+    </div>
+  );
 
   return (
-    <div  className="w-full bg-gray-100 min-h-screen p-8 flex flex-col overflow-hidden"
-    style={{ height: '1120px', width: '794px' }}>
+    <div className="w-full bg-gray-100 min-h-screen p-8 flex flex-col overflow-hidden"
+      style={{ height: '1120px', width: '794px' }}>
       {/* ✅ Header */}
-      <PdfHeader title="FINANCIAL ANALYSIS" />
+      <PdfHeader title="FINANCIAL ANALYSIS" acmData={acmData} />
 
       {/* ✅ Revenue Section */}
       <div className="mt-3">
@@ -95,7 +95,7 @@ const FinancialAnalysisPage = ({ acmData }) => {
               );
             })}
             {/* ✅ Revenue Total */}
-          <TableFooter first="Total Gross Income" second={formatCurrency(totalRevenue)} fourth={formatCurrency(totalRevenuePerUnit)} />
+            <TableFooter first="Total Gross Income" second={formatCurrency(totalRevenue)} fourth={formatCurrency(totalRevenuePerUnit)} />
           </div>
         </div>
       </div>
@@ -118,9 +118,9 @@ const FinancialAnalysisPage = ({ acmData }) => {
             })}
             {/* ✅ Expenses Total */}
             <TableFooter first="Total Expenses" second={formatCurrency(totalExpenses)} fourth={formatCurrency(totalExpensesPerUnit)} />
-            
+
             <div className='mt-3'>
-            <TableFooter first="Net Income" second={formatCurrency(netIncome)} fourth={formatCurrency(netIncomePerUnit)} />
+              <TableFooter first="Net Income" second={formatCurrency(netIncome)} fourth={formatCurrency(netIncomePerUnit)} />
             </div>
           </div>
         </div>
