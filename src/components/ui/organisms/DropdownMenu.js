@@ -19,7 +19,7 @@ const DropdownMenu = ({ onEdit, onDelete, showEdit = false, showDelete = false }
   }, []);
 
   return (
-    <div className="relative inline-block text-left" ref={ref}>
+    <div className="relative inline-block text-left " ref={ref}>
       <Icon
         icon="charm:menu-kebab"
         className="cursor-pointer text-[20px]"

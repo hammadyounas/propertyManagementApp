@@ -144,7 +144,7 @@ export default function FormUI({
                 onClick={() => push("/acms")}
                 loading={loading}
               />
-              <Button
+              {/* <Button
                 text={"Preview PDF"}
                 className={"md:!w-36 bg-green-600 text-white hover:bg-green-700"}
                 onClick={() => setShowPreview(true)}
@@ -157,7 +157,7 @@ export default function FormUI({
                 onClick={handleGeneratePDF}
                 disabled={!selectedBaseProperty || !selectedCompareProperties || selectedCompareProperties.length < 3 || isGeneratingPDF}
                 type="button"
-              />
+              /> */}
               <Button
                 text={loading ? "Saving & Generating..." : "Save & Generate Report"}
                 className={"bg-primary-default text-white md:!w-48"}

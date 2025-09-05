@@ -1,31 +1,31 @@
 export const columns = [
   {
-    label: "Sold Date",
-    field: "Sold Date",
+    label: "Image",
+    field: "images",
   },
   {
-    label: "Property",
-    field: "Property", 
+    label: "Base Property",
+    field: "base_property", 
   },
   {
-    label: "Number of Units Sold",
-    field: "Number of Units Sold",
+    label: "Compare Property",
+    field: "compare_property",
+  },
+  {
+    label: "Number of Units",
+    field: "number_of_units",
   },
   {
     label: "Sale Price",
-    field: "Sale Price",
+    field: "sale_price",
   },
   {
-    label: "Net Operating Income",
-    field: "Net Operating Income",
-  },
-  {
-    label: "Cap Rate (%)",
-    field: "Cap Rate (%)",
+    label: 'Created By',
+    field: 'created_by',
   },
   {
     label: "Action",
-    field: "Action",
+    field: "action",
   },
 ];
 
