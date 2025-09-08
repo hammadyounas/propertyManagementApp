@@ -8,24 +8,28 @@ export const columns = [
     field: "base_property", 
   },
   {
-    label: 'Base Property Address',
-    field: 'address',
-  },
-  {
     label: "Compare Properties",
     field: "compare_property",
   },
   {
+    label: 'Prepared For',
+    field: 'prepared_for',
+  },
+  {
     label: "No of Units",
-    field: "number_of_units",
+    field: "no_of_units",
   },
   {
     label: "Sale Price",
-    field: "sale_price",
+    field: "price",
   },
   {
     label: 'Created By',
     field: 'created_by',
+  },
+  {
+    label: 'Created At',
+    field: 'created_at',
   },
   {
     label: "Action",

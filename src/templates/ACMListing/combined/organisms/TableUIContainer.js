@@ -1,7 +1,7 @@
 import useTable from "../../functionality/organisms/useTable";
 import TableUI from "../../ui/organisms/TableUI";
 
-const Table = ({ rows, globalFilter, setGlobalFilter, push, acms, totalCount, loading, openDeleteModal }) => {
+const Table = ({ rows, globalFilter, setGlobalFilter, push, acms, totalCount, loading, openDeleteModal, handleGeneratePDF, downloadingPDF, openImageModal }) => {
   const { columns } = useTable();
   return (
     <TableUI
@@ -14,6 +14,9 @@ const Table = ({ rows, globalFilter, setGlobalFilter, push, acms, totalCount, lo
       totalCount={totalCount}
       loading={loading}
       openDeleteModal={openDeleteModal}
+      handleGeneratePDF={handleGeneratePDF}
+      downloadingPDF={downloadingPDF}
+      openImageModal={openImageModal}
     />
   );
 };

@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import useAcm from "../../functionality/page/useAcm";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
+import ImagePreviewModal from "../../../../components/ui/molecules/ImagePreviewModal";
 
 const ACMListingPage = () => {
   const {
@@ -22,6 +23,12 @@ const ACMListingPage = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    handleGeneratePDF,
+    downloadingPDF,
+    showImageModal,
+    selectedImages,
+    openImageModal,
+    closeImageModal,
   } = useAcm();
 
   return (
@@ -35,6 +42,9 @@ const ACMListingPage = () => {
         totalCount={totalCount}
         loading={loading}
         openDeleteModal={openDeleteModal}
+        handleGeneratePDF={handleGeneratePDF}
+        downloadingPDF={downloadingPDF}
+        openImageModal={openImageModal}
       />
       <div
            className={`flex w-full justify-end mt-2 items-center ${
@@ -53,6 +63,13 @@ const ACMListingPage = () => {
         onDelete={deleteACMById}
         text={"Are you sure you want to delete this ACM?"}
         disabled={deleteLoading}
+      />
+      <ImagePreviewModal
+        isOpen={showImageModal}
+        onClose={closeImageModal}
+        images={selectedImages.images}
+        title={selectedImages.title}
+        alt="Property Image Preview"
       />
     </>
   );

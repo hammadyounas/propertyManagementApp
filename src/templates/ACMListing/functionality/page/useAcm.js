@@ -13,6 +13,9 @@ const useAcm = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImages, setSelectedImages] = useState({ images: [], title: '' });
   const pageSize = 10;
   const { push } = useRouter();
   const dispatch = useDispatch();
@@ -59,6 +62,18 @@ const useAcm = () => {
     setShowDeleteModal(true);
   };
 
+  const openImageModal = (images, title) => {
+    // Handle both single image and array of images
+    const imageArray = Array.isArray(images) ? images : [images];
+    setSelectedImages({ images: imageArray, title: title });
+    setShowImageModal(true);
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImages({ images: [], title: '' });
+  };
+
   const deleteACMById = async () => {
     try {
       setDeleteLoading(true);
@@ -88,6 +103,31 @@ const useAcm = () => {
     }
   };
 
+  const handleGeneratePDF = async (acmId) => {
+    try {
+      setDownloadingPDF(true);
+      
+      // Find the ACM data from the current list
+      const acmData = acms.find(acm => acm._id === acmId);
+      
+      if (!acmData) {
+        toast.error("ACM data not found!");
+        return;
+      }
+
+      // Import and use the PDF generation utility
+      const { generateACMPDF } = await import("../../../../libs/utils/acm_template");
+      await generateACMPDF(acmData);
+      toast.success("PDF generated successfully!");
+      
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
+
   return {
     globalFilter,
     setGlobalFilter,
@@ -104,6 +144,12 @@ const useAcm = () => {
     openDeleteModal,
     closeDeleteModal,
     deleteLoading,
+    handleGeneratePDF,
+    downloadingPDF,
+    showImageModal,
+    selectedImages,
+    openImageModal,
+    closeImageModal,
   };
 };
 

@@ -136,7 +136,7 @@ export default function FormUI({
                   name="prepared_for"
                   value={preparedFor}
                   onChange={handlePreparedForChange}
-                  placeholder="Enter client name"
+                  placeholder="Enter Client Name"
                   disabled={loading}
                   className="text-sm -mt-2 first-letter:uppercase"
                 />
