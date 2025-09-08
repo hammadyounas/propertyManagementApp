@@ -11,6 +11,7 @@ export default function FormUI({
   register,
   errors,
   loading,
+  isGeneratingPDF,
   selectedBaseProperty,
   handleSelectBaseProperty,
   selectedCompareProperties,
@@ -20,9 +21,10 @@ export default function FormUI({
   push,
   handleSubmit,
   onSubmit,
+  preparedFor,
+  handlePreparedForChange,
 }) {
   const [showPreview, setShowPreview] = useState(false);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Create preview data from current form selections
   const getPreviewData = () => {
@@ -48,6 +50,7 @@ export default function FormUI({
         no_of_units: prop.no_of_units || 20,
         property_status: prop.property_status || "Active"
       })),
+      prepared_for: preparedFor || "Client Name",
       created_by: { name: "Current User" },
       createdAt: new Date(),
       updated_at: new Date(),
@@ -116,11 +119,30 @@ export default function FormUI({
                   options={filteredCompareProperties}
                   placeholder="Select Compare Properties"
                   isDisabled={loading}
-                  className="text-sm focus:ring-1 focus:ring-primary-default"
+                  className="text-sm"
                 />
                 {errors?.compare_property && (
                   <p className="text-sm text-danger-500 mt-2">
                     {errors?.compare_property?.message}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-between mt-6">
+              <div className="w-full md:w-[49%]">
+                <div className="my-2 text-sm font-medium">Prepared For*</div>
+                <Textinput
+                  register={register}
+                  name="prepared_for"
+                  value={preparedFor}
+                  onChange={handlePreparedForChange}
+                  placeholder="Enter client name"
+                  disabled={loading}
+                  className="text-sm -mt-2 first-letter:uppercase"
+                />
+                {errors?.prepared_for && (
+                  <p className="text-sm text-danger-500 mt-2">
+                    {errors?.prepared_for?.message}
                   </p>
                 )}
               </div>
@@ -159,7 +181,13 @@ export default function FormUI({
                 type="button"
               /> */}
               <Button
-                text={loading ? "Saving & Generating..." : "Save & Generate Report"}
+                text={
+                  loading && !isGeneratingPDF 
+                    ? "Saving..." 
+                    : isGeneratingPDF 
+                    ? "Generating PDF..." 
+                    : "Save & Generate Report"
+                }
                 className={"bg-primary-default text-white md:!w-48"}
                 type="submit"
                 loading={loading}

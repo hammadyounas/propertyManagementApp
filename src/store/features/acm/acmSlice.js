@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createACMAPI, fetchACMAPI } from "./acmAPI";
+import { createACMAPI, fetchACMAPI, deleteACMAPI } from "./acmAPI";
 
 // Thunk to fetch acm
 export const fetchACM = createAsyncThunk(
@@ -24,6 +24,22 @@ export const createACM = createAsyncThunk(
         error?.response?.data?.message ||
           error.message ||
           "An error occurred while creating ACM."
+      );
+    }
+  }
+)
+
+export const deleteACM = createAsyncThunk(
+  "acm/deleteACM",
+  async (acmId, thunkAPI) => {
+    try {
+      const response = await deleteACMAPI(acmId);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "An error occurred while deleting ACM."
       );
     }
   }
@@ -84,6 +100,19 @@ const acmSlice = createSlice({
       .addCase(createACM.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to create ACM";
+      })
+
+      // Delete ACM
+      .addCase(deleteACM.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteACM.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteACM.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete ACM";
       });
 
       // update invoice status

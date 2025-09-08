@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
 import useAcm from "../../functionality/page/useAcm";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
+import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
 
 const ACMListingPage = () => {
   const {
@@ -16,6 +17,11 @@ const ACMListingPage = () => {
     push,
     totalCount,
     loading,
+    deleteACMById,
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    deleteLoading,
   } = useAcm();
 
   return (
@@ -28,6 +34,7 @@ const ACMListingPage = () => {
         acms={acms}
         totalCount={totalCount}
         loading={loading}
+        openDeleteModal={openDeleteModal}
       />
       <div
            className={`flex w-full justify-end mt-2 items-center ${
@@ -40,6 +47,13 @@ const ACMListingPage = () => {
              initialPage={currentPage - 1}
            />
          </div>
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={deleteACMById}
+        text={"Are you sure you want to delete this ACM?"}
+        disabled={deleteLoading}
+      />
     </>
   );
 };

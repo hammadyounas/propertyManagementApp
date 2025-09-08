@@ -16,14 +16,14 @@ const TableUI = ({
   push,
   acms,
   loading,
-  handleDelete,
+  openDeleteModal,
 }) => {
   return (
     <Card noborder>
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end">
-          <div className="w-full flex items-center justify-end">
+          <div className="w-full flex items-center sm:justify-end justify-center">
             <div className="mr-10 text-sm font-medium text-gray-500">
               <p className="font-semibold">Total ACMs</p>
               <p>
@@ -59,7 +59,7 @@ const TableUI = ({
                       <th
                         key={i}
                         scope="col"
-                        className=" table-th font-bold text-center"
+                        className=" table-th font-bold text-center whitespace-nowrap"
                       >
                         {column.label}
                       </th>
@@ -131,21 +131,21 @@ const TableUI = ({
                           </div></td>
                         <td className="table-td lowercase">{row.base_property?.no_of_units}</td>
                         <td className="table-td">
-                          {row.base_property?.price}
+                          ${row.base_property?.price}
                         </td>
                         <td className="table-td">
                           {row.created_by?.name}
                         </td>
                         <td className="table-td">
                           <div className=" flex justify-center items-center">
-                            <Icon
+                            {/* <Icon
                               onClick={() => push(`/acms/edit/${row._id}`)}
                               className="cursor-pointer text-[20px] mx-4"
                               icon={"heroicons:pencil-square"}
-                            />
+                            /> */}
                             <Icon
                               onClick={() => {
-                                handleDelete(row._id);
+                                openDeleteModal(row._id);
                               }}
                               className="cursor-pointer text-[20px]"
                               icon={"heroicons-outline:trash"}
@@ -153,7 +153,7 @@ const TableUI = ({
                           </div>
                           {/* <DropdownMenu
                             onEdit={() => push(`/acms/edit/${row._id}`)}
-                            onDelete={() => handleDelete(row._id)}
+                            onDelete={() => openDeleteModal(row._id)}
                             showEdit={true}
                             showDelete={true}
                           /> */}

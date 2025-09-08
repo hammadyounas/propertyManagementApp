@@ -37,6 +37,10 @@ const useCreateACM = () => {
       .max(3, "Three compare properties are allowed")
       .of(yup.string().required("Compare Property is required"))
       .required("Compare Properties are required"),
+    prepared_for: yup
+      .string()
+      .required("Prepared For is required")
+      .min(2, "Prepared For must be at least 2 characters"),
   });
 
   const {
@@ -52,6 +56,8 @@ const useCreateACM = () => {
 
   const [selectedBaseProperty, setSelectedBaseProperty] = useState(null);
   const [selectedCompareProperties, setSelectedCompareProperties] = useState([]);
+  const [preparedFor, setPreparedFor] = useState("");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const { push } = useRouter();
   const dispatch = useDispatch();
   const { properties } = useSelector((state) => state.properties);
@@ -84,6 +90,12 @@ const useCreateACM = () => {
     setSelectedCompareProperties(selectedOptions);
     const values = selectedOptions?.map((opt) => opt.value) || [];
     setValue("compare_property", values);
+  };
+
+  const handlePreparedForChange = (e) => {
+    const value = e.target.value;
+    setPreparedFor(value);
+    setValue("prepared_for", value);
   };
 
   // Filter out base property from compare properties options
@@ -121,12 +133,16 @@ const useCreateACM = () => {
           compare_property: data.compare_property.map(id => 
             properties.find(p => p._id === id)
           ).filter(Boolean),
+          prepared_for: data.prepared_for,
           created_by: { 
             name: user?.name || "User Not Found",
             email: user?.email || "email@example.com",
             contact_number: user?.phone || user?.contact_number || "N/A"
           }
         };
+        
+        // Set PDF generation loading state
+        setIsGeneratingPDF(true);
         
         // Generate and download the PDF report
         setTimeout(async () => {
@@ -147,12 +163,16 @@ const useCreateACM = () => {
             setTimeout(() => {
               push("/acms");
             }, 2000);
+          } finally {
+            // Always clear PDF generation loading state
+            setIsGeneratingPDF(false);
           }
         }, 1000);
       }
     } catch (error) {
       console.error("Error in ACM submission:", error);
       toast.error("Failed to save ACM or generate report");
+      setIsGeneratingPDF(false);
     }
   };
   // const onSubmit = async (data) => {
@@ -188,13 +208,16 @@ const useCreateACM = () => {
     errors,
     reset,
     setValue,
-    loading,
+    loading: loading || isGeneratingPDF,
+    isGeneratingPDF,
     properties: propertyOptions,
     filteredCompareProperties,
     selectedBaseProperty,
     handleSelectBaseProperty,
     selectedCompareProperties,
     handleSelectCompareProperties,
+    preparedFor,
+    handlePreparedForChange,
     push,
   };
 };

@@ -65,7 +65,7 @@ const CoverPage = ({ acmData }) => {
           <img
             src={acmData.base_property.image || '/assets/images/pdf-img/CoverPageImage.webp'}
             alt="property image"
-            className='w-full h-full object-contain object-cover'
+            className='w-full h-full object-cover'
           />
         </div>
 
@@ -106,15 +106,16 @@ const CoverPage = ({ acmData }) => {
           {/* other right side content */}
           <div className='mt-28 p-5 uppercase'>
             <h6 className='text-lg'>PREPARED FOR</h6>
-            <p className='font-bold text-3xl'>{acmData.created_by?.name || 'Client Name'} </p>
+            <p className='font-bold text-3xl'>{acmData.prepared_for || 'Client Name'} </p>
             <p>{formatDate(acmData.createdAt)}</p>
           </div>
 
           <div className='mt-8 p-5 uppercase'>
             <h6 className='text-lg'>PREPARED BY</h6>
             <p className='font-bold text-3xl'>{acmData.created_by?.name || 'User Name'} </p>
-            <p className='text-base'><span className='font-bold'>E-mail:</span> {acmData.created_by?.email || 'email@example.com'}</p>
-            <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by?.contact_number || 'Phone Number'}</p>
+            <p className='text-base lowercase'><a href={`mailto:${acmData.created_by?.email}`}><span className='font-bold uppercase'>E-mail:</span> {acmData.created_by?.email || 'email@example.com'}</a>
+            </p>
+            <p className='text-base'><span className='font-bold'>Phone:</span> {acmData.created_by?.contact_number || ''}</p>
           </div>
         </div>
       </div>
