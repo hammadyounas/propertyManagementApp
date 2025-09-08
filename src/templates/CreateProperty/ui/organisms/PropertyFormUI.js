@@ -244,9 +244,10 @@ const PropertyForm = () => {
                         <table className="w-full">
                           <thead>
                             <tr>
-                              <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/3"></th>
-                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">CMHC Loan</th>
-                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">Conventional Loan</th>
+                              <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/4"></th>
+                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">CMHC Loan</th>
+                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">Conventional Loan</th>
+                              <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">Assumption</th>
                             </tr>
                           </thead>
                                                      <tbody>
@@ -285,6 +286,25 @@ const PropertyForm = () => {
                                   </td>
                                   <td className="py-3 px-4">
                                     {rowFields.filter(field => field.column === 3).map(field => (
+                                      <div key={field.name} className="w-full">
+                                        <input
+                                          type={field.type}
+                                          placeholder={field.placeholder}
+                                          value={getNestedValue(formData, field.name) || ''}
+                                          onChange={(e) => handleInputChange(field.name, e.target.value)}
+                                          className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
+                                            errors[field.name] ? 'border-red-500' : ''
+                                          }`}
+                                          required={field.required}
+                                        />
+                                        {errors[field.name] && (
+                                          <div className="text-red-500 text-xs mt-1">{errors[field.name]}</div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    {rowFields.filter(field => field.column === 4).map(field => (
                                       <div key={field.name} className="w-full">
                                         <input
                                           type={field.type}

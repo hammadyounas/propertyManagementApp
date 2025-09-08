@@ -50,9 +50,10 @@ export const FormSection = ({
                 <table className="w-full">
                   <thead>
                     <tr>
-                      <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/3"></th>
-                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">CMHC Loan</th>
-                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/3">Conventional Loan</th>
+                      <th className="text-left font-bold text-black text-sm py-2 px-4 w-1/4"></th>
+                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">CMHC Loan</th>
+                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">Conventional Loan</th>
+                      <th className="text-center font-bold text-black text-sm py-2 px-4 w-1/4">Assumption</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -84,6 +85,18 @@ export const FormSection = ({
                           </td>
                           <td className="py-3 px-4">
                             {rowFields.filter(field => field.column === 3).map(field => (
+                              <FormFieldRenderer
+                                key={field.name}
+                                field={field}
+                                value={getNestedValue(formData, field.name)}
+                                error={errors[field.name]}
+                                onChange={onInputChange}
+                                isTableField={true}
+                              />
+                            ))}
+                          </td>
+                          <td className="py-3 px-4">
+                            {rowFields.filter(field => field.column === 4).map(field => (
                               <FormFieldRenderer
                                 key={field.name}
                                 field={field}

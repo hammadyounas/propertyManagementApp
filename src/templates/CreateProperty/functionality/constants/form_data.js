@@ -276,30 +276,39 @@ export const formSections = [
       // Institution
       { name: "financing.institution.cmhc_loan_option", label: "INSTITUTION", type: "text", required: false, placeholder: "Enter institution", row: 1, column: 2 },
       { name: "financing.institution.current_mortgage", label: "INSTITUTION", type: "text", required: false, placeholder: "Enter institution", row: 1, column: 3 },
+      { name: "financing.institution.assumption", label: "INSTITUTION", type: "text", required: false, placeholder: "Enter institution", row: 1, column: 4 },
       // Rate
       { name: "financing.rate.cmhc_loan_option", label: "RATE", type: "number", required: false, placeholder: "Enter rate", row: 2, column: 2 },
       { name: "financing.rate.current_mortgage", label: "RATE", type: "number", required: false, placeholder: "Enter rate", row: 2, column: 3 },
+      { name: "financing.rate.assumption", label: "RATE", type: "number", required: false, placeholder: "Enter rate", row: 2, column: 4 },
       // Amortization
       { name: "financing.amortization.cmhc_loan_option", label: "AMORTIZATION", type: "number", required: false, placeholder: "Enter amortization", row: 3, column: 2 },
       { name: "financing.amortization.current_mortgage", label: "AMORTIZATION", type: "number", required: false, placeholder: "Enter amortization", row: 3, column: 3 },
+      { name: "financing.amortization.assumption", label: "AMORTIZATION", type: "number", required: false, placeholder: "Enter amortization", row: 3, column: 4 },
       // Term
       { name: "financing.term.cmhc_loan_option", label: "TERM", type: "number", required: false, placeholder: "Enter term", row: 4, column: 2 },
       { name: "financing.term.current_mortgage", label: "TERM", type: "number", required: false, placeholder: "Enter term", row: 4, column: 3 },
+      { name: "financing.term.assumption", label: "TERM", type: "number", required: false, placeholder: "Enter term", row: 4, column: 4 },
       // Cap Rate
       { name: "financing.cap_rate.cmhc_loan_option", label: "CAP RATE", type: "number", required: false, placeholder: "Enter cap rate", row: 5, column: 2 },
       { name: "financing.cap_rate.current_mortgage", label: "CAP RATE", type: "number", required: false, placeholder: "Enter cap rate", row: 5, column: 3 },
+      { name: "financing.cap_rate.assumption", label: "CAP RATE", type: "number", required: false, placeholder: "Enter cap rate", row: 5, column: 4 },
       // Loan Amount
       { name: "financing.loan_amount.cmhc_loan_option", label: "LOAN AMOUNT", type: "number", required: false, placeholder: "Enter loan amount", row: 6, column: 2 },
       { name: "financing.loan_amount.current_mortgage", label: "LOAN AMOUNT", type: "number", required: false, placeholder: "Enter loan amount", row: 6, column: 3 },
+      { name: "financing.loan_amount.assumption", label: "LOAN AMOUNT", type: "number", required: false, placeholder: "Enter loan amount", row: 6, column: 4 },
       // Loan to Value %
       { name: "financing.loan_to_value_percentage.cmhc_loan_option", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 2 },
       { name: "financing.loan_to_value_percentage.current_mortgage", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 3 },
+      { name: "financing.loan_to_value_percentage.assumption", label: "LOAN TO VALUE%", type: "number", required: false, placeholder: "Enter loan to value %", row: 7, column: 4 },
       // Debt Coverage Ratio
       { name: "financing.debt_coverage_ratio.cmhc_loan_option", label: "DEBT COVERAGE RATIO", type: "number", required: false, placeholder: "Enter debt coverage ratio", row: 8, column: 2 },
       { name: "financing.debt_coverage_ratio.current_mortgage", label: "DEBT COVERAGE RATIO", type: "number", required: false, placeholder: "Enter debt coverage ratio", row: 8, column: 3 },
+      { name: "financing.debt_coverage_ratio.assumption", label: "DEBT COVERAGE RATIO", type: "number", required: false, placeholder: "Enter debt coverage ratio", row: 8, column: 4 },
       // Down Payment
       { name: "financing.down_payment.cmhc_loan_option", label: "DOWN PAYMENT", type: "number", required: false, placeholder: "Enter down payment", row: 9, column: 2 },
       { name: "financing.down_payment.current_mortgage", label: "DOWN PAYMENT", type: "number", required: false, placeholder: "Enter down payment", row: 9, column: 3 },
+      { name: "financing.down_payment.assumption", label: "DOWN PAYMENT", type: "number", required: false, placeholder: "Enter down payment", row: 9, column: 4 },
     ],
     defaultExpanded: false,
     layout: "table"
@@ -310,12 +319,15 @@ export const formSections = [
       // Net Income
       { name: "cash_flow.net_income.cmhc_loan_option", label: "NET INCOME", type: "number", required: false, placeholder: "Enter net income", row: 1, column: 2 },
       { name: "cash_flow.net_income.current_mortgage", label: "NET INCOME", type: "number", required: false, placeholder: "Enter net income", row: 1, column: 3 },
+      { name: "cash_flow.net_income.assumption", label: "NET INCOME", type: "number", required: false, placeholder: "Enter net income", row: 1, column: 4 },
       // Annual Mortgage Cost
       { name: "cash_flow.annual_mortgage_cost.cmhc_loan_option", label: "ANNUAL MORTGAGE COST", type: "number", required: false, placeholder: "Enter annual mortgage cost", row: 2, column: 2 },
       { name: "cash_flow.annual_mortgage_cost.current_mortgage", label: "ANNUAL MORTGAGE COST", type: "number", required: false, placeholder: "Enter annual mortgage cost", row: 2, column: 3 },
+      { name: "cash_flow.annual_mortgage_cost.assumption", label: "ANNUAL MORTGAGE COST", type: "number", required: false, placeholder: "Enter annual mortgage cost", row: 2, column: 4 },
       // Net Cash After Mortgage
       { name: "cash_flow.net_cash_after_mortgage.cmhc_loan_option", label: "NET CASH AFTER MORTGAGE", type: "number", required: false, placeholder: "Enter net cash after mortgage", row: 3, column: 2 },
-      { name: "cash_flow.net_cash_after_mortgage.current_mortgage", label: "NET CASH AFTER MORTGAGE", type: "number", required: false, placeholder: "Enter net cash after mortgage", row: 3, column: 3 }
+      { name: "cash_flow.net_cash_after_mortgage.current_mortgage", label: "NET CASH AFTER MORTGAGE", type: "number", required: false, placeholder: "Enter net cash after mortgage", row: 3, column: 3 },
+      { name: "cash_flow.net_cash_after_mortgage.assumption", label: "NET CASH AFTER MORTGAGE", type: "number", required: false, placeholder: "Enter net cash after mortgage", row: 3, column: 4 }
     ],
     defaultExpanded: false,
     layout: "table"
@@ -326,12 +338,15 @@ export const formSections = [
       // Cash on Cash Return
       { name: "roi_analysis.cash_on_cash_return.cmhc_loan_option", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 2 },
       { name: "roi_analysis.cash_on_cash_return.current_mortgage", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 3 },
+      { name: "roi_analysis.cash_on_cash_return.assumption", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 4 },
       // Cash Plus Principal
       { name: "roi_analysis.cash_plus_principal.cmhc_loan_option", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 2 },
       { name: "roi_analysis.cash_plus_principal.current_mortgage", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 3 },
+      { name: "roi_analysis.cash_plus_principal.assumption", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 4 },
       // IRR with Market Appreciation
       { name: "roi_analysis.irr_with_market_appreciation.cmhc_loan_option", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 2 },
-      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 3 }
+      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 3 },
+      { name: "roi_analysis.irr_with_market_appreciation.assumption", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 4 }
     ],
     defaultExpanded: false,
     layout: "table"
