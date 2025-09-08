@@ -53,25 +53,25 @@ export const formSections = [
   {
     title: "Basic Property Information",
     fields: [
-      { name: "title", label: "Property Title", type: "text", required: true, placeholder: "Enter property title" },
-      { name: "description", label: "Description", type: "textarea", required: true, placeholder: "Enter detailed property description" },
-      { name: "property_type", label: "Property Type", type: "select", required: true, options: propertyTypes, placeholder: "Select property type" },
-      { name: "property_status", label: "Property Status", type: "select", required: true, options: propertyStatus, placeholder: "Select property status" },
-      { name: "ownership_status", label: "Ownership Status", type: "select", required: true, options: ownershipStatus, placeholder: "Select ownership status" },
-      { name: "contract_type", label: "Contract Type", type: "select", required: false, options: contractTypes, placeholder: "Select contract type" }
+      { name: "title", label: "Property Title", type: "text", required: true, placeholder: "Enter Property Title" },
+      { name: "description", label: "Description", type: "textarea", required: true, placeholder: "Enter Detailed Property Description" },
+      { name: "property_type", label: "Property Type", type: "select", required: true, options: propertyTypes, placeholder: "Select Property Type" },
+      { name: "property_status", label: "Property Status", type: "select", required: true, options: propertyStatus, placeholder: "Select Property Status" },
+      { name: "ownership_status", label: "Ownership Status", type: "select", required: true, options: ownershipStatus, placeholder: "Select Ownership Status" },
+      { name: "contract_type", label: "Contract Type", type: "select", required: false, options: contractTypes, placeholder: "Select Contract Type" }
     ],
     defaultExpanded: true
   },
   {
     title: "Location & Address",
     fields: [
-      { name: "address", label: "Address", type: "text", required: true, placeholder: "Enter complete address" },
-      { name: "street_number", label: "Street Number", type: "text", required: true, placeholder: "Enter street number" },
-      { name: "street_name", label: "Street Name", type: "text", required: true, placeholder: "Enter street name" },
-      { name: "city", label: "City", type: "text", required: true, placeholder: "Enter city" },
-      { name: "municipality", label: "Municipality", type: "text", required: true, placeholder: "Enter municipality" },
-      { name: "cadastral_number", label: "Cadastral Number", type: "text", required: true, placeholder: "Enter cadastral number" },
-      { name: "location_map_url", label: "Location Map URL", type: "textarea", required: false, placeholder: "Paste Google Maps iframe embed code" }
+      { name: "address", label: "Address", type: "text", required: true, placeholder: "Enter Complete Address" },
+      { name: "street_number", label: "Street Number", type: "text", required: true, placeholder: "Enter Street Number" },
+      { name: "street_name", label: "Street Name", type: "text", required: true, placeholder: "Enter Street Name" },
+      { name: "city", label: "City", type: "text", required: true, placeholder: "Enter City" },
+      { name: "municipality", label: "Municipality", type: "text", required: true, placeholder: "Enter Municipality" },
+      { name: "cadastral_number", label: "Cadastral Number", type: "text", required: true, placeholder: "Enter Cadastral Number" },
+      { name: "location_map_url", label: "Location Map URL", type: "textarea", required: false, placeholder: "Paste Google Maps Iframe Embed Code" }
     ],
     defaultExpanded: true
   },
@@ -336,17 +336,17 @@ export const formSections = [
     title: "ROI Analysis",
     fields: [
       // Cash on Cash Return
-      { name: "roi_analysis.cash_on_cash_return.cmhc_loan_option", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 2 },
-      { name: "roi_analysis.cash_on_cash_return.current_mortgage", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 3 },
-      { name: "roi_analysis.cash_on_cash_return.assumption", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter cash on cash return", row: 1, column: 4 },
+      { name: "roi_analysis.cash_on_cash_return.cmhc_loan_option", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter Cash on Cash Return", row: 1, column: 2 },
+      { name: "roi_analysis.cash_on_cash_return.current_mortgage", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter Cash on Cash Return", row: 1, column: 3 },
+      { name: "roi_analysis.cash_on_cash_return.assumption", label: "CASH ON CASH RETURN", type: "number", required: false, placeholder: "Enter Cash on Cash Return", row: 1, column: 4 },
       // Cash Plus Principal
-      { name: "roi_analysis.cash_plus_principal.cmhc_loan_option", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 2 },
-      { name: "roi_analysis.cash_plus_principal.current_mortgage", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 3 },
-      { name: "roi_analysis.cash_plus_principal.assumption", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter cash + principal", row: 2, column: 4 },
+      { name: "roi_analysis.cash_plus_principal.cmhc_loan_option", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter Cash + Principal", row: 2, column: 2 },
+      { name: "roi_analysis.cash_plus_principal.current_mortgage", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter Cash + Principal", row: 2, column: 3 },
+      { name: "roi_analysis.cash_plus_principal.assumption", label: "CASH + PRINCIPAL", type: "number", required: false, placeholder: "Enter Cash + Principal", row: 2, column: 4 },
       // IRR with Market Appreciation
-      { name: "roi_analysis.irr_with_market_appreciation.cmhc_loan_option", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 2 },
-      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 3 },
-      { name: "roi_analysis.irr_with_market_appreciation.assumption", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% market appreciation", row: 3, column: 4 }
+      { name: "roi_analysis.irr_with_market_appreciation.cmhc_loan_option", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% Market Appreciation", row: 3, column: 2 },
+      { name: "roi_analysis.irr_with_market_appreciation.current_mortgage", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% Market Appreciation", row: 3, column: 3 },
+      { name: "roi_analysis.irr_with_market_appreciation.assumption", label: "IRR WITH 2% MARKET APPRECIATION", type: "number", required: false, placeholder: "Enter IRR with 2% Market Appreciation", row: 3, column: 4 }
     ],
     defaultExpanded: false,
     layout: "table"
