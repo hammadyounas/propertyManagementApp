@@ -30,14 +30,14 @@ const OverviewUI = ({
           <Banknote className="mr-2 text-primary-default" />
           <p>{price}</p>
         </div>
-        <div className="flex justify-center items-center mr-4 mt-2 border border-black-default p-2 border-dotted">
+        {/* <div className="flex justify-center items-center mr-4 mt-2 border border-black-default p-2 border-dotted">
           <Bed className="mr-2 text-primary-default" />
           <p>{bedrooms} Bedrooms</p>
         </div>
         <div className="flex justify-center items-center mr-4 mt-2 border border-black-default p-2 border-dotted">
           <Bath className="mr-2 text-primary-default" />
           <p>{bathrooms} Bathrooms</p>
-        </div>
+        </div> */}
         <div className="flex justify-center items-center mr-4 mt-2 border border-black-default p-2 border-dotted">
           <LandPlot className="mr-2 text-primary-default" />
           <p>{area} sqft</p>

@@ -14,6 +14,7 @@ import Salesperson from "../molecules/SalespersonUIContainer";
 import Location from "../molecules/LocationUIContainer";
 import { Edit, Trash2, Plus } from "lucide-react";
 import Comments from "../molecules/CommentsUIContainer";
+import ComprehensivePropertyDetailsUI from "../../ui/molecules/ComprehensivePropertyDetailsUI";
 
 const PropertyDetailsPage = () => {
   const {
@@ -26,6 +27,7 @@ const PropertyDetailsPage = () => {
     handleDelete,
     user,
   } = usePropertyDetails();
+  console.log("propertyDetails", propertyDetails);
 
   return loading ? (
     <Loading />
@@ -36,48 +38,41 @@ const PropertyDetailsPage = () => {
         assignedTo={propertyDetails?.assigned_to}
       /> */}
       <PropertyDetailsUI>
+        {/* Banner Section */}
         <Banner
           title={propertyDetails?.title}
           address={propertyDetails?.address}
           updatedAt={propertyDetails?.createdAt}
           images={propertyDetails?.images}
         />
-        <Overview
-          type={propertyDetails?.property_type}
-          price={propertyDetails?.price}
-          bedrooms={propertyDetails?.bedrooms}
-          bathrooms={propertyDetails?.bathrooms}
-          area={propertyDetails?.area}
-          furnishingStatus={propertyDetails?.furnishing_status}
-          status={propertyDetails?.property_status}
+        
+        {/* Comprehensive Property Details */}
+        <ComprehensivePropertyDetailsUI propertyDetails={propertyDetails} />
+        
+        {/* Enhanced Amenities Display */}
+        <Amenities 
+          amenities={propertyDetails?.amenities} 
+          propertyDetails={propertyDetails}
         />
-        <Details details={propertyDetails?.description} />
-        <Amenities amenities={propertyDetails?.amenities} />
-        {/* <Documents documentDataRows={documentDataRows} /> */}
+        
+        {/* Salesperson Information */}
         <Salesperson
           salesperosonDataRows={propertyDetails?.assigned_to || []}
         />
-        {/* <Notes rows={rows} /> */}
+        
+        {/* Location Map */}
         <Location locationMapUrl={propertyDetails?.location_map_url} />
-        {/* <div className="my-4">
-          <h2 className="text-lg">Location</h2>
-          <div className="flex flex-wrap my-4 w-full">
-            <div
-              id="map"
-              style={{ textAlign: "center", width:'100%' }}
-              dangerouslySetInnerHTML={{ __html: iframeHtml }}
-            />
-          </div>
-        </div> */}
-        {/* Broker Comments Section */}
-        {/* Broker Comments Section */}
+        
+        {/* Comments Section */}
         <Comments user={user} />
+        
+        {/* Action Buttons */}
         <div className="flex justify-center md:justify-end mt-12 border-t pt-4">
           <Button
             onClick={() => push(`/properties/edit/${propertyDetails?._id}`)}
-            text={"Edit"}
+            text={"Edit Property"}
             className={
-              "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
+              "md:!w-40 mx-4 bg-transparent border border-black-default !text-black-default hover:bg-gray-50"
             }
           />
           {/* <Button

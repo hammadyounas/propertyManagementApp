@@ -101,7 +101,7 @@ export default function FormUI({
                   options={properties}
                   placeholder="Select Base Property"
                   isDisabled={loading}
-                  className="text-sm"
+                  className="text-sm capitalize"
                 />
                 {errors?.base_property && (
                   <p className="text-sm text-danger-500 mt-2">
@@ -119,7 +119,7 @@ export default function FormUI({
                   options={filteredCompareProperties}
                   placeholder="Select Compare Properties"
                   isDisabled={loading}
-                  className="text-sm"
+                  className="text-sm capitalize"
                 />
                 {errors?.compare_property && (
                   <p className="text-sm text-danger-500 mt-2">

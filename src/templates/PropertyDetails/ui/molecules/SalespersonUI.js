@@ -6,7 +6,7 @@ function SalespersonUI({ salesperosonDataRows, salespersonColumns }) {
   return (
     <div className="my-4">
       <div className="flex justify-start items-center my-2">
-        <h2 className="text-lg ">Salespersons</h2>
+        <h2 className="text-lg ">Brokers</h2>
         {/* <button className="bg-primary-default text-white px-4 py-2">
               Upload Documents
             </button> */}
