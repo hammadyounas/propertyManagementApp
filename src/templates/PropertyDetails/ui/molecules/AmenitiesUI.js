@@ -141,7 +141,7 @@ const AmenitiesUI = ({ amenities, propertyDetails }) => {
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-          <Star className="w-5 h-5 mr-2 text-blue-600" />
+          <Star className="w-5 h-5 mr-2 text-primary-default" />
           Amenities & Features
         </h3>
         <div className="text-center py-8">
@@ -157,7 +157,7 @@ const AmenitiesUI = ({ amenities, propertyDetails }) => {
   return (
     <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
       <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-        <Star className="w-5 h-5 mr-2 text-blue-600" />
+        <Star className="w-5 h-5 mr-2 text-primary-default" />
         Amenities & Features
       </h3>
       

@@ -46,7 +46,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
     if (!condition) return 'text-gray-500';
     const conditionLower = condition.toLowerCase();
     if (conditionLower.includes('excellent') || conditionLower.includes('new')) return 'text-green-600';
-    if (conditionLower.includes('good') || conditionLower.includes('fair')) return 'text-blue-600';
+    if (conditionLower.includes('good') || conditionLower.includes('fair')) return 'text-primary-default';
     if (conditionLower.includes('poor') || conditionLower.includes('needs')) return 'text-red-600';
     return 'text-gray-600';
   };
@@ -81,7 +81,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           <div className="flex items-center">
-            <Building className="w-8 h-8 text-blue-600 mr-3" />
+            <Building className="w-8 h-8 text-primary-default mr-3" />
             <div>
               <p className="text-sm text-gray-600">Property Type</p>
               <p className="font-semibold text-gray-900 capitalize">{propertyDetails.property_type}</p>
@@ -124,7 +124,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {propertyDetails.description && (
         <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <FileText className="w-5 h-5 mr-2 text-blue-600" />
+            <FileText className="w-5 h-5 mr-2 text-primary-default" />
             Property Description
           </h3>
           <p className="text-gray-700 leading-relaxed">{propertyDetails.description}</p>
@@ -134,7 +134,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Building Specifications */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <Building className="w-5 h-5 mr-2 text-blue-600" />
+          <Building className="w-5 h-5 mr-2 text-primary-default" />
           Building Specifications
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -196,7 +196,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Parking & Garages */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <Car className="w-5 h-5 mr-2 text-blue-600" />
+          <Car className="w-5 h-5 mr-2 text-primary-default" />
           Parking & Garages
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -218,7 +218,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Utilities & Systems */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <Zap className="w-5 h-5 mr-2 text-blue-600" />
+          <Zap className="w-5 h-5 mr-2 text-primary-default" />
           Utilities & Systems
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -280,7 +280,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Building Conditions */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <CheckCircle className="w-5 h-5 mr-2 text-blue-600" />
+          <CheckCircle className="w-5 h-5 mr-2 text-primary-default" />
           Building Conditions
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -344,7 +344,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Building Features */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <Shield className="w-5 h-5 mr-2 text-blue-600" />
+          <Shield className="w-5 h-5 mr-2 text-primary-default" />
           Building Features
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -367,7 +367,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {(propertyDetails.revenue || propertyDetails.expenses || propertyDetails.financial_analysis) && (
         <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+            <TrendingUp className="w-5 h-5 mr-2 text-primary-default" />
             Financial Information
           </h3>
           
@@ -418,7 +418,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
           {propertyDetails.financial_analysis && (
             <div className="mb-8">
               <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Calculator className="w-4 h-4 mr-2 text-blue-600" />
+                <Calculator className="w-4 h-4 mr-2 text-primary-default" />
                 Financial Analysis
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -443,7 +443,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {/* Owner Information */}
       <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-          <Users className="w-5 h-5 mr-2 text-blue-600" />
+          <Users className="w-5 h-5 mr-2 text-primary-default" />
           Owner Information
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -480,7 +480,7 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
       {propertyDetails.other_information && (
         <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <FileText className="w-5 h-5 mr-2 text-blue-600" />
+            <FileText className="w-5 h-5 mr-2 text-primary-default" />
             Additional Information
           </h3>
           <p className="text-gray-700 leading-relaxed">{propertyDetails.other_information}</p>
