@@ -83,12 +83,12 @@ const TableUI = ({
                           <img
                             src={
                               row.base_property?.images?.[0] ||
-                              "/assets/images/all-img/no-img.jpg"
+                              "/assets/images/all-img/no-property-img.png"
                             }
                             alt=""
                             className="block w-8 h-8 object-cover rounded-md mr-2 cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => openImageModal(
-                              row.base_property?.images || [row.base_property?.images?.[0] || "/assets/images/all-img/no-img.jpg"],
+                              row.base_property?.images || [row.base_property?.images?.[0] || "/assets/images/all-img/no-property-img.png"],
                               `${row.base_property?.title} - Base Property`
                             )}
                           />
@@ -133,14 +133,14 @@ const TableUI = ({
                                     <img
                                       src={
                                         property?.images[0] ||
-                                        "/assets/images/all-img/no-img.jpg"
+                                        "/assets/images/all-img/no-property-img.png"
                                       }
                                       alt={property?.title || "Property"}
                                       className={`w-8 h-8 object-cover rounded-full cursor-pointer hover:opacity-80 transition-opacity ${
                                         index !== 0 ? "-ml-1" : ""
                                       }`}
                                       onClick={() => openImageModal(
-                                        property?.images || [property?.images?.[0] || "/assets/images/all-img/no-img.jpg"],
+                                        property?.images || [property?.images?.[0] || "/assets/images/all-img/no-property-img.png"],
                                         `${property?.title} - Compare Property`
                                       )}
                                     />

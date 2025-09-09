@@ -119,7 +119,7 @@ export default function ImagePreviewModal({
               alt={alt}
               className="w-full h-auto max-h-[70vh] object-contain"
               onError={(e) => {
-                e.target.src = "/assets/images/all-img/no-img.jpg";
+                e.target.src = "/assets/images/all-img/no-property-img.png";
               }}
             />
           </div>
