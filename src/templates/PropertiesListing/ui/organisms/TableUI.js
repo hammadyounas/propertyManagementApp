@@ -91,43 +91,42 @@ const TableUI = ({
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
-                      <td className="table-td sm:p-4 p-2">{row.address}</td>
+                      <td className="table-td sm:p-4 p-2">{row.address + ' ' + row.street_number + ' ' + row.city}</td>
                       <td className="table-td sm:p-4 p-2">{row.property_type}</td>
                       <td className="table-td sm:p-4 p-2">{row.no_of_units}</td>
                       <td className="table-td sm:p-4 p-2">
                         {row.owner_name}, {row.owner_address}
                         {/* {row.owneraddress} */}
                       </td>
-                      <td className="table-td sm:p-4 p-2">
-                        {row.phone_number || row.telno}
+                      <td className="table-td sm:p-4 p-2 whitespace-nowrap">
+                        {row.phone_number}
                       </td>
                       <td className="table-td sm:p-4 p-2">
                         <span className="block w-full whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
                           ${
-                            row.property_status || row.status === "available"
+                            row.property_status === "available"
                               ? "text-green-600 bg-green-200"
                               : ""
                           }
                           ${
-                            row.property_status ||
-                            row.status === "under contract"
+                            row.property_status  === "under contract"
                               ? "text-yellow-600 bg-yellow-200"
                               : ""
                           }
                           ${
-                            row.property_status || row.status === "sold"
+                            row.property_status === "sold"
                               ? "text-blue-600 bg-blue-200"
                               : ""
                           }
                           ${
-                            row.property_status || row.status === "leased"
+                            row.property_status === "leased"
                               ? "text-purple-600 bg-purple-200"
                               : ""
                           }
                           ${
-                            row.property_status || row.status === "coming soon"
+                            row.property_status === "coming soon"
                               ? "text-orange-600 bg-orange-200"
                               : ""
                           }
@@ -138,7 +137,7 @@ const TableUI = ({
                           }
                         `}
                           >
-                            {row.property_status || row.status}
+                            {row.property_status}
                           </span>
                         </span>
                       </td>
