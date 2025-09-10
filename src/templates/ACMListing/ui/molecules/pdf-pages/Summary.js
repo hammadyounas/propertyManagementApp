@@ -78,8 +78,8 @@ const Summary = ({ acmData }) => {
                           return (
                             <td
                               key={colIndex}
-                              className={`px-3 p-1 text-gray-800 ${
-                                colIndex === table.keys.length - 1 ? '' : 'border-r'
+                              className={`px-3 p-1 border-b font-semibold text-xs text-gray-800 ${
+                                colIndex === table.keys.length - 1 ? '' : ''
                               } ${
                                 colIndex === 2
                                   ? 'text-center'
