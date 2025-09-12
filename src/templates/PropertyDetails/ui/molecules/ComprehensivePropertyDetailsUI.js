@@ -67,10 +67,10 @@ const ComprehensivePropertyDetailsUI = ({ propertyDetails }) => {
             </div>
             </div>
             <div className="flex items-center space-x-4 text-white">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(propertyDetails.property_status)}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getStatusColor(propertyDetails.property_status)}`}>
                 {propertyDetails.property_status}
               </span>
-              <span className="text-2xl font-bold text-white">
+              <span className="sm:text-2xl font-bold text-white">
                 {formatCurrency(propertyDetails.price)}
               </span>
             </div>
