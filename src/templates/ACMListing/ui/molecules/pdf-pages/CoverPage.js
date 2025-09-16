@@ -63,7 +63,7 @@ const CoverPage = ({ acmData }) => {
         {/* Background Image (Full Width) */}
         <div className="col-span-2">
           <img
-            src={acmData.base_property.image || '/assets/images/pdf-img/CoverPageImage.webp'}
+            src={'/assets/images/pdf-img/CoverPageImage.webp'}
             alt="property image"
             className='w-full h-full object-cover'
           />
