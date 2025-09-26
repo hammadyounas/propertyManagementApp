@@ -53,6 +53,10 @@ const withAuth = (Component) => {
         "/acms",
         "/marketing-emails",
         "/profile",
+        "/templates",
+        "/templates/create",
+        "/templates-listing",
+        "/design-documents",
       ];
 
       const isProtectedPath = protectedRoutes.some(
