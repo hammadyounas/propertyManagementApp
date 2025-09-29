@@ -53,17 +53,17 @@ export const menuItems = [
     icon: "heroicons:arrow-trending-up",
     link: "/acms",
   },
-  {
-    title: "New Template",
-    isHide: false,
-    icon: "icon-park-solid:add-one", // Clear "add" action
-    link: "/templates/create",
-  },
+  // {
+  //   title: "New Template",
+  //   isHide: false,
+  //   icon: "icon-park-solid:add-one", // Clear "add" action
+  //   link: "/templates/create",
+  // },
   {
     title: "Templates",
     isHide: false,
     icon: "tabler:template-filled", // Represents multiple items/templates
-    link: "/templates-listing",
+    link: "/templates",
   },
   {
     title: "Design Documents",

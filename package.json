@@ -26,6 +26,7 @@
     "framer-motion": "^11.9.0",
     "html2pdf.js": "^0.10.3",
     "jspdf-autotable": "^3.8.4",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.447.0",
     "mitt": "^3.0.1",
     "moment": "^2.30.1",

@@ -1,8 +1,8 @@
 import withAuth from "../../components/ui/organisms/withAuth";
-import CreateTextEditorPage from "../../templates/CreateTemplate/combined/pages/CreateTextEditorPage"
+import TemplateListPage from "../../templates/TemplateList/combined/pages/TemplateListPage";
 
 const TemplatesPage = () => {
-  return <CreateTextEditorPage />;
+  return <TemplateListPage />;
 };
 
 export default withAuth(TemplatesPage);

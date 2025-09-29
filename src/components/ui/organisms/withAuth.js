@@ -54,8 +54,6 @@ const withAuth = (Component) => {
         "/marketing-emails",
         "/profile",
         "/templates",
-        "/templates/create",
-        "/templates-listing",
         "/design-documents",
       ];
 

@@ -132,12 +132,14 @@ const TemplateEditor = ({   name,
 
         <style jsx global>{`
         .rich-text-editor .ql-editor {
-          min-height: 250px;
-          font-size: 14px;
-          line-height: 1.5;
-          padding: 12px 15px;
+          min-height: calc(100vh - 200px);
+          font-size: 16px;
+          line-height: 1.6;
+          padding: 24px;
           background-color: white;
           color: #374151;
+          border: none;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         .dark .rich-text-editor .ql-editor {
@@ -146,10 +148,11 @@ const TemplateEditor = ({   name,
         }
         
         .rich-text-editor .ql-toolbar {
-          border: 1px solid #d1d5db;
-          border-bottom: 1px solid #d1d5db;
-          border-radius: 0.375rem 0.375rem 0 0;
+          border: none;
+          border-bottom: 1px solid #e5e7eb;
+          border-radius: 0;
           background-color: #f9fafb;
+          padding: 8px 16px;
         }
         
         .dark .rich-text-editor .ql-toolbar {
@@ -158,11 +161,8 @@ const TemplateEditor = ({   name,
         }
         
         .rich-text-editor .ql-container {
-          border-bottom: 1px solid #d1d5db;
-          border-left: 1px solid #d1d5db;
-          border-right: 1px solid #d1d5db;
-          border-top: none;
-          border-radius: 0 0 0.375rem 0.375rem;
+          border: none;
+          border-radius: 0;
           font-family: inherit;
           background-color: white;
         }
