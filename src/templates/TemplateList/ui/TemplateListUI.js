@@ -33,7 +33,7 @@ export default function TemplateListUI({
           <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
             <DropdownUINew
               label={categoryFilter || "All Categories"}
-              wrapperClass="sm:w-48"
+              wrapperClass=""
               labelClass="btn-secondary bg-primary-default capitalize flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="left-0 max-sm:w-32 text-sm"
               classItem="p-2"
