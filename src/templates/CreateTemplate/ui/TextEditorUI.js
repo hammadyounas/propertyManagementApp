@@ -18,7 +18,6 @@ export default function TemplateEditorUI({
   isEdit = false, 
   templateId = null,
 }) {
-  const [showPlaceholders, setShowPlaceholders] = useState(false);
   const [selectedPlaceholder, setSelectedPlaceholder] = useState(null);
 
   // Category options for the dropdown
@@ -54,37 +53,44 @@ export default function TemplateEditorUI({
     const currentContent = editorValue;
     const newContent = currentContent + placeholder;
     setEditorValue(newContent);
-    setShowPlaceholders(false);
   };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div>
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+        <div className="px-4 sm:px-6 py-4">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0">
+            <div className="flex items-center space-x-4 w-full lg:w-auto">
+              <button
+                onClick={onBack}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
+              >
+                <svg className="w-5 h-5 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div className="flex-1 min-w-0">
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
                   placeholder="Untitled Document"
-                  className="text-xl font-semibold bg-transparent border-none focus:outline-none text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
+                  className="w-full text-lg sm:text-xl font-semibold bg-transparent border-none focus:outline-none text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 />
-                <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500 dark:text-slate-400">
-                  <span>Created on {new Date().toLocaleDateString('en-US')}</span>
-                  <span>•</span>
-                  <span>Admin</span>
+                <div className="flex items-center space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-slate-400">
+                  <span className="hidden sm:inline">Created on {new Date().toLocaleDateString('en-US')}</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span className="hidden sm:inline">Admin</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-48">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
+              <div className="w-full sm:w-48">
                 <CustomSelect
                   value={category}
                   onChange={setCategory}
                   options={categoryOptions}
                   placeholder="Select Category"
-                  className="text-sm"
+                  className="text-sm w-full"
                 />
               </div>
               <button
@@ -98,7 +104,7 @@ export default function TemplateEditorUI({
                   }
                 }}
                 disabled={loading}
-                className="px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {loading && (
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -106,57 +112,46 @@ export default function TemplateEditorUI({
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 )}
-                <span>Save as Template</span>
+                <span className="hidden sm:inline">Save as Template</span>
+                <span className="sm:hidden">Save</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-80px)]">
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)] lg:h-[calc(100vh-80px)]">
         {/* Main Editor Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Editor Toolbar */}
-          {/* <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-3">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                  </svg>
-                </button>
-                <span className="text-sm text-gray-600 dark:text-slate-400">Heading 3</span>
-              </div>
-            </div>
-          </div> */}
-
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Editor Content */}
-          <div className="flex-1 bg-white dark:bg-slate-800">
+          <div className="flex-1 bg-white dark:bg-slate-800 min-h-0">
             <div className="h-full">
-              <TemplateEditor
-                editorValue={editorValue}
-                setEditorValue={setEditorValue}
-              />
+            <TemplateEditor
+              editorValue={editorValue}
+              setEditorValue={setEditorValue}
+            />
             </div>
           </div>
-        </div>
+          </div>
 
         {/* Variables Sidebar */}
-        <div className="w-80 bg-white dark:bg-slate-800 border-l border-gray-200 dark:border-slate-700">
+        <div className="w-full lg:w-80 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
           <div className="p-4 border-b border-gray-200 dark:border-slate-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Variables</h3>
-            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-              You can use this predefined variables to create your template.
-            </p>
-          </div>
-          
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Variables</h3>
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                You can use this predefined variables to create your template.
+              </p>
+            </div>
+        </div>
+
           <div className="p-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
             {/* Personal Information */}
             <div>
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Personal Information
               </h4>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
                 {placeholders.slice(0, 8).map((placeholder, index) => (
                   <div
                     key={index}
@@ -179,7 +174,7 @@ export default function TemplateEditorUI({
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Contract Information
               </h4>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
                 {placeholders.slice(8, 12).map((placeholder, index) => (
                   <div
                     key={index}
@@ -202,7 +197,7 @@ export default function TemplateEditorUI({
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Property Information
               </h4>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
                 {placeholders.slice(12).map((placeholder, index) => (
                   <div
                     key={index}
