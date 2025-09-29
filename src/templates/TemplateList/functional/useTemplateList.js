@@ -8,7 +8,7 @@ export default function useTemplateList() {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all templates');
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -117,7 +117,7 @@ export default function useTemplateList() {
       template.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
       template.content.toLowerCase().includes(globalFilter.toLowerCase());
     
-    const matchesCategory = categoryFilter === 'all' || 
+    const matchesCategory = categoryFilter === 'all templates' || 
       template.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
@@ -139,5 +139,6 @@ export default function useTemplateList() {
     closeDeleteModal,
     showDeleteModal,
     deleteLoading,
+    router,
   };
 }

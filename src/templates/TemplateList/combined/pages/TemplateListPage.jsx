@@ -17,6 +17,7 @@ export default function TemplateListPage() {
     closeDeleteModal,
     showDeleteModal,
     deleteLoading,
+    router,
   } = useTemplateList();
 
   return (
@@ -31,6 +32,7 @@ export default function TemplateListPage() {
         onEdit={handleEdit}
         onDelete={openDeleteModal}
         onDuplicate={handleDuplicate}
+        router={router}
       />
       
       <ConfirmDeleteModal

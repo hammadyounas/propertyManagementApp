@@ -3,7 +3,6 @@ import Image from "next/image";
 import Card from "../../../components/ui/molecules/CardUI";
 import TemplateEditor from "../../../components/ui/organisms/TemplateEditor";
 import { CustomSelect } from "../../../components/ui/molecules/CustomSelect";
-import { formatDate } from "@fullcalendar/core/index.js";
 import { useState } from "react";
 
 export default function TemplateEditorUI({
@@ -16,7 +15,7 @@ export default function TemplateEditorUI({
   loading,
   onSave,
   onBack,
-  isEdit = false,
+  isEdit = false, 
   templateId = null,
 }) {
   const [showPlaceholders, setShowPlaceholders] = useState(false);
@@ -118,7 +117,7 @@ export default function TemplateEditorUI({
         {/* Main Editor Area */}
         <div className="flex-1 flex flex-col">
           {/* Editor Toolbar */}
-          <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-3">
+          {/* <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-3">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded">
@@ -129,7 +128,7 @@ export default function TemplateEditorUI({
                 <span className="text-sm text-gray-600 dark:text-slate-400">Heading 3</span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Editor Content */}
           <div className="flex-1 bg-white dark:bg-slate-800">

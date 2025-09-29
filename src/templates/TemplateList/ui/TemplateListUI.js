@@ -9,6 +9,7 @@ import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import { dateFormat } from "../../../libs/utils/helper";
+import { categories, columns, getCategoryColor, truncateContent } from "../functional/constant";
 
 export default function TemplateListUI({
   templates,
@@ -20,43 +21,8 @@ export default function TemplateListUI({
   loading = false,
   setCategoryFilter,
   categoryFilter,
+  router,
 }) {
-  const router = useRouter();
-
-  const categories = [
-    { label: 'All Templates', value: 'all' },
-    { label: 'Email Templates', value: 'email' },
-    { label: 'Contract Templates', value: 'contract' },
-    { label: 'Listing Templates', value: 'listing' },
-    { label: 'Marketing Templates', value: 'marketing' },
-  ];
-
-  const columns = [
-    { label: 'Template Name' },
-    { label: 'Category' },
-    { label: 'Content Preview' },
-    { label: 'Created Date' },
-    { label: 'Actions' },
-  ];
-
-  const getCategoryColor = (category) => {
-    const colors = {
-      email: 'text-blue-600 bg-blue-200',
-      contract: 'text-green-600 bg-green-200',
-      listing: 'text-purple-600 bg-purple-200',
-      marketing: 'text-orange-600 bg-orange-200',
-      default: 'text-gray-600 bg-gray-200',
-    };
-    return colors[category] || colors.default;
-  };
-
-  const truncateContent = (content, maxLength = 100) => {
-    if (!content) return '';
-    const textContent = content.replace(/<[^>]*>/g, '');
-    return textContent.length > maxLength 
-      ? textContent.substring(0, maxLength) + '...'
-      : textContent;
-  };
 
   return (
     <Card noborder>
@@ -68,7 +34,7 @@ export default function TemplateListUI({
             <DropdownUINew
               label={categoryFilter || "All Categories"}
               wrapperClass="sm:w-48"
-              labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
+              labelClass="btn-secondary bg-primary-default capitalize flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="left-0 max-sm:w-32 text-sm"
               classItem="p-2"
               onSelect={(value) => {
