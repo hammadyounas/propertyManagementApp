@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import Card from "../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
 import GlobalFilter from "../../../components/ui/atoms/GlobalFilter";
@@ -31,9 +30,9 @@ export default function TemplateListUI({
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
           <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
-            <DropdownUINew
+            {/* <DropdownUINew
               label={categoryFilter || "All Categories"}
-              wrapperClass=""
+              wrapperClass="w-full sm:w-40"
               labelClass="btn-secondary bg-primary-default capitalize flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
               classMenuItems="left-0 max-sm:w-32 text-sm"
               classItem="p-2"
@@ -41,7 +40,7 @@ export default function TemplateListUI({
                 setCategoryFilter(value);
               }}
               items={categories}
-            />
+            /> */}
             <span className="">
               <Button
                 text="Add Template"
@@ -93,7 +92,7 @@ export default function TemplateListUI({
                           </span>
                         </div>
                       </td>
-                      <td className="table-td sm:p-4 p-2">
+                      {/* <td className="table-td sm:p-4 p-2">
                         <span className="block w-full whitespace-nowrap">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${getCategoryColor(template.category || 'uncategorized')}`}
@@ -101,7 +100,7 @@ export default function TemplateListUI({
                             {template.category || 'Uncategorized'}
                           </span>
                         </span>
-                      </td>
+                      </td> */}
                       <td className="table-td sm:p-4 p-2 text-left">
                         <div className="">
                           {truncateContent(template.content)}

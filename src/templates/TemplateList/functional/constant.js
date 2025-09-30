@@ -8,7 +8,7 @@ export const categories = [
 
 export const columns = [
     { label: 'Template Name' },
-    { label: 'Category' },
+    // { label: 'Category' },
     { label: 'Content Preview' },
     { label: 'Created Date' },
     { label: 'Actions' },

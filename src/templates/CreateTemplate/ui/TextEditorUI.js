@@ -5,6 +5,8 @@ import TemplateEditor from "../../../components/ui/organisms/TemplateEditor";
 import { CustomSelect } from "../../../components/ui/molecules/CustomSelect";
 import { useRef, useState } from "react";
 import { categoryOptions, placeholders } from "../functional/constant";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 
 export default function TemplateEditorUI({
   title,
@@ -36,19 +38,7 @@ export default function TemplateEditorUI({
                 onClick={onBack}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
               >
-                <svg
-                  className="w-5 h-5 text-gray-600 dark:text-slate-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+               <Icon icon={"material-symbols:arrow-back-ios-rounded"} className="text-center"/>
               </button>
               <div className="flex-1 min-w-0">
                 <input
@@ -67,7 +57,7 @@ export default function TemplateEditorUI({
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
-              <div className="w-full sm:w-48">
+              {/* <div className="w-full sm:w-48">
                 <CustomSelect
                   value={category}
                   onChange={setCategory}
@@ -75,7 +65,7 @@ export default function TemplateEditorUI({
                   placeholder="Select Category"
                   className="text-sm w-full"
                 />
-              </div>
+              </div> */}
               <button
                 type="button"
                 onClick={handleTriggerImport}
@@ -101,25 +91,7 @@ export default function TemplateEditorUI({
                 className="w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {loading && (
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <LoadingUI />
                 )}
                 <span className="hidden sm:inline">Save as Template</span>
                 <span className="sm:hidden">Save</span>
