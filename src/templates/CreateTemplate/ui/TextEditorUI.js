@@ -101,7 +101,7 @@ export default function TemplateEditorUI({
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)] lg:h-[calc(100vh-80px)]">
+      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)]">
         {/* Main Editor Area */}
         <div className="flex-1 flex flex-col min-h-0">
           {/* Editor Content */}
