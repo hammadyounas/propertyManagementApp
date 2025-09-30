@@ -55,7 +55,7 @@ export const sampleTemplates = [
     id: 'sample-3',
     title: 'Marketing Flyer Template',
     content: `
-      <div style="text-align: center; padding: 20px;">
+      <div style="padding: 5px;">
         <h1 style="color: #2563eb;">{{property_address}}</h1>
         <h2 style="color: #1f2937;">{{property_type}} - {{property_price}}</h2>
         

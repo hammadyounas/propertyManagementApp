@@ -1,10 +1,6 @@
 "use client";
-import Image from "next/image";
-import Card from "../../../components/ui/molecules/CardUI";
 import TemplateEditor from "../../../components/ui/organisms/TemplateEditor";
-import { CustomSelect } from "../../../components/ui/molecules/CustomSelect";
-import { useRef, useState } from "react";
-import { categoryOptions, placeholders } from "../functional/constant";
+import { placeholders } from "../functional/constant";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 

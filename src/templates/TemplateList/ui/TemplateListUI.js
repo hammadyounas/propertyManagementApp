@@ -2,13 +2,16 @@
 import Card from "../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
 import GlobalFilter from "../../../components/ui/atoms/GlobalFilter";
-import DropdownUINew from "../../../components/ui/organisms/DropdownUINew";
 import Button from "../../../components/ui/molecules/Button";
 import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
-import { useRouter } from "next/router";
 import { dateFormat } from "../../../libs/utils/helper";
-import { categories, columns, getCategoryColor, truncateContent } from "../functional/constant";
+import {
+  categories,
+  columns,
+  getCategoryColor,
+  truncateContent,
+} from "../functional/constant";
 
 export default function TemplateListUI({
   templates,
@@ -22,7 +25,6 @@ export default function TemplateListUI({
   categoryFilter,
   router,
 }) {
-
   return (
     <Card noborder>
       <ToastContainer />
@@ -44,7 +46,7 @@ export default function TemplateListUI({
             <span className="">
               <Button
                 text="Add Template"
-                onClick={() => router.push('/templates/create')}
+                onClick={() => router.push("/templates/create")}
                 className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
@@ -58,7 +60,11 @@ export default function TemplateListUI({
               <thead className="bg-slate-200 dark:bg-slate-700">
                 <tr>
                   {columns?.map((column, i) => (
-                    <th key={i} scope="col" className="table-th font-bold px-4 py-4 text-center whitespace-nowrap">
+                    <th
+                      key={i}
+                      scope="col"
+                      className="table-th font-bold px-4 py-4 text-center whitespace-nowrap"
+                    >
                       {column.label}
                     </th>
                   ))}
