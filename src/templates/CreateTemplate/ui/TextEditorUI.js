@@ -3,7 +3,8 @@ import Image from "next/image";
 import Card from "../../../components/ui/molecules/CardUI";
 import TemplateEditor from "../../../components/ui/organisms/TemplateEditor";
 import { CustomSelect } from "../../../components/ui/molecules/CustomSelect";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { categoryOptions, placeholders } from "../functional/constant";
 
 export default function TemplateEditorUI({
   title,
@@ -15,45 +16,15 @@ export default function TemplateEditorUI({
   loading,
   onSave,
   onBack,
-  isEdit = false, 
+  isEdit = false,
   templateId = null,
+  fileInputRef,
+  handleTriggerImport,
+  arrayBufferFromFile,
+  textFromFile,
+  handleImportFile,
+  insertPlaceholder,
 }) {
-  const [selectedPlaceholder, setSelectedPlaceholder] = useState(null);
-
-  // Category options for the dropdown
-  const categoryOptions = [
-    { value: 'uncategorized', label: 'Template' },
-    { value: 'email', label: 'Email' },
-    { value: 'contract', label: 'Contract' },
-    { value: 'listing', label: 'Listing' },
-    { value: 'marketing', label: 'Marketing' },
-  ];
-
-  // Predefined placeholders for property management
-  const placeholders = [
-    { key: '{{client_name}}', label: 'Client Name', description: 'Full name of the client' },
-    { key: '{{property_address}}', label: 'Property Address', description: 'Complete property address' },
-    { key: '{{property_type}}', label: 'Property Type', description: 'Type of property (house, apartment, etc.)' },
-    { key: '{{property_price}}', label: 'Property Price', description: 'Price of the property' },
-    { key: '{{agent_name}}', label: 'Agent Name', description: 'Name of the real estate agent' },
-    { key: '{{agent_phone}}', label: 'Agent Phone', description: 'Agent contact phone number' },
-    { key: '{{agent_email}}', label: 'Agent Email', description: 'Agent email address' },
-    { key: '{{company_name}}', label: 'Company Name', description: 'Real estate company name' },
-    { key: '{{listing_date}}', label: 'Listing Date', description: 'Date when property was listed' },
-    { key: '{{closing_date}}', label: 'Closing Date', description: 'Expected closing date' },
-    { key: '{{commission_rate}}', label: 'Commission Rate', description: 'Commission percentage' },
-    { key: '{{property_features}}', label: 'Property Features', description: 'Key features of the property' },
-    { key: '{{viewing_schedule}}', label: 'Viewing Schedule', description: 'Available viewing times' },
-    { key: '{{mortgage_info}}', label: 'Mortgage Information', description: 'Mortgage details and requirements' },
-    { key: '{{legal_notes}}', label: 'Legal Notes', description: 'Important legal information' },
-  ];
-
-  const insertPlaceholder = (placeholder) => {
-    // Get the current editor content and add the placeholder
-    const currentContent = editorValue;
-    const newContent = currentContent + placeholder;
-    setEditorValue(newContent);
-  };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* Header */}
@@ -65,19 +36,31 @@ export default function TemplateEditorUI({
                 onClick={onBack}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-5 h-5 text-gray-600 dark:text-slate-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <div className="flex-1 min-w-0">
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder="Untitled Document"
                   className="w-full text-lg sm:text-xl font-semibold bg-transparent border-none focus:outline-none text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 />
                 <div className="flex items-center space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-slate-400">
-                  <span className="hidden sm:inline">Created on {new Date().toLocaleDateString('en-US')}</span>
+                  <span className="hidden sm:inline">
+                    Created on {new Date().toLocaleDateString("en-US")}
+                  </span>
                   <span className="hidden sm:inline">•</span>
                   <span className="hidden sm:inline">Admin</span>
                 </div>
@@ -94,8 +77,19 @@ export default function TemplateEditorUI({
                 />
               </div>
               <button
+                type="button"
+                onClick={handleTriggerImport}
+                className="w-full sm:w-auto px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-100 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors flex items-center justify-center space-x-2"
+              >
+                <span>Import Template</span>
+              </button>
+              <button
                 onClick={() => {
-                  const templateData = { title, content: editorValue, id: templateId };
+                  const templateData = {
+                    title,
+                    content: editorValue,
+                    id: templateId,
+                  };
                   if (onSave) {
                     onSave(templateData);
                   } else {
@@ -107,9 +101,24 @@ export default function TemplateEditorUI({
                 className="w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {loading && (
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                 )}
                 <span className="hidden sm:inline">Save as Template</span>
@@ -126,24 +135,26 @@ export default function TemplateEditorUI({
           {/* Editor Content */}
           <div className="flex-1 bg-white dark:bg-slate-800 min-h-0">
             <div className="h-full">
-            <TemplateEditor
-              editorValue={editorValue}
-              setEditorValue={setEditorValue}
-            />
+              <TemplateEditor
+                editorValue={editorValue}
+                setEditorValue={setEditorValue}
+              />
             </div>
           </div>
-          </div>
+        </div>
 
         {/* Variables Sidebar */}
         <div className="w-full lg:w-80 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
           <div className="p-4 border-b border-gray-200 dark:border-slate-700">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Variables</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
+                Variables
+              </h3>
               <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
                 You can use this predefined variables to create your template.
               </p>
             </div>
-        </div>
+          </div>
 
           <div className="p-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
             {/* Personal Information */}
@@ -217,7 +228,14 @@ export default function TemplateEditorUI({
           </div>
         </div>
       </div>
-      
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".docx,.html,.htm,.txt"
+        style={{ display: "none" }}
+        onChange={handleImportFile}
+      />
+
       {/* Additional styles for better media display */}
       <style jsx global>{`
         .ql-editor video {
@@ -226,14 +244,14 @@ export default function TemplateEditorUI({
           border-radius: 4px;
           margin: 10px 0;
         }
-        
+
         .ql-editor img {
           max-width: 100%;
           height: auto;
           border-radius: 4px;
           margin: 10px 0;
         }
-        
+
         /* Preview panel styles */
         .prose video {
           max-width: 100% !important;
@@ -241,7 +259,7 @@ export default function TemplateEditorUI({
           border-radius: 4px;
           margin: 10px 0;
         }
-        
+
         .prose img {
           max-width: 100% !important;
           height: auto !important;

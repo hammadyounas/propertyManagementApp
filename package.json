@@ -49,7 +49,8 @@
     "simplebar-react": "^3.2.6",
     "uuid": "^10.0.0",
     "uuidv4": "^6.2.13",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "mammoth": "^1.7.1"
   },
   "devDependencies": {
     "@types/node": "20.17.23",

@@ -13,7 +13,13 @@ export default function CreateTextEditorPage({ templateId = null }) {
     handleSave,
     handleBack,
     isEdit,
-    templateId: hookTemplateId
+    templateId: hookTemplateId,
+    fileInputRef,
+    handleTriggerImport,
+    arrayBufferFromFile,
+    textFromFile,
+    handleImportFile,
+    insertPlaceholder,
   } = useTextEditor(templateId)
   
   return (
@@ -29,6 +35,12 @@ export default function CreateTextEditorPage({ templateId = null }) {
      onBack={handleBack}
      isEdit={isEdit}
      templateId={hookTemplateId}
+     fileInputRef={fileInputRef}
+     handleTriggerImport={handleTriggerImport}
+     arrayBufferFromFile={arrayBufferFromFile}
+     textFromFile={textFromFile}
+     handleImportFile={handleImportFile}
+     insertPlaceholder={insertPlaceholder}
    />
   )
 }

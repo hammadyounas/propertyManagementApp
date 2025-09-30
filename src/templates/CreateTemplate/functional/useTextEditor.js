@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
@@ -8,6 +8,8 @@ export default function useTextEditor(templateId = null) {
   const [editorValue, setEditorValue] = useState('')
   const [category, setCategory] = useState('uncategorized')
   const [loading, setLoading] = useState(false)
+  const [selectedPlaceholder, setSelectedPlaceholder] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Load template data if editing
   useEffect(() => {
@@ -31,6 +33,84 @@ export default function useTextEditor(templateId = null) {
       loadTemplate();
     }
   }, [templateId]);
+
+  const handleTriggerImport = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  };
+
+  const arrayBufferFromFile = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+
+  const textFromFile = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+
+  const handleImportFile = async (e) => {
+    try {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const ext = file.name.split(".").pop().toLowerCase();
+
+      if (ext === "docx") {
+        const { default: mammoth } = await import("mammoth/mammoth.browser");
+        const buffer = await arrayBufferFromFile(file);
+        const { value: html } = await mammoth.convertToHtml(
+          { arrayBuffer: buffer },
+          {
+            styleMap: ["p[style-name='Normal'] => p:fresh"],
+          }
+        );
+        setEditorValue(html || "");
+        return;
+      }
+
+      if (ext === "html" || ext === "htm") {
+        const html = await textFromFile(file);
+        setEditorValue(html || "");
+        return;
+      }
+
+      if (ext === "txt") {
+        const txt = await textFromFile(file);
+        const escaped = txt
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        const html = `<p>${escaped.replace(/\n/g, "<br/>")}</p>`;
+        setEditorValue(html);
+        return;
+      }
+
+      alert(
+        "Unsupported file type. Please upload a .docx, .html, or .txt file."
+      );
+    } catch (err) {
+      console.error("Failed to import file:", err);
+      alert("Failed to import file. Please try another file.");
+    }
+  };
+
+  // Predefined placeholders for property management
+
+  const insertPlaceholder = (placeholder) => {
+    // Get the current editor content and add the placeholder
+    const currentContent = editorValue;
+    const newContent = currentContent + placeholder;
+    setEditorValue(newContent);
+  };
 
   const handleSave = (templateData) => {
     setLoading(true);
@@ -93,5 +173,11 @@ export default function useTextEditor(templateId = null) {
     handleBack,
     isEdit: !!templateId,
     templateId,
+    fileInputRef,
+    handleTriggerImport,
+    arrayBufferFromFile,
+    textFromFile,
+    handleImportFile,
+    insertPlaceholder,
   }
 }
