@@ -62,6 +62,15 @@ export default function useTextEditor(templateId = null) {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
 
+      // Set title from file name (without extension) if title is empty
+      try {
+        const fileName = file.name || "";
+        const baseName = fileName.replace(/\.[^.]+$/g, "");
+        if (!title && baseName) {
+          setTitle(baseName);
+        }
+      } catch {}
+
       const ext = file.name.split(".").pop().toLowerCase();
 
       if (ext === "docx") {
