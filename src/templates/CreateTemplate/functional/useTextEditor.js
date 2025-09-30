@@ -106,9 +106,13 @@ export default function useTextEditor(templateId = null) {
   // Predefined placeholders for property management
 
   const insertPlaceholder = (placeholder) => {
-    // Get the current editor content and add the placeholder
+    // Create a highlighted placeholder with inline styling - only the placeholder text is highlighted
+    const highlightedPlaceholder = `<p style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-weight: 500; border: 1px solid #f59e0b;">${placeholder}</p>`;
+    
+    // For now, append to current content (cursor position insertion will be handled in TemplateEditor)
     const currentContent = editorValue;
-    const newContent = currentContent + placeholder;
+    // const newContent = currentContent + placeholder;
+    const newContent = currentContent + highlightedPlaceholder;
     setEditorValue(newContent);
   };
 

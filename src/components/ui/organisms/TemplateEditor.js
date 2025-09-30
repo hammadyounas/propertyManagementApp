@@ -19,6 +19,7 @@ const TemplateEditor = ({   name,
   setDescription,
   editorValue,
   setEditorValue,
+  onInsertAtCursor,
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -32,6 +33,29 @@ const TemplateEditor = ({   name,
   useEffect(() => {
     setEditorValue(value || defaultValue || "");
   }, [value, defaultValue]);
+
+  // Expose insertAtCursor method to parent
+  useEffect(() => {
+    if (onInsertAtCursor && quillRef.current) {
+      const insertAtCursor = (content) => {
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        if (range) {
+          // Use pasteHTML to insert HTML content
+          editor.clipboard.dangerouslyPasteHTML(range.index, content);
+          // Move cursor after inserted content
+          const newRange = { index: range.index + content.length, length: 0 };
+          editor.setSelection(newRange);
+        } else {
+          // If no selection, append to end
+          const length = editor.getLength();
+          editor.clipboard.dangerouslyPasteHTML(length - 1, content);
+          editor.setSelection(length + content.length - 1);
+        }
+      };
+      onInsertAtCursor(insertAtCursor);
+    }
+  }, [onInsertAtCursor]);
 
   const modules = useMemo(
     () => ({
