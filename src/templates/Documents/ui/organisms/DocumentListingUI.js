@@ -1,0 +1,136 @@
+"use client";
+import { Icon } from "@iconify/react";
+import { ToastContainer } from "react-toastify";
+import {
+  categories,
+  columns,
+  getCategoryColor,
+  truncateContent,
+} from "../../functional/constant";
+import Card from "../../../../components/combined/molecules/CardUIContainer";
+import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import Button from "../../../../components/ui/molecules/Button";
+import { dateFormat } from "../../../../libs/utils/helper";
+
+export default function DocumentListingUI({
+  templates,
+  onEdit,
+  onDelete,
+  onDuplicate,
+  globalFilter,
+  setGlobalFilter,
+  loading = false,
+  setCategoryFilter,
+  categoryFilter,
+  router,
+}) {
+  return (
+    <Card noborder>
+      <ToastContainer />
+      <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
+          <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
+            <span className="">
+              <Button
+                text="Design Document"
+                onClick={() => router.push("/documents/create")}
+                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="overflow-x-auto -mx-6">
+        <div className="inline-block min-w-full align-middle">
+          <div className="overflow-hidden">
+            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 text-center">
+              <thead className="bg-slate-200 dark:bg-slate-700">
+                <tr>
+                  {columns?.map((column, i) => (
+                    <th
+                      key={i}
+                      scope="col"
+                      className="table-th font-bold px-4 py-4 text-center whitespace-nowrap"
+                    >
+                      {column.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="flex items-center justify-center w-full">
+                        <LoadingUI />
+                      </div>
+                    </td>
+                  </tr>
+                ) : templates.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4 text-center">
+                      No Data Found
+                    </td>
+                  </tr>
+                ) : (
+                  templates?.map((template, i) => (
+                    <tr
+                      key={i}
+                      className="even:bg-slate-200 dark:even:bg-slate-700"
+                    >
+                      <td className="table-td sm:p-4 p-2">
+                        <div className="flex items-center justify-center">
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {template.title}
+                          </span>
+                        </div>
+                      </td>
+                      {/* <td className="table-td sm:p-4 p-2">
+                        <span className="block w-full whitespace-nowrap">
+                          <span
+                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${getCategoryColor(template.category || 'uncategorized')}`}
+                          >
+                            {template.category || 'Uncategorized'}
+                          </span>
+                        </span>
+                      </td> */}
+                      <td className="table-td sm:p-4 p-2 text-left">
+                        <div className="">
+                          {truncateContent(template.content)}
+                        </div>
+                      </td>
+                      <td className="table-td sm:p-4 p-2">
+                        {dateFormat(template.createdAt || template.date)}
+                      </td>
+                      <td className="table-td sm:p-4 p-2">
+                        <div className="flex justify-center">
+                          <Icon
+                            onClick={() => onEdit(template)}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons:pencil-square"}
+                          />
+                          <Icon
+                            onClick={() => onDuplicate(template)}
+                            className="cursor-pointer text-[20px] mx-4"
+                            icon={"heroicons:document-duplicate"}
+                          />
+                          <Icon
+                            onClick={() => onDelete(template.id)}
+                            className="cursor-pointer text-[20px]"
+                            icon={"heroicons-outline:trash"}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}

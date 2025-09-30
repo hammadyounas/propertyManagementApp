@@ -69,7 +69,7 @@ export const menuItems = [
     title: "Design Documents",
     isHide: false,
     icon: "majesticons:document", // Represents documents with content
-    link: "/design-documents",
+    link: "/documents",
   },
 ];
 
