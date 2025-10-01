@@ -22,9 +22,9 @@ export default function useDesignDocument(initialDocumentId) {
       if (savedTemplates) {
         const parsed = JSON.parse(savedTemplates)
         setTemplates(parsed)
-        if (parsed.length && !selectedTemplateId) {
-          setSelectedTemplateId(parsed[0].id)
-        }
+        // if (parsed.length && !selectedTemplateId) {
+        //   setSelectedTemplateId(parsed[0].id)
+        // }
       }
     } catch (e) {
       console.error('Failed to load templates', e)
