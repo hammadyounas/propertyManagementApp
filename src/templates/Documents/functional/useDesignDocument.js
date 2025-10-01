@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import html2pdf from 'html2pdf.js'
 import { v4 as uuidv4 } from 'uuid'
+import { useRouter } from 'next/navigation'
 
-export default function useDesignDocument() {
+export default function useDesignDocument(initialDocumentId) {
   const [templates, setTemplates] = useState([])
   const [selectedTemplateId, setSelectedTemplateId] = useState('')
   const [clientName, setClientName] = useState('')
@@ -11,7 +12,10 @@ export default function useDesignDocument() {
   const [editorValue, setEditorValue] = useState('')
   const [documentId, setDocumentId] = useState('')
   const [docTitle, setDocTitle] = useState('')
+  const [editingId, setEditingId] = useState('')
+  const router = useRouter()
 
+  // Load templates
   useEffect(() => {
     try {
       const savedTemplates = localStorage.getItem('propertyTemplates')
@@ -26,6 +30,30 @@ export default function useDesignDocument() {
       console.error('Failed to load templates', e)
     }
   }, [])
+
+  // If editing existing document, load it
+  useEffect(() => {
+    if (!initialDocumentId) return
+    try {
+      setLoading(true)
+      const saved = localStorage.getItem('designDocuments')
+      if (!saved) return
+      const docs = JSON.parse(saved)
+      const existing = docs.find(d => d.id === initialDocumentId)
+      if (existing) {
+        setEditingId(existing.id)
+        setSelectedTemplateId(existing.templateId || '')
+        setEditorValue(existing.content || '')
+        setClientName(existing.clientName || '')
+        setDocumentId(existing.documentId || uuidv4())
+        setDocTitle(existing.title || '')
+      }
+    } catch (e) {
+      console.error('Failed to load document for editing', e)
+    } finally {
+      setLoading(false)
+    }
+  }, [initialDocumentId])
 
   const selectedTemplate = useMemo(() => {
     return templates.find(t => t.id === selectedTemplateId) || null
@@ -117,21 +145,42 @@ export default function useDesignDocument() {
     try {
       const saved = localStorage.getItem('designDocuments')
       const docs = saved ? JSON.parse(saved) : []
-      const newDoc = {
-        id: uuidv4(),
-        templateId: selectedTemplateId || null,
-        title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
-        content: editorValue,
-        clientName: clientName || '',
-        documentId: documentId || uuidv4(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+
+      if (editingId) {
+        const next = docs.map(d =>
+          d.id === editingId
+            ? {
+                ...d,
+                templateId: selectedTemplateId || d.templateId || null,
+                title: docTitle || d.title || 'Untitled Document',
+                content: editorValue,
+                clientName: clientName || '',
+                documentId: documentId || d.documentId || uuidv4(),
+                updatedAt: new Date().toISOString(),
+              }
+            : d
+        )
+        localStorage.setItem('designDocuments', JSON.stringify(next))
+        toast.success('Document updated')
+        router.push('/documents')
+        return editingId
+      } else {
+        const newDoc = {
+          id: uuidv4(),
+          templateId: selectedTemplateId || null,
+          title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
+          content: editorValue,
+          clientName: clientName || '',
+          documentId: documentId || uuidv4(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        const next = [newDoc, ...docs]
+        localStorage.setItem('designDocuments', JSON.stringify(next))
+        toast.success('Document saved')
+        router.push('/documents')
+        return newDoc.id
       }
-      const next = [newDoc, ...docs]
-      localStorage.setItem('designDocuments', JSON.stringify(next))
-      toast.success('Document saved')
-      router.push('/documents')
-      return newDoc.id
     } catch (e) {
       console.error('Failed to save document', e)
       toast.error('Failed to save document')

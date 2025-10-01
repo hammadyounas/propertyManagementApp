@@ -1,8 +1,11 @@
 import React from 'react'
 import CreateDesignDocumentUI from '../../ui/organisms/CreateDesignDocumentUI'
 import useDesignDocument from '../../functional/useDesignDocument'
+import { useRouter } from 'next/router'
 
 export default function DesignDocumentPage() {
+  const router = useRouter()
+  const idFromQuery = router.query?.id
   const {
     templates,
     selectedTemplateId,
@@ -19,7 +22,7 @@ export default function DesignDocumentPage() {
     docTitle,
     setDocTitle,
     handleSaveDocument,
-  } = useDesignDocument()
+  } = useDesignDocument(idFromQuery)
 
   return (
     <CreateDesignDocumentUI
@@ -38,6 +41,7 @@ export default function DesignDocumentPage() {
       docTitle={docTitle}
       setDocTitle={setDocTitle}
       onSave={handleSaveDocument}
+      onBack={() => router.push('/documents')}
     />
   )
 }

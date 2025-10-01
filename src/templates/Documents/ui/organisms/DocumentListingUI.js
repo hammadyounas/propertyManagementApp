@@ -14,7 +14,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import { dateFormat } from "../../../../libs/utils/helper";
 
 export default function DocumentListingUI({
-  templates,
+  documents,
   onEdit,
   onDelete,
   onDuplicate,
@@ -35,6 +35,7 @@ export default function DocumentListingUI({
             <span className="">
               <Button
                 text="Design Document"
+                icon="heroicons:plus"
                 onClick={() => router.push("/documents/create")}
                 className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
               />
@@ -68,14 +69,14 @@ export default function DocumentListingUI({
                       </div>
                     </td>
                   </tr>
-                ) : templates.length === 0 ? (
+                ) : documents.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
                       No Data Found
                     </td>
                   </tr>
                 ) : (
-                  templates?.map((template, i) => (
+                  documents?.map((document, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
@@ -83,41 +84,35 @@ export default function DocumentListingUI({
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex items-center justify-center">
                           <span className="text-primary-default font-bold cursor-pointer">
-                            {template.title}
+                            {document.title}
                           </span>
-                        </div>
-                      </td>
-                      {/* <td className="table-td sm:p-4 p-2">
-                        <span className="block w-full whitespace-nowrap">
-                          <span
-                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${getCategoryColor(template.category || 'uncategorized')}`}
-                          >
-                            {template.category || 'Uncategorized'}
-                          </span>
-                        </span>
-                      </td> */}
-                      <td className="table-td sm:p-4 p-2 text-left">
-                        <div className="">
-                          {truncateContent(template.content)}
                         </div>
                       </td>
                       <td className="table-td sm:p-4 p-2">
-                        {dateFormat(template.createdAt || template.date)}
+                        {document.clientName}
+                      </td>
+                      <td className="table-td sm:p-4 p-2 text-left">
+                        <div className="">
+                          {truncateContent(document.content)}
+                        </div>
+                      </td>
+                      <td className="table-td sm:p-4 p-2">
+                        {dateFormat(document.createdAt || document.date)}
                       </td>
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => onEdit(template)}
+                            onClick={() => onEdit(document)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
-                            onClick={() => onDuplicate(template)}
+                            onClick={() => onDuplicate(document)}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:document-duplicate"}
                           />
                           <Icon
-                            onClick={() => onDelete(template.id)}
+                            onClick={() => onDelete(document.id)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons-outline:trash"}
                           />

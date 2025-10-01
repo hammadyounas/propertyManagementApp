@@ -5,7 +5,7 @@ import ConfirmDeleteModal from '../../../../components/ui/molecules/ConfirmDelet
 
 export default function DocumentListing() {
     const {
-        templates,
+        documents,
         loading,
         globalFilter,
         setGlobalFilter,
@@ -14,6 +14,7 @@ export default function DocumentListing() {
         handleEdit,
         handleDelete,
         handleDuplicate,
+        currentItem,
         openDeleteModal,
         closeDeleteModal,
         showDeleteModal,
@@ -23,7 +24,7 @@ export default function DocumentListing() {
   return (
     <>
         <DocumentListingUI
-        templates={templates}
+        documents={documents}
         loading={loading}
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
@@ -38,8 +39,8 @@ export default function DocumentListing() {
         <ConfirmDeleteModal
         isOpen={showDeleteModal}
         onClose={closeDeleteModal}
-        onDelete={handleDelete}
-        text="Are you sure you want to delete this template?"
+        onDelete={() => handleDelete({ documentId: currentItem })}
+        text="Are you sure you want to delete this document?"
         disabled={deleteLoading}
       />
     </>

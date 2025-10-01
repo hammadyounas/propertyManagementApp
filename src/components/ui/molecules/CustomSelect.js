@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const CustomSelect = ({
   label,
@@ -15,6 +15,12 @@ export const CustomSelect = ({
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.value === value) || null
   );
+
+  // keep internal selectedOption in sync with external value/options
+  useEffect(() => {
+    const next = options.find((opt) => opt.value === value) || null;
+    setSelectedOption(next);
+  }, [value, options]);
 
   const handleSelect = (option) => {
     setSelectedOption(option);

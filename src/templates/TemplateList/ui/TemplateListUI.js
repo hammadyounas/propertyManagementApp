@@ -46,6 +46,7 @@ export default function TemplateListUI({
             <span className="">
               <Button
                 text="Add Template"
+                icon="heroicons:plus"
                 onClick={() => router.push("/templates/create")}
                 className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
               />

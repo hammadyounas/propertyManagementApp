@@ -57,10 +57,16 @@ export default function useTemplateList() {
     router.push(`/templates/edit/${template.id}`);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async ({ templateId }) => {
     try {
       setDeleteLoading(true);
-      setTemplates(prev => prev.filter(template => template.id !== currentItem));
+  
+      setTemplates(prev => {
+        const updated = prev.filter(template => template.id !== templateId);
+        localStorage.setItem('propertyTemplates', JSON.stringify(updated)); // ✅ update localStorage
+        return updated;
+      });
+  
       closeDeleteModal();
       toast.success('Template deleted successfully.');
     } catch (error) {
@@ -70,6 +76,7 @@ export default function useTemplateList() {
       setDeleteLoading(false);
     }
   };
+  
 
   const handleDuplicate = (template) => {
     const duplicatedTemplate = {

@@ -4,23 +4,23 @@ import { toast } from 'react-toastify';
 
 export default function useDesignListing() {
   const router = useRouter();
-  const [templates, setTemplates] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all templates');
+  const [categoryFilter, setCategoryFilter] = useState('all documents');
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Load templates from localStorage on component mount
   useEffect(() => {
-    const loadTemplates = () => {
+    const loadDocuments = () => {
       try {
         
-        const savedTemplates = localStorage.getItem('designDocuments');
-        if (savedTemplates) {
-          const parsedTemplates = JSON.parse(savedTemplates);
-          setTemplates(parsedTemplates);
+        const savedDocuments = localStorage.getItem('designDocuments');
+        if (savedDocuments) {
+          const parsedDocuments = JSON.parse(savedDocuments);
+          setDocuments(parsedDocuments);
         }
       } catch (error) {
         console.error('Error loading templates:', error);
@@ -29,15 +29,18 @@ export default function useDesignListing() {
       }
     };
 
-    loadTemplates();
+    loadDocuments();
   }, []);
 
-  // Save templates to localStorage whenever templates change
+  // Persist documents to localStorage whenever they change, but avoid initial empty write
   useEffect(() => {
-    if (templates.length > 0) {
-      localStorage.setItem('propertyTemplates', JSON.stringify(templates));
+    if (loading) return;
+    try {
+      localStorage.setItem('designDocuments', JSON.stringify(documents));
+    } catch (error) {
+      console.error('Error saving documents:', error);
     }
-  }, [templates]);
+  }, [documents, loading]);
 
   // Modal handlers
   const closeDeleteModal = () => {
@@ -45,83 +48,91 @@ export default function useDesignListing() {
     setCurrentItem(null);
   };
 
-  const openDeleteModal = (templateId) => {
-    setCurrentItem(templateId);
+  const openDeleteModal = (documentId) => {
+    setCurrentItem(documentId);
     setShowDeleteModal(true);
   };
 
-  const handleEdit = (template) => {
-    router.push(`/templates/edit/${template.id}`);
+  const handleEdit = (document) => {
+    router.push(`/documents/edit/${document.id}`);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async ({ documentId } = {}) => {
     try {
       setDeleteLoading(true);
-      setTemplates(prev => prev.filter(template => template.id !== currentItem));
+  
+      setDocuments(prev => {
+        const targetId = documentId ?? currentItem;
+        const updated = prev.filter(document => document.id !== targetId);
+        localStorage.setItem('designDocuments', JSON.stringify(updated)); // ✅ update localStorage
+        return updated;
+      });
+  
       closeDeleteModal();
-      toast.success('Template deleted successfully.');
+      toast.success('Document deleted successfully.');
     } catch (error) {
-      console.error('Error deleting template:', error);
-      toast.error('Error deleting template!');
+      console.error('Error deleting document:', error);
+      toast.error('Error deleting document!');
     } finally {
       setDeleteLoading(false);
     }
   };
+  
 
-  const handleDuplicate = (template) => {
+  const handleDuplicate = (document) => {
     const duplicatedTemplate = {
-      ...template,
+      ...document,
       id: Date.now().toString(),
-      title: `${template.title} (Copy)`,
+      title: `${document.title} (Copy)`,
       createdAt: new Date().toISOString(),
       date: new Date().toISOString(),
     };
     
-    setTemplates(prev => [duplicatedTemplate, ...prev]);
+    setDocuments(prev => [duplicatedTemplate, ...prev]);
     toast.success('Template duplicated successfully.');
   };
 
-  const handleSave = (templateData) => {
-    if (templateData.id) {
+  const handleSave = (documentData) => {
+    if (documentData.id) {
       // Update existing template
-      setTemplates(prev => 
-        prev.map(template => 
-          template.id === templateData.id 
-            ? { ...template, ...templateData, updatedAt: new Date().toISOString() }
-            : template
+      setDocuments(prev => 
+        prev.map(document => 
+          document.id === documentData.id 
+            ? { ...document, ...documentData, updatedAt: new Date().toISOString() }
+            : document
         )
       );
     } else {
       // Create new template
-      const newTemplate = {
+      const newDocument = {
         ...templateData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         date: new Date().toISOString(),
         category: templateData.category || 'uncategorized',
       };
-      setTemplates(prev => [newTemplate, ...prev]);
+      setDocuments(prev => [newDocument, ...prev]);
     }
   };
 
   const handleBack = () => {
-    router.push('/templates');
+    router.push('/documents');
   };
 
   // Filter templates based on global search and category
-  const filteredTemplates = templates.filter(template => {
+  const filteredDocuments = documents.filter(document => {
     const matchesSearch = !globalFilter || 
-      template.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      template.content.toLowerCase().includes(globalFilter.toLowerCase());
+      document.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
+      document.content.toLowerCase().includes(globalFilter.toLowerCase());
     
-    const matchesCategory = categoryFilter === 'all templates' || 
-      template.category === categoryFilter;
+    const matchesCategory = categoryFilter === 'all documents' || 
+      document.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
 
   return {
-    templates: filteredTemplates,
+    documents: filteredDocuments,
     loading,
     globalFilter,
     setGlobalFilter,
@@ -132,6 +143,7 @@ export default function useDesignListing() {
     handleDuplicate,
     handleSave,
     handleBack,
+    currentItem,
     openDeleteModal,
     closeDeleteModal,
     showDeleteModal,

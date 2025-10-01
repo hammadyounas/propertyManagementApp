@@ -1,5 +1,5 @@
 export const categories = [
-    { label: 'All Templates', value: 'all templates' },
+    { label: 'All Documents', value: 'all documents' },
     { label: 'Email Templates', value: 'email' },
     { label: 'Contract Templates', value: 'contract' },
     { label: 'Listing Templates', value: 'listing' },
@@ -7,8 +7,8 @@ export const categories = [
   ];
 
 export const columns = [
-    { label: 'Template Name' },
-    // { label: 'Category' },
+    { label: 'Document Name' },
+    { label: 'Client Name' },
     { label: 'Content Preview' },
     { label: 'Created Date' },
     { label: 'Actions' },

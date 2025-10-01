@@ -20,6 +20,7 @@ export default function CreateDesignDocumentUI({
   docTitle = "",
   setDocTitle = () => {},
   onSave = () => {},
+  onBack = () => {},
 }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
@@ -29,7 +30,7 @@ export default function CreateDesignDocumentUI({
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-4 w-full lg:w-auto">
               <button
-                onClick={() => push("/documents")}
+                onClick={onBack}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
               >
                 <Icon
