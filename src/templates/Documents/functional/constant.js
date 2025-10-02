@@ -8,7 +8,7 @@ export const categories = [
 
 export const columns = [
     { label: 'Document Name' },
-    { label: 'Client Name' },
+    // { label: 'Client Name' },
     { label: 'Content Preview' },
     { label: 'Created Date' },
     { label: 'Actions' },

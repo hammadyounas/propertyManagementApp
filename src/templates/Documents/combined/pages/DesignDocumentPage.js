@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 export default function DesignDocumentPage() {
   const router = useRouter()
   const idFromQuery = router.query?.id
+  const templateFromQuery = router.query?.template
   const {
     templates,
     selectedTemplateId,
@@ -22,13 +23,10 @@ export default function DesignDocumentPage() {
     docTitle,
     setDocTitle,
     handleSaveDocument,
-  } = useDesignDocument(idFromQuery)
+  } = useDesignDocument(idFromQuery, templateFromQuery)
 
   return (
     <CreateDesignDocumentUI
-      templates={templates}
-      selectedTemplateId={selectedTemplateId}
-      setSelectedTemplateId={setSelectedTemplateId}
       clientName={clientName}
       setClientName={setClientName}
       loading={loading}

@@ -80,7 +80,6 @@ export default function TemplateEditorUI({
                     onSave(templateData);
                   } else {
                     console.log("Saving:", templateData);
-                    alert("Template saved! (check console)");
                   }
                 }}
                 disabled={loading}

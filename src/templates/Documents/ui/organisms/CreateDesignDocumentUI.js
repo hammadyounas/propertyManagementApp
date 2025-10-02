@@ -1,13 +1,9 @@
 import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { CustomSelect } from "../../../../components/ui/molecules/CustomSelect";
 import TemplateEditor from "../../../../components/ui/organisms/TemplateEditor";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 
 export default function CreateDesignDocumentUI({
-  templates = [],
-  selectedTemplateId = "",
-  setSelectedTemplateId = () => {},
   clientName = "",
   setClientName = () => {},
   loading = false,
@@ -95,20 +91,7 @@ export default function CreateDesignDocumentUI({
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-80 p-4 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
-          <div>
-            <CustomSelect
-              label="Select Template"
-              placeholder="-- Select a template --"
-              value={selectedTemplateId}
-              onChange={setSelectedTemplateId}
-              options={templates.map((t) => ({
-                value: t.id,
-                label: t.title || "Untitled",
-              }))}
-            />
-          </div>
-
+        {/* <div className="w-full lg:w-80 p-4 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 my-2">
               Client Name
@@ -120,7 +103,7 @@ export default function CreateDesignDocumentUI({
               className="w-full border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

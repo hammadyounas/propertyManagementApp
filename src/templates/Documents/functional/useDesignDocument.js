@@ -4,7 +4,7 @@ import html2pdf from 'html2pdf.js'
 import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
 
-export default function useDesignDocument(initialDocumentId) {
+export default function useDesignDocument(initialDocumentId, templateIdFromQuery) {
   const [templates, setTemplates] = useState([])
   const [selectedTemplateId, setSelectedTemplateId] = useState('')
   const [clientName, setClientName] = useState('')
@@ -22,14 +22,18 @@ export default function useDesignDocument(initialDocumentId) {
       if (savedTemplates) {
         const parsed = JSON.parse(savedTemplates)
         setTemplates(parsed)
-        // if (parsed.length && !selectedTemplateId) {
-        //   setSelectedTemplateId(parsed[0].id)
-        // }
       }
     } catch (e) {
       console.error('Failed to load templates', e)
     }
   }, [])
+
+  // Set template from URL query if provided
+  useEffect(() => {
+    if (templateIdFromQuery && !editingId) {
+      setSelectedTemplateId(templateIdFromQuery)
+    }
+  }, [templateIdFromQuery, editingId])
 
   // If editing existing document, load it
   useEffect(() => {

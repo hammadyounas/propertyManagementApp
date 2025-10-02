@@ -11,6 +11,7 @@ import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
+import TemplateSelectionModal from "../molecules/TemplateSelectionModal";
 import { dateFormat } from "../../../../libs/utils/helper";
 
 export default function DocumentListingUI({
@@ -24,6 +25,14 @@ export default function DocumentListingUI({
   setCategoryFilter,
   categoryFilter,
   router,
+  onDownload,
+  templates = [],
+  selectedTemplateId = "",
+  setSelectedTemplateId = () => {},
+  showTemplateModal = false,
+  onOpenTemplateModal = () => {},
+  onCloseTemplateModal = () => {},
+  onCreateWithTemplate = () => {},
 }) {
   return (
     <Card noborder>
@@ -34,9 +43,9 @@ export default function DocumentListingUI({
           <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
             <span className="">
               <Button
-                text="Design Document"
+                text="Create Document"
                 icon="heroicons:plus"
-                onClick={() => router.push("/documents/create")}
+                onClick={onOpenTemplateModal}
                 className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
@@ -88,9 +97,9 @@ export default function DocumentListingUI({
                           </span>
                         </div>
                       </td>
-                      <td className="table-td sm:p-4 p-2">
+                      {/* <td className="table-td sm:p-4 p-2">
                         {document.clientName}
-                      </td>
+                      </td> */}
                       <td className="table-td sm:p-4 p-2 text-left">
                         <div className="">
                           {truncateContent(document.content)}
@@ -107,9 +116,9 @@ export default function DocumentListingUI({
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
-                            onClick={() => onDuplicate(document)}
+                            onClick={() => onDownload(document)}
                             className="cursor-pointer text-[20px] mx-4"
-                            icon={"heroicons:document-duplicate"}
+                            icon={"material-symbols:download"}
                           />
                           <Icon
                             onClick={() => onDelete(document.id)}
@@ -126,6 +135,16 @@ export default function DocumentListingUI({
           </div>
         </div>
       </div>
+
+      <TemplateSelectionModal
+        isOpen={showTemplateModal}
+        onClose={onCloseTemplateModal}
+        templates={templates}
+        selectedTemplateId={selectedTemplateId}
+        setSelectedTemplateId={setSelectedTemplateId}
+        onCreateDocument={onCreateWithTemplate}
+        loading={loading}
+      />
     </Card>
   );
 }
