@@ -43,6 +43,13 @@ const useProfile = () => {
         router.push("/profile");
       },
     },
+    {
+      label: "New Template",
+      icon: "icon-park-solid:add-one",
+      action: () => {
+        router.push("/templates/create");
+      },
+    },
     // {
     //   label: "Chat",
     //   icon: "heroicons-outline:chat",

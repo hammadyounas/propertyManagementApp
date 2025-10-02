@@ -53,6 +53,24 @@ export const menuItems = [
     icon: "heroicons:arrow-trending-up",
     link: "/acms",
   },
+  // {
+  //   title: "New Template",
+  //   isHide: false,
+  //   icon: "icon-park-solid:add-one", // Clear "add" action
+  //   link: "/templates/create",
+  // },
+  {
+    title: "Templates",
+    isHide: false,
+    icon: "tabler:template-filled", // Represents multiple items/templates
+    link: "/templates",
+  },
+  {
+    title: "Design Documents",
+    isHide: false,
+    icon: "majesticons:document", // Represents documents with content
+    link: "/documents",
+  },
 ];
 
 export const topMenu = [
@@ -382,99 +400,6 @@ export const topMenu = [
   },
 ];
 
-export const notifications = [
-  {
-    title: "Your order is placed",
-    desc: "Amet minim mollit non deser unt ullamco est sit aliqua.",
-
-    image: "/assets/images/all-img/user.png",
-    link: "#",
-  },
-  {
-    title: "Congratulations Darlene  🎉",
-    desc: "Won the monthly best seller badge",
-    unread: true,
-    image: "/assets/images/all-img/user2.png",
-    link: "#",
-  },
-  {
-    title: "Revised Order 👋",
-    desc: "Won the monthly best seller badge",
-
-    image: "/assets/images/all-img/user3.png",
-    link: "#",
-  },
-  {
-    title: "Brooklyn Simmons",
-    desc: "Added you to Top Secret Project group...",
-
-    image: "/assets/images/all-img/user4.png",
-    link: "#",
-  },
-];
-
-export const message = [
-  {
-    title: "Wade Warren",
-    desc: "Hi! How are you doing?.....",
-    active: true,
-    hasnotifaction: true,
-    notification_count: 1,
-    image: "/assets/images/all-img/user1.png",
-    link: "#",
-  },
-  {
-    title: "Savannah Nguyen",
-    desc: "Hi! How are you doing?.....",
-    active: false,
-    hasnotifaction: false,
-    image: "/assets/images/all-img/user2.png",
-    link: "#",
-  },
-  {
-    title: "Ralph Edwards",
-    desc: "Hi! How are you doing?.....",
-    active: false,
-    hasnotifaction: true,
-    notification_count: 8,
-    image: "/assets/images/all-img/user3.png",
-    link: "#",
-  },
-  {
-    title: "Cody Fisher",
-    desc: "Hi! How are you doing?.....",
-    active: true,
-    hasnotifaction: false,
-    image: "/assets/images/all-img/user4.png",
-    link: "#",
-  },
-  {
-    title: "Savannah Nguyen",
-    desc: "Hi! How are you doing?.....",
-    active: false,
-    hasnotifaction: false,
-    image: "/assets/images/all-img/user2.png",
-    link: "#",
-  },
-  {
-    title: "Ralph Edwards",
-    desc: "Hi! How are you doing?.....",
-    active: false,
-    hasnotifaction: true,
-    notification_count: 8,
-    image: "/assets/images/all-img/user3.png",
-    link: "#",
-  },
-  {
-    title: "Cody Fisher",
-    desc: "Hi! How are you doing?.....",
-    active: true,
-    hasnotifaction: false,
-    image: "/assets/images/all-img/user4.png",
-    link: "#",
-  },
-];
-
 export const colors = {
   primary: "#4669FA",
   secondary: "#A0AEC0",
@@ -558,60 +483,5 @@ export const bottomFilterLists = [
     name: "Business",
     value: "business",
     icon: "heroicons:chevron-double-right",
-  },
-];
-
-export const meets = [
-  {
-    img: "/assets/images/svg/sk.svg",
-    title: "Meeting with client",
-    date: "01 Nov 2021",
-    meet: "Zoom meeting",
-  },
-  {
-    img: "/assets/images/svg/path.svg",
-    title: "Design meeting (team)",
-    date: "01 Nov 2021",
-    meet: "Skyp meeting",
-  },
-  {
-    img: "/assets/images/svg/dc.svg",
-    title: "Background research",
-    date: "01 Nov 2021",
-    meet: "Google meeting",
-  },
-  {
-    img: "/assets/images/svg/sk.svg",
-    title: "Meeting with client",
-    date: "01 Nov 2021",
-    meet: "Zoom meeting",
-  },
-];
-
-export const files = [
-  {
-    img: "/assets/images/icon/file-1.svg",
-    title: "Dashboard.fig",
-    date: "06 June 2021 / 155MB",
-  },
-  {
-    img: "/assets/images/icon/pdf-1.svg",
-    title: "Ecommerce.pdf",
-    date: "06 June 2021 / 155MB",
-  },
-  {
-    img: "/assets/images/icon/zip-1.svg",
-    title: "Job portal_app.zip",
-    date: "06 June 2021 / 155MB",
-  },
-  {
-    img: "/assets/images/icon/pdf-2.svg",
-    title: "Ecommerce.pdf",
-    date: "06 June 2021 / 155MB",
-  },
-  {
-    img: "/assets/images/icon/scr-1.svg",
-    title: "Screenshot.jpg",
-    date: "06 June 2021 / 155MB",
   },
 ];

@@ -97,7 +97,7 @@ const DashboardTableUI = ({
           <DropdownUINew
             label={selectedFilter ? selectedFilter : "Invoice Status"}
             wrapperClass="sm:w-40"
-            labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 sm:py-3 py-2 rounded cursor-pointer"
+            labelClass="btn-secondary bg-primary-default flex items-center justify-center gap-2 px-4 sm:py-3 py-2 rounded cursor-pointer text-sm"
             classMenuItems="w-40 left-0"
             classItem="p-2 text-sm"
             onSelect={(value) => {
