@@ -96,9 +96,8 @@ export default function useDesignListing() {
       container.style.padding = '24px'
       container.style.background = '#ffffff'
       const headerHtml = `
-        <div style="margin-bottom:12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          ${documentData.id ? `<div style=\"font-size:12px;color:#444;\"><strong>Document ID:</strong> ${documentData.id}</div>` : ''}
-          ${documentData.clientName ? `<div style=\"font-size:12px;color:#444;\"><strong>Client:</strong> ${documentData.clientName}</div>` : ''}
+        <div style="text-align: center; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
+          <img src="/assets/images/logo/BLACK-LOGO.png" alt="Logo" style="max-height: 60px; max-width: 200px;" />
         </div>
       `
       container.innerHTML = headerHtml + (documentData.content || '')

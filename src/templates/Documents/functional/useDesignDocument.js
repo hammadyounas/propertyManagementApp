@@ -88,9 +88,8 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
       container.style.padding = '24px'
       container.style.background = '#ffffff'
       const headerHtml = `
-        <div style="margin-bottom:12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          ${documentId ? `<div style=\"font-size:12px;color:#444;\"><strong>Document ID:</strong> ${documentId}</div>` : ''}
-          ${clientName ? `<div style=\"font-size:12px;color:#444;\"><strong>Client:</strong> ${clientName}</div>` : ''}
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="/assets/images/logo/logo.svg" alt="Logo" style="max-height: 60px; max-width: 200px;" />
         </div>
       `
       container.innerHTML = headerHtml + (editorValue || '')
