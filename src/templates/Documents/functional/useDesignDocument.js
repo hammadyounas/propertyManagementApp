@@ -18,6 +18,9 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   // Load templates
   useEffect(() => {
     try {
+      // Check if we're in browser environment
+      if (typeof window === 'undefined') return;
+      
       const savedTemplates = localStorage.getItem('propertyTemplates')
       if (savedTemplates) {
         const parsed = JSON.parse(savedTemplates)
@@ -37,7 +40,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
 
   // If editing existing document, load it
   useEffect(() => {
-    if (!initialDocumentId) return
+    if (!initialDocumentId || typeof window === 'undefined') return
     try {
       setLoading(true)
       const saved = localStorage.getItem('designDocuments')
@@ -143,6 +146,10 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   const handleSaveDocument = () => {
     if (!editorValue.trim()) {
       toast.error('Nothing to save. Please edit content first.')
+      return
+    }
+    if (typeof window === 'undefined') {
+      toast.error('Cannot save in server environment')
       return
     }
     try {

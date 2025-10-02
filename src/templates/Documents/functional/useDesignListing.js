@@ -20,6 +20,12 @@ export default function useDesignListing() {
   useEffect(() => {
     const loadData = () => {
       try {
+        // Check if we're in browser environment
+        if (typeof window === 'undefined') {
+          setLoading(false);
+          return;
+        }
+
         // Load documents
         const savedDocuments = localStorage.getItem('designDocuments');
         if (savedDocuments) {
@@ -45,7 +51,7 @@ export default function useDesignListing() {
 
   // Persist documents to localStorage whenever they change, but avoid initial empty write
   useEffect(() => {
-    if (loading) return;
+    if (loading || typeof window === 'undefined') return;
     try {
       localStorage.setItem('designDocuments', JSON.stringify(documents));
     } catch (error) {
