@@ -28,6 +28,12 @@ export default function DocumentListing() {
         handleOpenTemplateModal,
         handleCloseTemplateModal,
         handleCreateWithTemplate,
+        // Pagination props
+        currentPage,
+        pageSize,
+        totalCount,
+        totalPages,
+        handlePageChange,
       } = useDesignListing();
   return (
     <>
@@ -50,6 +56,12 @@ export default function DocumentListing() {
         onOpenTemplateModal={handleOpenTemplateModal}
         onCloseTemplateModal={handleCloseTemplateModal}
         onCreateWithTemplate={handleCreateWithTemplate}
+        // Pagination props
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
         />
 
         <ConfirmDeleteModal

@@ -23,6 +23,11 @@ export default function DesignDocumentPage() {
     docTitle,
     setDocTitle,
     handleSaveDocument,
+    // Email modal props
+    showEmailModal,
+    emailLoading,
+    handleCloseEmailModal,
+    handleSendEmailWithPDF,
   } = useDesignDocument(idFromQuery, templateFromQuery)
 
   return (
@@ -40,6 +45,11 @@ export default function DesignDocumentPage() {
       setDocTitle={setDocTitle}
       onSave={handleSaveDocument}
       onBack={() => router.push('/documents')}
+      // Email modal props
+      showEmailModal={showEmailModal}
+      emailLoading={emailLoading}
+      onCloseEmailModal={handleCloseEmailModal}
+      onSendEmailWithPDF={handleSendEmailWithPDF}
     />
   )
 }

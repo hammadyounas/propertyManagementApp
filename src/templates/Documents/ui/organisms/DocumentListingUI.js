@@ -13,6 +13,8 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
 import TemplateSelectionModal from "../molecules/TemplateSelectionModal";
 import { dateFormat } from "../../../../libs/utils/helper";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 
 export default function DocumentListingUI({
   documents,
@@ -33,6 +35,12 @@ export default function DocumentListingUI({
   onOpenTemplateModal = () => {},
   onCloseTemplateModal = () => {},
   onCreateWithTemplate = () => {},
+  // Pagination props
+  currentPage = 0,
+  pageSize = 10,
+  totalCount = 0,
+  totalPages = 0,
+  handlePageChange = () => {},
 }) {
   return (
     <Card noborder>
@@ -81,7 +89,7 @@ export default function DocumentListingUI({
                 ) : documents.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (
@@ -145,6 +153,17 @@ export default function DocumentListingUI({
         onCreateDocument={onCreateWithTemplate}
         loading={loading}
       />
+      
+      {/* Pagination */}
+      {totalCount > pageSize && (
+        <div className="flex w-full justify-end mt-4 items-center">
+          <PaginationUI
+            pageCount={totalPages}
+            onPageChange={({ selected }) => handlePageChange(selected)}
+            currentPage={currentPage}
+          />
+        </div>
+      )}
     </Card>
   );
 }

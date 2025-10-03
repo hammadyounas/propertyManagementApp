@@ -18,6 +18,12 @@ export default function TemplateListPage() {
     showDeleteModal,
     deleteLoading,
     router,
+    // Pagination props
+    currentPage,
+    pageSize,
+    totalCount,
+    totalPages,
+    handlePageChange,
   } = useTemplateList();
 
   return (
@@ -33,6 +39,12 @@ export default function TemplateListPage() {
         onDelete={openDeleteModal}
         onDuplicate={handleDuplicate}
         router={router}
+        // Pagination props
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
       />
       
       <ConfirmDeleteModal

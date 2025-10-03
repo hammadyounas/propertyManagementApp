@@ -12,13 +12,15 @@ export default function useTemplateList() {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(10);
 
   // Load templates from localStorage on component mount
   useEffect(() => {
     const loadTemplates = () => {
       try {
         // Initialize sample templates if none exist
-        initializeSampleTemplates();
+        // initializeSampleTemplates();
         
         const savedTemplates = localStorage.getItem('propertyTemplates');
         if (savedTemplates) {
@@ -60,9 +62,10 @@ export default function useTemplateList() {
   const handleDelete = async ({ templateId }) => {
     try {
       setDeleteLoading(true);
-  
+
       setTemplates(prev => {
-        const updated = prev.filter(template => template.id !== templateId);
+        const targetId = templateId ?? currentItem;
+        const updated = prev.filter(template => template.id !== targetId);
         localStorage.setItem('propertyTemplates', JSON.stringify(updated)); // ✅ update localStorage
         return updated;
       });
@@ -130,8 +133,19 @@ export default function useTemplateList() {
     return matchesSearch && matchesCategory;
   });
 
+  // Pagination logic
+  const totalCount = filteredTemplates.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
+  const startIndex = currentPage * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
+
   return {
-    templates: filteredTemplates,
+    templates: paginatedTemplates,
     loading,
     globalFilter,
     setGlobalFilter,
@@ -147,5 +161,11 @@ export default function useTemplateList() {
     showDeleteModal,
     deleteLoading,
     router,
+    // Pagination props
+    currentPage,
+    pageSize,
+    totalCount,
+    totalPages,
+    handlePageChange,
   };
 }

@@ -15,6 +15,8 @@ export default function useDesignListing() {
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(10);
 
   // Load documents and templates from localStorage on component mount
   useEffect(() => {
@@ -142,19 +144,6 @@ export default function useDesignListing() {
     }
   }
 
-  const handleDuplicate = (document) => {
-    const duplicatedTemplate = {
-      ...document,
-      id: Date.now().toString(),
-      title: `${document.title} (Copy)`,
-      createdAt: new Date().toISOString(),
-      date: new Date().toISOString(),
-    };
-    
-    setDocuments(prev => [duplicatedTemplate, ...prev]);
-    toast.success('Template duplicated successfully.');
-  };
-
   const handleSave = (documentData) => {
     if (documentData.id) {
       // Update existing template
@@ -200,7 +189,7 @@ export default function useDesignListing() {
     router.push(`/documents/create?template=${templateId}`);
   };
 
-  // Filter templates based on global search and category
+  // Filter documents based on global search and category
   const filteredDocuments = documents.filter(document => {
     const matchesSearch = !globalFilter || 
       document.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
@@ -212,8 +201,19 @@ export default function useDesignListing() {
     return matchesSearch && matchesCategory;
   });
 
+  // Pagination logic
+  const totalCount = filteredDocuments.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
+  const startIndex = currentPage * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
+
   return {
-    documents: filteredDocuments,
+    documents: paginatedDocuments,
     templates,
     selectedTemplateId,
     setSelectedTemplateId,
@@ -225,7 +225,6 @@ export default function useDesignListing() {
     setCategoryFilter,
     handleEdit,
     handleDelete,
-    handleDuplicate,
     handleSave,
     handleBack,
     currentItem,
@@ -238,5 +237,11 @@ export default function useDesignListing() {
     handleOpenTemplateModal,
     handleCloseTemplateModal,
     handleCreateWithTemplate,
+    // Pagination props
+    currentPage,
+    pageSize,
+    totalCount,
+    totalPages,
+    handlePageChange,
   };
 }

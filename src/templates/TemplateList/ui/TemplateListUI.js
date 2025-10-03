@@ -12,6 +12,8 @@ import {
   getCategoryColor,
   truncateContent,
 } from "../functional/constant";
+import NoDataFound from "../../../components/ui/atoms/NoDataFound";
+import PaginationUI from "../../../components/ui/molecules/PaginationUI";
 
 export default function TemplateListUI({
   templates,
@@ -24,6 +26,12 @@ export default function TemplateListUI({
   setCategoryFilter,
   categoryFilter,
   router,
+  // Pagination props
+  currentPage = 0,
+  pageSize = 10,
+  totalCount = 0,
+  totalPages = 0,
+  handlePageChange = () => {},
 }) {
   return (
     <Card noborder>
@@ -83,7 +91,7 @@ export default function TemplateListUI({
                 ) : templates.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                    <NoDataFound />
                     </td>
                   </tr>
                 ) : (
@@ -143,6 +151,17 @@ export default function TemplateListUI({
           </div>
         </div>
       </div>
+      
+      {/* Pagination */}
+      {totalCount > pageSize && (
+        <div className="flex w-full justify-end mt-4 items-center">
+          <PaginationUI
+            pageCount={totalPages}
+            onPageChange={({ selected }) => handlePageChange(selected)}
+            currentPage={currentPage}
+          />
+        </div>
+      )}
     </Card>
   );
 }

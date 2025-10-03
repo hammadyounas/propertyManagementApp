@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import TemplateEditor from "../../../../components/ui/organisms/TemplateEditor";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
+import EmailModal from "../molecules/EmailModal";
 
 export default function CreateDesignDocumentUI({
   clientName = "",
@@ -17,6 +18,11 @@ export default function CreateDesignDocumentUI({
   setDocTitle = () => {},
   onSave = () => {},
   onBack = () => {},
+  // Email modal props
+  showEmailModal = false,
+  emailLoading = false,
+  onCloseEmailModal = () => {},
+  onSendEmailWithPDF = () => {},
 }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
@@ -105,6 +111,16 @@ export default function CreateDesignDocumentUI({
           </div>
         </div> */}
       </div>
+
+      {/* Email Modal */}
+      <EmailModal
+        isOpen={showEmailModal}
+        onClose={onCloseEmailModal}
+        onSend={onSendEmailWithPDF}
+        loading={emailLoading}
+        docTitle={docTitle}
+        clientName={clientName}
+      />
     </div>
   );
 }
