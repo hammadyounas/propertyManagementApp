@@ -20,6 +20,7 @@ export default function CreateTextEditorPage({ templateId = null }) {
     textFromFile,
     handleImportFile,
     insertPlaceholder,
+    setInse
   } = useTextEditor(templateId)
   
   return (

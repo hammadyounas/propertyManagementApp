@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { initializeSampleTemplates } from './sampleTemplates';
 
 export default function useTemplateList() {
   const router = useRouter();
@@ -14,14 +13,12 @@ export default function useTemplateList() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize] = useState(10);
+  const [insertAtCursorFn, setInsertAtCursorFn] = useState(null);
 
   // Load templates from localStorage on component mount
   useEffect(() => {
     const loadTemplates = () => {
       try {
-        // Initialize sample templates if none exist
-        // initializeSampleTemplates();
-        
         const savedTemplates = localStorage.getItem('propertyTemplates');
         if (savedTemplates) {
           const parsedTemplates = JSON.parse(savedTemplates);
@@ -57,6 +54,14 @@ export default function useTemplateList() {
 
   const handleEdit = (template) => {
     router.push(`/templates/edit/${template.id}`);
+  };
+
+  const insertPlaceholder = (placeholderKey) => {
+    if (insertAtCursorFn) {
+      insertAtCursorFn(placeholderKey);
+    } else {
+      console.warn('Editor insert function not ready');
+    }
   };
 
   const handleDelete = async ({ templateId }) => {
@@ -167,5 +172,7 @@ export default function useTemplateList() {
     totalCount,
     totalPages,
     handlePageChange,
+    setInsertAtCursorFn,
+    insertPlaceholder,
   };
 }
