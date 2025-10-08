@@ -96,11 +96,10 @@ const TemplateEditor = ({
       'Bold', 'Italic', 'Underline', 'StrikeThrough', 'SuperScript', 'SubScript', '|',
       'LowerCase', 'UpperCase', '|',
       'Formats', 'Alignments', '|',
-      'NumberFormatList', 'BulletFormatList', '|',
       'OrderedList', 'UnorderedList', '|',
       'Indent', 'Outdent', '|',
-      'CreateLink', 'Image', 'Audio', 'Video', 'CreateTable', '|',
-      'FormatPainter', 'ClearFormat', '|',
+      'CreateLink', 'Image', 'CreateTable', '|',
+      'ClearFormat', '|',
       'Print', 'SourceCode', 'FullScreen'
     ]
   };
@@ -200,9 +199,36 @@ const TemplateEditor = ({
     ],
     link: ['Open', 'Edit', 'UnLink'],
     table: [
-      'TableHeader', 'TableRows', 'TableColumns', 'BackgroundColor',
-      '-', 'TableRemove', 'Alignments', 'TableCellVerticalAlign', 'Styles'
+      'TableHeader', 'TableRows', 'TableColumns', 'BackgroundColor', '-',
+      'Alignments', 'TableCellVerticalAlign', 'Styles', 'TableRemove'
     ]
+  };
+
+  // MS Word-like table styles with comprehensive design options
+  const tableSettings = {
+    width: '100%',
+    styles: [
+      { text: 'Default Table', class: 'e-rte-table-default' },
+      { text: 'Plain Table 1', class: 'e-rte-table-plain-1' },
+      { text: 'Plain Table 2', class: 'e-rte-table-plain-2' },
+      { text: 'Grid Table 1 Light', class: 'e-rte-table-grid-1' },
+      { text: 'Grid Table 2 Blue', class: 'e-rte-table-grid-2' },
+      { text: 'Grid Table 3 Striped', class: 'e-rte-table-grid-3' },
+      { text: 'Grid Table 4 Green', class: 'e-rte-table-grid-4' },
+      { text: 'Grid Table 5 Dark', class: 'e-rte-table-grid-5-dark' },
+      { text: 'Grid Table 6 Colorful', class: 'e-rte-table-grid-6-colorful' },
+      { text: 'Grid Table 7 Accent', class: 'e-rte-table-grid-7-accent' },
+      { text: 'List Table 1 Simple', class: 'e-rte-table-list-1' },
+      { text: 'List Table 2 Minimal', class: 'e-rte-table-list-2' },
+      { text: 'List Table 3 Accent', class: 'e-rte-table-list-3' },
+      { text: 'List Table 4 Bold', class: 'e-rte-table-list-4' },
+      { text: 'List Table 5 Medium', class: 'e-rte-table-list-5' },
+      { text: 'Colorful Grid', class: 'e-rte-table-colorful-grid' },
+      { text: 'Colorful List', class: 'e-rte-table-colorful-list' },
+    ],
+    resize: true,
+    minWidth: 0,
+    maxWidth: null,
   };
 
   const pasteCleanupSettings = {
@@ -261,14 +287,14 @@ const TemplateEditor = ({
           fontFamily={fontFamily}
           fontSize={fontSize}
           format={format}
-          numberFormatList={numberFormatList}
-          bulletFormatList={bulletFormatList}
+          tableSettings={tableSettings}
           insertImageSettings={insertImageSettings}
           quickToolbarSettings={quickToolbarSettings}
           pasteCleanupSettings={pasteCleanupSettings}
           height="calc(100vh - 200px)"
           enableHtmlEncode={false}
           enableXhtml={true}
+          enableTabKey={true}
           change={(args) => {
             const content = args.value || "";
             setEditorValue(content);
@@ -422,10 +448,395 @@ const TemplateEditor = ({
         .dark .e-popup .e-item {
           color: #e2e8f0 !important;
         }
-
+        
         .dark .e-dropdown-popup .e-item:hover,
         .dark .e-popup .e-item:hover {
           background-color: #334155 !important;
+        }
+
+        /* MS Word Table Styles */
+        .syncfusion-editor .e-rte-content table {
+          border-collapse: collapse;
+          width: 100%;
+          margin: 10px 0;
+        }
+
+        .syncfusion-editor .e-rte-content table td,
+        .syncfusion-editor .e-rte-content table th {
+          padding: 8px 12px;
+          border: 1px solid #d1d5db;
+        }
+
+        /* Default Table */
+        .syncfusion-editor .e-rte-content table.e-rte-table-default {
+          border: 1px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-default th {
+          background-color: #f3f4f6;
+          font-weight: 600;
+          text-align: left;
+        }
+
+        /* Grid Table 1 - Light */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 {
+          border: 2px solid #6b7280;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 th {
+          background-color: #e5e7eb;
+          font-weight: 600;
+          border: 1px solid #9ca3af;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 td {
+          border: 1px solid #d1d5db;
+        }
+
+        /* Grid Table 2 - Accent Blue */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 {
+          border: 2px solid #3b82f6;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 th {
+          background-color: #3b82f6;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #2563eb;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 td {
+          border: 1px solid #93c5fd;
+        }
+
+        /* Grid Table 3 - Striped */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 {
+          border: 1px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 th {
+          background-color: #1f2937;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #374151;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 tbody tr:nth-child(even) {
+          background-color: #f9fafb;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 td {
+          border: 1px solid #e5e7eb;
+        }
+
+        /* Grid Table 4 - Professional */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 {
+          border: 2px solid #059669;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 th {
+          background-color: #059669;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #047857;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 td {
+          border: 1px solid #a7f3d0;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 tbody tr:hover {
+          background-color: #d1fae5;
+        }
+
+        /* Grid Table 5 Dark */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark {
+          border: 2px solid #1f2937;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark th {
+          background-color: #1f2937;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #111827;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark td {
+          background-color: #374151;
+          color: white;
+          border: 1px solid #4b5563;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark tbody tr:nth-child(even) td {
+          background-color: #4b5563;
+        }
+
+        /* Grid Table 6 Colorful */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful {
+          border: 2px solid #7c3aed;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful th {
+          background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+          color: white;
+          font-weight: 600;
+          border: 1px solid #6d28d9;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful tbody tr:nth-child(odd) {
+          background-color: #faf5ff;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful td {
+          border: 1px solid #e9d5ff;
+        }
+
+        /* List Table 1 - Simple */
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 {
+          border: none;
+          border-top: 2px solid #3b82f6;
+          border-bottom: 2px solid #3b82f6;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 th {
+          background-color: transparent;
+          font-weight: 600;
+          border: none;
+          border-bottom: 1px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 td {
+          border: none;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        /* List Table 2 - Minimal */
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 {
+          border: none;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 th {
+          background-color: #f3f4f6;
+          font-weight: 600;
+          border: none;
+          border-bottom: 2px solid #6b7280;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 td {
+          border: none;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        /* List Table 3 - Accent */
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 {
+          border: none;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 th {
+          background-color: #dbeafe;
+          color: #1e40af;
+          font-weight: 600;
+          border: none;
+          border-bottom: 2px solid #3b82f6;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 td {
+          border: none;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 tbody tr:hover {
+          background-color: #eff6ff;
+        }
+
+        /* List Table 4 - Bold Header */
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 {
+          border: none;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 th {
+          background-color: #059669;
+          color: white;
+          font-weight: 700;
+          border: none;
+          padding: 12px;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 td {
+          border: none;
+          border-bottom: 1px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 tbody tr:nth-child(even) {
+          background-color: #f0fdf4;
+        }
+
+        /* Plain Table 1 - Minimal borders */
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 {
+          border: 1px solid #e5e7eb;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 th {
+          background-color: white;
+          font-weight: 600;
+          border-bottom: 2px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 td {
+          border: none;
+          border-bottom: 1px solid #f3f4f6;
+        }
+
+        /* Plain Table 2 - No borders */
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 {
+          border: none;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 th {
+          background-color: transparent;
+          font-weight: 700;
+          border: none;
+          border-bottom: 3px solid #1f2937;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 td {
+          border: none;
+          padding: 10px 12px;
+        }
+
+        /* Grid Table 7 Accent - Orange */
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent {
+          border: 2px solid #f97316;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent th {
+          background-color: #f97316;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #ea580c;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent td {
+          border: 1px solid #fed7aa;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent tbody tr:nth-child(even) {
+          background-color: #fff7ed;
+        }
+
+        /* List Table 5 Medium */
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 {
+          border: none;
+          border-top: 3px solid #6366f1;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 th {
+          background-color: #eef2ff;
+          color: #4338ca;
+          font-weight: 600;
+          border: none;
+          border-bottom: 2px solid #6366f1;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 td {
+          border: none;
+          border-bottom: 1px solid #e0e7ff;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 tbody tr:hover {
+          background-color: #f5f3ff;
+        }
+
+        /* Colorful Grid - Rainbow */
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid {
+          border: 2px solid #ec4899;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid th {
+          background: linear-gradient(90deg, #ec4899 0%, #f59e0b 50%, #10b981 100%);
+          color: white;
+          font-weight: 600;
+          border: 1px solid #db2777;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid td {
+          border: 1px solid #fce7f3;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+1) {
+          background-color: #fef2f2;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+2) {
+          background-color: #fef3c7;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+3) {
+          background-color: #d1fae5;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+4) {
+          background-color: #dbeafe;
+        }
+
+        /* Colorful List - Teal */
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list {
+          border: none;
+          border-top: 3px solid #14b8a6;
+          border-bottom: 3px solid #14b8a6;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list th {
+          background-color: #14b8a6;
+          color: white;
+          font-weight: 700;
+          border: none;
+          padding: 12px;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list td {
+          border: none;
+          border-bottom: 1px solid #99f6e4;
+        }
+
+        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list tbody tr:hover {
+          background-color: #ccfbf1;
+        }
+
+        /* Table cell alignment helpers */
+        .syncfusion-editor .e-rte-content table td.align-top {
+          vertical-align: top;
+        }
+
+        .syncfusion-editor .e-rte-content table td.align-middle {
+          vertical-align: middle;
+        }
+
+        .syncfusion-editor .e-rte-content table td.align-bottom {
+          vertical-align: bottom;
+        }
+
+        /* Table border styles */
+        .syncfusion-editor .e-rte-content table.border-thick {
+          border-width: 3px;
+        }
+
+        .syncfusion-editor .e-rte-content table.border-double {
+          border-style: double;
+          border-width: 3px;
+        }
+
+        .syncfusion-editor .e-rte-content table.border-dashed {
+          border-style: dashed;
+        }
+
+        .syncfusion-editor .e-rte-content table.no-border {
+          border: none;
+        }
+
+        .syncfusion-editor .e-rte-content table.no-border td,
+        .syncfusion-editor .e-rte-content table.no-border th {
+          border: none;
         }
       `}</style>
 
