@@ -2,36 +2,78 @@
 
 import { useRef, useMemo, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
-import Quill from "quill"
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
-import "react-quill/dist/quill.snow.css"
+const ReactQuillWrapper = dynamic(
+  async () => {
+    // Import react-quill CSS
+    await import("react-quill/dist/quill.snow.css")
+    
+    // Import Quill and register custom formats
+    const Quill = (await import("quill")).default
+    const { default: ReactQuill } = await import("react-quill")
 
-// Register font families and pixel sizes BEFORE the editor mounts
-try {
-  const Font = Quill.import('attributors/class/font')
-  Font.whitelist = [
-    'arial','times-new-roman','calibri','cambria','garamond','georgia','helvetica','courier-new','verdana',
-    'noto-sans','noto-serif','noto-sans-arabic','noto-sans-devanagari','noto-sans-cjk-jp'
-  ]
-  Quill.register(Font, true)
+    // Register font families and pixel sizes
+    try {
+      const Font = Quill.import('attributors/class/font')
+      Font.whitelist = [
+        'arial','times-new-roman','calibri','cambria','garamond','georgia','helvetica','courier-new','verdana',
+        'noto-sans','noto-serif','noto-sans-arabic','noto-sans-devanagari','noto-sans-cjk-jp'
+      ]
+      Quill.register(Font, true)
 
-  const Size = Quill.import('attributors/style/size')
-  Size.whitelist = ['10px','11px','12px','14px','16px','18px','20px','22px','24px','28px','32px','36px','48px']
-  Quill.register(Size, true)
-} catch {}
+      const Size = Quill.import('attributors/style/size')
+      Size.whitelist = ['10px','11px','12px','14px','16px','18px','20px','22px','24px','28px','32px','36px','48px']
+      Quill.register(Size, true)
 
-// Register a custom dropdown format for bullet styles
-const Parchment = Quill.import('parchment')
-class BulletStyleAttributor extends Parchment.Attributor.Attribute {}
-const bulletStyle = new BulletStyleAttributor('bulletStyle', 'data-bullet-style', {
-  scope: Parchment.Scope.BLOCK,
-  whitelist: ['filled','circle','square','check']
-})
-try { Quill.register(bulletStyle, true) } catch {}
+      // Additional style attributors to preserve Word-like styling
+      const Parchment = Quill.import('parchment')
+      class LineHeightStyle extends Parchment.Attributor.Style {}
+      class TextIndentStyle extends Parchment.Attributor.Style {}
+      class MarginLeftStyle extends Parchment.Attributor.Style {}
+      class LetterSpacingStyle extends Parchment.Attributor.Style {}
+      const lineHeight = new LineHeightStyle('lineHeight', 'line-height', { scope: Parchment.Scope.INLINE })
+      const textIndent = new TextIndentStyle('textIndent', 'text-indent', { scope: Parchment.Scope.BLOCK })
+      const marginLeft = new MarginLeftStyle('marginLeft', 'margin-left', { scope: Parchment.Scope.BLOCK })
+      const letterSpacing = new LetterSpacingStyle('letterSpacing', 'letter-spacing', { scope: Parchment.Scope.INLINE })
+      Quill.register(lineHeight, true)
+      Quill.register(textIndent, true)
+      Quill.register(marginLeft, true)
+      Quill.register(letterSpacing, true)
 
+      // Register bullet style dropdown
+      class BulletStyleAttributor extends Parchment.Attributor.Attribute {}
+      const bulletStyle = new BulletStyleAttributor('bulletStyle', 'data-bullet-style', {
+        scope: Parchment.Scope.BLOCK,
+        whitelist: ['filled','circle','square','check']
+      })
+      Quill.register(bulletStyle, true)
+    } catch (error) {
+      console.error('Failed to register Quill formats:', error)
+    }
 
-const TemplateEditor = ({   name,
+    return ReactQuill
+  },
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="border border-gray-300 dark:border-slate-600 rounded-lg">
+        <div className="h-10 bg-gray-100 dark:bg-slate-800 border-b border-gray-300 dark:border-slate-600 rounded-t-lg flex items-center px-3">
+          <div className="flex space-x-2">
+            <div className="w-6 h-6 bg-gray-300 dark:bg-slate-600 rounded animate-pulse"></div>
+            <div className="w-6 h-6 bg-gray-300 dark:bg-slate-600 rounded animate-pulse"></div>
+            <div className="w-6 h-6 bg-gray-300 dark:bg-slate-600 rounded animate-pulse"></div>
+          </div>
+        </div>
+        <div className="h-32 bg-white dark:bg-slate-800 rounded-b-lg flex items-center justify-center">
+          <span className="text-gray-500 text-sm dark:text-slate-200">Loading editor...</span>
+        </div>
+      </div>
+    )
+  }
+)
+
+const TemplateEditor = ({
+  name,
   label,
   placeholder = "",
   value = "",
@@ -57,25 +99,23 @@ const TemplateEditor = ({   name,
     setEditorValue(value || defaultValue || "");
   }, [value, defaultValue]);
 
-  // (registration moved to module scope to ensure toolbar shows correct options)
-
   // Expose insertAtCursor method to parent
   useEffect(() => {
     if (!onInsertAtCursor || !quillRef.current) return;
-      const insertAtCursor = (content) => {
-        const editor = quillRef.current.getEditor();
+    const insertAtCursor = (content) => {
+      const editor = quillRef.current?.getEditor?.();
       if (!editor) return;
       const range = editor.getSelection(true);
       const index = range && typeof range.index === 'number' ? range.index : Math.max(0, editor.getLength() - 1)
       // insert as HTML to preserve placeholders like {{name}}
       if (editor.clipboard && typeof editor.clipboard.dangerouslyPasteHTML === 'function') {
         editor.clipboard.dangerouslyPasteHTML(index, content)
-        } else {
+      } else {
         editor.insertText(index, content)
-        }
+      }
       editor.setSelection(index + content.length, 0)
-      };
-      onInsertAtCursor(insertAtCursor);
+    };
+    onInsertAtCursor(insertAtCursor);
   }, [onInsertAtCursor])
 
   // Custom toolbar handlers (e.g., table insert)
@@ -94,20 +134,20 @@ const TemplateEditor = ({   name,
 
   // Memoize modules and formats so ReactQuill doesn't re-init on every keystroke
   const modules = useMemo(() => ({
-      toolbar: {
-        container: [
+    toolbar: {
+      container: [
         [{ font: [
           'arial','times-new-roman','calibri','cambria','garamond','georgia','helvetica','courier-new','verdana',
           'noto-sans','noto-serif','noto-sans-arabic','noto-sans-devanagari','noto-sans-cjk-jp'
         ] }],
         [{ size: ['10px','11px','12px','14px','16px','18px','20px','22px','24px','28px','32px','36px','48px'] }],
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ['bold','italic','underline','strike'],
-          [{ color: [] }, { background: [] }],
+        [{ color: [] }, { background: [] }],
         [{ script: 'sub' }, { script: 'super' }],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ indent: '-1' }, { indent: '+1' }],
-          [{ align: [] }],
+        [{ align: [] }],
         [{ direction: 'rtl' }],
         ['blockquote','code-block'],
         // Custom bullet style dropdown
@@ -172,7 +212,7 @@ const TemplateEditor = ({   name,
     <div className="relative">
       
       <div className="rich-text-editor">
-        <ReactQuill
+        <ReactQuillWrapper
           ref={quillRef}
           theme="snow"
           value={editorValue}
@@ -266,6 +306,33 @@ const TemplateEditor = ({   name,
         .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before { content: '32px'; }
         .ql-picker.ql-size .ql-picker-label[data-value="36px"]::before { content: '36px'; }
         .ql-picker.ql-size .ql-picker-label[data-value="48px"]::before { content: '48px'; }
+
+        /* Bullet style dropdown UI */
+        .ql-picker.ql-bulletStyle .ql-picker-label::before { content: '• Bullets'; }
+        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="filled"]::before { content: '\\2022  Filled'; }
+        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="circle"]::before { content: '\\25E6  Circle'; }
+        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="square"]::before { content: '\\25A0  Square'; }
+        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="check"]::before { content: '\\2713  Check'; color: #16a34a; }
+
+        /* Apply selected label */
+        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="filled"]::before { content: '• Filled'; }
+        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="circle"]::before { content: '◦ Circle'; }
+        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="square"]::before { content: '■ Square'; }
+        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="check"]::before { content: '✓ Check'; }
+
+        /* Render bullets in editor when style set via root class */
+        .rich-text-editor .ql-editor.bullet-filled ul,
+        .rich-text-editor .ql-editor.bullet-circle ul,
+        .rich-text-editor .ql-editor.bullet-square ul,
+        .rich-text-editor .ql-editor.bullet-check ul { list-style: none; padding-left: 1.4em; }
+        .rich-text-editor .ql-editor.bullet-filled ul > li,
+        .rich-text-editor .ql-editor.bullet-circle ul > li,
+        .rich-text-editor .ql-editor.bullet-square ul > li,
+        .rich-text-editor .ql-editor.bullet-check ul > li { position: relative; }
+        .rich-text-editor .ql-editor.bullet-filled ul > li::before { content: '\\2022'; position: absolute; left: -1.2em; top: 0.1em; }
+        .rich-text-editor .ql-editor.bullet-circle ul > li::before { content: '\\25E6'; position: absolute; left: -1.2em; top: 0.1em; }
+        .rich-text-editor .ql-editor.bullet-square ul > li::before { content: '\\25A0'; position: absolute; left: -1.2em; top: 0.1em; }
+        .rich-text-editor .ql-editor.bullet-check ul > li::before { content: '\\2713'; color: #16a34a; position: absolute; left: -1.2em; top: 0.1em; }
       `}</style>
 
     </div>
