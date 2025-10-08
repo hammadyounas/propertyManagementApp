@@ -1,57 +1,30 @@
 "use client"
 
-import { useRef, useMemo, useState, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 
-const ReactQuillWrapper = dynamic(
+const SyncfusionRTE = dynamic(
   async () => {
-    // Import react-quill CSS
-    await import("react-quill/dist/quill.snow.css")
+    // Import Syncfusion RTE and styles
+    const { RichTextEditorComponent, Inject, Toolbar, Image, Link, HtmlEditor, QuickToolbar, Table, FileManager, EmojiPicker, Audio, Video, FormatPainter, PasteCleanup } = await import("@syncfusion/ej2-react-richtexteditor")
     
-    // Import Quill and register custom formats
-    const Quill = (await import("quill")).default
-    const { default: ReactQuill } = await import("react-quill")
+    // Import Syncfusion styles
+    await import("@syncfusion/ej2-base/styles/material.css")
+    await import("@syncfusion/ej2-inputs/styles/material.css")
+    await import("@syncfusion/ej2-lists/styles/material.css")
+    await import("@syncfusion/ej2-popups/styles/material.css")
+    await import("@syncfusion/ej2-buttons/styles/material.css")
+    await import("@syncfusion/ej2-navigations/styles/material.css")
+    await import("@syncfusion/ej2-splitbuttons/styles/material.css")
+    await import("@syncfusion/ej2-richtexteditor/styles/material.css")
 
-    // Register font families and pixel sizes
-    try {
-      const Font = Quill.import('attributors/class/font')
-      Font.whitelist = [
-        'arial','times-new-roman','calibri','cambria','garamond','georgia','helvetica','courier-new','verdana',
-        'noto-sans','noto-serif','noto-sans-arabic','noto-sans-devanagari','noto-sans-cjk-jp'
-      ]
-      Quill.register(Font, true)
+    const RTEWrapper = ({ forwardRef, ...props }) => (
+      <RichTextEditorComponent ref={forwardRef} {...props}>
+        <Inject services={[Toolbar, Image, Link, HtmlEditor, QuickToolbar, Table, FileManager, EmojiPicker, Audio, Video, FormatPainter, PasteCleanup]} />
+      </RichTextEditorComponent>
+    )
 
-      const Size = Quill.import('attributors/style/size')
-      Size.whitelist = ['10px','11px','12px','14px','16px','18px','20px','22px','24px','28px','32px','36px','48px']
-      Quill.register(Size, true)
-
-      // Additional style attributors to preserve Word-like styling
-      const Parchment = Quill.import('parchment')
-      class LineHeightStyle extends Parchment.Attributor.Style {}
-      class TextIndentStyle extends Parchment.Attributor.Style {}
-      class MarginLeftStyle extends Parchment.Attributor.Style {}
-      class LetterSpacingStyle extends Parchment.Attributor.Style {}
-      const lineHeight = new LineHeightStyle('lineHeight', 'line-height', { scope: Parchment.Scope.INLINE })
-      const textIndent = new TextIndentStyle('textIndent', 'text-indent', { scope: Parchment.Scope.BLOCK })
-      const marginLeft = new MarginLeftStyle('marginLeft', 'margin-left', { scope: Parchment.Scope.BLOCK })
-      const letterSpacing = new LetterSpacingStyle('letterSpacing', 'letter-spacing', { scope: Parchment.Scope.INLINE })
-      Quill.register(lineHeight, true)
-      Quill.register(textIndent, true)
-      Quill.register(marginLeft, true)
-      Quill.register(letterSpacing, true)
-
-      // Register bullet style dropdown
-      class BulletStyleAttributor extends Parchment.Attributor.Attribute {}
-      const bulletStyle = new BulletStyleAttributor('bulletStyle', 'data-bullet-style', {
-        scope: Parchment.Scope.BLOCK,
-        whitelist: ['filled','circle','square','check']
-      })
-      Quill.register(bulletStyle, true)
-    } catch (error) {
-      console.error('Failed to register Quill formats:', error)
-    }
-
-    return ReactQuill
+    return RTEWrapper
   },
   { 
     ssr: false,
@@ -89,7 +62,7 @@ const TemplateEditor = ({
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
-  const quillRef = useRef(null);
+  const rteRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -101,85 +74,153 @@ const TemplateEditor = ({
 
   // Expose insertAtCursor method to parent
   useEffect(() => {
-    if (!onInsertAtCursor || !quillRef.current) return;
-    const insertAtCursor = (content) => {
-      const editor = quillRef.current?.getEditor?.();
+    if (!onInsertAtCursor || !rteRef.current) return;
+      const insertAtCursor = (content) => {
+      const editor = rteRef.current;
       if (!editor) return;
-      const range = editor.getSelection(true);
-      const index = range && typeof range.index === 'number' ? range.index : Math.max(0, editor.getLength() - 1)
-      // insert as HTML to preserve placeholders like {{name}}
-      if (editor.clipboard && typeof editor.clipboard.dangerouslyPasteHTML === 'function') {
-        editor.clipboard.dangerouslyPasteHTML(index, content)
-      } else {
-        editor.insertText(index, content)
-      }
-      editor.setSelection(index + content.length, 0)
-    };
-    onInsertAtCursor(insertAtCursor);
+      try {
+        editor.executeCommand('insertHTML', content);
+      } catch (e) {
+        console.error('Failed to insert content:', e);
+        }
+      };
+      onInsertAtCursor(insertAtCursor);
   }, [onInsertAtCursor])
 
-  // Custom toolbar handlers (e.g., table insert)
-  const tableHtml = (rows = 2, cols = 2) => {
-    let html = '<table style="width:100%; border-collapse:collapse;">'
-    for (let r = 0; r < rows; r++) {
-      html += '<tr>'
-      for (let c = 0; c < cols; c++) {
-        html += '<td style="border:1px solid #ccc; padding:6px;">&nbsp;</td>'
-      }
-      html += '</tr>'
-    }
-    html += '</table><p><br/></p>'
-    return html
-  }
+  // MS Word-like toolbar configuration with hierarchical numbering and bullet styles
+  const toolbarSettings = {
+    type: 'MultiRow',
+    items: [
+      'Undo', 'Redo', '|',
+      'FontName', 'FontSize', 'FontColor', 'BackgroundColor', '|',
+      'Bold', 'Italic', 'Underline', 'StrikeThrough', 'SuperScript', 'SubScript', '|',
+      'LowerCase', 'UpperCase', '|',
+      'Formats', 'Alignments', '|',
+      'NumberFormatList', 'BulletFormatList', '|',
+      'OrderedList', 'UnorderedList', '|',
+      'Indent', 'Outdent', '|',
+      'CreateLink', 'Image', 'Audio', 'Video', 'CreateTable', '|',
+      'FormatPainter', 'ClearFormat', '|',
+      'Print', 'SourceCode', 'FullScreen'
+    ]
+  };
 
-  // Memoize modules and formats so ReactQuill doesn't re-init on every keystroke
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ font: [
-          'arial','times-new-roman','calibri','cambria','garamond','georgia','helvetica','courier-new','verdana',
-          'noto-sans','noto-serif','noto-sans-arabic','noto-sans-devanagari','noto-sans-cjk-jp'
-        ] }],
-        [{ size: ['10px','11px','12px','14px','16px','18px','20px','22px','24px','28px','32px','36px','48px'] }],
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ['bold','italic','underline','strike'],
-        [{ color: [] }, { background: [] }],
-        [{ script: 'sub' }, { script: 'super' }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-        [{ direction: 'rtl' }],
-        ['blockquote','code-block'],
-        // Custom bullet style dropdown
-        [{ bulletStyle: ['filled','circle','square','check'] }],
-        ['link','image','video'],
-        [{ table: 'insert' }],
-        ['clean']
-      ],
-      handlers: {
-        table: function () {
-          const editor = this?.quill;
-          if (!editor) return;
-          const range = editor.getSelection(true);
-          const html = tableHtml(2, 2);
-          editor.clipboard.dangerouslyPasteHTML(range ? range.index : editor.getLength() - 1, html);
-        },
-        bulletStyle: function (value) {
-          const root = this?.quill?.root;
-          if (!root) return;
-          root.classList.remove('bullet-filled','bullet-circle','bullet-square','bullet-check');
-          if (value === 'filled') root.classList.add('bullet-filled');
-          if (value === 'circle') root.classList.add('bullet-circle');
-          if (value === 'square') root.classList.add('bullet-square');
-          if (value === 'check') root.classList.add('bullet-check');
-        }
-      }
-    }
-  }), [])
+  // Define number format list (hierarchical numbering)
+  const numberFormatList = {
+    types: [
+      { text: '1, 2, 3', value: 'decimal' },
+      { text: '1., 2., 3.', value: 'decimal' },
+      { text: 'I, II, III', value: 'upper-roman' },
+      { text: 'i, ii, iii', value: 'lower-roman' },
+      { text: 'A, B, C', value: 'upper-alpha' },
+      { text: 'a, b, c', value: 'lower-alpha' },
+    ]
+  };
 
-  const formats = useMemo(() => [
-    'header','font','size','bold','italic','underline','strike','color','background','script','blockquote','code-block','list','bullet','indent','align','direction','link','image','video'
-  ], [])
+  // Define bullet format list (rich bullet styles)
+  const bulletFormatList = {
+    types: [
+      { text: '●', value: 'disc' },
+      { text: '○', value: 'circle' },
+      { text: '■', value: 'square' },
+      { text: '✓', value: 'check' },
+      { text: '→', value: 'arrow' },
+      { text: '▶', value: 'triangle' },
+    ]
+  };
+
+  const fontFamily = {
+    default: 'Calibri',
+    items: [
+      { text: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+      { text: 'Times New Roman', value: 'Times New Roman, Times, serif' },
+      { text: 'Calibri', value: 'Calibri, Segoe UI, Arial, sans-serif' },
+      { text: 'Cambria', value: 'Cambria, Georgia, Times New Roman, serif' },
+      { text: 'Garamond', value: 'Garamond, Times New Roman, serif' },
+      { text: 'Georgia', value: 'Georgia, Times New Roman, serif' },
+      { text: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+      { text: 'Courier New', value: 'Courier New, Courier, monospace' },
+      { text: 'Verdana', value: 'Verdana, Geneva, Tahoma, sans-serif' },
+      { text: 'Segoe UI', value: 'Segoe UI, Arial, sans-serif' },
+      { text: 'Trebuchet MS', value: 'Trebuchet MS, Arial, sans-serif' },
+      { text: 'Tahoma', value: 'Tahoma, Geneva, Verdana, sans-serif' },
+    ]
+  };
+
+  const fontSize = {
+    default: '14px',
+    items: [
+      { text: '8', value: '8px' },
+      { text: '10', value: '10px' },
+      { text: '11', value: '11px' },
+      { text: '12', value: '12px' },
+      { text: '14', value: '14px' },
+      { text: '16', value: '16px' },
+      { text: '18', value: '18px' },
+      { text: '20', value: '20px' },
+      { text: '22', value: '22px' },
+      { text: '24', value: '24px' },
+      { text: '26', value: '26px' },
+      { text: '28', value: '28px' },
+      { text: '32', value: '32px' },
+      { text: '36', value: '36px' },
+      { text: '48', value: '48px' },
+      { text: '72', value: '72px' },
+    ]
+  };
+
+  const format = {
+    default: 'Paragraph',
+    types: [
+      { text: 'Paragraph', value: 'P' },
+      { text: 'Heading 1', value: 'H1' },
+      { text: 'Heading 2', value: 'H2' },
+      { text: 'Heading 3', value: 'H3' },
+      { text: 'Heading 4', value: 'H4' },
+      { text: 'Heading 5', value: 'H5' },
+      { text: 'Heading 6', value: 'H6' },
+      { text: 'Code', value: 'Pre' },
+      { text: 'Quotation', value: 'BlockQuote' },
+    ]
+  };
+
+  const insertImageSettings = {
+    display: 'inline',
+    width: 'auto',
+    height: 'auto',
+    saveFormat: 'Base64',
+    saveUrl: null,
+    path: null,
+  };
+
+  const quickToolbarSettings = {
+    image: [
+      'Replace', 'Align', 'Caption', 'Remove', 'InsertLink', 'OpenImageLink', '-',
+      'EditImageLink', 'RemoveImageLink', 'Display', 'AltText', 'Dimension'
+    ],
+    link: ['Open', 'Edit', 'UnLink'],
+    table: [
+      'TableHeader', 'TableRows', 'TableColumns', 'BackgroundColor',
+      '-', 'TableRemove', 'Alignments', 'TableCellVerticalAlign', 'Styles'
+    ]
+  };
+
+  const pasteCleanupSettings = {
+    prompt: false,
+    plainText: false,
+    keepFormat: true,
+    deniedTags: [],
+    deniedAttrs: [],
+    allowedStyleProps: [
+      'background', 'background-color', 'border', 'border-bottom', 'border-left', 'border-radius',
+      'border-right', 'border-top', 'border-style', 'border-width', 'color', 'font-family',
+      'font-size', 'font-weight', 'font-style', 'height', 'left', 'line-height', 'margin',
+      'margin-top', 'margin-left', 'margin-right', 'margin-bottom', 'max-height', 'max-width',
+      'min-height', 'min-width', 'padding', 'padding-bottom', 'padding-left', 'padding-right',
+      'padding-top', 'text-align', 'text-decoration', 'text-indent', 'top', 'vertical-align',
+      'width', 'letter-spacing'
+    ]
+  };
 
   if (!mounted) {
     return (
@@ -211,16 +252,28 @@ const TemplateEditor = ({
   return (
     <div className="relative">
       
-      <div className="rich-text-editor">
-        <ReactQuillWrapper
-          ref={quillRef}
-          theme="snow"
+      <div className="syncfusion-editor">
+        <SyncfusionRTE
+          forwardRef={rteRef}
           value={editorValue}
-          onChange={(content) => { setEditorValue(content); if (onChange) onChange(content); }}
           placeholder={placeholder}
-          modules={modules}
-          formats={formats}
-          className="dark-mode-editor"
+          toolbarSettings={toolbarSettings}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          format={format}
+          numberFormatList={numberFormatList}
+          bulletFormatList={bulletFormatList}
+          insertImageSettings={insertImageSettings}
+          quickToolbarSettings={quickToolbarSettings}
+          pasteCleanupSettings={pasteCleanupSettings}
+          height="calc(100vh - 200px)"
+          enableHtmlEncode={false}
+          enableXhtml={true}
+          change={(args) => {
+            const content = args.value || "";
+            setEditorValue(content);
+            if (onChange) onChange(content);
+          }}
           {...props}
         />
       </div>
@@ -229,110 +282,151 @@ const TemplateEditor = ({
       )}
 
         <style jsx global>{`
-        .rich-text-editor .ql-editor { min-height: calc(100vh - 200px); padding: 24px; }
-        /* Map font classes to actual stacks */
-        .ql-font-arial { font-family: Arial, Helvetica, sans-serif; }
-        .ql-font-times-new-roman { font-family: 'Times New Roman', Times, serif; }
-        .ql-font-calibri { font-family: Calibri, 'Segoe UI', Arial, sans-serif; }
-        .ql-font-cambria { font-family: Cambria, Georgia, 'Times New Roman', serif; }
-        .ql-font-garamond { font-family: Garamond, 'Times New Roman', serif; }
-        .ql-font-georgia { font-family: Georgia, 'Times New Roman', serif; }
-        .ql-font-helvetica { font-family: Helvetica, Arial, sans-serif; }
-        .ql-font-courier-new { font-family: 'Courier New', Courier, monospace; }
-        .ql-font-verdana { font-family: Verdana, Geneva, Tahoma, sans-serif; }
-        .ql-font-noto-sans { font-family: 'Noto Sans', Arial, sans-serif; }
-        .ql-font-noto-serif { font-family: 'Noto Serif', 'Times New Roman', serif; }
-        .ql-font-noto-sans-arabic { font-family: 'Noto Sans Arabic', 'Noto Sans', Arial, sans-serif; }
-        .ql-font-noto-sans-devanagari { font-family: 'Noto Sans Devanagari', 'Noto Sans', Arial, sans-serif; }
-        .ql-font-noto-sans-cjk-jp { font-family: 'Noto Sans CJK JP', 'Noto Sans', Arial, sans-serif; }
+        .syncfusion-editor .e-richtexteditor .e-rte-content {
+          min-height: calc(100vh - 200px);
+          padding: 24px;
+          font-family: Calibri, Segoe UI, Arial, sans-serif;
+          font-size: 14px;
+          line-height: 1.5;
+        }
 
-        /* Ensure dropdown shows actual names instead of 'Sans Serif' */
-        .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before { content: 'Arial'; font-family: Arial, Helvetica, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before { content: 'Times New Roman'; font-family: 'Times New Roman', Times, serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="calibri"]::before { content: 'Calibri'; font-family: Calibri, 'Segoe UI', Arial, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="cambria"]::before { content: 'Cambria'; font-family: Cambria, Georgia, 'Times New Roman', serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="garamond"]::before { content: 'Garamond'; font-family: Garamond, 'Times New Roman', serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before { content: 'Georgia'; font-family: Georgia, 'Times New Roman', serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="helvetica"]::before { content: 'Helvetica'; font-family: Helvetica, Arial, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before { content: 'Courier New'; font-family: 'Courier New', Courier, monospace; }
-        .ql-picker.ql-font .ql-picker-item[data-value="verdana"]::before { content: 'Verdana'; font-family: Verdana, Geneva, Tahoma, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="noto-sans"]::before { content: 'Noto Sans'; font-family: 'Noto Sans', Arial, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="noto-serif"]::before { content: 'Noto Serif'; font-family: 'Noto Serif', 'Times New Roman', serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="noto-sans-arabic"]::before { content: 'Noto Sans Arabic'; font-family: 'Noto Sans Arabic', 'Noto Sans', Arial, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="noto-sans-devanagari"]::before { content: 'Noto Sans Devanagari'; font-family: 'Noto Sans Devanagari', 'Noto Sans', Arial, sans-serif; }
-        .ql-picker.ql-font .ql-picker-item[data-value="noto-sans-cjk-jp"]::before { content: 'Noto Sans CJK JP'; font-family: 'Noto Sans CJK JP', 'Noto Sans', Arial, sans-serif; }
+        /* MS Word-like toolbar styling */
+        .syncfusion-editor .e-toolbar {
+          background: linear-gradient(to bottom, #ffffff 0%, #f3f4f6 100%);
+          border-bottom: 2px solid #d1d5db;
+          padding: 8px;
+        }
 
-        /* Selected label mapping */
-        .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before { content: 'Arial'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before { content: 'Times New Roman'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="calibri"]::before { content: 'Calibri'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="cambria"]::before { content: 'Cambria'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="garamond"]::before { content: 'Garamond'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before { content: 'Georgia'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="helvetica"]::before { content: 'Helvetica'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before { content: 'Courier New'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="verdana"]::before { content: 'Verdana'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="noto-sans"]::before { content: 'Noto Sans'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="noto-serif"]::before { content: 'Noto Serif'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="noto-sans-arabic"]::before { content: 'Noto Sans Arabic'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="noto-sans-devanagari"]::before { content: 'Noto Sans Devanagari'; }
-        .ql-picker.ql-font .ql-picker-label[data-value="noto-sans-cjk-jp"]::before { content: 'Noto Sans CJK JP'; }
+        .syncfusion-editor .e-toolbar .e-toolbar-item {
+          margin: 2px;
+        }
 
-        /* Size dropdown labels for px sizes */
-        .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before { content: '10px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="11px"]::before { content: '11px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: '12px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { content: '14px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { content: '16px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before { content: '18px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before { content: '20px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="22px"]::before { content: '22px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before { content: '24px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before { content: '28px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before { content: '32px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="36px"]::before { content: '36px'; }
-        .ql-picker.ql-size .ql-picker-item[data-value="48px"]::before { content: '48px'; }
+        .syncfusion-editor .e-toolbar .e-btn {
+          border-radius: 3px;
+          transition: all 0.15s ease;
+        }
 
-        .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before { content: '10px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="11px"]::before { content: '11px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before { content: '12px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before { content: '14px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before { content: '16px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before { content: '18px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before { content: '20px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="22px"]::before { content: '22px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before { content: '24px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before { content: '28px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before { content: '32px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="36px"]::before { content: '36px'; }
-        .ql-picker.ql-size .ql-picker-label[data-value="48px"]::before { content: '48px'; }
+        .syncfusion-editor .e-toolbar .e-btn:hover {
+          background-color: #e5e7eb;
+        }
 
-        /* Bullet style dropdown UI */
-        .ql-picker.ql-bulletStyle .ql-picker-label::before { content: '• Bullets'; }
-        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="filled"]::before { content: '\\2022  Filled'; }
-        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="circle"]::before { content: '\\25E6  Circle'; }
-        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="square"]::before { content: '\\25A0  Square'; }
-        .ql-picker.ql-bulletStyle .ql-picker-item[data-value="check"]::before { content: '\\2713  Check'; color: #16a34a; }
+        .syncfusion-editor .e-toolbar .e-btn.e-active {
+          background-color: #dbeafe;
+          border-color: #3b82f6;
+        }
 
-        /* Apply selected label */
-        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="filled"]::before { content: '• Filled'; }
-        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="circle"]::before { content: '◦ Circle'; }
-        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="square"]::before { content: '■ Square'; }
-        .ql-picker.ql-bulletStyle .ql-picker-label[data-value="check"]::before { content: '✓ Check'; }
+        /* Hierarchical Numbering Styles - Multi-level lists */
+        .syncfusion-editor .e-rte-content ol {
+          counter-reset: item;
+          padding-left: 2em;
+        }
 
-        /* Render bullets in editor when style set via root class */
-        .rich-text-editor .ql-editor.bullet-filled ul,
-        .rich-text-editor .ql-editor.bullet-circle ul,
-        .rich-text-editor .ql-editor.bullet-square ul,
-        .rich-text-editor .ql-editor.bullet-check ul { list-style: none; padding-left: 1.4em; }
-        .rich-text-editor .ql-editor.bullet-filled ul > li,
-        .rich-text-editor .ql-editor.bullet-circle ul > li,
-        .rich-text-editor .ql-editor.bullet-square ul > li,
-        .rich-text-editor .ql-editor.bullet-check ul > li { position: relative; }
-        .rich-text-editor .ql-editor.bullet-filled ul > li::before { content: '\\2022'; position: absolute; left: -1.2em; top: 0.1em; }
-        .rich-text-editor .ql-editor.bullet-circle ul > li::before { content: '\\25E6'; position: absolute; left: -1.2em; top: 0.1em; }
-        .rich-text-editor .ql-editor.bullet-square ul > li::before { content: '\\25A0'; position: absolute; left: -1.2em; top: 0.1em; }
-        .rich-text-editor .ql-editor.bullet-check ul > li::before { content: '\\2713'; color: #16a34a; position: absolute; left: -1.2em; top: 0.1em; }
+        .syncfusion-editor .e-rte-content ol > li {
+          counter-increment: item;
+          margin-bottom: 0.5em;
+        }
+
+        /* Level 1: 1, 2, 3 */
+        .syncfusion-editor .e-rte-content ol > li::marker {
+          content: counter(item) ". ";
+          font-weight: 600;
+        }
+
+        /* Level 2: 1.1, 1.2, 1.3 */
+        .syncfusion-editor .e-rte-content ol ol > li::marker {
+          content: counter(item, decimal) "." counter(item) " ";
+        }
+
+        /* Level 3: 1.1.1, 1.1.2 */
+        .syncfusion-editor .e-rte-content ol ol ol > li::marker {
+          content: counter(item, decimal) "." counter(item) "." counter(item) " ";
+        }
+
+        /* Rich Bullet Styles */
+        .syncfusion-editor .e-rte-content ul {
+          list-style-type: none;
+          padding-left: 2em;
+        }
+
+        .syncfusion-editor .e-rte-content ul > li {
+          position: relative;
+          margin-bottom: 0.5em;
+        }
+
+        /* Default bullet - filled circle */
+        .syncfusion-editor .e-rte-content ul > li::before {
+          content: "\\2022";
+          position: absolute;
+          left: -1.5em;
+          font-size: 1.2em;
+          line-height: 1.2;
+        }
+
+        /* Level 2 - hollow circle */
+        .syncfusion-editor .e-rte-content ul ul > li::before {
+          content: "\\25E6";
+        }
+
+        /* Level 3 - square */
+        .syncfusion-editor .e-rte-content ul ul ul > li::before {
+          content: "\\25AA";
+        }
+
+        /* Custom bullet styles via class */
+        .syncfusion-editor .e-rte-content ul.check-list > li::before {
+          content: "\\2713";
+          color: #16a34a;
+          font-weight: 600;
+        }
+
+        .syncfusion-editor .e-rte-content ul.arrow-list > li::before {
+          content: "\\2192";
+          color: #2563eb;
+        }
+
+        .syncfusion-editor .e-rte-content ul.triangle-list > li::before {
+          content: "\\25B6";
+          color: #7c3aed;
+          font-size: 0.8em;
+          top: 0.2em;
+        }
+
+        /* Dark mode support */
+        .dark .syncfusion-editor .e-richtexteditor .e-rte-content {
+          background-color: #1e293b;
+          color: #e2e8f0;
+        }
+
+        .dark .syncfusion-editor .e-toolbar {
+          background: linear-gradient(to bottom, #334155 0%, #1e293b 100%);
+          border-color: #475569;
+        }
+
+        .dark .syncfusion-editor .e-toolbar .e-btn:hover {
+          background-color: #475569;
+        }
+
+        .dark .syncfusion-editor .e-toolbar .e-btn.e-active {
+          background-color: #1e40af;
+          border-color: #3b82f6;
+        }
+
+        /* Syncfusion popup/dropdown dark mode */
+        .dark .e-dropdown-popup,
+        .dark .e-popup {
+          background-color: #1e293b !important;
+          border-color: #475569 !important;
+        }
+
+        .dark .e-dropdown-popup .e-item,
+        .dark .e-popup .e-item {
+          color: #e2e8f0 !important;
+        }
+
+        .dark .e-dropdown-popup .e-item:hover,
+        .dark .e-popup .e-item:hover {
+          background-color: #334155 !important;
+        }
       `}</style>
 
     </div>
