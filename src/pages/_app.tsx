@@ -1,3 +1,4 @@
+'use client';
 import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
@@ -6,10 +7,14 @@ import PageLayout from "@/components/combined/organisms/PageLayoutUIContainer";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useEffect } from "react";
+import { registerLicense } from '@syncfusion/ej2-base';
+
+const license = process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY;
+registerLicense(license as string);
 
 export default function App({ Component, pageProps }: AppProps) {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+  const token =
+  typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -18,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
       delete axios.defaults.headers.common["Authorization"];
     }
   }, [token]);
+
 
   return (
     <Provider store={store}>
