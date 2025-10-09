@@ -195,6 +195,7 @@ export default function TemplateEditorUI({
           </div>
         </div> */}
       </div>
+      
       <input
         ref={fileInputRef}
         type="file"
