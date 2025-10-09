@@ -111,7 +111,7 @@ export default function TemplateEditorUI({
         </div>
 
         {/* Variables Sidebar */}
-        <div className="w-full lg:w-80 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
+        {/* <div className="w-full lg:w-80 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
           <div className="p-4 border-b border-gray-200 dark:border-slate-700">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
@@ -124,7 +124,7 @@ export default function TemplateEditorUI({
           </div>
 
           <div className="p-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            {/* Personal Information */}
+            Personal Information
             <div>
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Personal Information
@@ -147,7 +147,7 @@ export default function TemplateEditorUI({
               </div>
             </div>
 
-            {/* Contract Information */}
+            Contract Information
             <div>
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Contract Information
@@ -170,7 +170,7 @@ export default function TemplateEditorUI({
               </div>
             </div>
 
-            {/* Property Information */}
+            Property Information
             <div>
               <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
                 Property Information
@@ -193,7 +193,7 @@ export default function TemplateEditorUI({
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <input
         ref={fileInputRef}

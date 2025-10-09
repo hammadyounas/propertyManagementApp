@@ -16,6 +16,7 @@ const SyncfusionRTE = dynamic(
     await import("@syncfusion/ej2-buttons/styles/material.css")
     await import("@syncfusion/ej2-navigations/styles/material.css")
     await import("@syncfusion/ej2-splitbuttons/styles/material.css")
+    await import("@syncfusion/ej2-dropdowns/styles/material.css")
     await import("@syncfusion/ej2-richtexteditor/styles/material.css")
 
     const RTEWrapper = ({ forwardRef, ...props }) => (
@@ -68,6 +69,68 @@ const TemplateEditor = ({
     setMounted(true);
   }, []);
 
+  // Add custom bullet styles functionality
+  useEffect(() => {
+    if (!mounted || !rteRef.current) return;
+
+    const editor = rteRef.current;
+    
+    // Function to apply custom bullet styles
+    const applyCustomBulletStyle = (bulletType) => {
+      const selection = editor.getSelection();
+      if (!selection || !selection.rangeCount) return;
+
+      const range = selection.getRangeAt(0);
+      const listElement = range.commonAncestorContainer.closest('ul');
+      
+      if (listElement) {
+        // Remove existing data-bullet attributes
+        listElement.removeAttribute('data-bullet');
+        
+        // Apply new bullet style
+        if (bulletType !== 'disc' && bulletType !== 'circle' && bulletType !== 'square') {
+          listElement.setAttribute('data-bullet', bulletType);
+          listElement.style.listStyleType = 'none';
+        } else {
+          listElement.style.listStyleType = bulletType;
+        }
+      }
+    };
+
+    // Add event listeners for custom bullet buttons (if they exist)
+    const addCustomBulletListeners = () => {
+      // This would be called when custom bullet buttons are clicked
+      // For now, we'll handle it through the editor's change event
+    };
+
+    // Listen for editor changes to ensure list styles are applied correctly
+    const handleEditorChange = () => {
+      // Ensure numbering styles are applied correctly
+      const orderedLists = editor.getDocument().querySelectorAll('ol');
+      orderedLists.forEach(list => {
+        const currentStyle = list.style.listStyleType;
+        if (currentStyle) {
+          // Force the style to be applied to both the list and its items
+          list.style.listStyleType = currentStyle;
+          const listItems = list.querySelectorAll('li');
+          listItems.forEach(item => {
+            item.style.listStyleType = currentStyle;
+          });
+        }
+      });
+    };
+
+    // Add the change handler
+    editor.addEventListener('change', handleEditorChange);
+    
+    // Cleanup
+    return () => {
+      if (editor && editor.removeEventListener) {
+        editor.removeEventListener('change', handleEditorChange);
+      }
+    };
+  }, [mounted]);
+
   useEffect(() => {
     setEditorValue(value || defaultValue || "");
   }, [value, defaultValue]);
@@ -96,6 +159,7 @@ const TemplateEditor = ({
       'Bold', 'Italic', 'Underline', 'StrikeThrough', 'SuperScript', 'SubScript', '|',
       'LowerCase', 'UpperCase', '|',
       'Formats', 'Alignments', '|',
+      'BulletFormatList', '|',
       'OrderedList', 'UnorderedList', '|',
       'Indent', 'Outdent', '|',
       'CreateLink', 'Image', 'CreateTable', '|',
@@ -105,26 +169,18 @@ const TemplateEditor = ({
   };
 
   // Define number format list (hierarchical numbering)
-  const numberFormatList = {
-    types: [
-      { text: '1, 2, 3', value: 'decimal' },
-      { text: '1., 2., 3.', value: 'decimal' },
-      { text: 'I, II, III', value: 'upper-roman' },
-      { text: 'i, ii, iii', value: 'lower-roman' },
-      { text: 'A, B, C', value: 'upper-alpha' },
-      { text: 'a, b, c', value: 'lower-alpha' },
-    ]
-  };
+  // const numberFormatList = {
+  //   types: [
+  //     { text: 'Number', value: 'decimal' },
+  //   ]
+  // };
 
   // Define bullet format list (rich bullet styles)
   const bulletFormatList = {
     types: [
-      { text: '●', value: 'disc' },
-      { text: '○', value: 'circle' },
-      { text: '■', value: 'square' },
-      { text: '✓', value: 'check' },
-      { text: '→', value: 'arrow' },
-      { text: '▶', value: 'triangle' },
+      { text: 'Disc', value: 'disc' },
+      { text: 'Circle', value: 'circle' },
+      { text: 'Square', value: 'square' },
     ]
   };
 
@@ -284,6 +340,8 @@ const TemplateEditor = ({
           value={editorValue}
           placeholder={placeholder}
           toolbarSettings={toolbarSettings}
+          // numberFormatList={numberFormatList}
+          bulletFormatList={bulletFormatList}
           fontFamily={fontFamily}
           fontSize={fontSize}
           format={format}
@@ -837,6 +895,438 @@ const TemplateEditor = ({
         .syncfusion-editor .e-rte-content table.no-border td,
         .syncfusion-editor .e-rte-content table.no-border th {
           border: none;
+        }
+
+        /* Enhanced Bullet Styles - Fix for Unicode bullet issue */
+        .syncfusion-editor .e-rte-content ul {
+          list-style-type: disc;
+          padding-left: 2em;
+          margin: 0.5em 0;
+        }
+
+        .syncfusion-editor .e-rte-content ul li {
+          margin: 0.25em 0;
+          line-height: 1.5;
+          position: relative;
+          list-style-position: outside;
+        }
+
+        /* Override any text content that shows Unicode bullet */
+        .syncfusion-editor .e-rte-content ul li:not([class*="bullet-"]) {
+          list-style-type: disc;
+        }
+
+        /* Force proper bullet display */
+        .syncfusion-editor .e-rte-content ul li::marker {
+          color: #374151;
+          font-size: 1.2em;
+        }
+
+        /* Remove any text content that might show Unicode bullet */
+        .syncfusion-editor .e-rte-content ul li::before {
+          display: none;
+        }
+
+        /* Apply bullet styles based on list-style-type */
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: disc"] li::marker {
+          content: "●";
+          color: #374151;
+          font-size: 1.2em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: circle"] li::marker {
+          content: "○";
+          color: #6b7280;
+          font-size: 1.1em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: square"] li::marker {
+          content: "■";
+          color: #1f2937;
+          font-size: 1.1em;
+        }
+
+        /* Custom bullet styles for special characters */
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] li::before {
+          content: "✓ ";
+          color: #059669;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] li::marker {
+          display: none;
+        }
+
+        /* Additional custom bullet styles using data attributes */
+        .syncfusion-editor .e-rte-content ul[data-bullet="check"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="check"] li::before {
+          content: "✓ ";
+          color: #059669;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="arrow"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="arrow"] li::before {
+          content: "→ ";
+          color: #3b82f6;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="triangle"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="triangle"] li::before {
+          content: "▶ ";
+          color: #dc2626;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="diamond"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="diamond"] li::before {
+          content: "◆ ";
+          color: #7c3aed;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="star"] {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul[data-bullet="star"] li::before {
+          content: "★ ";
+          color: #f59e0b;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        /* Custom bullet styles - Enhanced with proper Unicode handling */
+        .syncfusion-editor .e-rte-content ul.bullet-disc {
+          list-style-type: disc;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-disc li::marker {
+          color: #374151;
+          font-size: 1.2em;
+          content: "●";
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-circle {
+          list-style-type: circle;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-circle li::marker {
+          color: #6b7280;
+          font-size: 1.1em;
+          content: "○";
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-square {
+          list-style-type: square;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-square li::marker {
+          color: #1f2937;
+          font-size: 1.1em;
+          content: "■";
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-check {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-check li::before {
+          content: "✓ ";
+          color: #059669;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-check li::marker {
+          display: none;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-arrow {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-arrow li::before {
+          content: "→ ";
+          color: #3b82f6;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-arrow li::marker {
+          display: none;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-triangle {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-triangle li::before {
+          content: "▶ ";
+          color: #dc2626;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-triangle li::marker {
+          display: none;
+        }
+
+        /* Additional bullet styles */
+        .syncfusion-editor .e-rte-content ul.bullet-diamond {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-diamond li::before {
+          content: "◆ ";
+          color: #7c3aed;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-diamond li::marker {
+          display: none;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-star {
+          list-style-type: none;
+          padding-left: 1.5em;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-star li::before {
+          content: "★ ";
+          color: #f59e0b;
+          font-weight: bold;
+          position: absolute;
+          left: -1.5em;
+          display: block;
+        }
+
+        .syncfusion-editor .e-rte-content ul.bullet-star li::marker {
+          display: none;
+        }
+
+        /* Enhanced Numbered Lists */
+        .syncfusion-editor .e-rte-content ol {
+          padding-left: 2em;
+          margin: 0.5em 0;
+        }
+
+        .syncfusion-editor .e-rte-content ol li {
+          margin: 0.25em 0;
+          line-height: 1.5;
+        }
+
+        /* Numbered list styles - Apply based on actual style attributes */
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: decimal"] {
+          list-style-type: decimal !important;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: decimal-leading-zero"] {
+          list-style-type: decimal-leading-zero !important;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: upper-roman"] {
+          list-style-type: upper-roman !important;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: lower-roman"] {
+          list-style-type: lower-roman !important;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: upper-alpha"] {
+          list-style-type: upper-alpha !important;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="list-style-type: lower-alpha"] {
+          list-style-type: lower-alpha !important;
+        }
+
+        /* Force numbered list display with proper styling */
+        .syncfusion-editor .e-rte-content ol li::marker {
+          color: #374151;
+          font-weight: 600;
+          font-size: 1em;
+        }
+
+        /* Ensure all ordered lists have proper numbering */
+        .syncfusion-editor .e-rte-content ol {
+          counter-reset: item;
+        }
+
+        .syncfusion-editor .e-rte-content ol li {
+          display: list-item;
+          list-style-position: outside;
+        }
+
+        /* Remove the problematic decimal-leading-zero override */
+        .syncfusion-editor .e-rte-content ol li {
+          list-style-type: inherit;
+        }
+
+        /* Specific overrides for each numbering type */
+        .syncfusion-editor .e-rte-content ol[style*="decimal"] li {
+          list-style-type: decimal;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="decimal-leading-zero"] li {
+          list-style-type: decimal-leading-zero;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="upper-roman"] li {
+          list-style-type: upper-roman;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="lower-roman"] li {
+          list-style-type: lower-roman;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="upper-alpha"] li {
+          list-style-type: upper-alpha;
+        }
+
+        .syncfusion-editor .e-rte-content ol[style*="lower-alpha"] li {
+          list-style-type: lower-alpha;
+        }
+
+        /* Numbered list styles */
+        .syncfusion-editor .e-rte-content ol.number-decimal {
+          list-style-type: decimal;
+        }
+
+        .syncfusion-editor .e-rte-content ol.number-decimal-leading {
+          list-style-type: decimal-leading-zero;
+        }
+
+        .syncfusion-editor .e-rte-content ol.number-upper-roman {
+          list-style-type: upper-roman;
+        }
+
+        .syncfusion-editor .e-rte-content ol.number-lower-roman {
+          list-style-type: lower-roman;
+        }
+
+        .syncfusion-editor .e-rte-content ol.number-upper-alpha {
+          list-style-type: upper-alpha;
+        }
+
+        .syncfusion-editor .e-rte-content ol.number-lower-alpha {
+          list-style-type: lower-alpha;
+        }
+
+        /* MS Word-like Table Enhancements */
+        .syncfusion-editor .e-rte-content table {
+          border-collapse: collapse;
+          width: 100%;
+          margin: 1em 0;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .syncfusion-editor .e-rte-content table td,
+        .syncfusion-editor .e-rte-content table th {
+          padding: 12px 16px;
+          vertical-align: top;
+          border: 1px solid #d1d5db;
+        }
+
+        .syncfusion-editor .e-rte-content table th {
+          background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
+          font-weight: 600;
+          color: #1e293b;
+          text-align: left;
+        }
+
+        .syncfusion-editor .e-rte-content table tr:nth-child(even) {
+          background-color: #f8fafc;
+        }
+
+        .syncfusion-editor .e-rte-content table tr:hover {
+          background-color: #f1f5f9;
+        }
+
+        /* Dark mode bullet styles */
+        .dark .syncfusion-editor .e-rte-content ul.bullet-check li::before {
+          color: #10b981;
+        }
+
+        .dark .syncfusion-editor .e-rte-content ul.bullet-arrow li::before {
+          color: #60a5fa;
+        }
+
+        .dark .syncfusion-editor .e-rte-content ul.bullet-triangle li::before {
+          color: #f87171;
+        }
+
+        /* Dark mode table styles */
+        .dark .syncfusion-editor .e-rte-content table th {
+          background: linear-gradient(to bottom, #334155 0%, #1e293b 100%);
+          color: #e2e8f0;
+          border-color: #475569;
+        }
+
+        .dark .syncfusion-editor .e-rte-content table td {
+          border-color: #475569;
+          color: #e2e8f0;
+        }
+
+        .dark .syncfusion-editor .e-rte-content table tr:nth-child(even) {
+          background-color: #1e293b;
+        }
+
+        .dark .syncfusion-editor .e-rte-content table tr:hover {
+          background-color: #334155;
         }
       `}</style>
 
