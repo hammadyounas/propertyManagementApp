@@ -135,6 +135,116 @@ const TemplateEditor = ({
     setEditorValue(value || defaultValue || "");
   }, [value, defaultValue]);
 
+  // Handle dropdown height issue with MutationObserver
+  useEffect(() => {
+    if (!mounted || !rteRef.current) return;
+
+    const applyDropdownStyles = (dropdown) => {
+      if (!dropdown) return;
+      
+      // Check if it's a visible dropdown
+      const isVisible = window.getComputedStyle(dropdown).display !== 'none';
+      
+      if (isVisible) {
+        // Get the list inside dropdown
+        const list = dropdown.querySelector('ul, .e-list-parent, .e-content');
+        const items = list ? list.querySelectorAll('li, .e-list-item') : [];
+        
+        // If it has many items (likely the styles dropdown with 17 items)
+        if (items.length > 8) {
+          dropdown.style.setProperty('max-height', '300px', 'important');
+          dropdown.style.setProperty('overflow-y', 'auto', 'important');
+          dropdown.style.setProperty('overflow-x', 'hidden', 'important');
+          
+          console.log('Applied dropdown styles to element with', items.length, 'items');
+        }
+      }
+    };
+
+    const handleDropdownOpen = () => {
+      setTimeout(() => {
+        const dropdowns = document.querySelectorAll('.e-dropdown-popup, .e-rte-dropdown-popup, .e-popup, [class*="dropdown"]');
+        dropdowns.forEach(applyDropdownStyles);
+      }, 50);
+    };
+
+    // MutationObserver to watch for dynamically added dropdowns
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            // Check if the added node is a dropdown
+            if (node.classList && (
+              node.classList.contains('e-dropdown-popup') ||
+              node.classList.contains('e-rte-dropdown-popup') ||
+              node.classList.contains('e-popup')
+            )) {
+              applyDropdownStyles(node);
+            }
+            
+            // Also check children
+            const childDropdowns = node.querySelectorAll?.('.e-dropdown-popup, .e-rte-dropdown-popup, .e-popup');
+            childDropdowns?.forEach(applyDropdownStyles);
+          }
+        });
+      });
+    });
+
+    // Start observing the document body for dropdown additions
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    // Listen for clicks
+    const editorElement = rteRef.current.element;
+    if (editorElement) {
+      editorElement.addEventListener('click', handleDropdownOpen);
+    }
+    document.addEventListener('click', handleDropdownOpen);
+
+    // Initial check
+    handleDropdownOpen();
+
+    return () => {
+      observer.disconnect();
+      if (editorElement) {
+        editorElement.removeEventListener('click', handleDropdownOpen);
+      }
+      document.removeEventListener('click', handleDropdownOpen);
+    };
+  }, [mounted]);
+
+  // Handle paste events to ensure imported content is displayed
+  const handlePaste = (args) => {
+    console.log('Paste event:', args);
+    // Ensure pasted content retains formatting
+    if (args.value) {
+      console.log('Pasted content:', args.value.substring(0, 200));
+    }
+  };
+
+  // Handle actionBegin to process imported content
+  const handleActionBegin = (args) => {
+    if (args.requestType === 'Paste' || args.requestType === 'EnterAction') {
+      console.log('Action Begin - Import/Paste:', args);
+    }
+  };
+
+  // Handle afterPaste to ensure content is visible
+  const handleAfterPaste = (args) => {
+    console.log('After Paste:', args);
+    
+    // Force the editor to refresh and show the content
+    if (rteRef.current) {
+      const content = rteRef.current.value;
+      if (content && content.trim() !== '') {
+        console.log('Content after paste:', content.substring(0, 200));
+        setEditorValue(content);
+      }
+    }
+  };
+
   // Expose insertAtCursor method to parent
   useEffect(() => {
     if (!onInsertAtCursor || !rteRef.current) return;
@@ -169,18 +279,18 @@ const TemplateEditor = ({
   };
 
   // Define number format list (hierarchical numbering)
-  // const numberFormatList = {
-  //   types: [
-  //     { text: 'Number', value: 'decimal' },
-  //   ]
-  // };
+  const numberFormatList = {
+    types: [
+      { text: 'Number', value: 'decimal' },
+    ]
+  };
 
   // Define bullet format list (rich bullet styles)
   const bulletFormatList = {
     types: [
-      { text: 'Disc', value: 'disc' },
-      { text: 'Circle', value: 'circle' },
-      { text: 'Square', value: 'square' },
+      { text: '⬤ Disc', value: 'disc' },
+      { text: '○ Circle', value: 'circle' },
+      { text: '■ Square', value: 'square' },
     ]
   };
 
@@ -256,7 +366,7 @@ const TemplateEditor = ({
     link: ['Open', 'Edit', 'UnLink'],
     table: [
       'TableHeader', 'TableRows', 'TableColumns', 'BackgroundColor', '-',
-      'Alignments', 'TableCellVerticalAlign', 'Styles', 'TableRemove'
+      'Alignments', 'TableCellVerticalAlign', 'TableRemove'
     ]
   };
 
@@ -304,6 +414,18 @@ const TemplateEditor = ({
     ]
   };
 
+  // File Manager settings for importing documents
+  const fileManagerSettings = {
+    enable: true,
+    path: '/',
+    ajaxSettings: {
+      url: null,
+      getImageUrl: null,
+      uploadUrl: null,
+      downloadUrl: null
+    }
+  };
+
   if (!mounted) {
     return (
       <div className={`form-group ${className}`}>
@@ -340,7 +462,7 @@ const TemplateEditor = ({
           value={editorValue}
           placeholder={placeholder}
           toolbarSettings={toolbarSettings}
-          // numberFormatList={numberFormatList}
+          numberFormatList={numberFormatList}
           bulletFormatList={bulletFormatList}
           fontFamily={fontFamily}
           fontSize={fontSize}
@@ -349,10 +471,14 @@ const TemplateEditor = ({
           insertImageSettings={insertImageSettings}
           quickToolbarSettings={quickToolbarSettings}
           pasteCleanupSettings={pasteCleanupSettings}
+          fileManagerSettings={fileManagerSettings}
           height="calc(100vh - 200px)"
           enableHtmlEncode={false}
           enableXhtml={true}
           enableTabKey={true}
+          actionBegin={handleActionBegin}
+          afterPaste={handleAfterPaste}
+          pasteCleanup={handlePaste}
           change={(args) => {
             const content = args.value || "";
             setEditorValue(content);
@@ -495,6 +621,24 @@ const TemplateEditor = ({
           border-color: #3b82f6;
         }
 
+        /* Syncfusion popup/dropdown light mode */
+        .e-dropdown-popup,
+        .e-popup {
+          background-color: #ffffff !important;
+          border-color: #d1d5db !important;
+        }
+
+        .e-dropdown-popup .e-item,
+        .e-popup .e-item {
+          color: #1f2937 !important;
+          background-color: transparent !important;
+        }
+        
+        .e-dropdown-popup .e-item:hover,
+        .e-popup .e-item:hover {
+          background-color: #f3f4f6 !important;
+        }
+
         /* Syncfusion popup/dropdown dark mode */
         .dark .e-dropdown-popup,
         .dark .e-popup {
@@ -510,6 +654,87 @@ const TemplateEditor = ({
         .dark .e-dropdown-popup .e-item:hover,
         .dark .e-popup .e-item:hover {
           background-color: #334155 !important;
+        }
+
+        /* Color picker popup styling */
+        .e-colorpicker-popup {
+          background-color: #ffffff !important;
+          border: 1px solid #d1d5db !important;
+        }
+
+        .dark .e-colorpicker-popup {
+          background-color: #1e293b !important;
+          border-color: #475569 !important;
+        }
+
+        /* Fix for table styles dropdown - limit height and add scroll - AGGRESSIVE TARGETING */
+        .e-dropdown-popup:not(.e-colorpicker-popup),
+        .e-popup.e-dropdown-popup,
+        div[class*="dropdown"][class*="popup"],
+        .e-rte-dropdown-popup,
+        .e-rte-quick-popup .e-dropdown-popup,
+        .e-rte-quick-toolbar .e-dropdown-popup,
+        .e-richtexteditor .e-dropdown-popup,
+        body .e-dropdown-popup.e-popup-open,
+        body > .e-dropdown-popup {
+          max-height: 300px !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+        }
+
+        /* Force scrollbar styling on all dropdowns */
+        .e-dropdown-popup::-webkit-scrollbar,
+        .e-popup.e-dropdown-popup::-webkit-scrollbar,
+        .e-rte-dropdown-popup::-webkit-scrollbar {
+          width: 8px !important;
+          height: 8px !important;
+        }
+
+        .e-dropdown-popup::-webkit-scrollbar-track,
+        .e-popup.e-dropdown-popup::-webkit-scrollbar-track,
+        .e-rte-dropdown-popup::-webkit-scrollbar-track {
+          background: #f1f1f1 !important;
+          border-radius: 4px !important;
+        }
+
+        .e-dropdown-popup::-webkit-scrollbar-thumb,
+        .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb,
+        .e-rte-dropdown-popup::-webkit-scrollbar-thumb {
+          background: #888 !important;
+          border-radius: 4px !important;
+        }
+
+        .e-dropdown-popup::-webkit-scrollbar-thumb:hover,
+        .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb:hover,
+        .e-rte-dropdown-popup::-webkit-scrollbar-thumb:hover {
+          background: #555 !important;
+        }
+
+        /* Dark mode scrollbar */
+        .dark .e-dropdown-popup::-webkit-scrollbar-track,
+        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-track,
+        .dark .e-rte-dropdown-popup::-webkit-scrollbar-track {
+          background: #1e293b !important;
+        }
+
+        .dark .e-dropdown-popup::-webkit-scrollbar-thumb,
+        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb,
+        .dark .e-rte-dropdown-popup::-webkit-scrollbar-thumb {
+          background: #475569 !important;
+        }
+
+        .dark .e-dropdown-popup::-webkit-scrollbar-thumb:hover,
+        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb:hover,
+        .dark .e-rte-dropdown-popup::-webkit-scrollbar-thumb:hover {
+          background: #64748b !important;
+        }
+
+        /* Ensure dropdown content can scroll */
+        .e-dropdown-popup .e-content,
+        .e-dropdown-popup .e-list-parent,
+        .e-rte-dropdown-popup .e-content,
+        .e-rte-dropdown-popup .e-list-parent {
+          max-height: none !important;
         }
 
         /* MS Word Table Styles */
