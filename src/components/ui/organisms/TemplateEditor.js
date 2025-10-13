@@ -480,7 +480,6 @@ const TemplateEditor = ({
 
   return (
     <div className="relative">
-      
       <div className="syncfusion-editor">
         <SyncfusionRTE
           forwardRef={rteRef}

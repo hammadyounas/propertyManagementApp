@@ -20,7 +20,14 @@ export default function CreateTextEditorPage({ templateId = null }) {
     textFromFile,
     handleImportFile,
     insertPlaceholder,
-    setInse
+    showImportModal,
+    setShowImportModal,
+    isDragging,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleBrowseClick,
   } = useTextEditor(templateId)
   
   return (
@@ -42,6 +49,14 @@ export default function CreateTextEditorPage({ templateId = null }) {
      textFromFile={textFromFile}
      handleImportFile={handleImportFile}
      insertPlaceholder={insertPlaceholder}
+     showImportModal={showImportModal}
+     setShowImportModal={setShowImportModal}
+     isDragging={isDragging}
+     handleDragEnter={handleDragEnter}
+     handleDragLeave={handleDragLeave}
+     handleDragOver={handleDragOver}
+     handleDrop={handleDrop}
+     handleBrowseClick={handleBrowseClick}
    />
   )
 }

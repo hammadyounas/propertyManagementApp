@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 export default function useTextEditor(templateId = null) {
   const router = useRouter();
@@ -9,6 +9,8 @@ export default function useTextEditor(templateId = null) {
   const [category, setCategory] = useState('uncategorized')
   const [loading, setLoading] = useState(false)
   const [selectedPlaceholder, setSelectedPlaceholder] = useState(null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   // Load template data if editing
@@ -35,9 +37,96 @@ export default function useTextEditor(templateId = null) {
   }, [templateId]);
 
   const handleTriggerImport = () => {
+    setShowImportModal(true);
+  };
+
+  const handleBrowseClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
       fileInputRef.current.click();
+    }
+  };
+
+  // Handle drag events
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      await handleFileFromDrop(file);
+    }
+  };
+
+  const handleFileFromDrop = async (file) => {
+    try {
+      // Set title from file name (without extension) if title is empty
+      const fileName = file.name || "";
+      const baseName = fileName.replace(/\.[^.]+$/g, "");
+      if (!title && baseName) {
+        setTitle(baseName);
+      }
+
+      const ext = file.name.split(".").pop().toLowerCase();
+
+      if (ext === "docx") {
+        const { default: mammoth } = await import("mammoth/mammoth.browser");
+        const buffer = await arrayBufferFromFile(file);
+        const { value: html } = await mammoth.convertToHtml(
+          { arrayBuffer: buffer },
+          {
+            styleMap: ["p[style-name='Normal'] => p:fresh"],
+          }
+        );
+        setEditorValue(html || "");
+        setShowImportModal(false);
+        toast.success('Document imported successfully!');
+        return;
+      }
+
+      if (ext === "html" || ext === "htm") {
+        const html = await textFromFile(file);
+        setEditorValue(html || "");
+        setShowImportModal(false);
+        toast.success('HTML file imported successfully!');
+        return;
+      }
+
+      if (ext === "txt") {
+        const txt = await textFromFile(file);
+        const escaped = txt
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+        const html = `<p>${escaped.replace(/\n/g, "<br/>")}</p>`;
+        setEditorValue(html);
+        setShowImportModal(false);
+        toast.success('Text file imported successfully!');
+        return;
+      }
+
+      toast.error("Unsupported file type. Please upload a .docx, .html, or .txt file.");
+    } catch (err) {
+      console.error("Failed to import file:", err);
+      toast.error("Failed to import file. Please try another file.");
     }
   };
 
@@ -62,53 +151,10 @@ export default function useTextEditor(templateId = null) {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
 
-      // Set title from file name (without extension) if title is empty
-      try {
-        const fileName = file.name || "";
-        const baseName = fileName.replace(/\.[^.]+$/g, "");
-        if (!title && baseName) {
-          setTitle(baseName);
-        }
-      } catch {}
-
-      const ext = file.name.split(".").pop().toLowerCase();
-
-      if (ext === "docx") {
-        const { default: mammoth } = await import("mammoth/mammoth.browser");
-        const buffer = await arrayBufferFromFile(file);
-        const { value: html } = await mammoth.convertToHtml(
-          { arrayBuffer: buffer },
-          {
-            styleMap: ["p[style-name='Normal'] => p:fresh"],
-          }
-        );
-        setEditorValue(html || "");
-        return;
-      }
-
-      if (ext === "html" || ext === "htm") {
-        const html = await textFromFile(file);
-        setEditorValue(html || "");
-        return;
-      }
-
-      if (ext === "txt") {
-        const txt = await textFromFile(file);
-        const escaped = txt
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
-        const html = `<p>${escaped.replace(/\n/g, "<br/>")}</p>`;
-        setEditorValue(html);
-        return;
-      }
-
-      alert(
-        "Unsupported file type. Please upload a .docx, .html, or .txt file."
-      );
+      await handleFileFromDrop(file);
     } catch (err) {
       console.error("Failed to import file:", err);
-      alert("Failed to import file. Please try another file.");
+      toast.error("Failed to import file. Please try another file.");
     }
   };
 
@@ -192,5 +238,13 @@ export default function useTextEditor(templateId = null) {
     textFromFile,
     handleImportFile,
     insertPlaceholder,
+    showImportModal,
+    setShowImportModal,
+    isDragging,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleBrowseClick,
   }
 }

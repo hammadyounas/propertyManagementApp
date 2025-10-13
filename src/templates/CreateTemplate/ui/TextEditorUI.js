@@ -22,6 +22,14 @@ export default function TemplateEditorUI({
   textFromFile,
   handleImportFile,
   insertPlaceholder,
+  showImportModal,
+  setShowImportModal,
+  isDragging,
+  handleDragEnter,
+  handleDragLeave,
+  handleDragOver,
+  handleDrop,
+  handleBrowseClick,
 }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
@@ -203,6 +211,59 @@ export default function TemplateEditorUI({
         style={{ display: "none" }}
         onChange={handleImportFile}
       />
+
+      {/* Import Modal with Drag & Drop */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
+                  Import Document
+                </h3>
+                <button
+                  onClick={() => setShowImportModal(false)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                >
+                  <Icon icon="mdi:close" className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Drag and Drop Zone */}
+              <div
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={handleBrowseClick}
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+                  isDragging
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                    : 'border-gray-300 dark:border-slate-600 hover:border-blue-400'
+                }`}
+              >
+                <Icon
+                  icon="mdi:file-document-outline"
+                  className="w-16 h-16 mx-auto text-gray-400 dark:text-slate-500 mb-4"
+                />
+                <p className="text-sm text-gray-600 dark:text-slate-300 mb-2">
+                  {isDragging ? 'Drop file here' : 'Drag & drop your file here'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mb-3">or</p>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Browse Files
+                </button>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-4">
+                  Supported formats: .docx, .html, .txt
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Additional styles for better media display */}
       <style jsx global>{`
