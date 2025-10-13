@@ -313,8 +313,8 @@ const TemplateEditor = ({
   // Define bullet format list (rich bullet styles)
   const bulletFormatList = {
     types: [
-      { text: '⬤ Disc', value: 'disc' },
       { text: '○ Circle', value: 'circle' },
+      { text: '⬤ Disc', value: 'disc' },
       { text: '■ Square', value: 'square' },
     ]
   };
