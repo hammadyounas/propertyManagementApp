@@ -77,23 +77,27 @@ const TemplateEditor = ({
     
     // Function to apply custom bullet styles
     const applyCustomBulletStyle = (bulletType) => {
-      const selection = editor.getSelection();
-      if (!selection || !selection.rangeCount) return;
+      try {
+        const selection = editor.contentModule?.getDocument()?.getSelection() || window.getSelection();
+        if (!selection || !selection.rangeCount) return;
 
-      const range = selection.getRangeAt(0);
-      const listElement = range.commonAncestorContainer.closest('ul');
-      
-      if (listElement) {
-        // Remove existing data-bullet attributes
-        listElement.removeAttribute('data-bullet');
+        const range = selection.getRangeAt(0);
+        const listElement = range.commonAncestorContainer.closest?.('ul');
         
-        // Apply new bullet style
-        if (bulletType !== 'disc' && bulletType !== 'circle' && bulletType !== 'square') {
-          listElement.setAttribute('data-bullet', bulletType);
-          listElement.style.listStyleType = 'none';
-        } else {
-          listElement.style.listStyleType = bulletType;
+        if (listElement) {
+          // Remove existing data-bullet attributes
+          listElement.removeAttribute('data-bullet');
+          
+          // Apply new bullet style
+          if (bulletType !== 'disc' && bulletType !== 'circle' && bulletType !== 'square') {
+            listElement.setAttribute('data-bullet', bulletType);
+            listElement.style.listStyleType = 'none';
+          } else {
+            listElement.style.listStyleType = bulletType;
+          }
         }
+      } catch (error) {
+        console.error('Error in applyCustomBulletStyle:', error);
       }
     };
 
@@ -106,27 +110,43 @@ const TemplateEditor = ({
     // Listen for editor changes to ensure list styles are applied correctly
     const handleEditorChange = () => {
       // Ensure numbering styles are applied correctly
-      const orderedLists = editor.getDocument().querySelectorAll('ol');
-      orderedLists.forEach(list => {
-        const currentStyle = list.style.listStyleType;
-        if (currentStyle) {
-          // Force the style to be applied to both the list and its items
-          list.style.listStyleType = currentStyle;
-          const listItems = list.querySelectorAll('li');
-          listItems.forEach(item => {
-            item.style.listStyleType = currentStyle;
-          });
-        }
-      });
+      try {
+        const contentElement = editor.contentModule?.getDocument() || editor.inputElement;
+        if (!contentElement) return;
+        
+        const orderedLists = contentElement.querySelectorAll('ol');
+        orderedLists.forEach(list => {
+          const currentStyle = list.style.listStyleType;
+          if (currentStyle) {
+            // Force the style to be applied to both the list and its items
+            list.style.listStyleType = currentStyle;
+            const listItems = list.querySelectorAll('li');
+            listItems.forEach(item => {
+              item.style.listStyleType = currentStyle;
+            });
+          }
+        });
+      } catch (error) {
+        console.error('Error in handleEditorChange:', error);
+      }
     };
 
     // Add the change handler
-    editor.addEventListener('change', handleEditorChange);
+    try {
+      editor.addEventListener('change', handleEditorChange);
+    } catch (error) {
+      console.error('Error adding change event listener:', error);
+    }
     
     // Cleanup
     return () => {
-      if (editor && editor.removeEventListener) {
-        editor.removeEventListener('change', handleEditorChange);
+      try {
+        if (editor && editor.removeEventListener && typeof editor.removeEventListener === 'function') {
+          editor.removeEventListener('change', handleEditorChange);
+        }
+      } catch (error) {
+        // Silently handle cleanup errors when component unmounts
+        console.debug('Editor cleanup error (safe to ignore):', error);
       }
     };
   }, [mounted]);
@@ -197,7 +217,7 @@ const TemplateEditor = ({
     });
 
     // Listen for clicks
-    const editorElement = rteRef.current.element;
+    const editorElement = rteRef.current?.element;
     if (editorElement) {
       editorElement.addEventListener('click', handleDropdownOpen);
     }
@@ -207,11 +227,16 @@ const TemplateEditor = ({
     handleDropdownOpen();
 
     return () => {
-      observer.disconnect();
-      if (editorElement) {
-        editorElement.removeEventListener('click', handleDropdownOpen);
+      try {
+        observer.disconnect();
+        if (editorElement) {
+          editorElement.removeEventListener('click', handleDropdownOpen);
+        }
+        document.removeEventListener('click', handleDropdownOpen);
+      } catch (error) {
+        // Silently handle cleanup errors when component unmounts
+        console.debug('Dropdown observer cleanup error (safe to ignore):', error);
       }
-      document.removeEventListener('click', handleDropdownOpen);
     };
   }, [mounted]);
 
