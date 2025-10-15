@@ -3,10 +3,10 @@
 import { useRef, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 
-const SyncfusionRTE = dynamic(
+const SyncfusionDocEditor = dynamic(
   async () => {
-    // Import Syncfusion RTE and styles
-    const { RichTextEditorComponent, Inject, Toolbar, Image, Link, HtmlEditor, QuickToolbar, Table, FileManager, EmojiPicker, Audio, Video, FormatPainter, PasteCleanup } = await import("@syncfusion/ej2-react-richtexteditor")
+    // Import Syncfusion DocumentEditor and styles
+    const { DocumentEditorContainerComponent, Toolbar, Inject, Print } = await import("@syncfusion/ej2-react-documenteditor")
     
     // Import Syncfusion styles
     await import("@syncfusion/ej2-base/styles/material.css")
@@ -17,15 +17,47 @@ const SyncfusionRTE = dynamic(
     await import("@syncfusion/ej2-navigations/styles/material.css")
     await import("@syncfusion/ej2-splitbuttons/styles/material.css")
     await import("@syncfusion/ej2-dropdowns/styles/material.css")
-    await import("@syncfusion/ej2-richtexteditor/styles/material.css")
+    await import("@syncfusion/ej2-documenteditor/styles/material.css")
 
-    const RTEWrapper = ({ forwardRef, ...props }) => (
-      <RichTextEditorComponent ref={forwardRef} {...props}>
-        <Inject services={[Toolbar, Image, Link, HtmlEditor, QuickToolbar, Table, FileManager, EmojiPicker, Audio, Video, FormatPainter, PasteCleanup]} />
-      </RichTextEditorComponent>
+    const DocEditorWrapper = ({ forwardRef, height, showPropertiesPane, contentChange, ...otherProps }) => (
+      <DocumentEditorContainerComponent 
+        ref={forwardRef}
+        width="90%"
+        height={height || "700px"}
+        enableToolbar={true}
+        enablePrint={true}
+        showPropertiesPane={showPropertiesPane}
+        serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
+        contentChange={contentChange}
+        // Performance optimizations
+        enableOptimizedTextMeasuring={true}
+        enableSelectionResize={false}
+        enableSpellCheck={false}
+        enableAutoFocus={true}
+        // Text direction settings
+        locale="en-US"
+        // Disable unnecessary features for better performance
+        enableHyperlinkDialog={false}
+        enableBookmarkDialog={false}
+        enableTableOfContentsDialog={false}
+        enableFootnotesDialog={false}
+        enableTableDialog={false}
+        enableColumnsDialog={false}
+        enablePageSetupDialog={false}
+        enableStyleDialog={false}
+        enableFontDialog={false}
+        enableParagraphDialog={false}
+        enableListDialog={false}
+        enableTableOptionsDialog={false}
+        enableBordersAndShadingDialog={false}
+        enableTableStylesDialog={false}
+        enableTablePropertiesDialog={false}
+      >
+        <Inject services={[Toolbar, Print]} />
+      </DocumentEditorContainerComponent>
     )
 
-    return RTEWrapper
+    return DocEditorWrapper
   },
   { 
     ssr: false,
@@ -39,7 +71,7 @@ const SyncfusionRTE = dynamic(
           </div>
         </div>
         <div className="h-32 bg-white dark:bg-slate-800 rounded-b-lg flex items-center justify-center">
-          <span className="text-gray-500 text-sm dark:text-slate-200">Loading editor...</span>
+          <span className="text-gray-500 text-sm dark:text-slate-200">Loading document editor...</span>
         </div>
       </div>
     )
@@ -63,393 +95,808 @@ const TemplateEditor = ({
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
-  const rteRef = useRef(null);
+  const docEditorRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Add custom bullet styles functionality
+  // Set text direction to LTR (Left-to-Right) for English editing
   useEffect(() => {
-    if (!mounted || !rteRef.current) return;
-
-    const editor = rteRef.current;
+    if (!mounted || !docEditorRef.current?.documentEditor) return;
     
-    // Function to apply custom bullet styles
-    const applyCustomBulletStyle = (bulletType) => {
+    const setTextDirectionLTR = () => {
       try {
-        const selection = editor.contentModule?.getDocument()?.getSelection() || window.getSelection();
-        if (!selection || !selection.rangeCount) return;
-
-        const range = selection.getRangeAt(0);
-        const listElement = range.commonAncestorContainer.closest?.('ul');
-        
-        if (listElement) {
-          // Remove existing data-bullet attributes
-          listElement.removeAttribute('data-bullet');
+        const editor = docEditorRef.current.documentEditor;
+        if (editor) {
+          // Force LTR text direction
+          editor.selection.paragraphFormat.bidi = false;
+          editor.selection.paragraphFormat.textAlignment = 'Left';
           
-          // Apply new bullet style
-          if (bulletType !== 'disc' && bulletType !== 'circle' && bulletType !== 'square') {
-            listElement.setAttribute('data-bullet', bulletType);
-            listElement.style.listStyleType = 'none';
-          } else {
-            listElement.style.listStyleType = bulletType;
+          // Set document locale to English
+          if (editor.documentEditor) {
+            editor.documentEditor.locale = 'en-US';
           }
+          
+          // Disable RTL support completely
+          editor.documentHelper.enableRtlSupport = false;
+          
+          // Set default paragraph format for new content
+          const defaultFormat = editor.selection.paragraphFormat;
+          defaultFormat.bidi = false;
+          defaultFormat.textAlignment = 'Left';
+          
+          console.log('Text direction set to LTR (Left-to-Right)');
         }
       } catch (error) {
-        console.error('Error in applyCustomBulletStyle:', error);
+        console.error('Error setting text direction:', error);
       }
     };
-
-    // Add event listeners for custom bullet buttons (if they exist)
-    const addCustomBulletListeners = () => {
-      // This would be called when custom bullet buttons are clicked
-      // For now, we'll handle it through the editor's change event
-    };
-
-    // Listen for editor changes to ensure list styles are applied correctly
-    const handleEditorChange = () => {
-      // Ensure numbering styles are applied correctly
-      try {
-        const contentElement = editor.contentModule?.getDocument() || editor.inputElement;
-        if (!contentElement) return;
-        
-        const orderedLists = contentElement.querySelectorAll('ol');
-        orderedLists.forEach(list => {
-          const currentStyle = list.style.listStyleType;
-          if (currentStyle) {
-            // Force the style to be applied to both the list and its items
-            list.style.listStyleType = currentStyle;
-            const listItems = list.querySelectorAll('li');
-            listItems.forEach(item => {
-              item.style.listStyleType = currentStyle;
-            });
-          }
-        });
-      } catch (error) {
-        console.error('Error in handleEditorChange:', error);
-      }
-    };
-
-    // Add the change handler
-    try {
-      editor.addEventListener('change', handleEditorChange);
-    } catch (error) {
-      console.error('Error adding change event listener:', error);
-    }
     
-    // Cleanup
-    return () => {
-      try {
-        if (editor && editor.removeEventListener && typeof editor.removeEventListener === 'function') {
-          editor.removeEventListener('change', handleEditorChange);
-        }
-      } catch (error) {
-        // Silently handle cleanup errors when component unmounts
-        console.debug('Editor cleanup error (safe to ignore):', error);
-      }
-    };
+    // Set direction with multiple attempts to ensure it sticks
+    setTimeout(setTextDirectionLTR, 500);
+    setTimeout(setTextDirectionLTR, 1000);
+    setTimeout(setTextDirectionLTR, 2000);
   }, [mounted]);
 
+  // Update editorValue when value or defaultValue changes
   useEffect(() => {
-    setEditorValue(value || defaultValue || "");
-  }, [value, defaultValue]);
+    if (editorValue !== undefined) {
+      setEditorValue(editorValue);
+    } else if (value || defaultValue) {
+      setEditorValue(value || defaultValue);
+    }
+  }, [value, defaultValue, editorValue]);
 
-  // Handle dropdown height issue with MutationObserver
+  // Load content into DocumentEditor when it's ready
   useEffect(() => {
-    if (!mounted || !rteRef.current) return;
-
-    const applyDropdownStyles = (dropdown) => {
-      if (!dropdown) return;
-      
-      // Check if it's a visible dropdown
-      const isVisible = window.getComputedStyle(dropdown).display !== 'none';
-      
-      if (isVisible) {
-        // Get the list inside dropdown
-        const list = dropdown.querySelector('ul, .e-list-parent, .e-content');
-        const items = list ? list.querySelectorAll('li, .e-list-item') : [];
-        
-        // If it has many items (likely the styles dropdown with 17 items)
-        if (items.length > 8) {
-          dropdown.style.setProperty('max-height', '300px', 'important');
-          dropdown.style.setProperty('overflow-y', 'auto', 'important');
-          dropdown.style.setProperty('overflow-x', 'hidden', 'important');
+    if (!mounted || !docEditorRef.current?.documentEditor) return;
+    
+    const loadContent = async () => {
+      try {
+        const editor = docEditorRef.current.documentEditor;
+        if (editorValue && editorValue.trim() !== '') {
+          debugDocumentContent(editorValue, 'Loading content');
+          const format = detectDocumentFormat(editorValue);
+          console.log('Detected document format:', format);
           
-          console.log('Applied dropdown styles to element with', items.length, 'items');
+          switch (format) {
+            case 'sfdt':
+              // Syncfusion Document Format - load directly to preserve all formatting
+              editor.open(editorValue);
+              break;
+            case 'html':
+              // HTML content - convert to proper document format
+              await loadHtmlContent(editor, editorValue);
+              break;
+            case 'text':
+              // Plain text content
+              editor.editor.insertText(editorValue);
+              break;
+            default:
+              console.warn('Unknown document format, treating as plain text');
+              editor.editor.insertText(editorValue);
+              break;
+          }
+          
+          // After loading content, ensure text direction is LTR
+          setTimeout(() => {
+            try {
+              editor.selection.paragraphFormat.bidi = false;
+              console.log('Text direction set to LTR after content load');
+            } catch (dirError) {
+              console.warn('Could not set text direction:', dirError);
+            }
+          }, 200);
+        }
+      } catch (error) {
+        console.error('Error loading content:', error);
+        // Try fallback loading methods
+        try {
+          console.log('Attempting fallback content loading...');
+          if (editorValue && typeof editorValue === 'string') {
+            const textContent = editorValue.replace(/<[^>]*>/g, '');
+            editor.editor.insertText(textContent);
+          }
+        } catch (fallbackError) {
+          console.error('Fallback loading also failed:', fallbackError);
         }
       }
     };
 
-    const handleDropdownOpen = () => {
-      setTimeout(() => {
-        const dropdowns = document.querySelectorAll('.e-dropdown-popup, .e-rte-dropdown-popup, .e-popup, [class*="dropdown"]');
-        dropdowns.forEach(applyDropdownStyles);
-      }, 50);
-    };
+    loadContent();
+  }, [mounted, editorValue]);
 
-    // MutationObserver to watch for dynamically added dropdowns
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) { // Element node
-            // Check if the added node is a dropdown
-            if (node.classList && (
-              node.classList.contains('e-dropdown-popup') ||
-              node.classList.contains('e-rte-dropdown-popup') ||
-              node.classList.contains('e-popup')
-            )) {
-              applyDropdownStyles(node);
+  // Function to properly load HTML content with styling
+  const loadHtmlContent = async (editor, htmlContent) => {
+    try {
+      // Clear existing content
+      editor.editor.clear();
+      
+      // Method 1: Try using Syncfusion's insertHtml method if available
+      try {
+        if (editor.editor.insertHtml) {
+          console.log('Using insertHtml method...');
+          editor.editor.insertHtml(htmlContent);
+          console.log('HTML inserted successfully with formatting');
+          return;
+        }
+      } catch (insertHtmlError) {
+        console.warn('insertHtml method failed:', insertHtmlError);
+      }
+      
+      // Method 2: Try using Syncfusion's paste functionality
+      try {
+        console.log('Attempting to paste HTML content with formatting...');
+        // Create a clipboard event with HTML data
+        const clipboardData = new DataTransfer();
+        clipboardData.setData('text/html', htmlContent);
+        clipboardData.setData('text/plain', htmlContent.replace(/<[^>]*>/g, ''));
+        
+        // Use the editor's paste method
+        editor.editor.paste(htmlContent);
+        console.log('HTML pasted successfully with formatting');
+        return;
+      } catch (pasteError) {
+        console.warn('Paste method failed, trying alternative approach:', pasteError);
+      }
+      
+      // Method 2: Parse HTML and convert to document format manually
+      console.log('Using manual HTML parsing...');
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      
+      // Process each element and convert to document format
+      await processHtmlElements(editor, doc.body);
+      
+      } catch (error) {
+      console.error('Error processing HTML content:', error);
+      // Fallback: insert as plain text
+      const textContent = htmlContent.replace(/<[^>]*>/g, '');
+      editor.editor.insertText(textContent);
+    }
+  };
+
+  // Helper function to detect document format
+  const detectDocumentFormat = (content) => {
+    if (!content || typeof content !== 'string') {
+      return 'unknown';
+    }
+
+    // Check for Syncfusion Document Format (SFDT)
+    if (content.includes('"sections"') || 
+        content.includes('"characters"') || 
+        content.includes('"paragraphs"') ||
+        content.includes('"documentHelper"') ||
+        content.startsWith('{')) {
+      return 'sfdt';
+    }
+
+    // Check for HTML
+    if (content.includes('<') && content.includes('>')) {
+      return 'html';
+    }
+
+    // Check for plain text
+    return 'text';
+  };
+
+  // Debug function to log document content details
+  const debugDocumentContent = (content, operation) => {
+    if (!content) {
+      console.log(`${operation}: No content provided`);
+      return;
+    }
+    
+    console.log(`${operation}: Content length: ${content.length}`);
+    console.log(`${operation}: Content preview: ${content.substring(0, 100)}...`);
+    console.log(`${operation}: Content format: ${detectDocumentFormat(content)}`);
+    
+    if (content.includes('"sections"')) {
+      console.log(`${operation}: Contains sections - likely SFDT format`);
+    }
+    if (content.includes('<')) {
+      console.log(`${operation}: Contains HTML tags`);
+    }
+  };
+
+  // Process HTML elements and convert to document format
+  const processHtmlElements = async (editor, element) => {
+    for (const child of element.children) {
+      await processElement(editor, child);
+    }
+  };
+
+  // Process individual HTML element
+  const processElement = async (editor, element) => {
+    const tagName = element.tagName.toLowerCase();
+    const textContent = element.textContent.trim();
+    
+    if (!textContent) return;
+
+    switch (tagName) {
+      case 'h1':
+      case 'h2':
+      case 'h3':
+      case 'h4':
+      case 'h5':
+      case 'h6':
+        await insertHeading(editor, tagName, textContent);
+        break;
+      case 'p':
+        await insertParagraph(editor, textContent, element);
+        break;
+      case 'table':
+        await insertTable(editor, element);
+        break;
+      case 'ol':
+      case 'ul':
+        await insertList(editor, element);
+        break;
+      case 'strong':
+      case 'b':
+        await insertBoldText(editor, textContent);
+        break;
+      case 'em':
+      case 'i':
+        await insertItalicText(editor, textContent);
+        break;
+      default:
+        await insertParagraph(editor, textContent);
+        break;
+    }
+  };
+
+  // Insert heading with proper formatting
+  const insertHeading = async (editor, level, text) => {
+    editor.editor.insertText(text);
+    const range = editor.selection;
+    const paragraphFormat = editor.selection.getFormat(2); // Get paragraph format
+    
+    // Apply heading style based on level
+    const headingStyle = {
+      'h1': 'Heading 1',
+      'h2': 'Heading 2', 
+      'h3': 'Heading 3',
+      'h4': 'Heading 4',
+      'h5': 'Heading 5',
+      'h6': 'Heading 6'
+    };
+    
+    editor.selection.applyFormat('styleName', headingStyle[level]);
+    editor.editor.insertBreak(0); // Insert line break after heading
+  };
+
+  // Insert paragraph with proper formatting
+  const insertParagraph = async (editor, text, element = null) => {
+    if (element) {
+      // Check for inline formatting
+      const hasStrong = element.querySelector('strong, b');
+      const hasEm = element.querySelector('em, i');
+      
+      if (hasStrong || hasEm) {
+        // Insert with formatting
+        await insertFormattedText(editor, text, element);
+      } else {
+        editor.editor.insertText(text);
+        editor.editor.insertBreak(0);
+      }
+    } else {
+      editor.editor.insertText(text);
+      editor.editor.insertBreak(0);
+    }
+  };
+
+  // Insert formatted text
+  const insertFormattedText = async (editor, text, element) => {
+    editor.editor.insertText(text);
+    
+    // Apply formatting based on element content
+    if (element.querySelector('strong, b')) {
+      editor.selection.applyFormat('bold', true);
+    }
+    if (element.querySelector('em, i')) {
+      editor.selection.applyFormat('italic', true);
+    }
+    
+    editor.editor.insertBreak(0);
+  };
+
+  // Insert bold text
+  const insertBoldText = async (editor, text) => {
+    editor.editor.insertText(text);
+    editor.selection.applyFormat('bold', true);
+    editor.editor.insertBreak(0);
+  };
+
+  // Insert italic text
+  const insertItalicText = async (editor, text) => {
+    editor.editor.insertText(text);
+    editor.selection.applyFormat('italic', true);
+    editor.editor.insertBreak(0);
+  };
+
+  // Insert table
+  const insertTable = async (editor, tableElement) => {
+    const rows = tableElement.querySelectorAll('tr');
+    if (rows.length > 0) {
+      const cols = rows[0].querySelectorAll('td, th').length;
+      
+      // Insert table with proper dimensions
+      editor.editor.insertTable(rows.length, cols, 0, 0);
+      
+      // Fill table content
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].querySelectorAll('td, th');
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.trim();
+          if (cellText) {
+            editor.editor.insertText(cellText);
+          }
+          // Move to next cell
+          if (j < cells.length - 1) {
+            editor.editor.moveRight();
+          }
+        }
+        // Move to next row
+        if (i < rows.length - 1) {
+          editor.editor.moveDown();
+        }
+      }
+    }
+    editor.editor.insertBreak(0);
+  };
+
+  // Insert list
+  const insertList = async (editor, listElement) => {
+    const items = listElement.querySelectorAll('li');
+    const isOrdered = listElement.tagName.toLowerCase() === 'ol';
+    
+    for (const item of items) {
+      const text = item.textContent.trim();
+      if (text) {
+        editor.editor.insertText(text);
+        
+        // Apply list formatting
+        if (isOrdered) {
+          editor.selection.applyFormat('listFormat', { listType: 'NumberList' });
+        } else {
+          editor.selection.applyFormat('listFormat', { listType: 'BulletList' });
+        }
+        
+        editor.editor.insertBreak(0);
+      }
+    }
+  };
+
+  // Debounced content change handler for better performance
+  const [contentChangeTimeout, setContentChangeTimeout] = useState(null);
+  
+  const handleContentChange = () => {
+    // Clear existing timeout
+    if (contentChangeTimeout) {
+      clearTimeout(contentChangeTimeout);
+    }
+    
+    // Set new timeout to debounce rapid changes
+    const newTimeout = setTimeout(() => {
+      if (docEditorRef.current?.documentEditor) {
+        try {
+          // Get the document content in SFDT format (Syncfusion Document Format)
+          const content = docEditorRef.current.documentEditor.serialize();
+          debugDocumentContent(content, 'Saving content');
+          
+          // Update the editorValue state if setEditorValue is provided
+          if (setEditorValue) {
+            setEditorValue(content);
+          }
+          
+          // Call the onChange callback if provided
+          if (onChange) {
+            onChange(content);
+          }
+          
+          console.log('Content change handled successfully');
+        } catch (error) {
+          console.error('Error getting document content:', error);
+          // Fallback: try to get plain text
+          try {
+            const plainText = docEditorRef.current.documentEditor.editor.getText();
+            console.log('Fallback to plain text:', plainText.substring(0, 100) + '...');
+            
+            // Update the editorValue state if setEditorValue is provided
+            if (setEditorValue) {
+              setEditorValue(plainText);
             }
             
-            // Also check children
-            const childDropdowns = node.querySelectorAll?.('.e-dropdown-popup, .e-rte-dropdown-popup, .e-popup');
-            childDropdowns?.forEach(applyDropdownStyles);
+            // Call the onChange callback if provided
+            if (onChange) {
+              onChange(plainText);
+            }
+          } catch (fallbackError) {
+            console.error('Fallback content retrieval also failed:', fallbackError);
           }
-        });
-      });
-    });
+        }
+      }
+    }, 300); // 300ms debounce for better typing performance
+    
+    setContentChangeTimeout(newTimeout);
+  };
 
-    // Start observing the document body for dropdown additions
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    // Listen for clicks
-    const editorElement = rteRef.current?.element;
-    if (editorElement) {
-      editorElement.addEventListener('click', handleDropdownOpen);
+  // Export helpers
+  const handleExport = (format = 'Pdf') => {
+    try {
+      const editor = docEditorRef.current?.documentEditor;
+      if (!editor) return;
+      const fileName = (label || name || 'Document').toString();
+      editor.save(fileName, format);
+    } catch (error) {
+      console.error('Export failed:', error);
     }
-    document.addEventListener('click', handleDropdownOpen);
+  };
 
-    // Initial check
-    handleDropdownOpen();
+  const handlePrint = () => {
+    try {
+      const editor = docEditorRef.current?.documentEditor;
+      if (!editor) return;
+      editor.print();
+    } catch (error) {
+      console.error('Print failed:', error);
+    }
+  };
+
+  const handleImportDocument = () => {
+    // Create a file input element
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.html,.htm,.txt,.docx,.doc';
+    fileInput.style.display = 'none';
+    
+    fileInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      try {
+        console.log('File selected:', file.name, 'Type:', file.type);
+        
+        // For DOCX files, use Syncfusion's import service
+        if (file.name.endsWith('.docx') || file.name.endsWith('.doc') || 
+            file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+            file.type === 'application/msword') {
+          await importDocxFile(file);
+        } else {
+          const content = await readFileContent(file);
+          await importDocument(content);
+        }
+      } catch (error) {
+        console.error('Error importing file:', error);
+        alert('Error importing file. Please try again.');
+      }
+    });
+    
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    document.body.removeChild(fileInput);
+  };
+
+  const importDocxFile = async (file) => {
+    try {
+      const editor = docEditorRef.current?.documentEditor;
+      if (!editor) return;
+      
+      console.log('Importing DOCX file using Syncfusion service...');
+      
+      // Use Syncfusion's import service for DOCX files
+      const serviceUrl = 'https://ej2services.syncfusion.com/production/web-services/api/documenteditor/Import';
+      
+      const formData = new FormData();
+      formData.append('files', file);
+      
+      const response = await fetch(serviceUrl, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (response.ok) {
+        const sfdt = await response.text();
+        console.log('DOCX converted to SFDT successfully');
+        editor.open(sfdt);
+        
+        // Trigger content change to save the imported content
+        setTimeout(() => {
+          handleContentChange();
+        }, 500);
+        
+        console.log('Document imported successfully');
+      } else {
+        throw new Error('Failed to convert DOCX file');
+      }
+    } catch (error) {
+      console.error('Error importing DOCX file:', error);
+      alert('Error importing DOCX file. Please try again or use HTML format.');
+    }
+  };
+
+  const readFileContent = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        resolve(e.target.result);
+      };
+      
+      reader.onerror = (e) => {
+        reject(e);
+      };
+      
+      if (file.type === 'text/html' || file.type === 'text/plain') {
+        reader.readAsText(file);
+      } else {
+        reader.readAsText(file);
+      }
+    });
+  };
+
+  // Add Export PDF and Print buttons into Syncfusion toolbar
+  useEffect(() => {
+    if (!mounted || !docEditorRef.current) return;
+    
+    const addButtons = () => {
+      const containerEl = docEditorRef.current?.element;
+      if (!containerEl) return;
+
+      // Look for toolbar in multiple possible locations
+      const toolbarSelectors = [
+        '.e-toolbar .e-toolbar-items',
+        '.e-de-ctn .e-toolbar .e-toolbar-items', 
+        '.e-documenteditorcontainer-toolbar .e-toolbar-items',
+        '.e-toolbar-items'
+      ];
+      
+      let itemsEl = null;
+      for (const selector of toolbarSelectors) {
+        itemsEl = containerEl.querySelector(selector);
+        if (itemsEl) break;
+      }
+      
+      if (!itemsEl) {
+        console.log('Toolbar items container not found, retrying...');
+        return;
+      }
+
+      // Check if buttons already exist
+      if (containerEl.querySelector('#rte-export-pdf-btn') && containerEl.querySelector('#rte-print-btn')) {
+        return;
+      }
+
+      console.log('Adding Export PDF and Print buttons to toolbar...');
+
+      // Create Export PDF button
+      const exportBtn = document.createElement('button');
+      exportBtn.id = 'rte-export-pdf-btn';
+      exportBtn.type = 'button';
+      exportBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
+      exportBtn.title = 'Export PDF';
+      exportBtn.style.cssText = 'min-width: 90px; margin: 2px 4px;';
+      
+      const exportSpan = document.createElement('span');
+      exportSpan.className = 'e-tbar-btn-text';
+      exportSpan.textContent = 'Export PDF';
+      exportBtn.appendChild(exportSpan);
+      exportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handleExport('Pdf');
+      });
+      
+      const exportItem = document.createElement('div');
+      exportItem.className = 'e-toolbar-item';
+      exportItem.appendChild(exportBtn);
+
+      // Create Print button
+      const printBtn = document.createElement('button');
+      printBtn.id = 'rte-print-btn';
+      printBtn.type = 'button';
+      printBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
+      printBtn.title = 'Print';
+      printBtn.style.cssText = 'min-width: 60px; margin: 2px 4px;';
+      
+      const printSpan = document.createElement('span');
+      printSpan.className = 'e-tbar-btn-text';
+      printSpan.textContent = 'Print';
+      printBtn.appendChild(printSpan);
+      printBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handlePrint();
+      });
+      
+      const printItem = document.createElement('div');
+      printItem.className = 'e-toolbar-item';
+      printItem.appendChild(printBtn);
+
+      // Create Import Document button
+      const importBtn = document.createElement('button');
+      importBtn.id = 'rte-import-btn';
+      importBtn.type = 'button';
+      importBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
+      importBtn.title = 'Import Document';
+      importBtn.style.cssText = 'min-width: 100px; margin: 2px 4px;';
+      
+      const importSpan = document.createElement('span');
+      importSpan.className = 'e-tbar-btn-text';
+      importSpan.textContent = 'Import';
+      importBtn.appendChild(importSpan);
+      importBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handleImportDocument();
+      });
+      
+      const importItem = document.createElement('div');
+      importItem.className = 'e-toolbar-item';
+      importItem.appendChild(importBtn);
+
+      // Try to find a good insertion point
+      const findBtn = Array.from(itemsEl.querySelectorAll('.e-tbar-btn'))
+        .find((n) => (n.getAttribute('title') || '').toLowerCase().includes('find'));
+      
+      if (findBtn && findBtn.parentElement?.classList.contains('e-toolbar-item')) {
+        // Insert before Find button
+        itemsEl.insertBefore(importItem, findBtn.parentElement);
+        itemsEl.insertBefore(printItem, findBtn.parentElement);
+        itemsEl.insertBefore(exportItem, findBtn.parentElement);
+        console.log('Buttons inserted before Find button');
+      } else {
+        // Append at the end
+        itemsEl.appendChild(importItem);
+        itemsEl.appendChild(printItem);
+        itemsEl.appendChild(exportItem);
+        console.log('Buttons appended to end of toolbar');
+      }
+    };
+
+    // Multiple attempts with different timing
+    const attempts = [0, 100, 300, 600, 1000, 1500];
+    const timeouts = attempts.map(delay => 
+      setTimeout(() => {
+        console.log(`Attempting to add buttons after ${delay}ms`);
+        addButtons();
+      }, delay)
+    );
+
+    // Also use MutationObserver for dynamic changes
+    const observer = new MutationObserver((mutations) => {
+      let shouldRetry = false;
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          // Check if toolbar was added
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && (
+              node.classList?.contains('e-toolbar') || 
+              node.querySelector?.('.e-toolbar')
+            )) {
+              shouldRetry = true;
+            }
+          });
+        }
+      });
+      
+      if (shouldRetry) {
+        setTimeout(addButtons, 100);
+      }
+    });
+
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
 
     return () => {
-      try {
-        observer.disconnect();
-        if (editorElement) {
-          editorElement.removeEventListener('click', handleDropdownOpen);
-        }
-        document.removeEventListener('click', handleDropdownOpen);
-      } catch (error) {
-        // Silently handle cleanup errors when component unmounts
-        console.debug('Dropdown observer cleanup error (safe to ignore):', error);
-      }
+      timeouts.forEach(clearTimeout);
+      observer.disconnect();
     };
   }, [mounted]);
 
-  // Handle paste events to ensure imported content is displayed
-  const handlePaste = (args) => {
-    console.log('Paste event:', args);
-    // Ensure pasted content retains formatting
-    if (args.value) {
-      console.log('Pasted content:', args.value.substring(0, 200));
-    }
-  };
-
-  // Handle actionBegin to process imported content
-  const handleActionBegin = (args) => {
-    if (args.requestType === 'Paste' || args.requestType === 'EnterAction') {
-      console.log('Action Begin - Import/Paste:', args);
-    }
-  };
-
-  // Handle afterPaste to ensure content is visible
-  const handleAfterPaste = (args) => {
-    console.log('After Paste:', args);
+  // Function to import document with proper formatting
+  const importDocument = async (content) => {
+    if (!docEditorRef.current?.documentEditor) return;
     
-    // Force the editor to refresh and show the content
-    if (rteRef.current) {
-      const content = rteRef.current.value;
-      if (content && content.trim() !== '') {
-        console.log('Content after paste:', content.substring(0, 200));
-        setEditorValue(content);
+    try {
+      const editor = docEditorRef.current.documentEditor;
+      
+      console.log('Importing document...');
+      debugDocumentContent(content, 'Import Document');
+      
+      // Clear existing content
+      editor.editor.clear();
+      
+      // Check if content is HTML
+      if (typeof content === 'string' && content.includes('<')) {
+        console.log('Detected HTML content, converting to SFDT format...');
+        
+        // Use Syncfusion's built-in HTML import functionality
+        try {
+          // Convert HTML to SFDT using Syncfusion's service
+          const serviceUrl = 'https://ej2services.syncfusion.com/production/web-services/api/documenteditor/Import';
+          
+          const formData = new FormData();
+          const blob = new Blob([content], { type: 'text/html' });
+          formData.append('files', blob, 'document.html');
+          
+          const response = await fetch(serviceUrl, {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (response.ok) {
+            const sfdt = await response.text();
+            console.log('HTML converted to SFDT successfully');
+            editor.open(sfdt);
+            
+            // Trigger content change to save the imported content
+            setTimeout(() => {
+              handleContentChange();
+            }, 500);
+          } else {
+            console.warn('Service conversion failed, using fallback method');
+            await loadHtmlContent(editor, content);
+            
+            // Trigger content change to save the imported content
+            setTimeout(() => {
+              handleContentChange();
+            }, 500);
+          }
+        } catch (conversionError) {
+          console.warn('Error using conversion service, using fallback:', conversionError);
+          await loadHtmlContent(editor, content);
+          
+          // Trigger content change to save the imported content
+          setTimeout(() => {
+            handleContentChange();
+          }, 500);
+        }
+      } else {
+        // Insert as plain text
+        editor.editor.insertText(content);
+        
+        // Trigger content change to save the imported content
+        setTimeout(() => {
+          handleContentChange();
+        }, 500);
       }
+      
+      console.log('Document imported successfully');
+      
+      // Ensure text direction is LTR after import
+      setTimeout(() => {
+        try {
+          editor.selection.paragraphFormat.bidi = false;
+          console.log('Text direction set to LTR after import');
+        } catch (dirError) {
+          console.warn('Could not set text direction after import:', dirError);
+        }
+      }, 600);
+    } catch (error) {
+      console.error('Error importing document:', error);
+      alert('Error importing document. Please try again.');
     }
   };
 
   // Expose insertAtCursor method to parent
   useEffect(() => {
-    if (!onInsertAtCursor || !rteRef.current) return;
-      const insertAtCursor = (content) => {
-      const editor = rteRef.current;
+    if (!onInsertAtCursor || !docEditorRef.current) return;
+    const insertAtCursor = (content) => {
+      const editor = docEditorRef.current?.documentEditor;
       if (!editor) return;
       try {
-        editor.executeCommand('insertHTML', content);
+        editor.editor.insertText(content);
       } catch (e) {
         console.error('Failed to insert content:', e);
-        }
-      };
-      onInsertAtCursor(insertAtCursor);
+      }
+    };
+    onInsertAtCursor(insertAtCursor);
   }, [onInsertAtCursor])
-
-  // MS Word-like toolbar configuration with hierarchical numbering and bullet styles
-  const toolbarSettings = {
-    type: 'MultiRow',
-    items: [
-      'Undo', 'Redo', '|',
-      'FontName', 'FontSize', 'FontColor', 'BackgroundColor', '|',
-      'Bold', 'Italic', 'Underline', 'StrikeThrough', 'SuperScript', 'SubScript', '|',
-      'LowerCase', 'UpperCase', '|',
-      'Formats', 'Alignments', '|',
-      'BulletFormatList', '|',
-      'OrderedList', 'UnorderedList', '|',
-      'Indent', 'Outdent', '|',
-      'CreateLink', 'Image', 'CreateTable', '|',
-      'ClearFormat', '|',
-      'Print', 'SourceCode', 'FullScreen'
-    ]
-  };
-
-  // Define number format list (hierarchical numbering)
-  const numberFormatList = {
-    types: [
-      { text: 'Number', value: 'decimal' },
-    ]
-  };
-
-  // Define bullet format list (rich bullet styles)
-  const bulletFormatList = {
-    types: [
-      { text: '○ Circle', value: 'circle' },
-      { text: '⬤ Disc', value: 'disc' },
-      { text: '■ Square', value: 'square' },
-    ]
-  };
-
-  const fontFamily = {
-    default: 'Calibri',
-    items: [
-      { text: 'Arial', value: 'Arial, Helvetica, sans-serif' },
-      { text: 'Times New Roman', value: 'Times New Roman, Times, serif' },
-      { text: 'Calibri', value: 'Calibri, Segoe UI, Arial, sans-serif' },
-      { text: 'Cambria', value: 'Cambria, Georgia, Times New Roman, serif' },
-      { text: 'Garamond', value: 'Garamond, Times New Roman, serif' },
-      { text: 'Georgia', value: 'Georgia, Times New Roman, serif' },
-      { text: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
-      { text: 'Courier New', value: 'Courier New, Courier, monospace' },
-      { text: 'Verdana', value: 'Verdana, Geneva, Tahoma, sans-serif' },
-      { text: 'Segoe UI', value: 'Segoe UI, Arial, sans-serif' },
-      { text: 'Trebuchet MS', value: 'Trebuchet MS, Arial, sans-serif' },
-      { text: 'Tahoma', value: 'Tahoma, Geneva, Verdana, sans-serif' },
-    ]
-  };
-
-  const fontSize = {
-    default: '14px',
-    items: [
-      { text: '8', value: '8px' },
-      { text: '10', value: '10px' },
-      { text: '11', value: '11px' },
-      { text: '12', value: '12px' },
-      { text: '14', value: '14px' },
-      { text: '16', value: '16px' },
-      { text: '18', value: '18px' },
-      { text: '20', value: '20px' },
-      { text: '22', value: '22px' },
-      { text: '24', value: '24px' },
-      { text: '26', value: '26px' },
-      { text: '28', value: '28px' },
-      { text: '32', value: '32px' },
-      { text: '36', value: '36px' },
-      { text: '48', value: '48px' },
-      { text: '72', value: '72px' },
-    ]
-  };
-
-  const format = {
-    default: 'Paragraph',
-    types: [
-      { text: 'Paragraph', value: 'P' },
-      { text: 'Heading 1', value: 'H1' },
-      { text: 'Heading 2', value: 'H2' },
-      { text: 'Heading 3', value: 'H3' },
-      { text: 'Heading 4', value: 'H4' },
-      { text: 'Heading 5', value: 'H5' },
-      { text: 'Heading 6', value: 'H6' },
-      { text: 'Code', value: 'Pre' },
-      { text: 'Quotation', value: 'BlockQuote' },
-    ]
-  };
-
-  const insertImageSettings = {
-    display: 'inline',
-    width: 'auto',
-    height: 'auto',
-    saveFormat: 'Base64',
-    saveUrl: null,
-    path: null,
-  };
-
-  const quickToolbarSettings = {
-    image: [
-      'Replace', 'Align', 'Caption', 'Remove', 'InsertLink', 'OpenImageLink', '-',
-      'EditImageLink', 'RemoveImageLink', 'Display', 'AltText', 'Dimension'
-    ],
-    link: ['Open', 'Edit', 'UnLink'],
-    table: [
-      'TableHeader', 'TableRows', 'TableColumns', 'BackgroundColor', '-',
-      'Alignments', 'TableCellVerticalAlign', 'TableRemove'
-    ]
-  };
-
-  // MS Word-like table styles with comprehensive design options
-  const tableSettings = {
-    width: '100%',
-    styles: [
-      { text: 'Default Table', class: 'e-rte-table-default' },
-      { text: 'Plain Table 1', class: 'e-rte-table-plain-1' },
-      { text: 'Plain Table 2', class: 'e-rte-table-plain-2' },
-      { text: 'Grid Table 1 Light', class: 'e-rte-table-grid-1' },
-      { text: 'Grid Table 2 Blue', class: 'e-rte-table-grid-2' },
-      { text: 'Grid Table 3 Striped', class: 'e-rte-table-grid-3' },
-      { text: 'Grid Table 4 Green', class: 'e-rte-table-grid-4' },
-      { text: 'Grid Table 5 Dark', class: 'e-rte-table-grid-5-dark' },
-      { text: 'Grid Table 6 Colorful', class: 'e-rte-table-grid-6-colorful' },
-      { text: 'Grid Table 7 Accent', class: 'e-rte-table-grid-7-accent' },
-      { text: 'List Table 1 Simple', class: 'e-rte-table-list-1' },
-      { text: 'List Table 2 Minimal', class: 'e-rte-table-list-2' },
-      { text: 'List Table 3 Accent', class: 'e-rte-table-list-3' },
-      { text: 'List Table 4 Bold', class: 'e-rte-table-list-4' },
-      { text: 'List Table 5 Medium', class: 'e-rte-table-list-5' },
-      { text: 'Colorful Grid', class: 'e-rte-table-colorful-grid' },
-      { text: 'Colorful List', class: 'e-rte-table-colorful-list' },
-    ],
-    resize: true,
-    minWidth: 0,
-    maxWidth: null,
-  };
-
-  const pasteCleanupSettings = {
-    prompt: false,
-    plainText: false,
-    keepFormat: true,
-    deniedTags: [],
-    deniedAttrs: [],
-    allowedStyleProps: [
-      'background', 'background-color', 'border', 'border-bottom', 'border-left', 'border-radius',
-      'border-right', 'border-top', 'border-style', 'border-width', 'color', 'font-family',
-      'font-size', 'font-weight', 'font-style', 'height', 'left', 'line-height', 'margin',
-      'margin-top', 'margin-left', 'margin-right', 'margin-bottom', 'max-height', 'max-width',
-      'min-height', 'min-width', 'padding', 'padding-bottom', 'padding-left', 'padding-right',
-      'padding-top', 'text-align', 'text-decoration', 'text-indent', 'top', 'vertical-align',
-      'width', 'letter-spacing'
-    ]
-  };
-
-  // File Manager settings for importing documents
-  const fileManagerSettings = {
-    enable: true,
-    path: '/',
-    ajaxSettings: {
-      url: null,
-      getImageUrl: null,
-      uploadUrl: null,
-      downloadUrl: null
-    }
-  };
 
   if (!mounted) {
     return (
@@ -471,7 +918,7 @@ const TemplateEditor = ({
             </div>
           </div>
           <div className="h-32 bg-white dark:bg-slate-800 rounded-b-lg flex items-center justify-center">
-            <span className="text-gray-500 text-sm dark:text-slate-200">Loading editor...</span>
+            <span className="text-gray-500 text-sm dark:text-slate-200">Loading document editor...</span>
           </div>
         </div>
       </div>
@@ -479,35 +926,14 @@ const TemplateEditor = ({
   }
 
   return (
-    <div className="relative">
-      <div className="syncfusion-editor">
-        <SyncfusionRTE
-          forwardRef={rteRef}
-          value={editorValue}
-          placeholder={placeholder}
-          toolbarSettings={toolbarSettings}
-          numberFormatList={numberFormatList}
-          bulletFormatList={bulletFormatList}
-          fontFamily={fontFamily}
-          fontSize={fontSize}
-          format={format}
-          tableSettings={tableSettings}
-          insertImageSettings={insertImageSettings}
-          quickToolbarSettings={quickToolbarSettings}
-          pasteCleanupSettings={pasteCleanupSettings}
-          fileManagerSettings={fileManagerSettings}
+    <div className="relative w-full">
+      <div className="syncfusion-doc-editor">
+        <SyncfusionDocEditor
+          forwardRef={docEditorRef}
           height="calc(100vh - 200px)"
-          enableHtmlEncode={false}
-          enableXhtml={true}
-          enableTabKey={true}
-          actionBegin={handleActionBegin}
-          afterPaste={handleAfterPaste}
-          pasteCleanup={handlePaste}
-          change={(args) => {
-            const content = args.value || "";
-            setEditorValue(content);
-            if (onChange) onChange(content);
-          }}
+          enableToolbar={true}
+          showPropertiesPane={true}
+          contentChange={handleContentChange}
           {...props}
         />
       </div>
@@ -516,1066 +942,303 @@ const TemplateEditor = ({
       )}
 
         <style jsx global>{`
-        .syncfusion-editor .e-richtexteditor .e-rte-content {
-          min-height: calc(100vh - 200px);
-          padding: 24px;
+        /* DocumentEditor Container Styling */
+        .syncfusion-doc-editor {
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          direction: ltr !important;
+          text-align: left !important;
+        }
+
+        /* Force LTR text direction for document content */
+        .syncfusion-doc-editor .e-de-page-container,
+        .syncfusion-doc-editor .e-de-page,
+        .syncfusion-doc-editor .e-content,
+        .syncfusion-doc-editor .e-de-text {
+          direction: ltr !important;
+          text-align: left !important;
+          unicode-bidi: normal !important;
+        }
+
+        /* Ensure cursor starts from left */
+        .syncfusion-doc-editor .e-de-ctn-main {
+          direction: ltr !important;
+        }
+
+        /* Performance optimizations for typing */
+        .syncfusion-doc-editor .e-de-text,
+        .syncfusion-doc-editor .e-content {
+          will-change: auto !important;
+          transform: translateZ(0) !important;
+          backface-visibility: hidden !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        /* Fix for reverse typing issue */
+        .syncfusion-doc-editor .e-de-text * {
+          unicode-bidi: normal !important;
+          direction: ltr !important;
+        }
+
+        /* Custom Export PDF, Print and Import buttons styling */
+        .syncfusion-doc-editor #rte-export-pdf-btn,
+        .syncfusion-doc-editor #rte-print-btn,
+        .syncfusion-doc-editor #rte-import-btn {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          padding: 6px 12px !important;
+          border: 1px solid #d1d5db !important;
+          background-color: #ffffff !important;
+          color: #374151 !important;
+          border-radius: 4px !important;
+          font-size: 12px !important;
+          font-weight: 500 !important;
+          transition: all 0.15s ease !important;
+          cursor: pointer !important;
+          min-width: 80px !important;
+          margin: 2px 4px !important;
+        }
+
+        .syncfusion-doc-editor #rte-export-pdf-btn:hover,
+        .syncfusion-doc-editor #rte-print-btn:hover,
+        .syncfusion-doc-editor #rte-import-btn:hover {
+          background-color: #f3f4f6 !important;
+          border-color: #9ca3af !important;
+        }
+
+        .syncfusion-doc-editor #rte-export-pdf-btn:active,
+        .syncfusion-doc-editor #rte-print-btn:active,
+        .syncfusion-doc-editor #rte-import-btn:active {
+          background-color: #e5e7eb !important;
+          transform: translateY(1px) !important;
+        }
+
+        /* Dark mode for custom buttons */
+        .dark .syncfusion-doc-editor #rte-export-pdf-btn,
+        .dark .syncfusion-doc-editor #rte-print-btn,
+        .dark .syncfusion-doc-editor #rte-import-btn {
+          background-color: #374151 !important;
+          border-color: #4b5563 !important;
+          color: #e5e7eb !important;
+        }
+
+        .dark .syncfusion-doc-editor #rte-export-pdf-btn:hover,
+        .dark .syncfusion-doc-editor #rte-print-btn:hover,
+        .dark .syncfusion-doc-editor #rte-import-btn:hover {
+          background-color: #4b5563 !important;
+          border-color: #6b7280 !important;
+        }
+
+        /* On small screens, use full width */
+        @media (max-width: 1280px) {
+          .syncfusion-doc-editor { width: 100%; }
+        }
+
+        .syncfusion-doc-editor .e-documenteditor-container {
           font-family: Calibri, Segoe UI, Arial, sans-serif;
           font-size: 14px;
           line-height: 1.5;
         }
 
+        .syncfusion-doc-editor .e-de-ctn-title {
+          display: none;
+        }
+
         /* MS Word-like toolbar styling */
-        .syncfusion-editor .e-toolbar {
+        .syncfusion-doc-editor .e-toolbar {
           background: linear-gradient(to bottom, #ffffff 0%, #f3f4f6 100%);
           border-bottom: 2px solid #d1d5db;
           padding: 8px;
+          position: relative;
+          z-index: 3; /* keep toolbar above any side panes */
         }
 
-        .syncfusion-editor .e-toolbar .e-toolbar-item {
-          margin: 2px;
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-item {
+          margin: 2px 4px; /* tighten spacing */
+          flex: 0 0 auto !important; /* prevent shrinking */
         }
 
-        .syncfusion-editor .e-toolbar .e-btn {
+        .syncfusion-doc-editor .e-toolbar .e-btn {
           border-radius: 3px;
           transition: all 0.15s ease;
         }
 
-        .syncfusion-editor .e-toolbar .e-btn:hover {
+        /* Force toolbar items to wrap when space is tight */
+        .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-toolbar-items,
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items {
+          flex-wrap: wrap !important;
+          height: auto !important;
+          overflow: visible !important;
+        }
+
+        .syncfusion-doc-editor .e-de-ctn .e-toolbar,
+        .syncfusion-doc-editor .e-toolbar {
+          overflow: visible !important;
+        }
+
+        /* Allow content to flow normally instead of fixed width scrolling */
+        .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-hscroll,
+        .syncfusion-doc-editor .e-toolbar .e-hscroll {
+          overflow: visible !important;
+        }
+        .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-hscroll-content,
+        .syncfusion-doc-editor .e-toolbar .e-hscroll-content {
+          white-space: normal !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-wrap: wrap !important;
+          justify-content: flex-start !important;
+          align-items: center !important;
+          row-gap: 4px;
+          column-gap: 4px;
+        }
+
+        /* Ensure the actual items container also wraps */
+        .syncfusion-doc-editor .e-documenteditorcontainer-toolbar .e-toolbar-items,
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          align-items: center !important;
+          gap: 4px;
+          width: 100% !important;
+        }
+
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items .e-toolbar-item {
+          flex: 0 0 auto !important;
+        }
+        .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-scroll-nav,
+        .syncfusion-doc-editor .e-toolbar .e-scroll-nav {
+          display: none !important;
+          width: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+        }
+
+        /* Hide any leftover scroll nav variants to avoid empty boxes */
+        .syncfusion-doc-editor .e-toolbar .e-hscroll .e-scroll-left,
+        .syncfusion-doc-editor .e-toolbar .e-hscroll .e-scroll-right,
+        .syncfusion-doc-editor .e-toolbar .e-scroll-nav.e-scroll-left,
+        .syncfusion-doc-editor .e-toolbar .e-scroll-nav.e-scroll-right {
+          display: none !important;
+          width: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+        }
+
+        /* Clean up stray separators that can appear as blank items */
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items > .e-separator:first-child,
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items > .e-separator:last-child,
+        .syncfusion-doc-editor .e-toolbar .e-toolbar-items > .e-separator + .e-separator {
+          display: none !important;
+        }
+
+        /* Fallback: on very narrow screens, keep items on one line and enable horizontal scroll */
+        @media (max-width: 900px) {
+          .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-toolbar-items,
+          .syncfusion-doc-editor .e-toolbar .e-toolbar-items { flex-wrap: nowrap !important; }
+          .syncfusion-doc-editor .e-de-ctn .e-toolbar,
+          .syncfusion-doc-editor .e-toolbar { overflow-x: auto !important; height: auto !important; }
+          .syncfusion-doc-editor .e-de-ctn .e-toolbar .e-scroll-nav,
+          .syncfusion-doc-editor .e-toolbar .e-scroll-nav { display: block !important; }
+        }
+
+        .syncfusion-doc-editor .e-toolbar .e-btn:hover {
           background-color: #e5e7eb;
         }
 
-        .syncfusion-editor .e-toolbar .e-btn.e-active {
+        .syncfusion-doc-editor .e-toolbar .e-btn.e-active {
           background-color: #dbeafe;
           border-color: #3b82f6;
         }
 
-        /* Hierarchical Numbering Styles - Multi-level lists */
-        .syncfusion-editor .e-rte-content ol {
-          counter-reset: item;
-          padding-left: 2em;
+        /* Page-based document view */
+        .syncfusion-doc-editor .e-de-page-container {
+          background-color: #f5f5f5;
+          display: flex;
+          justify-content: center; /* center pages horizontally */
         }
 
-        .syncfusion-editor .e-rte-content ol > li {
-          counter-increment: item;
-          margin-bottom: 0.5em;
-        }
-
-        /* Level 1: 1, 2, 3 */
-        .syncfusion-editor .e-rte-content ol > li::marker {
-          content: counter(item) ". ";
-          font-weight: 600;
-        }
-
-        /* Level 2: 1.1, 1.2, 1.3 */
-        .syncfusion-editor .e-rte-content ol ol > li::marker {
-          content: counter(item, decimal) "." counter(item) " ";
-        }
-
-        /* Level 3: 1.1.1, 1.1.2 */
-        .syncfusion-editor .e-rte-content ol ol ol > li::marker {
-          content: counter(item, decimal) "." counter(item) "." counter(item) " ";
-        }
-
-        /* Rich Bullet Styles */
-        .syncfusion-editor .e-rte-content ul {
-          list-style-type: none;
-          padding-left: 2em;
-        }
-
-        .syncfusion-editor .e-rte-content ul > li {
+        /* Ensure properties pane is visible and scrollable */
+        .syncfusion-doc-editor .e-de-pane { 
+          max-width: 380px; 
+          min-width: 280px;
+          /* Move properties pane to the LEFT */
+          order: 1 !important;
+          border-left: none !important;
+          border-right: 1px solid #e5e7eb !important;
           position: relative;
-          margin-bottom: 0.5em;
+          z-index: 4; /* below toolbar */
+          margin-top: 8px; /* avoid overlapping second row of toolbar */
+        }
+        .syncfusion-doc-editor .e-de-properties-pane, 
+        .syncfusion-doc-editor .e-de-prop-pane { 
+          overflow: auto !important; 
+          max-height: calc(100vh - 280px); /* leave room under toolbar */
         }
 
-        /* Default bullet - filled circle */
-        .syncfusion-editor .e-rte-content ul > li::before {
-          content: "\\2022";
-          position: absolute;
-          left: -1.5em;
-          font-size: 1.2em;
-          line-height: 1.2;
+        /* Prevent outer containers from clipping the pane */
+        .syncfusion-doc-editor, 
+        .syncfusion-doc-editor * { 
+          overflow: visible;
         }
 
-        /* Level 2 - hollow circle */
-        .syncfusion-editor .e-rte-content ul ul > li::before {
-          content: "\\25E6";
+        /* Dark mode border swap for left-side pane */
+        .dark .syncfusion-doc-editor .e-de-pane {
+          border-right-color: #475569 !important;
         }
 
-        /* Level 3 - square */
-        .syncfusion-editor .e-rte-content ul ul ul > li::before {
-          content: "\\25AA";
+        .syncfusion-doc-editor .e-de-page {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          margin: 20px auto; /* ensure centered even if flex fails */
         }
 
-        /* Custom bullet styles via class */
-        .syncfusion-editor .e-rte-content ul.check-list > li::before {
-          content: "\\2713";
-          color: #16a34a;
-          font-weight: 600;
+        /* Default table styling - no borders */
+        .syncfusion-doc-editor table {
+          border-collapse: collapse;
         }
 
-        .syncfusion-editor .e-rte-content ul.arrow-list > li::before {
-          content: "\\2192";
-          color: #2563eb;
+        .syncfusion-doc-editor table td,
+        .syncfusion-doc-editor table th {
+          padding: 8px 12px;
         }
 
-        .syncfusion-editor .e-rte-content ul.triangle-list > li::before {
-          content: "\\25B6";
-          color: #7c3aed;
-          font-size: 0.8em;
-          top: 0.2em;
+        /* DocumentEditor preserves headers and footers natively */
+        .syncfusion-doc-editor .e-de-header,
+        .syncfusion-doc-editor .e-de-footer {
+          opacity: 0.7;
+          font-size: 0.9em;
         }
 
         /* Dark mode support */
-        .dark .syncfusion-editor .e-richtexteditor .e-rte-content {
+        .dark .syncfusion-doc-editor .e-de-page-container {
+          background-color: #0f172a;
+        }
+
+        .dark .syncfusion-doc-editor .e-de-page {
           background-color: #1e293b;
           color: #e2e8f0;
         }
 
-        .dark .syncfusion-editor .e-toolbar {
+        .dark .syncfusion-doc-editor .e-toolbar {
           background: linear-gradient(to bottom, #334155 0%, #1e293b 100%);
           border-color: #475569;
         }
 
-        .dark .syncfusion-editor .e-toolbar .e-btn:hover {
+        /* Dark mode: keep toolbar wrapping consistent */
+        .dark .syncfusion-doc-editor .e-toolbar .e-toolbar-items {
+          flex-wrap: wrap !important;
+        }
+
+        .dark .syncfusion-doc-editor .e-toolbar .e-btn:hover {
           background-color: #475569;
         }
 
-        .dark .syncfusion-editor .e-toolbar .e-btn.e-active {
+        .dark .syncfusion-doc-editor .e-toolbar .e-btn.e-active {
           background-color: #1e40af;
           border-color: #3b82f6;
-        }
-
-        /* Syncfusion popup/dropdown light mode */
-        .e-dropdown-popup,
-        .e-popup {
-          background-color: #ffffff !important;
-          border-color: #d1d5db !important;
-        }
-
-        .e-dropdown-popup .e-item,
-        .e-popup .e-item {
-          color: #1f2937 !important;
-          background-color: transparent !important;
-        }
-        
-        .e-dropdown-popup .e-item:hover,
-        .e-popup .e-item:hover {
-          background-color: #f3f4f6 !important;
-        }
-
-        /* Syncfusion popup/dropdown dark mode */
-        .dark .e-dropdown-popup,
-        .dark .e-popup {
-          background-color: #1e293b !important;
-          border-color: #475569 !important;
-        }
-
-        .dark .e-dropdown-popup .e-item,
-        .dark .e-popup .e-item {
-          color: #e2e8f0 !important;
-        }
-        
-        .dark .e-dropdown-popup .e-item:hover,
-        .dark .e-popup .e-item:hover {
-          background-color: #334155 !important;
-        }
-
-        /* Color picker popup styling */
-        .e-colorpicker-popup {
-          background-color: #ffffff !important;
-          border: 1px solid #d1d5db !important;
-        }
-
-        .dark .e-colorpicker-popup {
-          background-color: #1e293b !important;
-          border-color: #475569 !important;
-        }
-
-        /* Fix for table styles dropdown - limit height and add scroll - AGGRESSIVE TARGETING */
-        .e-dropdown-popup:not(.e-colorpicker-popup),
-        .e-popup.e-dropdown-popup,
-        div[class*="dropdown"][class*="popup"],
-        .e-rte-dropdown-popup,
-        .e-rte-quick-popup .e-dropdown-popup,
-        .e-rte-quick-toolbar .e-dropdown-popup,
-        .e-richtexteditor .e-dropdown-popup,
-        body .e-dropdown-popup.e-popup-open,
-        body > .e-dropdown-popup {
-          max-height: 300px !important;
-          overflow-y: auto !important;
-          overflow-x: hidden !important;
-        }
-
-        /* Force scrollbar styling on all dropdowns */
-        .e-dropdown-popup::-webkit-scrollbar,
-        .e-popup.e-dropdown-popup::-webkit-scrollbar,
-        .e-rte-dropdown-popup::-webkit-scrollbar {
-          width: 8px !important;
-          height: 8px !important;
-        }
-
-        .e-dropdown-popup::-webkit-scrollbar-track,
-        .e-popup.e-dropdown-popup::-webkit-scrollbar-track,
-        .e-rte-dropdown-popup::-webkit-scrollbar-track {
-          background: #f1f1f1 !important;
-          border-radius: 4px !important;
-        }
-
-        .e-dropdown-popup::-webkit-scrollbar-thumb,
-        .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb,
-        .e-rte-dropdown-popup::-webkit-scrollbar-thumb {
-          background: #888 !important;
-          border-radius: 4px !important;
-        }
-
-        .e-dropdown-popup::-webkit-scrollbar-thumb:hover,
-        .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb:hover,
-        .e-rte-dropdown-popup::-webkit-scrollbar-thumb:hover {
-          background: #555 !important;
-        }
-
-        /* Dark mode scrollbar */
-        .dark .e-dropdown-popup::-webkit-scrollbar-track,
-        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-track,
-        .dark .e-rte-dropdown-popup::-webkit-scrollbar-track {
-          background: #1e293b !important;
-        }
-
-        .dark .e-dropdown-popup::-webkit-scrollbar-thumb,
-        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb,
-        .dark .e-rte-dropdown-popup::-webkit-scrollbar-thumb {
-          background: #475569 !important;
-        }
-
-        .dark .e-dropdown-popup::-webkit-scrollbar-thumb:hover,
-        .dark .e-popup.e-dropdown-popup::-webkit-scrollbar-thumb:hover,
-        .dark .e-rte-dropdown-popup::-webkit-scrollbar-thumb:hover {
-          background: #64748b !important;
-        }
-
-        /* Ensure dropdown content can scroll */
-        .e-dropdown-popup .e-content,
-        .e-dropdown-popup .e-list-parent,
-        .e-rte-dropdown-popup .e-content,
-        .e-rte-dropdown-popup .e-list-parent {
-          max-height: none !important;
-        }
-
-        /* MS Word Table Styles */
-        .syncfusion-editor .e-rte-content table {
-          border-collapse: collapse;
-          width: 100%;
-          margin: 10px 0;
-        }
-
-        .syncfusion-editor .e-rte-content table td,
-        .syncfusion-editor .e-rte-content table th {
-          padding: 8px 12px;
-          border: 1px solid #d1d5db;
-        }
-
-        /* Default Table */
-        .syncfusion-editor .e-rte-content table.e-rte-table-default {
-          border: 1px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-default th {
-          background-color: #f3f4f6;
-          font-weight: 600;
-          text-align: left;
-        }
-
-        /* Grid Table 1 - Light */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 {
-          border: 2px solid #6b7280;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 th {
-          background-color: #e5e7eb;
-          font-weight: 600;
-          border: 1px solid #9ca3af;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-1 td {
-          border: 1px solid #d1d5db;
-        }
-
-        /* Grid Table 2 - Accent Blue */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 {
-          border: 2px solid #3b82f6;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 th {
-          background-color: #3b82f6;
-          color: white;
-          font-weight: 600;
-          border: 1px solid #2563eb;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-2 td {
-          border: 1px solid #93c5fd;
-        }
-
-        /* Grid Table 3 - Striped */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 {
-          border: 1px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 th {
-          background-color: #1f2937;
-          color: white;
-          font-weight: 600;
-          border: 1px solid #374151;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 tbody tr:nth-child(even) {
-          background-color: #f9fafb;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-3 td {
-          border: 1px solid #e5e7eb;
-        }
-
-        /* Grid Table 4 - Professional */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 {
-          border: 2px solid #059669;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 th {
-          background-color: #059669;
-          color: white;
-          font-weight: 600;
-          border: 1px solid #047857;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 td {
-          border: 1px solid #a7f3d0;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-4 tbody tr:hover {
-          background-color: #d1fae5;
-        }
-
-        /* Grid Table 5 Dark */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark {
-          border: 2px solid #1f2937;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark th {
-          background-color: #1f2937;
-          color: white;
-          font-weight: 600;
-          border: 1px solid #111827;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark td {
-          background-color: #374151;
-          color: white;
-          border: 1px solid #4b5563;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-5-dark tbody tr:nth-child(even) td {
-          background-color: #4b5563;
-        }
-
-        /* Grid Table 6 Colorful */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful {
-          border: 2px solid #7c3aed;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful th {
-          background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-          color: white;
-          font-weight: 600;
-          border: 1px solid #6d28d9;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful tbody tr:nth-child(odd) {
-          background-color: #faf5ff;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-6-colorful td {
-          border: 1px solid #e9d5ff;
-        }
-
-        /* List Table 1 - Simple */
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 {
-          border: none;
-          border-top: 2px solid #3b82f6;
-          border-bottom: 2px solid #3b82f6;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 th {
-          background-color: transparent;
-          font-weight: 600;
-          border: none;
-          border-bottom: 1px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-1 td {
-          border: none;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        /* List Table 2 - Minimal */
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 {
-          border: none;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 th {
-          background-color: #f3f4f6;
-          font-weight: 600;
-          border: none;
-          border-bottom: 2px solid #6b7280;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-2 td {
-          border: none;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        /* List Table 3 - Accent */
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 {
-          border: none;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 th {
-          background-color: #dbeafe;
-          color: #1e40af;
-          font-weight: 600;
-          border: none;
-          border-bottom: 2px solid #3b82f6;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 td {
-          border: none;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-3 tbody tr:hover {
-          background-color: #eff6ff;
-        }
-
-        /* List Table 4 - Bold Header */
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 {
-          border: none;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 th {
-          background-color: #059669;
-          color: white;
-          font-weight: 700;
-          border: none;
-          padding: 12px;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 td {
-          border: none;
-          border-bottom: 1px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-4 tbody tr:nth-child(even) {
-          background-color: #f0fdf4;
-        }
-
-        /* Plain Table 1 - Minimal borders */
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 {
-          border: 1px solid #e5e7eb;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 th {
-          background-color: white;
-          font-weight: 600;
-          border-bottom: 2px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-1 td {
-          border: none;
-          border-bottom: 1px solid #f3f4f6;
-        }
-
-        /* Plain Table 2 - No borders */
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 {
-          border: none;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 th {
-          background-color: transparent;
-          font-weight: 700;
-          border: none;
-          border-bottom: 3px solid #1f2937;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-plain-2 td {
-          border: none;
-          padding: 10px 12px;
-        }
-
-        /* Grid Table 7 Accent - Orange */
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent {
-          border: 2px solid #f97316;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent th {
-          background-color: #f97316;
-          color: white;
-          font-weight: 600;
-          border: 1px solid #ea580c;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent td {
-          border: 1px solid #fed7aa;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-grid-7-accent tbody tr:nth-child(even) {
-          background-color: #fff7ed;
-        }
-
-        /* List Table 5 Medium */
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 {
-          border: none;
-          border-top: 3px solid #6366f1;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 th {
-          background-color: #eef2ff;
-          color: #4338ca;
-          font-weight: 600;
-          border: none;
-          border-bottom: 2px solid #6366f1;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 td {
-          border: none;
-          border-bottom: 1px solid #e0e7ff;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-list-5 tbody tr:hover {
-          background-color: #f5f3ff;
-        }
-
-        /* Colorful Grid - Rainbow */
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid {
-          border: 2px solid #ec4899;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid th {
-          background: linear-gradient(90deg, #ec4899 0%, #f59e0b 50%, #10b981 100%);
-          color: white;
-          font-weight: 600;
-          border: 1px solid #db2777;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid td {
-          border: 1px solid #fce7f3;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+1) {
-          background-color: #fef2f2;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+2) {
-          background-color: #fef3c7;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+3) {
-          background-color: #d1fae5;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-grid tbody tr:nth-child(4n+4) {
-          background-color: #dbeafe;
-        }
-
-        /* Colorful List - Teal */
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list {
-          border: none;
-          border-top: 3px solid #14b8a6;
-          border-bottom: 3px solid #14b8a6;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list th {
-          background-color: #14b8a6;
-          color: white;
-          font-weight: 700;
-          border: none;
-          padding: 12px;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list td {
-          border: none;
-          border-bottom: 1px solid #99f6e4;
-        }
-
-        .syncfusion-editor .e-rte-content table.e-rte-table-colorful-list tbody tr:hover {
-          background-color: #ccfbf1;
-        }
-
-        /* Table cell alignment helpers */
-        .syncfusion-editor .e-rte-content table td.align-top {
-          vertical-align: top;
-        }
-
-        .syncfusion-editor .e-rte-content table td.align-middle {
-          vertical-align: middle;
-        }
-
-        .syncfusion-editor .e-rte-content table td.align-bottom {
-          vertical-align: bottom;
-        }
-
-        /* Table border styles */
-        .syncfusion-editor .e-rte-content table.border-thick {
-          border-width: 3px;
-        }
-
-        .syncfusion-editor .e-rte-content table.border-double {
-          border-style: double;
-          border-width: 3px;
-        }
-
-        .syncfusion-editor .e-rte-content table.border-dashed {
-          border-style: dashed;
-        }
-
-        .syncfusion-editor .e-rte-content table.no-border {
-          border: none;
-        }
-
-        .syncfusion-editor .e-rte-content table.no-border td,
-        .syncfusion-editor .e-rte-content table.no-border th {
-          border: none;
-        }
-
-        /* Enhanced Bullet Styles - Fix for Unicode bullet issue */
-        .syncfusion-editor .e-rte-content ul {
-          list-style-type: disc;
-          padding-left: 2em;
-          margin: 0.5em 0;
-        }
-
-        .syncfusion-editor .e-rte-content ul li {
-          margin: 0.25em 0;
-          line-height: 1.5;
-          position: relative;
-          list-style-position: outside;
-        }
-
-        /* Override any text content that shows Unicode bullet */
-        .syncfusion-editor .e-rte-content ul li:not([class*="bullet-"]) {
-          list-style-type: disc;
-        }
-
-        /* Force proper bullet display */
-        .syncfusion-editor .e-rte-content ul li::marker {
-          color: #374151;
-          font-size: 1.2em;
-        }
-
-        /* Remove any text content that might show Unicode bullet */
-        .syncfusion-editor .e-rte-content ul li::before {
-          display: none;
-        }
-
-        /* Apply bullet styles based on list-style-type */
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: disc"] li::marker {
-          content: "●";
-          color: #374151;
-          font-size: 1.2em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: circle"] li::marker {
-          content: "○";
-          color: #6b7280;
-          font-size: 1.1em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: square"] li::marker {
-          content: "■";
-          color: #1f2937;
-          font-size: 1.1em;
-        }
-
-        /* Custom bullet styles for special characters */
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] li::before {
-          content: "✓ ";
-          color: #059669;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul[style*="list-style-type: none"] li::marker {
-          display: none;
-        }
-
-        /* Additional custom bullet styles using data attributes */
-        .syncfusion-editor .e-rte-content ul[data-bullet="check"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="check"] li::before {
-          content: "✓ ";
-          color: #059669;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="arrow"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="arrow"] li::before {
-          content: "→ ";
-          color: #3b82f6;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="triangle"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="triangle"] li::before {
-          content: "▶ ";
-          color: #dc2626;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="diamond"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="diamond"] li::before {
-          content: "◆ ";
-          color: #7c3aed;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="star"] {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul[data-bullet="star"] li::before {
-          content: "★ ";
-          color: #f59e0b;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        /* Custom bullet styles - Enhanced with proper Unicode handling */
-        .syncfusion-editor .e-rte-content ul.bullet-disc {
-          list-style-type: disc;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-disc li::marker {
-          color: #374151;
-          font-size: 1.2em;
-          content: "●";
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-circle {
-          list-style-type: circle;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-circle li::marker {
-          color: #6b7280;
-          font-size: 1.1em;
-          content: "○";
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-square {
-          list-style-type: square;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-square li::marker {
-          color: #1f2937;
-          font-size: 1.1em;
-          content: "■";
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-check {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-check li::before {
-          content: "✓ ";
-          color: #059669;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-check li::marker {
-          display: none;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-arrow {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-arrow li::before {
-          content: "→ ";
-          color: #3b82f6;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-arrow li::marker {
-          display: none;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-triangle {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-triangle li::before {
-          content: "▶ ";
-          color: #dc2626;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-triangle li::marker {
-          display: none;
-        }
-
-        /* Additional bullet styles */
-        .syncfusion-editor .e-rte-content ul.bullet-diamond {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-diamond li::before {
-          content: "◆ ";
-          color: #7c3aed;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-diamond li::marker {
-          display: none;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-star {
-          list-style-type: none;
-          padding-left: 1.5em;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-star li::before {
-          content: "★ ";
-          color: #f59e0b;
-          font-weight: bold;
-          position: absolute;
-          left: -1.5em;
-          display: block;
-        }
-
-        .syncfusion-editor .e-rte-content ul.bullet-star li::marker {
-          display: none;
-        }
-
-        /* Enhanced Numbered Lists */
-        .syncfusion-editor .e-rte-content ol {
-          padding-left: 2em;
-          margin: 0.5em 0;
-        }
-
-        .syncfusion-editor .e-rte-content ol li {
-          margin: 0.25em 0;
-          line-height: 1.5;
-        }
-
-        /* Numbered list styles - Apply based on actual style attributes */
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: decimal"] {
-          list-style-type: decimal !important;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: decimal-leading-zero"] {
-          list-style-type: decimal-leading-zero !important;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: upper-roman"] {
-          list-style-type: upper-roman !important;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: lower-roman"] {
-          list-style-type: lower-roman !important;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: upper-alpha"] {
-          list-style-type: upper-alpha !important;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="list-style-type: lower-alpha"] {
-          list-style-type: lower-alpha !important;
-        }
-
-        /* Force numbered list display with proper styling */
-        .syncfusion-editor .e-rte-content ol li::marker {
-          color: #374151;
-          font-weight: 600;
-          font-size: 1em;
-        }
-
-        /* Ensure all ordered lists have proper numbering */
-        .syncfusion-editor .e-rte-content ol {
-          counter-reset: item;
-        }
-
-        .syncfusion-editor .e-rte-content ol li {
-          display: list-item;
-          list-style-position: outside;
-        }
-
-        /* Remove the problematic decimal-leading-zero override */
-        .syncfusion-editor .e-rte-content ol li {
-          list-style-type: inherit;
-        }
-
-        /* Specific overrides for each numbering type */
-        .syncfusion-editor .e-rte-content ol[style*="decimal"] li {
-          list-style-type: decimal;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="decimal-leading-zero"] li {
-          list-style-type: decimal-leading-zero;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="upper-roman"] li {
-          list-style-type: upper-roman;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="lower-roman"] li {
-          list-style-type: lower-roman;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="upper-alpha"] li {
-          list-style-type: upper-alpha;
-        }
-
-        .syncfusion-editor .e-rte-content ol[style*="lower-alpha"] li {
-          list-style-type: lower-alpha;
-        }
-
-        /* Numbered list styles */
-        .syncfusion-editor .e-rte-content ol.number-decimal {
-          list-style-type: decimal;
-        }
-
-        .syncfusion-editor .e-rte-content ol.number-decimal-leading {
-          list-style-type: decimal-leading-zero;
-        }
-
-        .syncfusion-editor .e-rte-content ol.number-upper-roman {
-          list-style-type: upper-roman;
-        }
-
-        .syncfusion-editor .e-rte-content ol.number-lower-roman {
-          list-style-type: lower-roman;
-        }
-
-        .syncfusion-editor .e-rte-content ol.number-upper-alpha {
-          list-style-type: upper-alpha;
-        }
-
-        .syncfusion-editor .e-rte-content ol.number-lower-alpha {
-          list-style-type: lower-alpha;
-        }
-
-        /* MS Word-like Table Enhancements */
-        .syncfusion-editor .e-rte-content table {
-          border-collapse: collapse;
-          width: 100%;
-          margin: 1em 0;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .syncfusion-editor .e-rte-content table td,
-        .syncfusion-editor .e-rte-content table th {
-          padding: 12px 16px;
-          vertical-align: top;
-          border: 1px solid #d1d5db;
-        }
-
-        .syncfusion-editor .e-rte-content table th {
-          background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
-          font-weight: 600;
-          color: #1e293b;
-          text-align: left;
-        }
-
-        .syncfusion-editor .e-rte-content table tr:nth-child(even) {
-          background-color: #f8fafc;
-        }
-
-        .syncfusion-editor .e-rte-content table tr:hover {
-          background-color: #f1f5f9;
-        }
-
-        /* Dark mode bullet styles */
-        .dark .syncfusion-editor .e-rte-content ul.bullet-check li::before {
-          color: #10b981;
-        }
-
-        .dark .syncfusion-editor .e-rte-content ul.bullet-arrow li::before {
-          color: #60a5fa;
-        }
-
-        .dark .syncfusion-editor .e-rte-content ul.bullet-triangle li::before {
-          color: #f87171;
-        }
-
-        /* Dark mode table styles */
-        .dark .syncfusion-editor .e-rte-content table th {
-          background: linear-gradient(to bottom, #334155 0%, #1e293b 100%);
-          color: #e2e8f0;
-          border-color: #475569;
-        }
-
-        .dark .syncfusion-editor .e-rte-content table td {
-          border-color: #475569;
-          color: #e2e8f0;
-        }
-
-        .dark .syncfusion-editor .e-rte-content table tr:nth-child(even) {
-          background-color: #1e293b;
-        }
-
-        .dark .syncfusion-editor .e-rte-content table tr:hover {
-          background-color: #334155;
         }
       `}</style>
 
