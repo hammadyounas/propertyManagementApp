@@ -19,7 +19,7 @@ const SyncfusionDocEditor = dynamic(
     await import("@syncfusion/ej2-dropdowns/styles/material.css")
     await import("@syncfusion/ej2-documenteditor/styles/material.css")
 
-    const DocEditorWrapper = ({ forwardRef, height, showPropertiesPane, contentChange, ...otherProps }) => (
+    const DocEditorWrapper = ({ forwardRef, height, showPropertiesPane, contentChange, created, ...otherProps }) => (
       <DocumentEditorContainerComponent 
         ref={forwardRef}
         width="90%"
@@ -29,6 +29,7 @@ const SyncfusionDocEditor = dynamic(
         showPropertiesPane={showPropertiesPane}
         serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
         contentChange={contentChange}
+        created={created}
         // Performance optimizations
         enableOptimizedTextMeasuring={true}
         enableSelectionResize={false}
@@ -95,11 +96,18 @@ const TemplateEditor = ({
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
+  const [editorCreated, setEditorCreated] = useState(false);
   const docEditorRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Handler for when the editor is created
+  const handleEditorCreated = () => {
+    console.log('Editor created event fired');
+    setEditorCreated(true);
+  };
 
   // Set text direction to LTR (Left-to-Right) for English editing
   useEffect(() => {
@@ -163,7 +171,7 @@ const TemplateEditor = ({
           switch (format) {
             case 'sfdt':
               // Syncfusion Document Format - load directly to preserve all formatting
-              editor.open(editorValue);
+            editor.open(editorValue);
               break;
             case 'html':
               // HTML content - convert to proper document format
@@ -171,7 +179,7 @@ const TemplateEditor = ({
               break;
             case 'text':
               // Plain text content
-              editor.editor.insertText(editorValue);
+            editor.editor.insertText(editorValue);
               break;
             default:
               console.warn('Unknown document format, treating as plain text');
@@ -480,10 +488,10 @@ const TemplateEditor = ({
     
     // Set new timeout to debounce rapid changes
     const newTimeout = setTimeout(() => {
-      if (docEditorRef.current?.documentEditor) {
-        try {
+    if (docEditorRef.current?.documentEditor) {
+      try {
           // Get the document content in SFDT format (Syncfusion Document Format)
-          const content = docEditorRef.current.documentEditor.serialize();
+        const content = docEditorRef.current.documentEditor.serialize();
           debugDocumentContent(content, 'Saving content');
           
           // Update the editorValue state if setEditorValue is provided
@@ -492,13 +500,13 @@ const TemplateEditor = ({
           }
           
           // Call the onChange callback if provided
-          if (onChange) {
-            onChange(content);
-          }
+        if (onChange) {
+          onChange(content);
+        }
           
           console.log('Content change handled successfully');
-        } catch (error) {
-          console.error('Error getting document content:', error);
+      } catch (error) {
+        console.error('Error getting document content:', error);
           // Fallback: try to get plain text
           try {
             const plainText = docEditorRef.current.documentEditor.editor.getText();
@@ -664,12 +672,18 @@ const TemplateEditor = ({
         return;
       }
 
-      // Check if buttons already exist
-      if (containerEl.querySelector('#rte-export-pdf-btn') && containerEl.querySelector('#rte-print-btn')) {
-        return;
-      }
+      // Remove any existing custom buttons first to avoid duplicates
+      const existingExport = containerEl.querySelector('#rte-export-pdf-btn');
+      const existingPrint = containerEl.querySelector('#rte-print-btn');
+      const existingImport = containerEl.querySelector('#rte-import-btn');
+      
+      [existingExport, existingPrint, existingImport].forEach(btn => {
+        if (btn && btn.parentElement) {
+          btn.parentElement.remove();
+        }
+      });
 
-      console.log('Adding Export PDF and Print buttons to toolbar...');
+      console.log('Adding Export PDF, Print, and Import buttons to toolbar...');
 
       // Create Export PDF button
       const exportBtn = document.createElement('button');
@@ -770,11 +784,13 @@ const TemplateEditor = ({
       let shouldRetry = false;
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          // Check if toolbar was added
+          // Check if toolbar was added or modified
           mutation.addedNodes.forEach((node) => {
             if (node.nodeType === 1 && (
               node.classList?.contains('e-toolbar') || 
-              node.querySelector?.('.e-toolbar')
+              node.classList?.contains('e-toolbar-items') ||
+              node.querySelector?.('.e-toolbar') ||
+              node.querySelector?.('.e-toolbar-items')
             )) {
               shouldRetry = true;
             }
@@ -784,6 +800,7 @@ const TemplateEditor = ({
       
       if (shouldRetry) {
         setTimeout(addButtons, 100);
+        setTimeout(addButtons, 500); // Try again after a longer delay
       }
     });
 
@@ -796,7 +813,7 @@ const TemplateEditor = ({
       timeouts.forEach(clearTimeout);
       observer.disconnect();
     };
-  }, [mounted]);
+  }, [mounted, editorCreated]);
 
   // Function to import document with proper formatting
   const importDocument = async (content) => {
@@ -934,6 +951,7 @@ const TemplateEditor = ({
           enableToolbar={true}
           showPropertiesPane={true}
           contentChange={handleContentChange}
+          created={handleEditorCreated}
           {...props}
         />
       </div>
