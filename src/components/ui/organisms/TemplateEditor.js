@@ -98,6 +98,8 @@ const TemplateEditor = ({
   const [mounted, setMounted] = useState(false);
   const [editorCreated, setEditorCreated] = useState(false);
   const docEditorRef = useRef(null);
+  const isInternalUpdate = useRef(false); // Track if update is from editor itself
+  const lastLoadedContent = useRef(null); // Track last loaded content to prevent reloads
 
   useEffect(() => {
     setMounted(true);
@@ -160,6 +162,18 @@ const TemplateEditor = ({
   useEffect(() => {
     if (!mounted || !docEditorRef.current?.documentEditor) return;
     
+    // Skip loading if this is an internal update from the editor itself
+    if (isInternalUpdate.current) {
+      console.log('Skipping content load - internal update');
+      return;
+    }
+    
+    // Skip loading if the content hasn't changed
+    if (editorValue === lastLoadedContent.current) {
+      console.log('Skipping content load - content unchanged');
+      return;
+    }
+    
     const loadContent = async () => {
       try {
         const editor = docEditorRef.current.documentEditor;
@@ -167,6 +181,9 @@ const TemplateEditor = ({
           debugDocumentContent(editorValue, 'Loading content');
           const format = detectDocumentFormat(editorValue);
           console.log('Detected document format:', format);
+          
+          // Update the last loaded content
+          lastLoadedContent.current = editorValue;
           
           switch (format) {
             case 'sfdt':
@@ -494,6 +511,10 @@ const TemplateEditor = ({
         const content = docEditorRef.current.documentEditor.serialize();
           debugDocumentContent(content, 'Saving content');
           
+          // Mark this as an internal update to prevent reload
+          isInternalUpdate.current = true;
+          lastLoadedContent.current = content;
+          
           // Update the editorValue state if setEditorValue is provided
           if (setEditorValue) {
             setEditorValue(content);
@@ -504,6 +525,11 @@ const TemplateEditor = ({
           onChange(content);
         }
           
+          // Reset the flag after a short delay
+          setTimeout(() => {
+            isInternalUpdate.current = false;
+          }, 100);
+          
           console.log('Content change handled successfully');
       } catch (error) {
         console.error('Error getting document content:', error);
@@ -511,6 +537,10 @@ const TemplateEditor = ({
           try {
             const plainText = docEditorRef.current.documentEditor.editor.getText();
             console.log('Fallback to plain text:', plainText.substring(0, 100) + '...');
+            
+            // Mark this as an internal update to prevent reload
+            isInternalUpdate.current = true;
+            lastLoadedContent.current = plainText;
             
             // Update the editorValue state if setEditorValue is provided
             if (setEditorValue) {
@@ -521,6 +551,11 @@ const TemplateEditor = ({
             if (onChange) {
               onChange(plainText);
             }
+            
+            // Reset the flag after a short delay
+            setTimeout(() => {
+              isInternalUpdate.current = false;
+            }, 100);
           } catch (fallbackError) {
             console.error('Fallback content retrieval also failed:', fallbackError);
           }
