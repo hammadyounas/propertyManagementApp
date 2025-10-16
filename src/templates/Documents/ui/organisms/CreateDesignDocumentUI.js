@@ -45,6 +45,7 @@ export default function CreateDesignDocumentUI({
                   value={docTitle}
                   onChange={(e) => setDocTitle(e.target.value)}
                   placeholder="Untitled Document"
+                  required
                   className="w-full text-lg sm:text-xl font-semibold bg-transparent border-none focus:outline-none text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 />
                 <div className="flex items-center space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-slate-400">

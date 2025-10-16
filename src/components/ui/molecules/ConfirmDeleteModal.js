@@ -18,7 +18,7 @@ export default function ConfirmDeleteModal({
             Confirm Deletion
           </h2>
         </div>
-        <p className="text-gray-600 mt-2 text-center">
+        <p className="text-gray-600 mt-2">
           {text || "Are you sure you want to delete this item?"}
         </p>
 
