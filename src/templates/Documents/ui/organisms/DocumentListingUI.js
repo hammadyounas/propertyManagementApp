@@ -119,12 +119,17 @@ export default function DocumentListingUI({
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => onEdit(document)}
+                            // onClick={() => onEdit(document)}
                             className="cursor-pointer text-[20px]"
-                            icon={"heroicons:pencil-square"}
+                            icon={"hugeicons:mail-send-02"}
                           />
                           <Icon
-                            onClick={() => onDownload(document)}
+                            // onClick={() => onEdit(document)}
+                            className="cursor-pointer text-[20px] ml-4"
+                            icon={"bytesize:upload"}
+                          />
+                          <Icon
+                            // onClick={() => onDownload(document)}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"material-symbols:download"}
                           />

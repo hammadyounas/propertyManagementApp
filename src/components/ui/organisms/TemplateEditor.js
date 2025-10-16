@@ -149,14 +149,18 @@ const TemplateEditor = ({
     setTimeout(setTextDirectionLTR, 2000);
   }, [mounted]);
 
-  // Update editorValue when value or defaultValue changes
+  // Initialize internal state from value or defaultValue props
+  // Note: This should NOT use editorValue as a dependency to avoid circular updates
   useEffect(() => {
-    if (editorValue !== undefined) {
-      setEditorValue(editorValue);
-    } else if (value || defaultValue) {
-      setEditorValue(value || defaultValue);
+    if (value || defaultValue) {
+      // Only set initial value if we don't have content yet
+      if (!editorValue || editorValue === '') {
+        if (setEditorValue && typeof setEditorValue === 'function') {
+          setEditorValue(value || defaultValue);
+        }
+      }
     }
-  }, [value, defaultValue, editorValue]);
+  }, [value, defaultValue]); // Removed editorValue from dependencies
 
   // Load content into DocumentEditor when it's ready
   useEffect(() => {

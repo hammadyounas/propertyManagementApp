@@ -63,23 +63,23 @@ export default function CreateDesignDocumentUI({
                 <Icon icon="mdi:content-save" />
                 <span>Save</span>
               </button>
-              <button
+              {/* <button
                 onClick={onDownload}
                 disabled={loading}
                 className="px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Icon icon="mdi:download" />
                 <span>Download</span>
-              </button>
+              </button> */}
 
-              <button
+              {/* <button
                 onClick={onSendEmail}
                 disabled={loading}
                 className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Icon icon="mdi:email" />
                 <span>Send Email</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

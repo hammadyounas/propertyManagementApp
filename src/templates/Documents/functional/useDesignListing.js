@@ -96,53 +96,7 @@ export default function useDesignListing() {
       setDeleteLoading(false);
     }
   };
-  
-  const handleDownload = async (documentData) => {
-    setLoading(true)
-    try {
-      const container = document.createElement('div')
-      container.style.padding = '24px'
-      container.style.background = '#ffffff'
-      const headerHtml = `
-        <div style="text-align: center; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
-          <img src="/assets/images/logo/BLACK-LOGO.png" alt="Logo" style="max-height: 60px; max-width: 200px;" />
-        </div>
-      `
-      container.innerHTML = headerHtml + (documentData.content || '')
-      document.body.appendChild(container)
 
-      const safeName = `${(documentData.title || 'document').replace(/[^a-z0-9-_ ]/gi,'_')}.pdf`
-
-      try {
-        const res = await fetch('/styles/pdf-styles.css')
-        if (res.ok) {
-          const css = await res.text()
-          const styleEl = document.createElement('style')
-          styleEl.type = 'text/css'
-          styleEl.appendChild(document.createTextNode(css))
-          container.prepend(styleEl)
-        }
-      } catch {}
-
-      const opt = {
-        margin:       [10, 10, 10, 10],
-        filename:     safeName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }
-
-      await html2pdf().set(opt).from(container).save()
-      toast.success('PDF download started')
-
-      document.body.removeChild(container)
-    } catch (e) {
-      console.error(e)
-      toast.error('Failed to generate PDF')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleSave = (documentData) => {
     if (documentData.id) {
@@ -233,7 +187,7 @@ export default function useDesignListing() {
     showDeleteModal,
     deleteLoading,
     router,
-    handleDownload,
+    // handleDownload,
     handleOpenTemplateModal,
     handleCloseTemplateModal,
     handleCreateWithTemplate,

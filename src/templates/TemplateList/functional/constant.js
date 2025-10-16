@@ -18,7 +18,7 @@ export const columns = [
     const colors = {
       email: 'text-blue-600 bg-blue-200',
       contract: 'text-green-600 bg-green-200',
-      listing: 'text-purple-600 bg-purple-200',
+      listing: 'text-purple-600 bg-purple-200', 
       marketing: 'text-orange-600 bg-orange-200',
       document: 'text-red-600 bg-red-200',
       default: 'text-gray-600 bg-gray-200',

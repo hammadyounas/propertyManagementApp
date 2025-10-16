@@ -69,6 +69,12 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   }, [templates, selectedTemplateId])
 
   useEffect(() => {
+    // Only load template content if NOT editing an existing document
+    // This prevents overwriting user edits when editing a document
+    if (editingId) {
+      return; // Skip this effect when editing
+    }
+    
     if (selectedTemplate) {
       setEditorValue(selectedTemplate.content || '')
       setDocumentId(uuidv4())
@@ -78,7 +84,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
       setDocumentId('')
       setDocTitle('')
     }
-  }, [selectedTemplateId])
+  }, [selectedTemplateId, editingId, selectedTemplate])
 
   const regenerateDocumentId = () => setDocumentId(uuidv4())
 
