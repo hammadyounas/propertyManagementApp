@@ -532,17 +532,6 @@ const TemplateEditor = ({
   };
 
   // Export helpers
-  const handleExport = (format = 'Pdf') => {
-    try {
-      const editor = docEditorRef.current?.documentEditor;
-      if (!editor) return;
-      const fileName = (label || name || 'Document').toString();
-      editor.save(fileName, format);
-    } catch (error) {
-      console.error('Export failed:', error);
-    }
-  };
-
   const handlePrint = () => {
     try {
       const editor = docEditorRef.current?.documentEditor;
@@ -673,39 +662,16 @@ const TemplateEditor = ({
       }
 
       // Remove any existing custom buttons first to avoid duplicates
-      const existingExport = containerEl.querySelector('#rte-export-pdf-btn');
       const existingPrint = containerEl.querySelector('#rte-print-btn');
       const existingImport = containerEl.querySelector('#rte-import-btn');
       
-      [existingExport, existingPrint, existingImport].forEach(btn => {
+      [existingPrint, existingImport].forEach(btn => {
         if (btn && btn.parentElement) {
           btn.parentElement.remove();
         }
       });
 
-      console.log('Adding Export PDF, Print, and Import buttons to toolbar...');
-
-      // Create Export PDF button
-      const exportBtn = document.createElement('button');
-      exportBtn.id = 'rte-export-pdf-btn';
-      exportBtn.type = 'button';
-      exportBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
-      exportBtn.title = 'Export PDF';
-      exportBtn.style.cssText = 'min-width: 90px; margin: 2px 4px;';
-      
-      const exportSpan = document.createElement('span');
-      exportSpan.className = 'e-tbar-btn-text';
-      exportSpan.textContent = 'Export PDF';
-      exportBtn.appendChild(exportSpan);
-      exportBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        handleExport('Pdf');
-      });
-      
-      const exportItem = document.createElement('div');
-      exportItem.className = 'e-toolbar-item';
-      exportItem.appendChild(exportBtn);
+      console.log('Adding Print and Import buttons to toolbar...');
 
       // Create Print button
       const printBtn = document.createElement('button');
@@ -759,13 +725,11 @@ const TemplateEditor = ({
         // Insert before Find button
         itemsEl.insertBefore(importItem, findBtn.parentElement);
         itemsEl.insertBefore(printItem, findBtn.parentElement);
-        itemsEl.insertBefore(exportItem, findBtn.parentElement);
         console.log('Buttons inserted before Find button');
       } else {
         // Append at the end
         itemsEl.appendChild(importItem);
         itemsEl.appendChild(printItem);
-        itemsEl.appendChild(exportItem);
         console.log('Buttons appended to end of toolbar');
       }
     };
@@ -1000,8 +964,7 @@ const TemplateEditor = ({
           direction: ltr !important;
         }
 
-        /* Custom Export PDF, Print and Import buttons styling */
-        .syncfusion-doc-editor #rte-export-pdf-btn,
+        /* Custom Print and Import buttons styling */
         .syncfusion-doc-editor #rte-print-btn,
         .syncfusion-doc-editor #rte-import-btn {
           display: inline-flex !important;
@@ -1020,14 +983,12 @@ const TemplateEditor = ({
           margin: 2px 4px !important;
         }
 
-        .syncfusion-doc-editor #rte-export-pdf-btn:hover,
         .syncfusion-doc-editor #rte-print-btn:hover,
         .syncfusion-doc-editor #rte-import-btn:hover {
           background-color: #f3f4f6 !important;
           border-color: #9ca3af !important;
         }
 
-        .syncfusion-doc-editor #rte-export-pdf-btn:active,
         .syncfusion-doc-editor #rte-print-btn:active,
         .syncfusion-doc-editor #rte-import-btn:active {
           background-color: #e5e7eb !important;
@@ -1035,7 +996,6 @@ const TemplateEditor = ({
         }
 
         /* Dark mode for custom buttons */
-        .dark .syncfusion-doc-editor #rte-export-pdf-btn,
         .dark .syncfusion-doc-editor #rte-print-btn,
         .dark .syncfusion-doc-editor #rte-import-btn {
           background-color: #374151 !important;
@@ -1043,7 +1003,6 @@ const TemplateEditor = ({
           color: #e5e7eb !important;
         }
 
-        .dark .syncfusion-doc-editor #rte-export-pdf-btn:hover,
         .dark .syncfusion-doc-editor #rte-print-btn:hover,
         .dark .syncfusion-doc-editor #rte-import-btn:hover {
           background-color: #4b5563 !important;
