@@ -54,7 +54,7 @@ export default function DocumentListingUI({
                 text="Create Document"
                 icon="heroicons:plus"
                 onClick={onOpenTemplateModal}
-                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
+                className="btn-primary max-lg:hidden bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
           </div>

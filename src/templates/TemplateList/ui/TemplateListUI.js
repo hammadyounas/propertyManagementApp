@@ -56,7 +56,7 @@ export default function TemplateListUI({
                 text="Add Template"
                 icon="heroicons:plus"
                 onClick={() => router.push("/templates/create")}
-                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
+                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium max-lg:hidden"
               />
             </span>
           </div>
@@ -91,7 +91,7 @@ export default function TemplateListUI({
                 ) : templates.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                    <NoDataFound />
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (
@@ -128,7 +128,7 @@ export default function TemplateListUI({
                         <div className="flex justify-center">
                           <Icon
                             onClick={() => onEdit(template)}
-                            className="cursor-pointer text-[20px]"
+                            className="cursor-pointer text-[20px] max-lg:hidden"
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
@@ -136,11 +136,21 @@ export default function TemplateListUI({
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:document-duplicate"}
                           />
-                          <Icon
-                            onClick={() => onDelete(template.id)}
-                            className="cursor-pointer text-[20px]"
-                            icon={"heroicons-outline:trash"}
-                          />
+                          <div className="relative group inline-block">
+                            <Icon
+                              onClick={() => onDelete(template.id)}
+                              className="cursor-pointer text-[20px]"
+                              icon="heroicons-outline:trash"
+                            />
+                            <span
+                              className="absolute -top-8 left-1/2 -translate-x-1/2 
+                   bg-gray-800 text-white text-xs rounded py-1 px-2 
+                   opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                   pointer-events-none whitespace-nowrap"
+                            >
+                              Delete
+                            </span>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -151,7 +161,7 @@ export default function TemplateListUI({
           </div>
         </div>
       </div>
-      
+
       {/* Pagination */}
       {totalCount > pageSize && (
         <div className="flex w-full justify-end mt-4 items-center">
