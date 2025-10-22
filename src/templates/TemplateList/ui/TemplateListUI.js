@@ -105,15 +105,6 @@ export default function TemplateListUI({
                           </span>
                         </div>
                       </td>
-                      {/* <td className="table-td sm:p-4 p-2">
-                        <span className="block w-full whitespace-nowrap">
-                          <span
-                            className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${getCategoryColor(template.category || 'uncategorized')}`}
-                          >
-                            {template.category || 'Uncategorized'}
-                          </span>
-                        </span>
-                      </td> */}
                       <td className="table-td sm:p-4 p-2 text-center">
                         <div className="flex items-center justify-center">
                           <img src={template.created_by?.avatar || "/assets/images/users/default.jpg"} alt={template.created_by?.name} className="w-8 h-8 rounded-full mr-2" />
@@ -128,7 +119,7 @@ export default function TemplateListUI({
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => onEdit(template)}
+                            onClick={() => onEdit(template._id)}
                             className="cursor-pointer text-[20px] max-lg:hidden"
                             icon={"heroicons:pencil-square"}
                           />

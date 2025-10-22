@@ -9,7 +9,7 @@ import {
   clearTemplateError
 } from '../../../store/features/templates/templateSlice'
 import {
-  selectTemplate,
+  selectTemplateById,
   selectTemplateLoading,
   selectTemplateError,
   selectTemplateCreateSuccess
@@ -24,7 +24,7 @@ export default function useTextEditor(templateId = null) {
   const dispatch = useDispatch();
   
   // Redux state
-  const template = useSelector(selectTemplate);
+  const template = useSelector(selectTemplateById);
   const loading = useSelector(selectTemplateLoading);
   const error = useSelector(selectTemplateError);
   const createSuccess = useSelector(selectTemplateCreateSuccess);
@@ -209,6 +209,8 @@ export default function useTextEditor(templateId = null) {
           id: templateId, 
           data: optimizedTemplateData 
         })).unwrap();
+        toast.success('Template updated successfully!');
+        router.push('/templates');
       } else {
         // Create new template
         await dispatch(createTemplate(optimizedTemplateData)).unwrap();

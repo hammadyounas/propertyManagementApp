@@ -14,7 +14,8 @@ import {
   selectTemplateLoading,
   selectTemplateError,
   selectTemplateCreateSuccess,
-  selectTemplatesTotalCount
+  selectTemplatesTotalCount,
+  selectTemplateById
 } from '../../../store/features/templates/templateSelectors';
 
 export default function useTemplateList() {
@@ -27,7 +28,7 @@ export default function useTemplateList() {
   const error = useSelector(selectTemplateError);
   const createSuccess = useSelector(selectTemplateCreateSuccess);
   const totalCount = useSelector(selectTemplatesTotalCount);
-  
+  const template = useSelector(selectTemplateById);
   // Local state
   const [globalFilter, setGlobalFilter] = useState('');
   const [currentItem, setCurrentItem] = useState(null);
@@ -70,8 +71,8 @@ export default function useTemplateList() {
     setShowDeleteModal(true);
   };
 
-  const handleEdit = (template) => {
-    router.push(`/templates/edit/${template.id}`);
+  const handleEdit = (id) => {
+    router.push(`/templates/edit/${id}`);
   };
 
 
@@ -112,10 +113,10 @@ export default function useTemplateList() {
 
   const handleSave = async (templateData) => {
     try {
-      if (templateData.id) {
+      if (templateData._id) {
         // Update existing template
         await dispatch(updateTemplate({ 
-          id: templateData.id, 
+          id: templateData._id, 
           data: templateData 
         })).unwrap();
         toast.success('Template updated successfully.');
