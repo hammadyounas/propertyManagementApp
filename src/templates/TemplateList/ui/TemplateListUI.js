@@ -7,9 +7,7 @@ import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
 import { dateFormat } from "../../../libs/utils/helper";
 import {
-  categories,
   columns,
-  getCategoryColor,
   truncateContent,
 } from "../functional/constant";
 import NoDataFound from "../../../components/ui/atoms/NoDataFound";
@@ -116,9 +114,12 @@ export default function TemplateListUI({
                           </span>
                         </span>
                       </td> */}
-                      <td className="table-td sm:p-4 p-2 text-left">
-                        <div className="">
-                          {truncateContent(template.content)}
+                      <td className="table-td sm:p-4 p-2 text-center">
+                        <div className="flex items-center justify-center">
+                          <img src={template.created_by?.avatar || "/assets/images/users/default.jpg"} alt={template.created_by?.name} className="w-8 h-8 rounded-full mr-2" />
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {template.created_by.name}
+                          </span>
                         </div>
                       </td>
                       <td className="table-td sm:p-4 p-2">
