@@ -8,6 +8,7 @@ import dashboardReducer from "./features/dashboard/dashboardSlice";
 import propertiesReducer from "./features/properties/propertiesSlice";
 import invoicesReducer from "./features/invoices/invoicesSlice";
 import acmReducer from "./features/acm/acmSlice";
+import templatesReducer from "./features/templates/templateSlice"
 
 const rootReducer = {
   layout,
@@ -19,5 +20,6 @@ const rootReducer = {
   properties: propertiesReducer,
   invoices: invoicesReducer,
   acm: acmReducer,
+  templates: templatesReducer,
 };
 export default rootReducer;

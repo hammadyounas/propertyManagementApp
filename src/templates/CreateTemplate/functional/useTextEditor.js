@@ -1,14 +1,37 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  createTemplate,
+  updateTemplate,
+  fetchTemplateById,
+  clearTemplateError
+} from '../../../store/features/templates/templateSlice'
+import {
+  selectTemplate,
+  selectTemplateLoading,
+  selectTemplateError,
+  selectTemplateCreateSuccess
+} from '../../../store/features/templates/templateSelectors'
+import {
+  optimizeTemplateContent,
+  compressContent
+} from '../../../libs/utils/contentOptimizer'
 
 export default function useTextEditor(templateId = null) {
   const router = useRouter();
+  const dispatch = useDispatch();
+  
+  // Redux state
+  const template = useSelector(selectTemplate);
+  const loading = useSelector(selectTemplateLoading);
+  const error = useSelector(selectTemplateError);
+  const createSuccess = useSelector(selectTemplateCreateSuccess);
+  
+  // Local state
   const [title, setTitle] = useState('')
   const [editorValue, setEditorValue] = useState('')
-  const [category, setCategory] = useState('uncategorized')
-  const [loading, setLoading] = useState(false)
-  const [selectedPlaceholder, setSelectedPlaceholder] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
@@ -16,25 +39,33 @@ export default function useTextEditor(templateId = null) {
   // Load template data if editing
   useEffect(() => {
     if (templateId) {
-      const loadTemplate = () => {
-        try {
-          const savedTemplates = localStorage.getItem('propertyTemplates');
-          if (savedTemplates) {
-            const templates = JSON.parse(savedTemplates);
-            const template = templates.find(t => t.id === templateId);
-            if (template) {
-              setTitle(template.title || '');
-              setEditorValue(template.content || '');
-              setCategory(template.category || 'uncategorized');
-            }
-          }
-        } catch (error) {
-          console.error('Error loading template:', error);
-        }
-      };
-      loadTemplate();
+      dispatch(fetchTemplateById(templateId));
     }
-  }, [templateId]);
+  }, [templateId, dispatch]);
+
+  // Handle success/error states
+  useEffect(() => {
+    if (createSuccess) {
+      toast.success(templateId ? 'Template updated successfully!' : 'Template created successfully!');
+      dispatch(clearTemplateError());
+      router.push('/templates');
+    }
+  }, [createSuccess, dispatch, router, templateId]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearTemplateError());
+    }
+  }, [error, dispatch]);
+
+  // Populate form when template is loaded for editing
+  useEffect(() => {
+    if (template && templateId) {
+      setTitle(template.title || '');
+      setEditorValue(template.content || '');
+    }
+  }, [template, templateId]);
 
   const handleTriggerImport = () => {
     setShowImportModal(true);
@@ -158,61 +189,33 @@ export default function useTextEditor(templateId = null) {
     }
   };
 
-  // Predefined placeholders for property management
 
-  const insertPlaceholder = (placeholder) => {
-    // Create a highlighted placeholder with inline styling - only the placeholder text is highlighted
-    const highlightedPlaceholder = `<p style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-weight: 500; border: 1px solid #f59e0b;">${placeholder}</p>`;
-    
-    // For now, append to current content (cursor position insertion will be handled in TemplateEditor)
-    const currentContent = editorValue;
-    // const newContent = currentContent + placeholder;
-    const newContent = currentContent + highlightedPlaceholder;
-    setEditorValue(newContent);
-  };
-
-  const handleSave = (templateData) => {
-    setLoading(true);
-    
+  const handleSave = async (templateData) => {
     try {
-      const savedTemplates = localStorage.getItem('propertyTemplates');
-      let templates = savedTemplates ? JSON.parse(savedTemplates) : [];
+      // Optimize content before saving
+      const optimizedContent = optimizeTemplateContent(templateData.content);
+      
+      // Compress content further if needed
+      const finalContent = compressContent(optimizedContent);
+      
+      const optimizedTemplateData = {
+        ...templateData,
+        content: finalContent
+      };
       
       if (templateId) {
         // Update existing template
-        templates = templates.map(template => 
-          template.id === templateId 
-            ? { 
-                ...template, 
-                ...templateData, 
-                updatedAt: new Date().toISOString() 
-              }
-            : template
-        );
+        await dispatch(updateTemplate({ 
+          id: templateId, 
+          data: optimizedTemplateData 
+        })).unwrap();
       } else {
         // Create new template
-        const newTemplate = {
-          ...templateData,
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString(),
-          date: new Date().toISOString(),
-          category: category,
-        };
-        templates = [newTemplate, ...templates];
+        await dispatch(createTemplate(optimizedTemplateData)).unwrap();
       }
-      
-      localStorage.setItem('propertyTemplates', JSON.stringify(templates));
-      
-      // Show success message
-      toast.success(templateId ? 'Template updated successfully!' : 'Template saved successfully!');
-      
-      // Redirect to template list
-      router.push('/templates');
     } catch (error) {
       console.error('Error saving template:', error);
       toast.error('Error saving template. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -225,8 +228,6 @@ export default function useTextEditor(templateId = null) {
     setTitle,
     editorValue,
     setEditorValue,
-    category,
-    setCategory,
     loading,
     handleSave,
     handleBack,
@@ -237,7 +238,6 @@ export default function useTextEditor(templateId = null) {
     arrayBufferFromFile,
     textFromFile,
     handleImportFile,
-    insertPlaceholder,
     showImportModal,
     setShowImportModal,
     isDragging,

@@ -138,7 +138,7 @@ export default function TemplateListUI({
                           />
                           <div className="relative group inline-block">
                             <Icon
-                              onClick={() => onDelete(template.id)}
+                              onClick={() => onDelete(template._id)}
                               className="cursor-pointer text-[20px]"
                               icon="heroicons-outline:trash"
                             />

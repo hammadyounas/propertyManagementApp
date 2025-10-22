@@ -1,45 +1,63 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchTemplate,
+  createTemplate,
+  updateTemplate,
+  deleteTemplate,
+  clearTemplateError
+} from '../../../store/features/templates/templateSlice';
+import {
+  selectTemplates,
+  selectTemplateLoading,
+  selectTemplateError,
+  selectTemplateCreateSuccess,
+  selectTemplatesTotalCount
+} from '../../../store/features/templates/templateSelectors';
 
 export default function useTemplateList() {
   const router = useRouter();
-  const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  
+  // Redux state
+  const templates = useSelector(selectTemplates);
+  const loading = useSelector(selectTemplateLoading);
+  const error = useSelector(selectTemplateError);
+  const createSuccess = useSelector(selectTemplateCreateSuccess);
+  const totalCount = useSelector(selectTemplatesTotalCount);
+  
+  // Local state
   const [globalFilter, setGlobalFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all templates');
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
-  const [insertAtCursorFn, setInsertAtCursorFn] = useState(null);
 
-  // Load templates from localStorage on component mount
+  // Fetch templates on component mount
   useEffect(() => {
-    const loadTemplates = () => {
-      try {
-        const savedTemplates = localStorage.getItem('propertyTemplates');
-        if (savedTemplates) {
-          const parsedTemplates = JSON.parse(savedTemplates);
-          setTemplates(parsedTemplates);
-        }
-      } catch (error) {
-        console.error('Error loading templates:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchTemplate({
+      search: globalFilter,
+      page: currentPage,
+      limit: pageSize
+    }));
+  }, [dispatch, globalFilter, currentPage, pageSize]);
 
-    loadTemplates();
-  }, []);
-
-  // Save templates to localStorage whenever templates change
+  // Handle success/error states
   useEffect(() => {
-    if (templates.length > 0) {
-      localStorage.setItem('propertyTemplates', JSON.stringify(templates));
+    if (createSuccess) {
+      toast.success('Template created successfully!');
+      dispatch(clearTemplateError());
     }
-  }, [templates]);
+  }, [createSuccess, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearTemplateError());
+    }
+  }, [error, dispatch]);
 
   // Modal handlers
   const closeDeleteModal = () => {
@@ -56,69 +74,59 @@ export default function useTemplateList() {
     router.push(`/templates/edit/${template.id}`);
   };
 
-  const insertPlaceholder = (placeholderKey) => {
-    if (insertAtCursorFn) {
-      insertAtCursorFn(placeholderKey);
-    } else {
-      console.warn('Editor insert function not ready');
-    }
-  };
 
   const handleDelete = async ({ templateId }) => {
     try {
-      setDeleteLoading(true);
-
-      setTemplates(prev => {
-        const targetId = templateId ?? currentItem;
-        const updated = prev.filter(template => template.id !== targetId);
-        localStorage.setItem('propertyTemplates', JSON.stringify(updated)); // ✅ update localStorage
-        return updated;
-      });
-  
+      const targetId = templateId ?? currentItem;
+      await dispatch(deleteTemplate(targetId)).unwrap();
       closeDeleteModal();
       toast.success('Template deleted successfully.');
     } catch (error) {
       console.error('Error deleting template:', error);
       toast.error('Error deleting template!');
-    } finally {
-      setDeleteLoading(false);
     }
   };
   
 
-  const handleDuplicate = (template) => {
-    const duplicatedTemplate = {
-      ...template,
-      id: Date.now().toString(),
-      title: `${template.title} (Copy)`,
-      createdAt: new Date().toISOString(),
-      date: new Date().toISOString(),
-    };
-    
-    setTemplates(prev => [duplicatedTemplate, ...prev]);
-    toast.success('Template duplicated successfully.');
+  const handleDuplicate = async (template) => {
+    try {
+      const duplicatedTemplate = {
+        title: `${template.title} (Copy)`,
+        content: template.content,
+        // Remove the original ID so server can generate a new one
+        // Don't include _id, id, or any other ID fields
+      };
+      
+      await dispatch(createTemplate(duplicatedTemplate)).unwrap();
+      toast.success('Template duplicated successfully.');
+      dispatch(fetchTemplate({
+        search: globalFilter,
+        page: currentPage,
+        limit: pageSize
+      }));
+    } catch (error) {
+      console.error('Error duplicating template:', error);
+      toast.error('Error duplicating template!');
+    }
   };
 
-  const handleSave = (templateData) => {
-    if (templateData.id) {
-      // Update existing template
-      setTemplates(prev => 
-        prev.map(template => 
-          template.id === templateData.id 
-            ? { ...template, ...templateData, updatedAt: new Date().toISOString() }
-            : template
-        )
-      );
-    } else {
-      // Create new template
-      const newTemplate = {
-        ...templateData,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        date: new Date().toISOString(),
-        category: templateData.category || 'uncategorized',
-      };
-      setTemplates(prev => [newTemplate, ...prev]);
+  const handleSave = async (templateData) => {
+    try {
+      if (templateData.id) {
+        // Update existing template
+        await dispatch(updateTemplate({ 
+          id: templateData.id, 
+          data: templateData 
+        })).unwrap();
+        toast.success('Template updated successfully.');
+      } else {
+        // Create new template
+        await dispatch(createTemplate(templateData)).unwrap();
+        toast.success('Template created successfully.');
+      }
+    } catch (error) {
+      console.error('Error saving template:', error);
+      toast.error('Error saving template!');
     }
   };
 
@@ -126,36 +134,21 @@ export default function useTemplateList() {
     router.push('/templates');
   };
 
-  // Filter templates based on global search and category
-  const filteredTemplates = templates.filter(template => {
-    const matchesSearch = !globalFilter || 
-      template.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      template.content.toLowerCase().includes(globalFilter.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all templates' || 
-      template.category === categoryFilter;
-    
-    return matchesSearch && matchesCategory;
-  });
+  // No filtering needed - Redux handles search
+  const filteredTemplates = templates;
 
   // Pagination logic
-  const totalCount = filteredTemplates.length;
   const totalPages = Math.ceil(totalCount / pageSize);
-  const startIndex = currentPage * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
 
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage);
+    setCurrentPage(selectedPage + 1); // Convert to 1-based indexing
   };
 
   return {
-    templates: paginatedTemplates,
+    templates: filteredTemplates,
     loading,
     globalFilter,
     setGlobalFilter,
-    categoryFilter,
-    setCategoryFilter,
     handleEdit,
     handleDelete,
     handleDuplicate,
@@ -164,15 +157,13 @@ export default function useTemplateList() {
     openDeleteModal,
     closeDeleteModal,
     showDeleteModal,
-    deleteLoading,
+    deleteLoading: loading,
     router,
     // Pagination props
-    currentPage,
+    currentPage: currentPage - 1, // Convert to 0-based indexing for UI
     pageSize,
     totalCount,
     totalPages,
     handlePageChange,
-    setInsertAtCursorFn,
-    insertPlaceholder,
   };
 }
