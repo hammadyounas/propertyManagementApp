@@ -137,7 +137,6 @@ const templateSlice = createSlice({
       })
       .addCase(fetchTemplateById.fulfilled, (state, action) => {
         state.loading = false;
-        state.template = action.payload;
       })
       .addCase(fetchTemplateById.rejected, (state, action) => {
         state.loading = false;
@@ -151,7 +150,6 @@ const templateSlice = createSlice({
       })
       .addCase(updateTemplate.fulfilled, (state, action) => {
         state.loading = false;
-        state.template = action.payload;
       })
       .addCase(updateTemplate.rejected, (state, action) => {
         state.loading = false;

@@ -1,8 +1,6 @@
 "use client";
 import TemplateEditor from "../../../components/ui/organisms/TemplateEditor";
-import { placeholders } from "../functional/constant";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 
 export default function TemplateEditorUI({
   title,
@@ -61,28 +59,11 @@ export default function TemplateEditorUI({
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
-              {/* <div className="w-full sm:w-48">
-                <CustomSelect
-                  value={category}
-                  onChange={setCategory}
-                  options={categoryOptions}
-                  placeholder="Select Category"
-                  className="text-sm w-full"
-                />
-              </div> */}
-              {/* <button
-                type="button"
-                onClick={handleTriggerImport}
-                className="w-full sm:w-auto px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-100 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors flex items-center justify-center space-x-2"
-              >
-                <span>Import Template</span>
-              </button> */}
               <button
                 onClick={() => {
                   const templateData = {
                     title,
                     content: editorValue,
-                    id: templateId,
                   };
                   if (onSave) {
                     onSave(templateData);
@@ -93,11 +74,8 @@ export default function TemplateEditorUI({
                 disabled={loading}
                 className="w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
-                {loading && (
-                  <LoadingUI />
-                )}
-                <span className="hidden sm:inline">Save as Template</span>
-                <span className="sm:hidden">Save</span>
+                <span className="hidden sm:inline">{loading ? "Saving..." : "Save as Template"}</span>
+                <span className="sm:hidden">{loading ? "Saving..." : "Save"}</span>
               </button>
             </div>
           </div>
@@ -117,91 +95,6 @@ export default function TemplateEditorUI({
             </div>
           </div>
         </div>
-
-        {/* Variables Sidebar */}
-        {/* <div className="w-full lg:w-80 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
-          <div className="p-4 border-b border-gray-200 dark:border-slate-700">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
-                Variables
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-                You can use this predefined variables to create your template.
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            Personal Information
-            <div>
-              <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
-                Personal Information
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-                {placeholders.slice(0, 8).map((placeholder, index) => (
-                  <div
-                    key={index}
-                    onClick={() => insertPlaceholder(placeholder.key)}
-                    className="p-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
-                  >
-                    <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
-                      {placeholder.label}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                      {placeholder.key}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            Contract Information
-            <div>
-              <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
-                Contract Information
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-                {placeholders.slice(8, 12).map((placeholder, index) => (
-                  <div
-                    key={index}
-                    onClick={() => insertPlaceholder(placeholder.key)}
-                    className="p-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
-                  >
-                    <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
-                      {placeholder.label}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                      {placeholder.key}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            Property Information
-            <div>
-              <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
-                Property Information
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-                {placeholders.slice(12).map((placeholder, index) => (
-                  <div
-                    key={index}
-                    onClick={() => insertPlaceholder(placeholder.key)}
-                    className="p-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
-                  >
-                    <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
-                      {placeholder.label}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                      {placeholder.key}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
       
       <input

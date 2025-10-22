@@ -24,6 +24,7 @@ export const fetchAllTemplatesAPI = async ({ search = "", page, limit }) => {
 
 export const fetchTemplateByIdAPI = async (id) => {
   const response = await getRequest(`template/${id}`);
+  console.log("response", response?.data);
   return response?.data;
 };
 
