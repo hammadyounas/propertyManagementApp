@@ -7,19 +7,13 @@ export default function TemplateEditorUI({
   editorValue,
   setEditorValue,
   setTitle,
-  category,
-  setCategory,
   loading,
   onSave,
   onBack,
   isEdit = false,
   templateId = null,
   fileInputRef,
-  handleTriggerImport,
-  arrayBufferFromFile,
-  textFromFile,
   handleImportFile,
-  insertPlaceholder,
   showImportModal,
   setShowImportModal,
   isDragging,
@@ -74,7 +68,7 @@ export default function TemplateEditorUI({
                 disabled={loading}
                 className="w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
-                <span className="hidden sm:inline">{loading ? "Saving..." : "Save as Template"}</span>
+                <span className="hidden sm:inline">{loading ? "Saving Template..." : "Save as Template"}</span>
                 <span className="sm:hidden">{loading ? "Saving..." : "Save"}</span>
               </button>
             </div>
