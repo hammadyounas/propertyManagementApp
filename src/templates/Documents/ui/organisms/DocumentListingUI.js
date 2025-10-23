@@ -12,6 +12,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
 import TemplateSelectionModal from "../molecules/TemplateSelectionModal";
+import UploadPdfModal from "../molecules/UploadPdfModal";
 import { dateFormat } from "../../../../libs/utils/helper";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
@@ -41,6 +42,13 @@ export default function DocumentListingUI({
   totalCount = 0,
   totalPages = 0,
   handlePageChange = () => {},
+  // Upload PDF props
+  showUploadModal = false,
+  onOpenUploadModal = () => {},
+  onCloseUploadModal = () => {},
+  onUploadPdf = () => {},
+  uploadLoading = false,
+  uploadingDocument = null,
 }) {
   return (
     <Card noborder>
@@ -121,21 +129,28 @@ export default function DocumentListingUI({
                             // onClick={() => onEdit(document)}
                             className="cursor-pointer text-[20px]"
                             icon={"hugeicons:mail-send-02"}
+                            title="Send Email"
                           />
                           <Icon
-                            // onClick={() => onEdit(document)}
-                            className="cursor-pointer text-[20px] ml-4"
+                            onClick={() => onOpenUploadModal(document._id || document.id)}
+                            className="cursor-pointer text-[20px] ml-4 hover:text-primary-default transition-colors"
                             icon={"bytesize:upload"}
+                            title="Upload PDF"
                           />
-                          <Icon
-                            // onClick={() => onDownload(document)}
-                            className="cursor-pointer text-[20px] mx-4"
-                            icon={"material-symbols:download"}
-                          />
+                          
+                          <a href={document.pdf_file} target="_blank" rel="noopener noreferrer">
+                            <Icon
+                              className={`${document.pdf_file === "" ? 'cursor-not-allowed' : 'cursor-pointer'} text-[20px] mx-4`}
+                              icon={"material-symbols:download"}
+                              title="Download PDF"
+                              disabled={document.pdf_file === ""}
+                            />
+                          </a>
                           <Icon
                             onClick={() => onDelete(document._id || document.id)}
-                            className="cursor-pointer text-[20px]"
+                            className="cursor-pointer text-[20px] hover:text-red-600 transition-colors"
                             icon={"heroicons-outline:trash"}
+                            title="Delete"
                           />
                         </div>
                       </td>
@@ -156,6 +171,14 @@ export default function DocumentListingUI({
         setSelectedTemplateId={setSelectedTemplateId}
         onCreateDocument={onCreateWithTemplate}
         loading={loading}
+      />
+
+      <UploadPdfModal
+        isOpen={showUploadModal}
+        onClose={onCloseUploadModal}
+        onUpload={onUploadPdf}
+        loading={uploadLoading}
+        documentTitle={uploadingDocument?.title || "Upload PDF"}
       />
       
       {/* Pagination */}

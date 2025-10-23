@@ -24,8 +24,18 @@ export const getRequest = async (url) => {
 
 export const patchRequest = async (url, data) => {
   try {
+    // Check if data is FormData and set appropriate headers
+    const config = data instanceof FormData ? {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    } : {};
+    
     const response = await axios.patch(
-      `${API_URL}/${API_PREFIX}/${url}`, data);
+      `${API_URL}/${API_PREFIX}/${url}`, 
+      data,
+      config
+    );
     return response.data;
   } catch (error) {
     throw error;

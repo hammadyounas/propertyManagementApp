@@ -34,6 +34,13 @@ export default function DocumentListing() {
         totalCount,
         totalPages,
         handlePageChange,
+        // Upload PDF props
+        showUploadModal,
+        handleOpenUploadModal,
+        handleCloseUploadModal,
+        handleUploadPdf,
+        uploadLoading,
+        uploadingDocument,
       } = useDesignListing();
   return (
     <>
@@ -62,6 +69,13 @@ export default function DocumentListing() {
         totalCount={totalCount}
         totalPages={totalPages}
         handlePageChange={handlePageChange}
+        // Upload PDF props
+        showUploadModal={showUploadModal}
+        onOpenUploadModal={handleOpenUploadModal}
+        onCloseUploadModal={handleCloseUploadModal}
+        onUploadPdf={handleUploadPdf}
+        uploadLoading={uploadLoading}
+        uploadingDocument={uploadingDocument}
         />
 
         <ConfirmDeleteModal

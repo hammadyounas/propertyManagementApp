@@ -14,7 +14,6 @@ export default function DesignDocumentPage() {
     clientName,
     setClientName,
     loading,
-    handleDownload,
     handleSendEmail,
     editorValue,
     setEditorValue,
@@ -35,8 +34,6 @@ export default function DesignDocumentPage() {
       clientName={clientName}
       setClientName={setClientName}
       loading={loading}
-      onDownload={handleDownload}
-      onSendEmail={handleSendEmail}
       editorValue={editorValue}
       setEditorValue={setEditorValue}
       documentId={documentId}

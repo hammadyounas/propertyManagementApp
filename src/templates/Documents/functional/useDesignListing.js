@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import html2pdf from 'html2pdf.js'
-import { fetchDocuments, deleteDocument } from '../../../store/features/documents/documentSlice';
+import { fetchDocuments, deleteDocument, uploadPdfToCloudinary } from '../../../store/features/documents/documentSlice';
 import { selectDocuments, selectLoading, selectTotalCount } from '../../../store/features/documents/documentSelectors';
 import { fetchTemplate } from '../../../store/features/templates/templateSlice';
 import { selectTemplates } from '../../../store/features/templates/templateSelectors';
@@ -28,6 +28,11 @@ export default function useDesignListing() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
+  
+  // Upload PDF modal state
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadingDocumentId, setUploadingDocumentId] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   // Fetch documents and templates on component mount
   useEffect(() => {
@@ -123,6 +128,64 @@ export default function useDesignListing() {
     setCurrentPage(selectedPage + 1); // Convert from 0-based to 1-based
   };
 
+  // Upload PDF handlers
+  const handleOpenUploadModal = (documentId) => {
+    setUploadingDocumentId(documentId);
+    setShowUploadModal(true);
+  };
+
+  const handleCloseUploadModal = () => {
+    setShowUploadModal(false);
+    setUploadingDocumentId(null);
+  };
+
+  const handleUploadPdf = async (file) => {
+    if (!uploadingDocumentId) {
+      toast.error('No document selected for upload');
+      return;
+    }
+
+    if (!file) {
+      toast.error('No file selected');
+      return;
+    }
+
+    try {
+      setUploadLoading(true);
+
+      // Create FormData to send file
+      const formData = new FormData();
+      formData.append('pdf_file', file);
+      
+      console.log('Uploading PDF:', {
+        documentId: uploadingDocumentId,
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
+      });
+
+      await dispatch(uploadPdfToCloudinary({ 
+        id: uploadingDocumentId, 
+        file: formData 
+      })).unwrap();
+
+      toast.success('PDF uploaded successfully!');
+      handleCloseUploadModal();
+      
+      // Refresh documents list
+      dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+    } catch (error) {
+      console.error('Full error uploading PDF:', error);
+      const errorMessage = error?.message || error?.error || error || 'Failed to upload PDF';
+      toast.error(errorMessage);
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  // Get the document title for the upload modal
+  const uploadingDocument = documents.find(doc => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId);
+
   return {
     documents,
     templates,
@@ -154,5 +217,12 @@ export default function useDesignListing() {
     totalCount,
     totalPages,
     handlePageChange,
+    // Upload PDF
+    showUploadModal,
+    handleOpenUploadModal,
+    handleCloseUploadModal,
+    handleUploadPdf,
+    uploadLoading,
+    uploadingDocument,
   };
 }

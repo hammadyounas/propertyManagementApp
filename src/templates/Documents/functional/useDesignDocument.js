@@ -95,56 +95,6 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
 
   const regenerateDocumentId = () => setDocumentId(generateDocId())
 
-  const handleDownload = async () => {
-    if (!selectedTemplate) {
-      toast.error('Please select a template')
-      return
-    }
-    setLoading(true)
-    try {
-      const container = document.createElement('div')
-      container.style.padding = '24px'
-      container.style.background = '#ffffff'
-      const headerHtml = `
-        <div style="text-align: center; margin-bottom: 20px;">
-          <img src="/assets/images/logo/logo.svg" alt="Logo" style="max-height: 60px; max-width: 200px;" />
-        </div>
-      `
-      container.innerHTML = headerHtml + (editorValue || '')
-      document.body.appendChild(container)
-
-      const safeName = `${(docTitle || selectedTemplate.title || 'document').replace(/[^a-z0-9-_ ]/gi,'_')}.pdf`
-
-      try {
-        const res = await fetch('/styles/pdf-styles.css')
-        if (res.ok) {
-          const css = await res.text()
-          const styleEl = document.createElement('style')
-          styleEl.type = 'text/css'
-          styleEl.appendChild(document.createTextNode(css))
-          container.prepend(styleEl)
-        }
-      } catch {}
-
-      const opt = {
-        margin:       [10, 10, 10, 10],
-        filename:     safeName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }
-
-      await html2pdf().set(opt).from(container).save()
-      toast.success('PDF download started')
-
-      document.body.removeChild(container)
-    } catch (e) {
-      console.error(e)
-      toast.error('Failed to generate PDF')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleSendEmail = () => {
     if (!editorValue.trim()) {
@@ -156,59 +106,6 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
 
   const handleCloseEmailModal = () => {
     setShowEmailModal(false)
-  }
-
-  const generatePDFForEmail = async () => {
-    const container = document.createElement('div')
-    container.style.padding = '24px'
-    container.style.background = '#ffffff'
-    container.style.fontFamily = 'Arial, sans-serif'
-    container.style.lineHeight = '1.6'
-    container.style.wordWrap = 'break-word'
-    container.style.overflowWrap = 'break-word'
-    container.style.pageBreakInside = 'avoid'
-    
-    const headerHtml = `
-      <div style="text-align: center; margin-bottom: 20px;">
-        <img src="/assets/images/logo/logo.svg" alt="Logo" style="max-height: 60px; max-width: 200px;" />
-      </div>
-    `
-    container.innerHTML = headerHtml + `<div class="text-content">${editorValue || ''}</div>`
-    document.body.appendChild(container)
-
-    try {
-      const res = await fetch('/styles/pdf-styles.css')
-      if (res.ok) {
-        const css = await res.text()
-        const styleEl = document.createElement('style')
-        styleEl.type = 'text/css'
-        styleEl.appendChild(document.createTextNode(css))
-        container.prepend(styleEl)
-      }
-    } catch {}
-
-    const opt = {
-      margin: [20, 20, 20, 20],
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true,
-        letterRendering: true,
-        allowTaint: true
-      },
-      jsPDF: { 
-        unit: 'mm', 
-        format: 'a4', 
-        orientation: 'portrait',
-        compress: true
-      },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    }
-
-    const pdfBlob = await html2pdf().set(opt).from(container).outputPdf('blob')
-    document.body.removeChild(container)
-    
-    return pdfBlob
   }
 
   const handleSendEmailWithPDF = async (emailData) => {
@@ -314,7 +211,6 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     clientName,
     setClientName,
     loading,
-    handleDownload,
     handleSendEmail,
     selectedTemplate,
     editorValue,

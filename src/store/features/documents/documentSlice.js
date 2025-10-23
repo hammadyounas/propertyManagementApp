@@ -70,7 +70,7 @@ export const deleteDocument = createAsyncThunk(
 
 export const uploadPdfToCloudinary = createAsyncThunk(
   "documents/uploadPdfToCloudinary",
-  async (id, file, thunkAPI) => {
+  async ({ id, file }, thunkAPI) => {
     try {
       return await uploadPdfToCloudinaryAPI(id, file);
     } catch (error) {
