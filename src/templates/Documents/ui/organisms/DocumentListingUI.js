@@ -100,17 +100,16 @@ export default function DocumentListingUI({
                     >
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex items-center justify-center">
-                          <span className="text-primary-default font-bold cursor-pointer">
-                            {document.title}
+                          <span className="font-mono font-semibold text-primary-default">
+                            {document.doc_id || 'N/A'}
                           </span>
                         </div>
                       </td>
-                      {/* <td className="table-td sm:p-4 p-2">
-                        {document.clientName}
-                      </td> */}
-                      <td className="table-td sm:p-4 p-2 text-left">
-                        <div className="">
-                          {truncateContent(document.content)}
+                      <td className="table-td sm:p-4 p-2">
+                        <div className="flex items-center justify-center">
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {document.title}
+                          </span>
                         </div>
                       </td>
                       <td className="table-td sm:p-4 p-2">
@@ -134,7 +133,7 @@ export default function DocumentListingUI({
                             icon={"material-symbols:download"}
                           />
                           <Icon
-                            onClick={() => onDelete(document.id)}
+                            onClick={() => onDelete(document._id || document.id)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons-outline:trash"}
                           />

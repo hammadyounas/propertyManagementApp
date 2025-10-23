@@ -36,7 +36,7 @@ export default function TemplateSelectionModal({
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}
             options={templates.map((t) => ({
-              value: t.id,
+              value: t._id || t.id,
               label: t.title || "Untitled",
             }))}
           />

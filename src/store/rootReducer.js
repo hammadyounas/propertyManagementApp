@@ -9,6 +9,7 @@ import propertiesReducer from "./features/properties/propertiesSlice";
 import invoicesReducer from "./features/invoices/invoicesSlice";
 import acmReducer from "./features/acm/acmSlice";
 import templatesReducer from "./features/templates/templateSlice"
+import documentsReducer from "./features/documents/documentSlice"
 
 const rootReducer = {
   layout,
@@ -21,5 +22,6 @@ const rootReducer = {
   invoices: invoicesReducer,
   acm: acmReducer,
   templates: templatesReducer,
+  documents: documentsReducer,
 };
 export default rootReducer;

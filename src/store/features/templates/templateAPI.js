@@ -11,8 +11,8 @@ export const createTemplateAPI = async (data) => {
   return response?.data?.template;
 };
 
-export const fetchAllTemplatesAPI = async ({ search = "", page, limit }) => {
-  const queryParams = searchParams({ search, page, limit });
+export const fetchAllTemplatesAPI = async ({ search = "", page, limit, all = false }) => {
+  const queryParams = searchParams({ search, page, limit, all });
   const response = await getRequest(`template?${queryParams.toString()}`);
   const templates = response?.data?.template?.filter(
     (template) => !template.isDeleted

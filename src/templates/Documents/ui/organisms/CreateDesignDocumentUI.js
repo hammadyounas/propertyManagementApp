@@ -52,6 +52,18 @@ export default function CreateDesignDocumentUI({
                   <span className="hidden sm:inline">
                     Created on {new Date().toLocaleDateString("en-US")}
                   </span>
+                  {documentId && (
+                    <span className="flex items-center gap-2 font-mono font-semibold text-primary-default">
+                      Doc ID: {documentId}
+                      <button
+                        onClick={onRegenerateId}
+                        className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                        title="Regenerate Document ID"
+                      >
+                        <Icon icon="mdi:refresh" className="text-lg" />
+                      </button>
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -62,7 +74,7 @@ export default function CreateDesignDocumentUI({
                 className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Icon icon="mdi:content-save" />
-                <span>Save</span>
+                <span>Save Document</span>
               </button>
               {/* <button
                 onClick={onDownload}

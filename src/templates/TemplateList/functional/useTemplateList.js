@@ -82,6 +82,11 @@ export default function useTemplateList() {
       await dispatch(deleteTemplate(targetId)).unwrap();
       closeDeleteModal();
       toast.success('Template deleted successfully.');
+      dispatch(fetchTemplate({
+        search: globalFilter,
+        page: currentPage,
+        limit: pageSize
+      }));
     } catch (error) {
       console.error('Error deleting template:', error);
       toast.error('Error deleting template!');

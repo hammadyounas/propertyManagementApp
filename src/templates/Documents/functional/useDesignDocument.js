@@ -1,37 +1,42 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import html2pdf from 'html2pdf.js'
-import { v4 as uuidv4 } from 'uuid'
 import { useRouter } from 'next/navigation'
+import { fetchTemplate } from '../../../store/features/templates/templateSlice'
+import { selectTemplates, selectTemplateLoading } from '../../../store/features/templates/templateSelectors'
+import { fetchDocumentById, createDocument } from '../../../store/features/documents/documentSlice'
+import { selectDocument } from '../../../store/features/documents/documentSelectors'
+
+// Generate a random 6-digit unique ID
+const generateDocId = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
 
 export default function useDesignDocument(initialDocumentId, templateIdFromQuery) {
-  const [templates, setTemplates] = useState([])
+  const dispatch = useDispatch()
+  const router = useRouter()
+  
+  // Redux state
+  const templates = useSelector(selectTemplates) // Will contain all templates when fetched with all: true
+  const document = useSelector(selectDocument)
+  const templatesLoading = useSelector(selectTemplateLoading)
+  
+  // Local state
   const [selectedTemplateId, setSelectedTemplateId] = useState('')
   const [clientName, setClientName] = useState('')
   const [loading, setLoading] = useState(false)
   const [editorValue, setEditorValue] = useState('')
-  const [documentId, setDocumentId] = useState('')
+  const [documentId, setDocumentId] = useState(generateDocId()) // Auto-generate 6-digit ID
   const [docTitle, setDocTitle] = useState('')
   const [editingId, setEditingId] = useState('')
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
-  const router = useRouter()
 
-  // Load templates
+  // Fetch ALL templates on mount (using all: true to get unpaginated list)
   useEffect(() => {
-    try {
-      // Check if we're in browser environment
-      if (typeof window === 'undefined') return;
-      
-      const savedTemplates = localStorage.getItem('propertyTemplates')
-      if (savedTemplates) {
-        const parsed = JSON.parse(savedTemplates)
-        setTemplates(parsed)
-      }
-    } catch (e) {
-      console.error('Failed to load templates', e)
-    }
-  }, [])
+    dispatch(fetchTemplate({ all: true }))
+  }, [dispatch])
 
   // Set template from URL query if provided
   useEffect(() => {
@@ -40,32 +45,34 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     }
   }, [templateIdFromQuery, editingId])
 
-  // If editing existing document, load it
+  // If editing existing document, load it from Redux
   useEffect(() => {
-    if (!initialDocumentId || typeof window === 'undefined') return
-    try {
-      setLoading(true)
-      const saved = localStorage.getItem('designDocuments')
-      if (!saved) return
-      const docs = JSON.parse(saved)
-      const existing = docs.find(d => d.id === initialDocumentId)
-      if (existing) {
-        setEditingId(existing.id)
-        setSelectedTemplateId(existing.templateId || '')
-        setEditorValue(existing.content || '')
-        setClientName(existing.clientName || '')
-        setDocumentId(existing.documentId || uuidv4())
-        setDocTitle(existing.title || '')
-      }
-    } catch (e) {
-      console.error('Failed to load document for editing', e)
-    } finally {
-      setLoading(false)
-    }
-  }, [initialDocumentId])
+    if (!initialDocumentId) return
+    
+    setLoading(true)
+    dispatch(fetchDocumentById(initialDocumentId))
+      .unwrap()
+      .then((doc) => {
+        if (doc) {
+          setEditingId(doc._id)
+          setSelectedTemplateId(doc.templateId || '')
+          setEditorValue(doc.content || '')
+          setClientName(doc.clientName || '')
+          setDocumentId(doc.doc_id || generateDocId())
+          setDocTitle(doc.title || '')
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to load document for editing', error)
+        toast.error('Failed to load document')
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [initialDocumentId, dispatch])
 
   const selectedTemplate = useMemo(() => {
-    return templates.find(t => t.id === selectedTemplateId) || null
+    return templates.find(t => t._id === selectedTemplateId || t.id === selectedTemplateId) || null
   }, [templates, selectedTemplateId])
 
   useEffect(() => {
@@ -77,16 +84,16 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     
     if (selectedTemplate) {
       setEditorValue(selectedTemplate.content || '')
-      setDocumentId(uuidv4())
+      setDocumentId(generateDocId())
       setDocTitle(selectedTemplate.title || '')
     } else {
       setEditorValue('')
-      setDocumentId('')
+      setDocumentId(generateDocId())
       setDocTitle('')
     }
   }, [selectedTemplateId, editingId, selectedTemplate])
 
-  const regenerateDocumentId = () => setDocumentId(uuidv4())
+  const regenerateDocumentId = () => setDocumentId(generateDocId())
 
   const handleDownload = async () => {
     if (!selectedTemplate) {
@@ -240,57 +247,63 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     }
   }
 
-  const handleSaveDocument = () => {
+  const handleSaveDocument = async (retryCount = 0) => {
     if (!editorValue.trim()) {
       toast.error('Nothing to save. Please edit content first.')
       return
     }
-    if (typeof window === 'undefined') {
-      toast.error('Cannot save in server environment')
-      return
-    }
-    try {
-      const saved = localStorage.getItem('designDocuments')
-      const docs = saved ? JSON.parse(saved) : []
 
-      if (editingId) {
-        const next = docs.map(d =>
-          d.id === editingId
-            ? {
-                ...d,
-                templateId: selectedTemplateId || d.templateId || null,
-                title: docTitle || d.title || 'Untitled Document',
-                content: editorValue,
-                clientName: clientName || '',
-                documentId: documentId || d.documentId || uuidv4(),
-                updatedAt: new Date().toISOString(),
-              }
-            : d
-        )
-        localStorage.setItem('designDocuments', JSON.stringify(next))
-        toast.success('Document updated')
-        router.push('/documents')
-        return editingId
-      } else {
-        const newDoc = {
-          id: uuidv4(),
-          templateId: selectedTemplateId || null,
-          title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
-          content: editorValue,
-          clientName: clientName || '',
-          documentId: documentId || uuidv4(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-        const next = [newDoc, ...docs]
-        localStorage.setItem('designDocuments', JSON.stringify(next))
-        toast.success('Document saved')
-        router.push('/documents')
-        return newDoc.id
+    const MAX_RETRIES = 5 // Maximum retry attempts for duplicate ID
+    
+    try {
+      setLoading(true)
+
+      const documentData = {
+        templateId: selectedTemplateId || null,
+        title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
+        content: editorValue,
+        clientName: clientName || '',
+        doc_id: documentId || generateDocId(), // Use doc_id for backend
       }
-    } catch (e) {
-      console.error('Failed to save document', e)
-      toast.error('Failed to save document')
+
+      // Always create a new document (even when "editing")
+      // This creates a copy with the modified content
+      const result = await dispatch(createDocument(documentData)).unwrap()
+      toast.success(editingId ? 'New document created from template' : 'Document saved successfully')
+      router.push('/documents')
+      return result._id
+    } catch (error) {
+      console.error('Failed to save document', error)
+      
+      // Check if error is due to duplicate doc_id
+      const isDuplicateError = 
+        error?.message?.toLowerCase().includes('duplicate') ||
+        error?.message?.toLowerCase().includes('already exists') ||
+        error?.message?.toLowerCase().includes('unique') ||
+        error?.toLowerCase().includes('duplicate') ||
+        error?.toLowerCase().includes('already exists')
+      
+      if (isDuplicateError && retryCount < MAX_RETRIES) {
+        console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
+        // Generate new ID and retry
+        const newDocId = generateDocId()
+        setDocumentId(newDocId)
+        toast.warning(`Document ID already exists. Trying with new ID: ${newDocId}`)
+        
+        // Wait a bit before retrying
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        // Retry with new ID
+        return handleSaveDocument(retryCount + 1)
+      } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
+        toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
+      } else {
+        toast.error(error?.message || 'Failed to save document')
+      }
+    } finally {
+      if (retryCount === 0) {
+        setLoading(false)
+      }
     }
   }
 

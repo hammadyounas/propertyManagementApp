@@ -1,65 +1,39 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import html2pdf from 'html2pdf.js'
+import { fetchDocuments, deleteDocument } from '../../../store/features/documents/documentSlice';
+import { selectDocuments, selectLoading, selectTotalCount } from '../../../store/features/documents/documentSelectors';
+import { fetchTemplate } from '../../../store/features/templates/templateSlice';
+import { selectTemplates } from '../../../store/features/templates/templateSelectors';
 
 export default function useDesignListing() {
   const router = useRouter();
-  const [documents, setDocuments] = useState([]);
-  const [templates, setTemplates] = useState([]);
+  const dispatch = useDispatch();
+  
+  // Redux state
+  const documents = useSelector(selectDocuments);
+  const templates = useSelector(selectTemplates);
+  const loading = useSelector(selectLoading);
+  const totalCount = useSelector(selectTotalCount);
+  
+  // Local state
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [showTemplateModal, setShowTemplateModal] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all documents');
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
 
-  // Load documents and templates from localStorage on component mount
+  // Fetch documents and templates on component mount
   useEffect(() => {
-    const loadData = () => {
-      try {
-        // Check if we're in browser environment
-        if (typeof window === 'undefined') {
-          setLoading(false);
-          return;
-        }
-
-        // Load documents
-        const savedDocuments = localStorage.getItem('designDocuments');
-        if (savedDocuments) {
-          const parsedDocuments = JSON.parse(savedDocuments);
-          setDocuments(parsedDocuments);
-        }
-
-        // Load templates
-        const savedTemplates = localStorage.getItem('propertyTemplates');
-        if (savedTemplates) {
-          const parsedTemplates = JSON.parse(savedTemplates);
-          setTemplates(parsedTemplates);
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  // Persist documents to localStorage whenever they change, but avoid initial empty write
-  useEffect(() => {
-    if (loading || typeof window === 'undefined') return;
-    try {
-      localStorage.setItem('designDocuments', JSON.stringify(documents));
-    } catch (error) {
-      console.error('Error saving documents:', error);
-    }
-  }, [documents, loading]);
+    dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+    dispatch(fetchTemplate({ all: true })); // Fetch all templates for dropdown
+  }, [dispatch, currentPage, pageSize, globalFilter]);
 
   // Modal handlers
   const closeDeleteModal = () => {
@@ -73,22 +47,21 @@ export default function useDesignListing() {
   };
 
   const handleEdit = (document) => {
-    router.push(`/documents/edit/${document.id}`);
+    router.push(`/documents/edit/${document._id || document.id}`);
   };
 
   const handleDelete = async ({ documentId } = {}) => {
     try {
       setDeleteLoading(true);
-  
-      setDocuments(prev => {
-        const targetId = documentId ?? currentItem;
-        const updated = prev.filter(document => document.id !== targetId);
-        localStorage.setItem('designDocuments', JSON.stringify(updated)); // ✅ update localStorage
-        return updated;
-      });
-  
+      const targetId = documentId ?? currentItem;
+      
+      await dispatch(deleteDocument(targetId)).unwrap();
+      
       closeDeleteModal();
       toast.success('Document deleted successfully.');
+      
+      // Refresh documents list
+      dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
     } catch (error) {
       console.error('Error deleting document:', error);
       toast.error('Error deleting document!');
@@ -143,31 +116,15 @@ export default function useDesignListing() {
     router.push(`/documents/create?template=${templateId}`);
   };
 
-  // Filter documents based on global search and category
-  const filteredDocuments = documents.filter(document => {
-    const matchesSearch = !globalFilter || 
-      document.title.toLowerCase().includes(globalFilter.toLowerCase()) ||
-      document.content.toLowerCase().includes(globalFilter.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all documents' || 
-      document.category === categoryFilter;
-    
-    return matchesSearch && matchesCategory;
-  });
-
   // Pagination logic
-  const totalCount = filteredDocuments.length;
   const totalPages = Math.ceil(totalCount / pageSize);
-  const startIndex = currentPage * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
 
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage);
+    setCurrentPage(selectedPage + 1); // Convert from 0-based to 1-based
   };
 
   return {
-    documents: paginatedDocuments,
+    documents,
     templates,
     selectedTemplateId,
     setSelectedTemplateId,
