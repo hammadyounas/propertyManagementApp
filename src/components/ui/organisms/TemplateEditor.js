@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
+import toast from "react-hot-toast"
 
 const SyncfusionDocEditor = dynamic(
   async () => {
@@ -192,7 +193,67 @@ const TemplateEditor = ({
           switch (format) {
             case 'sfdt':
               // Syncfusion Document Format - load directly to preserve all formatting
-            editor.open(editorValue);
+              console.log('Loading SFDT document...');
+              try {
+                // Check if document uses abbreviated format (corrupted format)
+                const isAbbreviated = editorValue.includes('"optimizeSfdt":false');
+                
+                if (isAbbreviated) {
+                  console.error('❌ CORRUPTED DOCUMENT: This document uses abbreviated SFDT format (optimizeSfdt: false)');
+                  console.error('This format was created by a buggy contentOptimizer and cannot be loaded.');
+                  console.error('The document must be deleted and recreated.');
+                  
+                  // Show user-friendly error message
+                  editor.openBlank();
+                  await new Promise(resolve => setTimeout(resolve, 300));
+                  
+                  const errorMessage = `❌ DOCUMENT CORRUPTED - CANNOT LOAD\n\n` +
+                    `This template was saved in a corrupted format and cannot be opened.\n\n` +
+                    `What happened:\n` +
+                    `• The document was saved with "optimizeSfdt: false" (abbreviated format)\n` +
+                    `• Syncfusion DocumentEditor cannot parse this format\n` +
+                    `• The internal document structure is incomplete\n\n` +
+                    `Solution:\n` +
+                    `1. Go back to the Templates list\n` +
+                    `2. Delete this template\n` +
+                    `3. Create a new template\n` +
+                    `4. New templates will work correctly (bug is now fixed)\n\n` +
+                    `Note: This bug has been fixed. All NEW templates will save and load correctly.`;
+                  
+                  editor.editor.insertText(errorMessage);
+                  
+                  // Show toast notification
+                  setTimeout(() => {
+                    toast.error('This template is corrupted and must be deleted and recreated.', {
+                      duration: 8000
+                    });
+                  }, 1000);
+                  
+                  return; // Don't try to load
+                }
+                
+                // Try to open the SFDT document (should only reach here if NOT abbreviated)
+                console.log('Opening SFDT document...');
+                editor.open(editorValue);
+                console.log('Document opened successfully');
+                
+              } catch (openError) {
+                console.error('Error loading SFDT document:', openError);
+                
+                // Show error message to user
+                try {
+                  editor.openBlank();
+                  await new Promise(resolve => setTimeout(resolve, 300));
+                  
+                  const errorMsg = `⚠️ Failed to load document\n\n` +
+                    `Error: ${openError.message}\n\n` +
+                    `This template may be corrupted. Please delete it and create a new one.`;
+                  
+                  editor.editor.insertText(errorMsg);
+                } catch (fallbackError) {
+                  console.error('Could not show error message:', fallbackError);
+                }
+              }
               break;
             case 'html':
               // HTML content - convert to proper document format
@@ -292,12 +353,17 @@ const TemplateEditor = ({
       return 'unknown';
     }
 
-    // Check for Syncfusion Document Format (SFDT)
+    // Check for Syncfusion Document Format (SFDT) - both full and abbreviated formats
+    // Full SFDT uses: "sections", "characters", "paragraphs"
+    // Abbreviated SFDT (optimizeSfdt: false) uses: "sec", "b", "ahb", "i"
     if (content.includes('"sections"') || 
         content.includes('"characters"') || 
         content.includes('"paragraphs"') ||
         content.includes('"documentHelper"') ||
-        content.startsWith('{')) {
+        content.includes('"sec":[') ||  // Abbreviated "sections"
+        content.includes('"optimizeSfdt"') ||  // SFDT flag
+        content.includes('"ahb"') ||  // Abbreviated format indicator
+        (content.trim().startsWith('{') && (content.includes('"sec"') || content.includes('"sections"')))) {
       return 'sfdt';
     }
 

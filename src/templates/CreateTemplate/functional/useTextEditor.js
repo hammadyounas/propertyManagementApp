@@ -14,10 +14,6 @@ import {
   selectTemplateError,
   selectTemplateCreateSuccess
 } from '../../../store/features/templates/templateSelectors'
-import {
-  optimizeTemplateContent,
-  compressContent
-} from '../../../libs/utils/contentOptimizer'
 
 export default function useTextEditor(templateId = null) {
   const router = useRouter();
@@ -192,28 +188,21 @@ export default function useTextEditor(templateId = null) {
 
   const handleSave = async (templateData) => {
     try {
-      // Optimize content before saving
-      const optimizedContent = optimizeTemplateContent(templateData.content);
-      
-      // Compress content further if needed
-      const finalContent = compressContent(optimizedContent);
-      
-      const optimizedTemplateData = {
-        ...templateData,
-        content: finalContent
-      };
+      // Save content directly without optimization
+      // The contentOptimizer was causing issues by creating abbreviated SFDT format
+      // which Syncfusion DocumentEditor cannot properly load
       
       if (templateId) {
         // Update existing template
         await dispatch(updateTemplate({ 
           id: templateId, 
-          data: optimizedTemplateData 
+          data: templateData 
         })).unwrap();
         toast.success('Template updated successfully!');
         router.push('/templates');
       } else {
         // Create new template
-        await dispatch(createTemplate(optimizedTemplateData)).unwrap();
+        await dispatch(createTemplate(templateData)).unwrap();
       }
     } catch (error) {
       console.error('Error saving template:', error);

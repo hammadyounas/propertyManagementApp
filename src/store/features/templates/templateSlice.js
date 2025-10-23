@@ -152,12 +152,7 @@ const templateSlice = createSlice({
       })
       .addCase(updateTemplate.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.templates.findIndex(
-            (template) => template._id === action.payload._id
-          );
-          if (index !== -1) {
-                state.templates[index] = action.payload;
-            }
+        state.template = action.payload;
         })
       .addCase(updateTemplate.rejected, (state, action) => {
         state.loading = false;

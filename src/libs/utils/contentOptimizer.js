@@ -18,14 +18,10 @@ export const optimizeTemplateContent = (content) => {
       // Remove unnecessary properties that bloat the content
       const optimizedContent = {
         ...parsedContent,
-        // Remove or minimize large properties
-        sec: parsedContent.sec?.map(section => ({
-          ...section,
-          // Remove unnecessary properties that might be large
-          // Keep only essential content
-        })) || [],
-        // Remove other large properties if they exist
-        ...(parsedContent.optimizeSfdt !== undefined && { optimizeSfdt: false }),
+        // Ensure optimizeSfdt is set to true for better compatibility
+        // optimizeSfdt: true uses full field names (sections, blocks)
+        // optimizeSfdt: false uses abbreviated names (sec, b) which can cause loading issues
+        optimizeSfdt: true,
       };
       
       return JSON.stringify(optimizedContent);
