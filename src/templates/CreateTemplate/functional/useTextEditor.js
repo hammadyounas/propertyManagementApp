@@ -14,6 +14,7 @@ import {
   selectTemplateError,
   selectTemplateCreateSuccess
 } from '../../../store/features/templates/templateSelectors'
+import { addFullScreenChangeListener, toggleFullScreen } from '../../../libs/utils/fullScreenHelper'
 
 export default function useTextEditor(templateId = null) {
   const router = useRouter();
@@ -30,7 +31,9 @@ export default function useTextEditor(templateId = null) {
   const [editorValue, setEditorValue] = useState('')
   const [showImportModal, setShowImportModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const fileInputRef = useRef(null);
+  const fullScreenRef = useRef(null);
 
   // Load template data if editing
   useEffect(() => {
@@ -214,6 +217,18 @@ export default function useTextEditor(templateId = null) {
     router.push('/templates');
   };
 
+  // Full-screen functionality using utility
+  const handleFullScreen = () => {
+    if (!fullScreenRef.current) return;
+    toggleFullScreen(fullScreenRef.current, isFullScreen);
+  };
+
+  // Listen for fullscreen change events using utility
+  useEffect(() => {
+    const cleanup = addFullScreenChangeListener(setIsFullScreen);
+    return cleanup;
+  }, []);
+
   return {
     title,
     setTitle,
@@ -237,5 +252,9 @@ export default function useTextEditor(templateId = null) {
     handleDragOver,
     handleDrop,
     handleBrowseClick,
+    // Full-screen
+    isFullScreen,
+    fullScreenRef,
+    handleFullScreen,
   }
 }

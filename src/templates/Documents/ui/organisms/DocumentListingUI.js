@@ -2,10 +2,7 @@
 import { Icon } from "@iconify/react";
 import { ToastContainer } from "react-toastify";
 import {
-  categories,
   columns,
-  getCategoryColor,
-  truncateContent,
 } from "../../functional/constant";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";

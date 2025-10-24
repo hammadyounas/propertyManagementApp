@@ -37,18 +37,7 @@ export default function TemplateListUI({
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
-          <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
-            {/* <DropdownUINew
-              label={categoryFilter || "All Categories"}
-              wrapperClass="w-full sm:w-40"
-              labelClass="btn-secondary bg-primary-default capitalize flex items-center justify-center gap-2 px-4 py-3 rounded cursor-pointer"
-              classMenuItems="left-0 max-sm:w-32 text-sm"
-              classItem="p-2"
-              onSelect={(value) => {
-                setCategoryFilter(value);
-              }}
-              items={categories}
-            /> */}
+          <div className="w-full flex items-center max-sm:justify-end gap-4 whitespace-nowrap text-sm">              
             <span className="">
               <Button
                 text="Add Template"

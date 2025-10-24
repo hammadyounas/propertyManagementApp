@@ -29,6 +29,10 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
     emailLoading,
     handleCloseEmailModal,
     handleSendEmailWithPDF,
+    // Full-screen props
+    isFullScreen,
+    fullScreenRef,
+    handleFullScreen,
   } = useDesignDocument(idFromQuery, templateFromQuery)
 
   return (
@@ -50,6 +54,10 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
       emailLoading={emailLoading}
       onCloseEmailModal={handleCloseEmailModal}
       onSendEmailWithPDF={handleSendEmailWithPDF}
+      // Full-screen props
+      isFullScreen={isFullScreen}
+      fullScreenRef={fullScreenRef}
+      handleFullScreen={handleFullScreen}
     />
   )
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 
 const SidebarLogoUI = ({
   isDark,
@@ -12,7 +13,6 @@ const SidebarLogoUI = ({
   return (
     <div
       className={` logo-segment flex justify-between items-center bg-black-default dark:bg-slate-800 z-[9] py-6  px-4 
-      ${menuHover ? "logo-hovered" : ""}
       ${
         skin === "bordered"
           ? " border-b border-r-0 border-slate-200 dark:border-slate-700"
@@ -21,40 +21,38 @@ const SidebarLogoUI = ({
       
       `}
     >
-      {/* <Link href="/analytics"> */}
-        <div className="flex items-center justify-center space-x-4 w-full">
-          <div className="logo-icon flex justify-center items-center ">
-            {!isDark && !isSemiDark ? (
-              <img src="/assets/images/logo/WHITE-LOGO.png" alt="" className="w-[65%]" />
-            ) : (
-              <img src="/assets/images/logo/BLACK-LOGO.png" alt="" className="w-[65%]" />
-            )}
-          </div>
-
-          {/* {(!collapsed || menuHover) && (
-            <div>
-              <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                DashCode
-              </h1>
-            </div>
-          )} */}
+      <div className="flex items-center justify-between w-full">
+        {/* Logo - Full when expanded, Icon only when collapsed */}
+        <div className={`logo-icon flex items-center justify-center transition-all duration-300 ${collapsed ? 'w-full' : 'flex-1'}`}>
+          {!isDark && !isSemiDark ? (
+            <img 
+              src="/assets/images/logo/WHITE-LOGO.png" 
+              alt="Logo" 
+              className={`transition-all duration-300 ${collapsed ? 'w-10 h-10 object-contain' : 'w-[80%]'}`} 
+            />
+          ) : (
+            <img 
+              src="/assets/images/logo/BLACK-LOGO.png" 
+              alt="Logo" 
+              className={`transition-all duration-300 ${collapsed ? 'w-10 h-10 object-contain' : 'w-[80%]'}`} 
+            />
+          )}
         </div>
-      {/* </Link> */}
 
-      {/* <h6 className="text-white">LOGO</h6> */}
-
-      {/* {(!collapsed || menuHover) && (
-        <div
-          onClick={() => setMenuCollapsed(!collapsed)}
-          className={`h-4 w-4 border-[1.5px] border-slate-900 dark:border-slate-700 rounded-full transition-all duration-150
-          ${
-            collapsed
-              ? ""
-              : "ring-2 ring-inset ring-offset-4 ring-black-900 dark:ring-slate-400 bg-slate-900 dark:bg-slate-400 dark:ring-offset-slate-700"
-          }
-          `}
-        ></div>
-      )} */}
+        {/* Toggle Button - Only visible when expanded */}
+        {!collapsed && (
+          <button
+            onClick={() => setMenuCollapsed(!collapsed)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600 transition-all duration-200 cursor-pointer group flex-shrink-0 ml-2"
+            title="Collapse Sidebar"
+          >
+            <Icon
+              icon="heroicons:chevron-left"
+              className="text-white dark:text-slate-300 text-xl group-hover:text-primary-default transition-colors"
+            />
+          </button>
+        )}
+      </div>
     </div>
   );
 };

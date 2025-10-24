@@ -7,22 +7,15 @@ const SidebarUI = ({scroll, collapsed, setMenuHover, menuHover, isSemiDark, skin
   return (
     <div className={isSemiDark ? "dark" : ""}>
       <div
-        className={`sidebar-wrapper bg-black-default dark:bg-slate-800     ${
+        className={`sidebar-wrapper bg-black-default dark:bg-slate-800 transition-all duration-300 ${
           collapsed ? "w-[72px] close_sidebar" : "w-[248px]"
         }
-      ${menuHover ? "sidebar-hovered" : ""}
       ${
         skin === "bordered"
           ? "border-r border-slate-200 dark:border-slate-700"
           : "shadow-base"
       }
       `}
-        onMouseEnter={() => {
-          setMenuHover(true);
-        }}
-        onMouseLeave={() => {
-          setMenuHover(false);
-        }}
       >
         <SidebarLogoUIContainer menuHover={menuHover} />
         <div

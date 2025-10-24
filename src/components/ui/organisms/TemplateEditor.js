@@ -1016,7 +1016,7 @@ const TemplateEditor = ({
       <div className="syncfusion-doc-editor">
         <SyncfusionDocEditor
           forwardRef={docEditorRef}
-          height="calc(100vh - 200px)"
+          height="calc(100vh - 50px)"
           enableToolbar={true}
           showPropertiesPane={true}
           contentChange={handleContentChange}

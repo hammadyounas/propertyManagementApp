@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import html2pdf from 'html2pdf.js'
 import { useRouter } from 'next/navigation'
 import { fetchTemplate } from '../../../store/features/templates/templateSlice'
 import { selectTemplates, selectTemplateLoading } from '../../../store/features/templates/templateSelectors'
 import { fetchDocumentById, createDocument, updateDocument } from '../../../store/features/documents/documentSlice'
 import { selectDocument } from '../../../store/features/documents/documentSelectors'
+import { addFullScreenChangeListener, toggleFullScreen } from '../../../libs/utils/fullScreenHelper'
 
 // Generate a random 6-digit unique ID
 const generateDocId = () => {
@@ -32,6 +32,10 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   const [editingId, setEditingId] = useState('')
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
+  const [isFullScreen, setIsFullScreen] = useState(false)
+  
+  // Refs
+  const fullScreenRef = useRef(null)
 
   // Fetch ALL templates on mount (using all: true to get unpaginated list)
   useEffect(() => {
@@ -217,6 +221,18 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     }
   }
 
+  // Full-screen functionality using utility
+  const handleFullScreen = () => {
+    if (!fullScreenRef.current) return;
+    toggleFullScreen(fullScreenRef.current, isFullScreen);
+  };
+
+  // Listen for fullscreen change events using utility
+  useEffect(() => {
+    const cleanup = addFullScreenChangeListener(setIsFullScreen);
+    return cleanup;
+  }, []);
+
   return {
     templates,
     selectedTemplateId,
@@ -233,12 +249,16 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     docTitle,
     setDocTitle,
     handleSaveDocument,
-    isEditing: !!editingId, // NEW: Boolean flag for editing mode
+    isEditing: !!editingId, // Boolean flag for editing mode
     // Email modal props
     showEmailModal,
     emailLoading,
     handleCloseEmailModal,
     handleSendEmailWithPDF,
+    // Full-screen props
+    isFullScreen,
+    fullScreenRef,
+    handleFullScreen,
   }
 }
 

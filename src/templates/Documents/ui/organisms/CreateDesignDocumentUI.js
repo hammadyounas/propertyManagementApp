@@ -18,29 +18,38 @@ export default function CreateDesignDocumentUI({
   setDocTitle = () => {},
   onSave = () => {},
   onBack = () => {},
-  isEditing = false, // NEW: Track if we're editing existing document
+  isEditing = false, // Track if we're editing existing document
   // Email modal props
   showEmailModal = false,
   emailLoading = false,
   onCloseEmailModal = () => {},
   onSendEmailWithPDF = () => {},
+  // Full-screen props
+  isFullScreen = false,
+  fullScreenRef,
+  handleFullScreen,
 }) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+    <div 
+      ref={fullScreenRef}
+      className={`min-h-screen ${isFullScreen ? 'bg-white dark:bg-slate-900' : 'bg-gray-50 dark:bg-slate-900'}`}
+    >
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
+      <div className={`bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 ${isFullScreen ? 'absolute top-0 left-0 right-0 z-50' : ''}`}>
         <div className="px-4 sm:px-6 py-4">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-4 w-full lg:w-auto">
-              <button
-                onClick={onBack}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
-              >
-                <Icon
-                  icon={"material-symbols:arrow-back-ios-rounded"}
-                  className="text-center"
-                />
-              </button>
+              {!isFullScreen && (
+                <button
+                  onClick={onBack}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
+                >
+                  <Icon
+                    icon={"material-symbols:arrow-back-ios-rounded"}
+                    className="text-center"
+                  />
+                </button>
+              )}
               <div className="flex-1 min-w-0 w-full">
                 <input
                   value={docTitle}
@@ -49,42 +58,60 @@ export default function CreateDesignDocumentUI({
                   required
                   className="w-full text-lg sm:text-xl font-semibold bg-transparent border-none focus:outline-none text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400"
                 />
-                <div className="flex items-center space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-slate-400">
-                  <span className="hidden sm:inline">
-                    Created on {new Date().toLocaleDateString("en-US")}
-                  </span>
-                  {documentId && (
-                    <span className="flex items-center gap-2 font-mono font-semibold text-primary-default">
-                      <Icon icon="mdi:identifier" className="w-4 h-4" />
-                      Doc ID: {documentId}
-                      {!isEditing && (
-                        <button
-                          onClick={onRegenerateId}
-                          className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
-                          title="Regenerate Document ID"
-                        >
-                          <Icon icon="mdi:refresh" className="w-3 h-3" />
-                        </button>
-                      )}
-                      {isEditing && (
-                        <span className="ml-1 text-xs text-gray-500 dark:text-slate-500" title="ID cannot be changed when editing">
-                          (Fixed)
-                        </span>
-                      )}
+                {!isFullScreen && (
+                  <div className="flex items-center space-x-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-slate-400">
+                    <span className="hidden sm:inline">
+                      Created on {new Date().toLocaleDateString("en-US")}
                     </span>
-                  )}
-                </div>
+                    {documentId && (
+                      <span className="flex items-center gap-2 font-mono font-semibold text-primary-default">
+                        <Icon icon="mdi:identifier" className="w-4 h-4" />
+                        Doc ID: {documentId}
+                        {!isEditing && (
+                          <button
+                            onClick={onRegenerateId}
+                            className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                            title="Regenerate Document ID"
+                          >
+                            <Icon icon="mdi:refresh" className="w-3 h-3" />
+                          </button>
+                        )}
+                        {isEditing && (
+                          <span className="ml-1 text-xs text-gray-500 dark:text-slate-500" title="ID cannot be changed when editing">
+                            (Fixed)
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
+            <div className="flex items-center gap-4">
               <button
-                onClick={onSave}
-                disabled={loading}
-                className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                onClick={handleFullScreen}
+                className="font-normal text-base w-full sm:w-auto px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors flex items-center justify-center space-x-2"
               >
-                <Icon icon="mdi:content-save" />
-                <span>Save Document</span>
+                <Icon 
+                  icon={isFullScreen ? "material-symbols:fullscreen-exit-rounded" : "material-symbols:fullscreen-rounded"} 
+                  className="text-xl"
+                />
+                <span className="hidden sm:inline">
+                  {isFullScreen ? "Exit Full Screen" : "Full Screen"}
+                </span>
               </button>
+              {!isFullScreen && (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
+                  <button
+                    onClick={onSave}
+                    disabled={loading}
+                    className="px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    <Icon icon="mdi:content-save" />
+                    <span>Save Document</span>
+                  </button>
+                </div>
+              )}
               {/* <button
                 onClick={onDownload}
                 disabled={loading}
@@ -107,7 +134,7 @@ export default function CreateDesignDocumentUI({
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-80px)]">
+      <div className={`flex flex-col lg:flex-row ${isFullScreen ? 'h-[calc(100vh-80px)] pt-20' : 'lg:h-[calc(100vh-80px)]'}`}>
         <div className="flex-1 flex flex-col min-h-0">
           {/* Editor Content */}
           <div className="flex-1 bg-white dark:bg-slate-800 min-h-0">

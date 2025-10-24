@@ -14,8 +14,9 @@ const themeConfig = {
     navBarType: "sticky",
     footerType: "static",
     isMonochrome: false,
+    isCollapsed: true, // Sidebar initially collapsed
     menu: {
-      isCollapsed: false,
+      isCollapsed: true, // Sidebar initially collapsed
       isHidden: false,
     },
     mobileMenu: false,

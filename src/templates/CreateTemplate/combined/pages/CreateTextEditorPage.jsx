@@ -28,6 +28,10 @@ export default function CreateTextEditorPage({ templateId = null }) {
     handleDragOver,
     handleDrop,
     handleBrowseClick,
+    // Full-screen
+    isFullScreen,
+    fullScreenRef,
+    handleFullScreen,
   } = useTextEditor(templateId)
   
   return (
@@ -57,6 +61,10 @@ export default function CreateTextEditorPage({ templateId = null }) {
      handleDragOver={handleDragOver}
      handleDrop={handleDrop}
      handleBrowseClick={handleBrowseClick}
+     // Full-screen
+     isFullScreen={isFullScreen}
+     fullScreenRef={fullScreenRef}
+     handleFullScreen={handleFullScreen}
    />
   )
 }
