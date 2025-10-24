@@ -5,7 +5,7 @@ import html2pdf from 'html2pdf.js'
 import { useRouter } from 'next/navigation'
 import { fetchTemplate } from '../../../store/features/templates/templateSlice'
 import { selectTemplates, selectTemplateLoading } from '../../../store/features/templates/templateSelectors'
-import { fetchDocumentById, createDocument } from '../../../store/features/documents/documentSlice'
+import { fetchDocumentById, createDocument, updateDocument } from '../../../store/features/documents/documentSlice'
 import { selectDocument } from '../../../store/features/documents/documentSelectors'
 
 // Generate a random 6-digit unique ID
@@ -79,16 +79,16 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     // Only load template content if NOT editing an existing document
     // This prevents overwriting user edits when editing a document
     if (editingId) {
-      return; // Skip this effect when editing
+      return; // Skip this effect when editing - preserve existing doc_id
     }
     
     if (selectedTemplate) {
       setEditorValue(selectedTemplate.content || '')
-      setDocumentId(generateDocId())
+      setDocumentId(generateDocId()) // Only generate new ID for new documents
       setDocTitle(selectedTemplate.title || '')
     } else {
       setEditorValue('')
-      setDocumentId(generateDocId())
+      setDocumentId(generateDocId()) // Only generate new ID for new documents
       setDocTitle('')
     }
   }, [selectedTemplateId, editingId, selectedTemplate])
@@ -163,22 +163,35 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         doc_id: documentId || generateDocId(), // Use doc_id for backend
       }
 
-      // Always create a new document (even when "editing")
-      // This creates a copy with the modified content
-      const result = await dispatch(createDocument(documentData)).unwrap()
-      toast.success(editingId ? 'New document created from template' : 'Document saved successfully')
+      let result;
+      
+      if (editingId) {
+        // Update existing document
+        result = await dispatch(updateDocument({ 
+          id: editingId, 
+          data: documentData 
+        })).unwrap()
+        toast.success('Document updated successfully')
+      } else {
+        // Create new document
+        result = await dispatch(createDocument(documentData)).unwrap()
+        toast.success('Document created successfully')
+      }
+      
       router.push('/documents')
-      return result._id
+      return result._id || result.id
     } catch (error) {
       console.error('Failed to save document', error)
       
-      // Check if error is due to duplicate doc_id
+      // Check if error is due to duplicate doc_id (only for create, not update)
       const isDuplicateError = 
-        error?.message?.toLowerCase().includes('duplicate') ||
-        error?.message?.toLowerCase().includes('already exists') ||
-        error?.message?.toLowerCase().includes('unique') ||
-        error?.toLowerCase().includes('duplicate') ||
-        error?.toLowerCase().includes('already exists')
+        !editingId && (
+          error?.message?.toLowerCase().includes('duplicate') ||
+          error?.message?.toLowerCase().includes('already exists') ||
+          error?.message?.toLowerCase().includes('unique') ||
+          error?.toLowerCase().includes('duplicate') ||
+          error?.toLowerCase().includes('already exists')
+        )
       
       if (isDuplicateError && retryCount < MAX_RETRIES) {
         console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
@@ -195,7 +208,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
       } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
         toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
       } else {
-        toast.error(error?.message || 'Failed to save document')
+        toast.error(error?.message || `Failed to ${editingId ? 'update' : 'create'} document`)
       }
     } finally {
       if (retryCount === 0) {
@@ -220,6 +233,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     docTitle,
     setDocTitle,
     handleSaveDocument,
+    isEditing: !!editingId, // NEW: Boolean flag for editing mode
     // Email modal props
     showEmailModal,
     emailLoading,

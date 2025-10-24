@@ -18,6 +18,7 @@ export default function CreateDesignDocumentUI({
   setDocTitle = () => {},
   onSave = () => {},
   onBack = () => {},
+  isEditing = false, // NEW: Track if we're editing existing document
   // Email modal props
   showEmailModal = false,
   emailLoading = false,
@@ -54,14 +55,22 @@ export default function CreateDesignDocumentUI({
                   </span>
                   {documentId && (
                     <span className="flex items-center gap-2 font-mono font-semibold text-primary-default">
+                      <Icon icon="mdi:identifier" className="w-4 h-4" />
                       Doc ID: {documentId}
-                      <button
-                        onClick={onRegenerateId}
-                        className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
-                        title="Regenerate Document ID"
-                      >
-                        <Icon icon="mdi:refresh" className="text-lg" />
-                      </button>
+                      {!isEditing && (
+                        <button
+                          onClick={onRegenerateId}
+                          className="ml-1 p-1 hover:bg-gray-200 dark:hover:bg-slate-600 rounded transition-colors"
+                          title="Regenerate Document ID"
+                        >
+                          <Icon icon="mdi:refresh" className="w-3 h-3" />
+                        </button>
+                      )}
+                      {isEditing && (
+                        <span className="ml-1 text-xs text-gray-500 dark:text-slate-500" title="ID cannot be changed when editing">
+                          (Fixed)
+                        </span>
+                      )}
                     </span>
                   )}
                 </div>

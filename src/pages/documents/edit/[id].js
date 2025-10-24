@@ -10,7 +10,13 @@ const DesignDocumentPage = dynamic(
 const EditDesignDocument = () => {
   const router = useRouter();
   const { id } = router.query;
-  return <DesignDocumentPage />;
+  
+  // Wait for router to be ready before rendering
+  if (!router.isReady) {
+    return <div>Loading...</div>;
+  }
+  
+  return <DesignDocumentPage documentId={id} />;
 };
 
 export default withAuth(EditDesignDocument);

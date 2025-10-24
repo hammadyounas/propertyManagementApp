@@ -190,6 +190,12 @@ export default function DocumentListingUI({
                             />
                           </a>
                           <Icon
+                            onClick={() => onEdit(document)}
+                            className="cursor-pointer text-[20px] hover:text-blue-600 transition-colors mr-4"
+                            icon={"heroicons-outline:pencil-square"}
+                            title="Edit"
+                          />
+                          <Icon
                             onClick={() => onDelete(document._id || document.id)}
                             className="cursor-pointer text-[20px] hover:text-red-600 transition-colors"
                             icon={"heroicons-outline:trash"}

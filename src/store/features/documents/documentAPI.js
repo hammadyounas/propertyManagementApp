@@ -20,6 +20,11 @@ export const createDocumentAPI = async (data) => {
     return response?.data;
 }
 
+export const updateDocumentAPI = async (id, data) => {
+    const response = await patchRequest(`document/${id}`, data);
+    return response?.data;
+}
+
 export const deleteDocumentAPI = async (id) => {
     const response = await deleteRequest(`document/${id}`);
     return response?.data;

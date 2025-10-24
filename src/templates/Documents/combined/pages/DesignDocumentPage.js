@@ -3,10 +3,11 @@ import CreateDesignDocumentUI from '../../ui/organisms/CreateDesignDocumentUI'
 import useDesignDocument from '../../functional/useDesignDocument'
 import { useRouter } from 'next/router'
 
-export default function DesignDocumentPage() {
+export default function DesignDocumentPage({ documentId: documentIdProp, templateId: templateIdProp }) {
   const router = useRouter()
-  const idFromQuery = router.query?.id
-  const templateFromQuery = router.query?.template
+  // Use prop if provided, otherwise fallback to router query
+  const idFromQuery = documentIdProp || router.query?.id
+  const templateFromQuery = templateIdProp || router.query?.template
   const {
     templates,
     selectedTemplateId,
@@ -22,6 +23,7 @@ export default function DesignDocumentPage() {
     docTitle,
     setDocTitle,
     handleSaveDocument,
+    isEditing,
     // Email modal props
     showEmailModal,
     emailLoading,
@@ -42,6 +44,7 @@ export default function DesignDocumentPage() {
       setDocTitle={setDocTitle}
       onSave={handleSaveDocument}
       onBack={() => router.push('/documents')}
+      isEditing={isEditing}
       // Email modal props
       showEmailModal={showEmailModal}
       emailLoading={emailLoading}
