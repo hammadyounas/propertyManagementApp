@@ -9,6 +9,8 @@ export const categories = [
 export const columns = [
     { label: 'Doc ID' },
     { label: 'Document Name' },
+    { label: 'Email Recipient' },
+    { label: 'Created By'},
     { label: 'Created Date' },
     { label: 'Actions' },
   ];

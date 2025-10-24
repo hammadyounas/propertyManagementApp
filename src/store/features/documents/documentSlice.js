@@ -85,7 +85,7 @@ export const uploadPdfToCloudinary = createAsyncThunk(
 
 export const sendEmailWithDocument = createAsyncThunk(
   "documents/sendEmailWithDocument",
-  async (id, email, thunkAPI) => {
+  async ({id, email}, thunkAPI) => {
     try {
       return await sendEmailWithDocumentAPI(id, email);
     } catch (error) {

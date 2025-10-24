@@ -13,6 +13,7 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import Button from "../../../../components/ui/molecules/Button";
 import TemplateSelectionModal from "../molecules/TemplateSelectionModal";
 import UploadPdfModal from "../molecules/UploadPdfModal";
+import EmailModal from "../molecules/EmailModal";
 import { dateFormat } from "../../../../libs/utils/helper";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
@@ -49,6 +50,13 @@ export default function DocumentListingUI({
   onUploadPdf = () => {},
   uploadLoading = false,
   uploadingDocument = null,
+  // Email props
+  showEmailModal = false,
+  onOpenEmailModal = () => {},
+  onCloseEmailModal = () => {},
+  onSendEmail = () => {},
+  emailLoading = false,
+  emailingDocument = null,
 }) {
   return (
     <Card noborder>
@@ -120,16 +128,35 @@ export default function DocumentListingUI({
                           </span>
                         </div>
                       </td>
+                      <td className={`table-td sm:p-4 p-2 ${document.email_recipient ? 'lowercase' : ''}`}>
+                        {document.email_recipient || 'N/A'}
+                      </td>
+                      <td className="table-td sm:p-4 p-2 text-center">
+                        <div className="flex items-center justify-center">
+                          <img src={document.created_by?.avatar || "/assets/images/users/default.jpg"} alt={document.created_by?.name} className="w-8 h-8 rounded-full mr-2" />
+                          <span className="text-primary-default font-bold cursor-pointer">
+                            {document?.created_by?.name}
+                          </span>
+                        </div>
+                      </td>
                       <td className="table-td sm:p-4 p-2">
                         {dateFormat(document.createdAt || document.date)}
                       </td>
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex justify-center">
                           <Icon
-                            // onClick={() => onEdit(document)}
-                            className="cursor-pointer text-[20px]"
+                            onClick={() => onOpenEmailModal(document._id || document.id)}
+                            className={`text-[20px] transition-colors ${
+                              document.pdf_file && document.pdf_file.trim() !== ''
+                                ? 'cursor-pointer hover:text-green-600'
+                                : 'cursor-not-allowed text-gray-400 dark:text-slate-600'
+                            }`}
                             icon={"hugeicons:mail-send-02"}
-                            title="Send Email"
+                            title={
+                              document.pdf_file && document.pdf_file.trim() !== ''
+                                ? 'Send Email'
+                                : 'Upload PDF first to send email'
+                            }
                           />
                           <Icon
                             onClick={() => onOpenUploadModal(document._id || document.id)}
@@ -138,12 +165,28 @@ export default function DocumentListingUI({
                             title="Upload PDF"
                           />
                           
-                          <a href={document.pdf_file} target="_blank" rel="noopener noreferrer">
+                          <a 
+                            href={document.pdf_file || '#'} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                              if (!document.pdf_file || document.pdf_file.trim() === '') {
+                                e.preventDefault();
+                              }
+                            }}
+                          >
                             <Icon
-                              className={`${document.pdf_file === "" ? 'cursor-not-allowed' : 'cursor-pointer'} text-[20px] mx-4`}
+                              className={`${
+                                document.pdf_file && document.pdf_file.trim() !== '' 
+                                  ? 'cursor-pointer hover:text-blue-600' 
+                                  : 'cursor-not-allowed text-gray-400 dark:text-slate-600'
+                              } text-[20px] mx-4 transition-colors`}
                               icon={"material-symbols:download"}
-                              title="Download PDF"
-                              disabled={document.pdf_file === ""}
+                              title={
+                                document.pdf_file && document.pdf_file.trim() !== ''
+                                  ? 'Download PDF'
+                                  : 'No PDF uploaded'
+                              }
                             />
                           </a>
                           <Icon
@@ -179,6 +222,16 @@ export default function DocumentListingUI({
         onUpload={onUploadPdf}
         loading={uploadLoading}
         documentTitle={uploadingDocument?.title || "Upload PDF"}
+      />
+
+      <EmailModal
+        isOpen={showEmailModal}
+        onClose={onCloseEmailModal}
+        onSend={onSendEmail}
+        loading={emailLoading}
+        docTitle={emailingDocument?.title || "Document"}
+        clientName={emailingDocument?.clientName || ""}
+        hasPdf={emailingDocument?.pdf_file && emailingDocument.pdf_file.trim() !== ''}
       />
       
       {/* Pagination */}

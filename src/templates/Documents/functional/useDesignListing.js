@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import html2pdf from 'html2pdf.js'
-import { fetchDocuments, deleteDocument, uploadPdfToCloudinary } from '../../../store/features/documents/documentSlice';
+import { fetchDocuments, deleteDocument, uploadPdfToCloudinary, sendEmailWithDocument } from '../../../store/features/documents/documentSlice';
 import { selectDocuments, selectLoading, selectTotalCount } from '../../../store/features/documents/documentSelectors';
 import { fetchTemplate } from '../../../store/features/templates/templateSlice';
 import { selectTemplates } from '../../../store/features/templates/templateSelectors';
@@ -33,6 +33,11 @@ export default function useDesignListing() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadingDocumentId, setUploadingDocumentId] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
+  
+  // Email modal state
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailingDocumentId, setEmailingDocumentId] = useState(null);
+  const [emailLoading, setEmailLoading] = useState(false);
 
   // Fetch documents and templates on component mount
   useEffect(() => {
@@ -183,8 +188,63 @@ export default function useDesignListing() {
     }
   };
 
+  // Email handlers
+  const handleOpenEmailModal = (documentId) => {
+    setEmailingDocumentId(documentId);
+    setShowEmailModal(true);
+  };
+
+  const handleCloseEmailModal = () => {
+    setShowEmailModal(false);
+    setEmailingDocumentId(null);
+  };
+
+  const handleSendEmail = async (emailData) => {
+    if (!emailingDocumentId) {
+      toast.error('No document selected for email');
+      return;
+    }
+
+    // Find the document to check if PDF exists
+    const document = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
+    
+    // Check if PDF file exists
+    if (!document?.pdf_file || document.pdf_file.trim() === '') {
+      toast.error('Please upload a PDF file first before sending email');
+      handleCloseEmailModal();
+      return;
+    }
+
+    try {
+      setEmailLoading(true);
+
+      console.log('Sending email:', {
+        documentId: emailingDocumentId,
+        emailRecipient: emailData.email_recipient,
+        pdfUrl: document.pdf_file
+      });
+
+      await dispatch(sendEmailWithDocument({ 
+        id: emailingDocumentId, 
+        email: emailData 
+      })).unwrap();
+
+      toast.success('Email sent successfully!');
+      handleCloseEmailModal();
+    } catch (error) {
+      console.error('Error sending email:', error);
+      const errorMessage = error?.message || error?.error || error || 'Failed to send email';
+      toast.error(errorMessage);
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
   // Get the document title for the upload modal
   const uploadingDocument = documents.find(doc => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId);
+  
+  // Get the document for email modal
+  const emailingDocument = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
 
   return {
     documents,
@@ -224,5 +284,12 @@ export default function useDesignListing() {
     handleUploadPdf,
     uploadLoading,
     uploadingDocument,
+    // Email
+    showEmailModal,
+    handleOpenEmailModal,
+    handleCloseEmailModal,
+    handleSendEmail,
+    emailLoading,
+    emailingDocument,
   };
 }

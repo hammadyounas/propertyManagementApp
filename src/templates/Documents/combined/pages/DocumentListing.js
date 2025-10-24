@@ -41,6 +41,13 @@ export default function DocumentListing() {
         handleUploadPdf,
         uploadLoading,
         uploadingDocument,
+        // Email props
+        showEmailModal,
+        handleOpenEmailModal,
+        handleCloseEmailModal,
+        handleSendEmail,
+        emailLoading,
+        emailingDocument,
       } = useDesignListing();
   return (
     <>
@@ -76,6 +83,13 @@ export default function DocumentListing() {
         onUploadPdf={handleUploadPdf}
         uploadLoading={uploadLoading}
         uploadingDocument={uploadingDocument}
+        // Email props
+        showEmailModal={showEmailModal}
+        onOpenEmailModal={handleOpenEmailModal}
+        onCloseEmailModal={handleCloseEmailModal}
+        onSendEmail={handleSendEmail}
+        emailLoading={emailLoading}
+        emailingDocument={emailingDocument}
         />
 
         <ConfirmDeleteModal
