@@ -62,13 +62,13 @@ export const menuItems = [
   {
     title: "Templates",
     isHide: false,
-    icon: "tabler:template-filled", // Represents multiple items/templates
+    icon: "tabler:template", // Represents multiple items/templates
     link: "/templates",
   },
   {
     title: "Design Documents",
     isHide: false,
-    icon: "majesticons:document", // Represents documents with content
+    icon: "majesticons:document-line", // Represents documents with content
     link: "/documents",
   },
 ];

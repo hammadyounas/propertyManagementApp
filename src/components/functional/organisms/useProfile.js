@@ -45,7 +45,7 @@ const useProfile = () => {
     },
     {
       label: "New Template",
-      icon: "icon-park-solid:add-one",
+      icon: "gg:add",
       action: () => {
         router.push("/templates/create");
       },
