@@ -75,41 +75,41 @@ const TableUI = ({
                             className="block w-8 h-8 object-cover rounded-full mr-2"
                           /> */}
                           <span className="text-primary-default font-bold">
-                            {row.name}
+                            {row?.name}
                           </span>
                         </div>
                       </td>
-                      <td className="table-td">{row.phoneNumber}</td>
-                      <td className="table-td lowercase">{row.email}</td>
-                      <td className="table-td">{row.type}</td>
+                      <td className="table-td">{row?.phoneNumber}</td>
+                      <td className="table-td lowercase">{row?.email}</td>
+                      <td className="table-td">{row?.type}</td>
                       <td className="table-td">
                         <span className="block w-full">
                           <span
                             className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25
-              ${row.status === "active" ? "text-green-600 bg-green-200" : ""}
-              ${row.status === "inactive" ? "text-red-600 bg-red-200" : ""}
-              ${row.status === "pending" ? "text-yellow-600 bg-yellow-200" : ""}
+              ${row?.status === "active" ? "text-green-600 bg-green-200" : ""}
+              ${row?.status === "inactive" ? "text-red-600 bg-red-200" : ""}
+              ${row?.status === "pending" ? "text-yellow-600 bg-yellow-200" : ""}
               `}
                           >
-                            {row.status}
+                            {row?.status}
                           </span>
                         </span>
                       </td>
                       <td className="table-td">
                         <div className="flex justify-center items-center">
                           <Icon
-                            onClick={() => push(`/clients/view/${row._id}`)}
+                            onClick={() => push(`/clients/view/${row?._id}`)}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
                           <Icon
-                            onClick={() => push(`/clients/edit/${row._id}`)}
+                            onClick={() => push(`/clients/edit/${row?._id}`)}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:pencil-square"}
                           />
                           <Icon
                             onClick={() => {
-                              openDeleteModal(row._id);
+                              openDeleteModal(row?._id);
                             }}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons-outline:trash"}
