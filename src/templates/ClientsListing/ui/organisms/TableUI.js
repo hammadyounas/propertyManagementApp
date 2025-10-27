@@ -4,6 +4,7 @@ import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 const TableUI = ({
   columns,
   rows,
@@ -57,7 +58,7 @@ const TableUI = ({
                 ) : users?.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (

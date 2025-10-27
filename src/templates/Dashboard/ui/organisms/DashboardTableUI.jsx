@@ -1,6 +1,7 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 import Button from "../../../../components/ui/molecules/Button";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import CountdownTimer from "../../../../libs/utils/countdownTimer";
@@ -161,7 +162,7 @@ const DashboardTableUI = ({
                 ) : dashboardEntries?.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                     <NoDataFound />
                     </td>
                   </tr>
                 ) : (

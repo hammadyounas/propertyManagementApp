@@ -5,6 +5,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import { dateFormat } from "../../../../libs/utils/helper";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 
 const TableUI = ({
   columns,
@@ -69,7 +70,7 @@ const TableUI = ({
                 ) : acms?.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (

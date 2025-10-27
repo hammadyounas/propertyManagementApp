@@ -29,6 +29,7 @@ const CreateClientPage = () => {
     acceptedFiles,
     inputType,
     setInputType,
+    downloadSampleCsv,
   } = useForm();
   return (
     <FormUI
@@ -58,6 +59,7 @@ const CreateClientPage = () => {
       acceptedFiles={acceptedFiles}
       inputType={inputType}
       setInputType={setInputType}
+      downloadSampleCsv={downloadSampleCsv}
     />
   );
 };

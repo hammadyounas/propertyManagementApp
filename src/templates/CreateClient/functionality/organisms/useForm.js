@@ -152,12 +152,22 @@
     });
     
 
-    const handleRemoveCSV = () => {
-      setCsvData(null);
-    };
-    
+  const handleRemoveCSV = () => {
+    setCsvData(null);
+  };
+  
+  const downloadSampleCsv = () => {
+    const sampleFilePath = '/sample-client-data.csv';
+    const link = document.createElement('a');
+    link.href = sampleFilePath;
+    link.download = 'sample-client-data.csv';
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-    const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     
       setLoading(true);
       try {
@@ -233,37 +243,38 @@
     
     
 
-    return {
-      register,
-      control,
-      handleSubmit,
-      onSubmit,
-      errors,
-      getValues,
-      setValue,
-      loading,
-      push,
-      status,
-      handleSelectStatus,
-      clientType,
-      handleSelectClientType,
-      salesPersonAssigned,
-      handleSelectAssignedSalesperson,
-      communicationChannels,
-      handleSelectCommunicationChannel,
-      clientStatus,
-      clientTypes,
-      preferredCommunicationChannels,
-      salesPersons,
-      handleFileUpload,
-      csvData,
-      handleRemoveCSV,
-      getRootProps,
-      getInputProps,
-      acceptedFiles,
-      inputType,
-      setInputType,
-    };
+  return {
+    register,
+    control,
+    handleSubmit,
+    onSubmit,
+    errors,
+    getValues,
+    setValue,
+    loading,
+    push,
+    status,
+    handleSelectStatus,
+    clientType,
+    handleSelectClientType,
+    salesPersonAssigned,
+    handleSelectAssignedSalesperson,
+    communicationChannels,
+    handleSelectCommunicationChannel,
+    clientStatus,
+    clientTypes,
+    preferredCommunicationChannels,
+    salesPersons,
+    handleFileUpload,
+    csvData,
+    handleRemoveCSV,
+    getRootProps,
+    getInputProps,
+    acceptedFiles,
+    inputType,
+    setInputType,
+    downloadSampleCsv,
   };
+};
 
   export default useCreateForm;

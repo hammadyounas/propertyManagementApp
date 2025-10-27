@@ -9,6 +9,7 @@ import DropdownUI from "../../../../components/ui/organisms/DropdownUI";
 import { dateFormat, getStatusClasses } from "../../../../libs/utils/helper";
 import Dropdown from "../../../../components/ui/organisms/Dropdown";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 
 const TableUI = ({
   columns,
@@ -86,7 +87,7 @@ const TableUI = ({
                 ) : invoices?.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (

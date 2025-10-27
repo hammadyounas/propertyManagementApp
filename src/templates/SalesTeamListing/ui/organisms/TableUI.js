@@ -6,6 +6,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
 import { dateFormat } from "../../../../libs/utils/helper";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 const TableUI = ({
   columns,
   rows,
@@ -80,7 +81,7 @@ const TableUI = ({
                 ) : users?.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                      <NoDataFound />
                     </td>
                   </tr>
                 ) : (

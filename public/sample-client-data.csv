@@ -1,0 +1,6 @@
+name,email,phoneNumber,address,type,status,preferredCommunicationChannel,notes
+John Smith,john.smith@email.com,+1-514-555-0123,123 Maple Street Montreal QC,buyer,active,email,Looking for a 3-bedroom house in downtown area
+Sarah Johnson,sarah.j@email.com,+1-416-555-0456,456 Oak Avenue Toronto ON,seller,active,whatsapp,Wants to sell commercial property
+Michael Brown,m.brown@email.com,+1-604-555-0789,789 Pine Road Vancouver BC,buyer,pending,email,Interested in investment properties
+Emily Davis,emily.davis@email.com,+1-403-555-0321,321 Elm Street Calgary AB,seller,active,whatsapp,Multiple residential properties for sale
+

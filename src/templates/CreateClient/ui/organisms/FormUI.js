@@ -34,6 +34,7 @@ const FormUI = ({
   acceptedFiles,
   inputType,
   setInputType,
+  downloadSampleCsv,
 }) => {
   return (
     <div className="w-full lg:w-[75%]">
@@ -218,9 +219,16 @@ const FormUI = ({
               </div>
             ) : (
               <div className="mt-6">
-                <label className="block text-sm font-medium my-2">
-                  Upload CSV*
-                </label>
+                <div className="flex justify-end items-center mb-4">
+                  <Button
+                    text="Download Sample"
+                    onClick={downloadSampleCsv}
+                    type="button"
+                    className="!bg-white w-48 !text-primary-default border border-primary-default hover:!bg-primary-default hover:!text-white"
+                    icon={<Icon icon="material-symbols:download" className="text-lg" />}
+                    disabled={loading}
+                  />
+                </div>
 
                 <div className="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer">
                   {csvData && csvData.length > 0 ? (

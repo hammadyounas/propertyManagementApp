@@ -6,6 +6,7 @@ import Button from "../../../../components/ui/molecules/Button";
 import { ToastContainer } from "react-toastify";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 
 const TableUI = ({
   columns,
@@ -82,7 +83,7 @@ const TableUI = ({
                 ) : properties.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length} className="p-4 text-center">
-                      No Data Found
+                     <NoDataFound />
                     </td>
                   </tr>
                 ) : (
