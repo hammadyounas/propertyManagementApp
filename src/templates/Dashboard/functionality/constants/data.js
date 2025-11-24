@@ -70,6 +70,14 @@ export const columns = [
     field: "amount",
   },
   {
+    label: "Commission %",
+    field: "commission_percentage",
+  },
+  {
+    label: "Commission Amount",
+    field: "commission_amount",
+  },
+  {
     label: "Action",
     field: "action",
   }

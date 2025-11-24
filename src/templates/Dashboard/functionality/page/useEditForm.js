@@ -39,6 +39,26 @@ const useEditForm = () => {
           return !value.toString().toLowerCase().includes("e");
         }
       ),
+
+    commission_percentage: yup
+      .number()
+      .typeError("Commission % must be a number")
+      .nullable()
+      .transform((value, originalValue) => {
+        // Convert empty string to undefined
+        if (originalValue === "" || originalValue === null || originalValue === undefined) {
+          return undefined;
+        }
+        return Number(originalValue);
+      })
+      .test("valid-range", "Commission % must be greater than 0 and less than 100", (value) => {
+        // Only validate if value exists
+        if (value === undefined || value === null || value === "") {
+          return true; // Skip validation if empty
+        }
+        return Number(value) > 0 && Number(value) < 100;
+      }),
+
     comment: yup.string().optional().max(200),
   });
 
@@ -87,6 +107,7 @@ const useEditForm = () => {
           ? new Date(dashboardData.signatureDate).toISOString().split("T")[0]
           : "";
 
+        setValue("commission_percentage", dashboardData?.commissionPercentage || dashboardData?.commission_percentage);
         setValue("signature_date", formattedSignatureDate);
         setValue("dd", dashboardData?.dd);
         setValue("closing_days", dashboardData?.closingDays);
@@ -136,7 +157,15 @@ const useEditForm = () => {
         pmtReceived: data.pmtReceived,
         user_id: userId,
       };
-      console.log(formData);
+
+      if (data.commission_percentage !== undefined &&
+        data.commission_percentage !== null &&
+        data.commission_percentage !== "") {
+        formData.commissionPercentage = Number(data.commission_percentage);
+      }
+
+      console.log("Form Data:", formData);
+
       const response = await patchRequest(`dashboard/${id}`, formData);
       if (response) {
         toast.success("Dashboard entry edited successfully!");
@@ -148,8 +177,8 @@ const useEditForm = () => {
       console.error("Error:", error);
       toast.error(
         error?.response?.data?.message ||
-          error.message ||
-          "An error occurred while updating dashboard entry"
+        error.message ||
+        "An error occurred while updating dashboard entry"
       );
     } finally {
       setLoading(false);

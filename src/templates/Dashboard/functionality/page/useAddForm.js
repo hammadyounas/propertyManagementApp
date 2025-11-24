@@ -40,6 +40,12 @@ const useAddForm = () => {
           return !value.toString().toLowerCase().includes("e");
         }
       ),
+    commission_percentage: yup
+      .number()
+      .typeError("Commission % must be a number")
+      .required("Commission % is required")
+      .moreThan(0, "Commission % must be greater than 0")
+      .lessThan(100, "Commission % must be less than 100"),
     comment: yup
       .string()
       .optional()
@@ -122,9 +128,10 @@ const useAddForm = () => {
         invoice: data.invoice,
         pmtReceived: data.pmtReceived,
         amount: data.value_of_amount,
-        comment: data.comment,
+        commissionPercentage: data.commission_percentage,
+        comment: data.comment, 
       };
-
+    
       const response = await postRequest("dashboard", formData);
       if (response) {
         toast.success("Dashboard entry added successfully!");

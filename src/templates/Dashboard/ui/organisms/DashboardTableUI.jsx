@@ -9,6 +9,55 @@ import { dateFormat } from "../../../../libs/utils/helper";
 import { Icon } from "@iconify/react";
 import ReactSelect from "react-select";
 
+const getCommissionAmount = (row = {}) => {
+  const directKeys = ["commissionAmount", "commission_amount", "commission"];
+  for (const key of directKeys) {
+    const value = row[key];
+    if (value !== undefined && value !== null && value !== "") {
+      const parsed = Number(value);
+      if (!Number.isNaN(parsed)) {
+        return parsed;
+      }
+    }
+  }
+
+  const rateKeys = [
+    "commissionRate",
+    "commission_rate",
+    "commissionPercentage",
+    "commission_percentage",
+    "commissionPercent",
+    "commission_percent",
+  ];
+
+  let rate = null;
+  for (const key of rateKeys) {
+    const value = row[key];
+    if (value !== undefined && value !== null && value !== "") {
+      const parsed = Number(value);
+      if (!Number.isNaN(parsed)) {
+        rate = parsed;
+        break;
+      }
+    }
+  }
+
+  const amount = Number(row?.amount) || 0;
+  if (rate === null) {
+    return 0;
+  }
+
+  const normalizedRate = rate > 1 ? rate / 100 : rate;
+  const commission = amount * normalizedRate;
+  return Number.isFinite(commission) ? Number(commission.toFixed(2)) : 0;
+};
+
+const formatCurrency = (value = 0) =>
+  `$ ${(Number(value) || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
 const DashboardTableUI = ({
   columns,
   rows,
@@ -28,8 +77,29 @@ const DashboardTableUI = ({
   setSelectedBroker,
 }) => {
   const calculateTotal = (key) => {
+    if (key === "commissionAmount") {
+      return dashboardEntries.reduce(
+        (total, row) => {
+          const commissionAmount = getCommissionAmount(row);
+          return total + (Number(commissionAmount) || 0);
+        },
+        0
+      );
+    }
+    if (key === "amount") {
+      return dashboardEntries.reduce(
+        (total, row) => {
+          const amount = Number(row?.amount) || 0;
+          return total + amount;
+        },
+        0
+      );
+    }
     return dashboardEntries.reduce(
-      (total, row) => total + (Number(row[key]) || 0),
+      (total, row) => {
+        const value = Number(row?.[key]) || 0;
+        return total + value;
+      },
       0
     );
   };
@@ -44,6 +114,8 @@ const DashboardTableUI = ({
     { key: "created_by", label: "Created By" },
     { key: "comment", label: "Comment" },
     { key: "amount", label: "Amount" },
+    { key: "commissionPercentage", label: "Commission %" },
+    { key: "commissionAmount", label: "Commission Amount" },
     { key: "action", label: "Action" },
   ];
 
@@ -292,8 +364,19 @@ const DashboardTableUI = ({
                         )}
                       </td>
                       <td className="table-td sm:p-4 p-2">
-                        $ {row.amount.toLocaleString()}
+                        {formatCurrency(row.amount)}
                       </td>
+                      <td className="table-td sm:p-4 p-2">
+                        {row.commissionPercentage !== undefined && row.commissionPercentage !== null
+                          ? `${Number(row.commissionPercentage).toFixed(2)}%`
+                          : row.commission_percentage !== undefined && row.commission_percentage !== null
+                          ? `${Number(row.commission_percentage).toFixed(2)}%`
+                          : "N/A"}
+                      </td>
+                      <td className="table-td sm:p-4 p-2">
+                        {formatCurrency(getCommissionAmount(row))}
+                      </td>
+                      
                       <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <Icon
                           onClick={() => push(`/dashboard/edit/${row._id}`)}
@@ -326,11 +409,12 @@ const DashboardTableUI = ({
                           // "financingDays",
                           // "closingDays",
                           "amount",
+                          "commissionAmount",
                         ].includes(column.key) ? (
                           <>
                             <p>Total</p>
                             <p>
-                              $ {calculateTotal(column.key).toLocaleString()}
+                              {formatCurrency(calculateTotal(column.key))}
                             </p>
                           </>
                         ) : null}
