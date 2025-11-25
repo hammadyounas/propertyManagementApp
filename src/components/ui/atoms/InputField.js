@@ -62,16 +62,16 @@ const InputField = ({
           />
         )}
 
-<div className="flex text-xl absolute right-5 top-1/2 -translate-y-1/2  space-x-1 rtl:space-x-reverse">
-        {type === "password" && (
-          <span className="cursor-pointer" onClick={() => setOpen(!open)}>
-            <Icon
-              icon={open ? "heroicons-outline:eye" : "heroicons-outline:eye-off"}
-            />
-          </span>
+        <div className="flex text-xl absolute right-5 top-1/2 -translate-y-1/2  space-x-1 rtl:space-x-reverse">
+          {type === "password" && (
+            <span className="cursor-pointer" onClick={() => setOpen(!open)}>
+              <Icon
+                icon={open ? "heroicons-outline:eye" : "heroicons-outline:eye-off"}
+              />
+            </span>
 
-)}
-</div>
+          )}
+        </div>
 
         {error && <p className="text-danger-500 text-sm">{error}</p>}
       </div>

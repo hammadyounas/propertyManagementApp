@@ -104,6 +104,21 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
             />
           </div>
 
+          <div className="mt-[6px] w-full md:w-[49%]">
+            <Textinput
+              name="commission_percentage"
+              label="Commission %*"
+              type="number"
+              register={register}
+              error={errors.commission_percentage}
+              placeholder="Commission Percentage"
+              disabled={loading}
+              step="0.01"
+              min="0"
+              max="100"
+            />
+          </div>
+
           <div className="w-full md:w-[49%]">
             <TextareaUI
               name="comment"
@@ -118,6 +133,7 @@ export default function AddForm({register, errors, loading, invoice, handleSelec
             <p className="text-xs text-gray-500 text-right">Max (100 words)</p>
 
           </div>
+
 
         </div>
 
