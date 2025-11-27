@@ -16,6 +16,7 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
     setClientName,
     loading,
     handleSendEmail,
+    handleDownloadDocument,
     editorValue,
     setEditorValue,
     documentId,
@@ -47,6 +48,7 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
       docTitle={docTitle}
       setDocTitle={setDocTitle}
       onSave={handleSaveDocument}
+      onDownload={handleDownloadDocument}
       onBack={() => router.push('/documents')}
       isEditing={isEditing}
       // Email modal props

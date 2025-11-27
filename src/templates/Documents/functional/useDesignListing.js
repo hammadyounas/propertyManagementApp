@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -39,11 +39,42 @@ export default function useDesignListing() {
   const [emailingDocumentId, setEmailingDocumentId] = useState(null);
   const [emailLoading, setEmailLoading] = useState(false);
 
+  const allDocuments = documents || [];
+
+  const filteredDocuments = useMemo(() => {
+    const term = (globalFilter || '').trim().toLowerCase();
+    if (!term) return allDocuments;
+
+    return allDocuments.filter((doc) => {
+      const docId = (doc?.doc_id || doc?.docId || doc?.id || '').toString().toLowerCase();
+      const title = (doc?.title || '').toLowerCase();
+      const client = (doc?.clientName || '').toLowerCase();
+      const email = (doc?.email_recipient || '').toLowerCase();
+
+      return (
+        docId.includes(term) ||
+        title.includes(term) ||
+        client.includes(term) ||
+        email.includes(term)
+      );
+    });
+  }, [allDocuments, globalFilter]);
+
+  const filteredTotalCount = (globalFilter || '').trim()
+    ? filteredDocuments.length
+    : totalCount;
+
   // Fetch documents and templates on component mount
   useEffect(() => {
-    dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+    dispatch(fetchDocuments({ page: 1, limit: 1000, search: '' }));
     dispatch(fetchTemplate({ all: true })); // Fetch all templates for dropdown
-  }, [dispatch, currentPage, pageSize, globalFilter]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!showTemplateModal) return;
+    if (templates && templates.length > 0) return;
+    dispatch(fetchTemplate({ all: true }));
+  }, [showTemplateModal, templates?.length, dispatch]);
 
   // Modal handlers
   const closeDeleteModal = () => {
@@ -241,13 +272,13 @@ export default function useDesignListing() {
   };
 
   // Get the document title for the upload modal
-  const uploadingDocument = documents.find(doc => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId);
+  const uploadingDocument = allDocuments.find(doc => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId);
   
   // Get the document for email modal
-  const emailingDocument = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
+  const emailingDocument = allDocuments.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
 
   return {
-    documents,
+    documents: filteredDocuments,
     templates,
     selectedTemplateId,
     setSelectedTemplateId,
@@ -274,7 +305,7 @@ export default function useDesignListing() {
     // Pagination props
     currentPage,
     pageSize,
-    totalCount,
+    totalCount: filteredTotalCount,
     totalPages,
     handlePageChange,
     // Upload PDF

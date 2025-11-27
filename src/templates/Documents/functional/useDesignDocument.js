@@ -81,21 +81,24 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
 
   useEffect(() => {
     // Only load template content if NOT editing an existing document
-    // This prevents overwriting user edits when editing a document
     if (editingId) {
-      return; // Skip this effect when editing - preserve existing doc_id
+      return;
     }
     
     if (selectedTemplate) {
       setEditorValue(selectedTemplate.content || '')
-      setDocumentId(generateDocId()) // Only generate new ID for new documents
       setDocTitle(selectedTemplate.title || '')
+      if (!documentId) {
+        setDocumentId(generateDocId())
+      }
     } else {
       setEditorValue('')
-      setDocumentId(generateDocId()) // Only generate new ID for new documents
       setDocTitle('')
+      if (!documentId) {
+        setDocumentId(generateDocId())
+      }
     }
-  }, [selectedTemplateId, editingId, selectedTemplate])
+  }, [selectedTemplateId, editingId, selectedTemplate, documentId])
 
   const regenerateDocumentId = () => setDocumentId(generateDocId())
 
@@ -148,7 +151,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     }
   }
 
-  const handleSaveDocument = async (retryCount = 0) => {
+  const saveDocument = async (retryCount = 0, { redirectToList = true } = {}) => {
     if (!editorValue.trim()) {
       toast.error('Nothing to save. Please edit content first.')
       return
@@ -182,7 +185,9 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         toast.success('Document created successfully')
       }
       
-      router.push('/documents')
+      if (redirectToList) {
+        router.push('/documents')
+      }
       return result._id || result.id
     } catch (error) {
       console.error('Failed to save document', error)
@@ -208,7 +213,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         await new Promise(resolve => setTimeout(resolve, 300))
         
         // Retry with new ID
-        return handleSaveDocument(retryCount + 1)
+        return saveDocument(retryCount + 1, { redirectToList })
       } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
         toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
       } else {
@@ -220,6 +225,9 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
       }
     }
   }
+
+  const handleSaveDocument = () => saveDocument(0, { redirectToList: true })
+  const handleDownloadDocument = () => saveDocument(0, { redirectToList: false })
 
   // Full-screen functionality using utility
   const handleFullScreen = () => {
@@ -241,6 +249,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     setClientName,
     loading,
     handleSendEmail,
+    handleDownloadDocument,
     selectedTemplate,
     editorValue,
     setEditorValue,
