@@ -59,17 +59,29 @@ export const menuItems = [
   //   icon: "icon-park-solid:add-one", // Clear "add" action
   //   link: "/templates/create",
   // },
+  // {
+  //   title: "Templates",
+  //   isHide: false,
+  //   icon: "tabler:template", // Represents multiple items/templates
+  //   link: "/templates",
+  // },
+  // {
+  //   title: "Design Documents",
+  //   isHide: false,
+  //   icon: "majesticons:document-line", // Represents documents with content
+  //   link: "/documents",
+  // },
   {
     title: "Templates",
     isHide: false,
-    icon: "tabler:template", // Represents multiple items/templates
-    link: "/templates",
+    icon: "tabler:template",
+    link: "/templates-2",
   },
   {
-    title: "Design Documents",
+    title: "Design Document",
     isHide: false,
-    icon: "majesticons:document-line", // Represents documents with content
-    link: "/documents",
+    icon: "majesticons:document-line",
+    link: "/design-documents-2",
   },
 ];
 

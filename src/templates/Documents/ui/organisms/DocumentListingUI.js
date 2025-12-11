@@ -143,49 +143,16 @@ export default function DocumentListingUI({
                         <div className="flex justify-center">
                           <Icon
                             onClick={() => onOpenEmailModal(document._id || document.id)}
-                            className={`text-[20px] transition-colors ${
-                              document.pdf_file && document.pdf_file.trim() !== ''
-                                ? 'cursor-pointer hover:text-green-600'
-                                : 'cursor-not-allowed text-gray-400 dark:text-slate-600'
-                            }`}
+                            className="cursor-pointer text-[20px] hover:text-green-600 transition-colors"
                             icon={"hugeicons:mail-send-02"}
-                            title={
-                              document.pdf_file && document.pdf_file.trim() !== ''
-                                ? 'Send Email'
-                                : 'Upload PDF first to send email'
-                            }
+                            title="Send Email"
                           />
                           <Icon
-                            onClick={() => onOpenUploadModal(document._id || document.id)}
-                            className="cursor-pointer text-[20px] ml-4 hover:text-primary-default transition-colors"
-                            icon={"bytesize:upload"}
-                            title="Upload PDF"
+                            onClick={() => onDownload(document)}
+                            className="cursor-pointer text-[20px] mx-4 hover:text-blue-600 transition-colors"
+                            icon={"material-symbols:download"}
+                            title="Download PDF"
                           />
-                          
-                          <a 
-                            href={document.pdf_file || '#'} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              if (!document.pdf_file || document.pdf_file.trim() === '') {
-                                e.preventDefault();
-                              }
-                            }}
-                          >
-                            <Icon
-                              className={`${
-                                document.pdf_file && document.pdf_file.trim() !== '' 
-                                  ? 'cursor-pointer hover:text-blue-600' 
-                                  : 'cursor-not-allowed text-gray-400 dark:text-slate-600'
-                              } text-[20px] mx-4 transition-colors`}
-                              icon={"material-symbols:download"}
-                              title={
-                                document.pdf_file && document.pdf_file.trim() !== ''
-                                  ? 'Download PDF'
-                                  : 'No PDF uploaded'
-                              }
-                            />
-                          </a>
                           <Icon
                             onClick={() => onEdit(document)}
                             className="cursor-pointer text-[20px] hover:text-blue-600 transition-colors mr-4"
@@ -234,6 +201,7 @@ export default function DocumentListingUI({
         loading={emailLoading}
         docTitle={emailingDocument?.title || "Document"}
         clientName={emailingDocument?.clientName || ""}
+        defaultEmail={emailingDocument?.email_recipient || ""}
         hasPdf={emailingDocument?.pdf_file && emailingDocument.pdf_file.trim() !== ''}
       />
       

@@ -7,6 +7,8 @@ import EmailModal from "../molecules/EmailModal";
 export default function CreateDesignDocumentUI({
   clientName = "",
   setClientName = () => {},
+  recipientEmail = "",
+  setRecipientEmail = () => {},
   loading = false,
   onDownload = () => {},
   onSendEmail = () => {},
@@ -149,7 +151,7 @@ export default function CreateDesignDocumentUI({
             </div>
           </div>
         </div>
-        {/* <div className="w-full lg:w-80 p-4 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto">
+        <div className="w-full lg:w-80 p-4 bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 max-h-96 lg:max-h-none overflow-y-auto space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 my-2">
               Client Name
@@ -161,7 +163,19 @@ export default function CreateDesignDocumentUI({
               className="w-full border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
             />
           </div>
-        </div> */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 my-2">
+              Recipient Email
+            </label>
+            <input
+              type="email"
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              placeholder="recipient@example.com"
+              className="w-full border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Email Modal */}
@@ -172,6 +186,7 @@ export default function CreateDesignDocumentUI({
         loading={emailLoading}
         docTitle={docTitle}
         clientName={clientName}
+        defaultEmail={recipientEmail}
       />
     </div>
   );

@@ -13,18 +13,20 @@ const NavmenuUI = ({
   return (
     <>
       <ul>
-        {menus.map((item, i) => (
+        {menus.map((item, i) => {
+          // Check if this menu item should be active
+          const isActive = locationName === item.link || 
+            (location?.startsWith(`${item.link}/`) && 
+             // Special case: /templates should not be active when on /templates-2
+             !(item.link === '/templates' && locationName?.startsWith('/templates-2')));
+          
+          return (
           <li
             key={i}
             className={` single-sidebar-menu 
               ${item.child ? "item-has-children" : ""}
               ${activeSubmenu === i ? "open" : ""}
-              ${
-                locationName === item.link ||
-                location?.startsWith(`${item.link}`)
-                  ? "menu-item-active"
-                  : ""
-              }`}
+              ${isActive ? "menu-item-active" : ""}`}
           >
             {/* single menu with no childred*/}
             {!item.child && !item.isHeadr && (
@@ -79,7 +81,8 @@ const NavmenuUI = ({
               locationName={locationName}
             />
           </li>
-        ))}
+          );
+        })}
         {/* <li className="single-sidebar-menu">
           <a
             href="https://dashcode-react-doc.codeshaper.tech/"

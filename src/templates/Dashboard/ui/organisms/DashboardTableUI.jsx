@@ -238,7 +238,13 @@ const DashboardTableUI = ({
                     </td>
                   </tr>
                 ) : (
-                  dashboardEntries?.map((row, i) => (
+                  dashboardEntries?.map((row, i) => {
+                    const ddDays = Number(row?.dd) || 0;
+                    const financingDays = Number(row?.financingDays) || 0;
+                    const closingDays = Number(row?.closingDays) || 0;
+                    const isNonPaid = row?.pmtReceived === "non paid";
+
+                    return (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700 whitespace-nowrap"
@@ -248,88 +254,46 @@ const DashboardTableUI = ({
                         {dateFormat(row.signatureDate)}
                       </td>
                       <td className={`table-td sm:p-4 p-2 `}>
-                        <span
+                        <div
                           className={`${
-                            row.dd > 0 && row.pmtReceived === 'non paid'
+                            ddDays > 0 && isNonPaid
                               ? "text-green-700 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer
-                            initialDays={
-                              row.dd > 0 && row.pmtReceived === 'non paid' ? (
-                                <>
-                                  <div className="flex justify-center items-center gap-2 text-green-600">
-                                    <Icon
-                                      icon="majesticons:timer-line"
-                                      className=""
-                                    />{" "}
-                                    {row.dd}
-                                  </div>
-                                </>
-                              ) : (
-                                row.dd
-                              )
-                            }
-                          />
-                        </span>
+                          {ddDays > 0 && isNonPaid && (
+                            <Icon icon="majesticons:timer-line" className="mr-1" />
+                          )}
+                          <CountdownTimer initialDays={ddDays} />
+                        </div>
                       </td>
                       <td className={`table-td sm:p-4 p-2 `}>
-                        <span
+                        <div
                           className={`${
-                            row.financingDays > 0 && row.dd  === 0 && row.pmtReceived === 'non paid'
+                            financingDays > 0 && isNonPaid
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer
-                            initialDays={
-                              row.financingDays > 0 && row.dd === 0 && row.pmtReceived === 'non paid' ? (
-                                <>
-                                  <div className="flex justify-center items-center gap-2 text-green-600">
-                                    <Icon
-                                      icon="majesticons:timer-line"
-                                      className=""
-                                    />{" "}
-                                    {row.financingDays}
-                                  </div>
-                                </>
-                              ) : (
-                                row.financingDays
-                              )
-                            }
-                          />
-                        </span>
+                          {financingDays > 0 && isNonPaid && (
+                            <Icon icon="majesticons:timer-line" className="mr-1" />
+                          )}
+                          <CountdownTimer initialDays={financingDays} />
+                        </div>
                       </td>
                       <td className={`table-td sm:p-4 p-2 `}>
-                        <span
+                        <div
                           className={`${
-                            row.closingDays > 0 &&
-                            row.financingDays === 0 &&
-                            row.dd === 0
-                            && row.pmtReceived === 'non paid'
+                            closingDays > 0 && isNonPaid
                               ? "text-green-600 py-2 bg-green-200 px-2 rounded-full flex justify-center items-center"
                               : ""
                           }`}
                         >
-                          <CountdownTimer
-                            initialDays={
-                              row.closingDays > 0 && row.financingDays === 0 && row.pmtReceived === 'non paid' ? (
-                                <>
-                                  <div className="flex justify-center items-center gap-2 text-green-600">
-                                    <Icon
-                                      icon="majesticons:timer-line"
-                                      className=""
-                                    />{" "}
-                                    {row.closingDays}
-                                  </div>
-                                </>
-                              ) : (
-                                row.closingDays
-                              )
-                            }
-                          />
-                        </span>
+                          {closingDays > 0 && isNonPaid && (
+                            <Icon icon="majesticons:timer-line" className="mr-1" />
+                          )}
+                          <CountdownTimer initialDays={closingDays} />
+                        </div>
                       </td>
                       <td className="table-td sm:p-4 p-2">{row.invoice}</td>
                       <td className="table-td sm:p-4 p-2">
@@ -396,7 +360,8 @@ const DashboardTableUI = ({
                       </span>
                     </td> */}
                     </tr>
-                  ))
+                  );
+                })
                 )}
               </tbody>
               {dashboardEntries?.length > 0 && (

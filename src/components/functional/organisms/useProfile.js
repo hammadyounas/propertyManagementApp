@@ -43,13 +43,13 @@ const useProfile = () => {
         router.push("/profile");
       },
     },
-    {
-      label: "New Template",
-      icon: "gg:add",
-      action: () => {
-        router.push("/templates/create");
-      },
-    },
+    // {
+    //   label: "New Template",
+    //   icon: "gg:add",
+    //   action: () => {
+    //     router.push("/templates/create");
+    //   },
+    // },
     // {
     //   label: "Chat",
     //   icon: "heroicons-outline:chat",

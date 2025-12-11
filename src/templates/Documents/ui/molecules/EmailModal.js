@@ -12,15 +12,16 @@ export default function EmailModal({
   docTitle = '',
   clientName = '',
   hasPdf = false,
+  defaultEmail = '',
 }) {
   const [email, setEmail] = useState('');
 
   // Reset email field when modal opens
   React.useEffect(() => {
     if (isOpen) {
-      setEmail('');
+      setEmail(defaultEmail || '');
     }
-  }, [isOpen]);
+  }, [isOpen, defaultEmail]);
 
   const handleSend = () => {
     if (!email.trim()) {
@@ -66,7 +67,7 @@ export default function EmailModal({
             text={loading ? "Sending..." : "Send Email"}
             className="btn-primary bg-primary-default"
             onClick={handleSend}
-            disabled={loading || !hasPdf}
+            disabled={loading}
           />
         </div>
       }

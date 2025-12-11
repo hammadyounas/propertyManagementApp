@@ -14,6 +14,8 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
     setSelectedTemplateId,
     clientName,
     setClientName,
+    recipientEmail,
+    setRecipientEmail,
     loading,
     handleSendEmail,
     handleDownloadDocument,
@@ -40,6 +42,8 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
     <CreateDesignDocumentUI
       clientName={clientName}
       setClientName={setClientName}
+      recipientEmail={recipientEmail}
+      setRecipientEmail={setRecipientEmail}
       loading={loading}
       editorValue={editorValue}
       setEditorValue={setEditorValue}

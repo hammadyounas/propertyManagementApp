@@ -236,14 +236,12 @@ export default function useDesignListing() {
       return;
     }
 
-    // Find the document to check if PDF exists
+    // Find the document
     const document = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
     
-    // Check if PDF file exists
+    // Check if PDF file exists - show warning but allow sending
     if (!document?.pdf_file || document.pdf_file.trim() === '') {
-      toast.error('Please upload a PDF file first before sending email');
-      handleCloseEmailModal();
-      return;
+      toast.warning('No PDF file attached. Email will be sent without PDF attachment.');
     }
 
     try {
@@ -252,7 +250,7 @@ export default function useDesignListing() {
       console.log('Sending email:', {
         documentId: emailingDocumentId,
         emailRecipient: emailData.email_recipient,
-        pdfUrl: document.pdf_file
+        pdfUrl: document?.pdf_file || 'No PDF'
       });
 
       await dispatch(sendEmailWithDocument({ 
@@ -262,6 +260,9 @@ export default function useDesignListing() {
 
       toast.success('Email sent successfully!');
       handleCloseEmailModal();
+      
+      // Refresh documents list to update email_recipient if needed
+      dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
     } catch (error) {
       console.error('Error sending email:', error);
       const errorMessage = error?.message || error?.error || error || 'Failed to send email';

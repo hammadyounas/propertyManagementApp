@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { Icon } from '@iconify/react';
 
-const CountdownTimer = ({ initialDays }) => {
-  const [daysRemaining, setDaysRemaining] = useState(initialDays);
+const CountdownTimer = ({ initialDays = 0 }) => {
+  const normalizeDays = (value) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  };
+
+  const [daysRemaining, setDaysRemaining] = useState(normalizeDays(initialDays));
 
   useEffect(() => {
-    setDaysRemaining(initialDays); // Reset countdown whenever initialDays changes
+    setDaysRemaining(normalizeDays(initialDays)); // Reset countdown whenever initialDays changes
   }, [initialDays]);
 
   useEffect(() => {
@@ -16,6 +21,10 @@ const CountdownTimer = ({ initialDays }) => {
     return () => clearInterval(interval);
   }, []);
 
-  return <span className="flex justify-center items-center gap-2">{daysRemaining} days</span>;
+  return (
+    <span className="flex justify-center items-center gap-2">
+      {daysRemaining} days
+    </span>
+  );
 };
 export default CountdownTimer;

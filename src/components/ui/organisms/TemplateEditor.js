@@ -234,7 +234,7 @@ const TemplateEditor = ({
           }
         } catch (err) {
           console.warn("Failed removing existing Doc ID line", err)
-        } finally {
+      } finally {
           clearSearchHighlight()
         }
       }
@@ -300,6 +300,7 @@ const TemplateEditor = ({
         selection.moveDown()
         selection.moveToParagraphStart()
         selection.paragraphFormat.textAlignment = "center"
+        selection.paragraphFormat.beforeSpacing = 10;
       }
 
       try {
@@ -493,7 +494,7 @@ const TemplateEditor = ({
           console.log("Using insertHtml method...")
           editor.editor.insertHtml(htmlContent)
           console.log("HTML inserted successfully with formatting")
-          return
+        return
         }
       } catch (insertHtmlError) {
         console.warn("insertHtml method failed:", insertHtmlError)
@@ -1216,7 +1217,7 @@ const TemplateEditor = ({
           created={handleEditorCreated}
           {...props}
         />
-      </div>
+        </div>
       {error && <p className="text-red-500 text-sm mt-1 dark:text-slate-200">{error.message}</p>}
 
       <style jsx global>{`
@@ -1471,6 +1472,7 @@ const TemplateEditor = ({
         /* Default table styling - no borders */
         .syncfusion-doc-editor table {
           border-collapse: collapse;
+           background-color:rgb(230, 12, 12) !important;
         }
 
         .syncfusion-doc-editor table td,

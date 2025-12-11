@@ -25,6 +25,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   // Local state
   const [selectedTemplateId, setSelectedTemplateId] = useState('')
   const [clientName, setClientName] = useState('')
+  const [recipientEmail, setRecipientEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [editorValue, setEditorValue] = useState('')
   const [documentId, setDocumentId] = useState(generateDocId()) // Auto-generate 6-digit ID
@@ -62,6 +63,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
           setSelectedTemplateId(doc.templateId || '')
           setEditorValue(doc.content || '')
           setClientName(doc.clientName || '')
+          setRecipientEmail(doc.email_recipient || '')
           setDocumentId(doc.doc_id || generateDocId())
           setDocTitle(doc.title || '')
         }
@@ -167,8 +169,13 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
         content: editorValue,
         clientName: clientName || '',
-        doc_id: documentId || generateDocId(), // Use doc_id for backend
+        email_recipient: recipientEmail || '', // Email will be saved when downloading
+        doc_id: documentId || generateDocId(), 
       }
+
+      // Debug: Log email to verify it's being included
+      console.log('Saving document with email:', recipientEmail)
+      console.log('Document data:', documentData)
 
       let result;
       
@@ -183,6 +190,11 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         // Create new document
         result = await dispatch(createDocument(documentData)).unwrap()
         toast.success('Document created successfully')
+        // IMPORTANT: Set editingId after creating so subsequent saves will update instead of create
+        // This prevents duplicate entries when user downloads first, then saves with email later
+        if (result?._id || result?.id) {
+          setEditingId(result._id || result.id)
+        }
       }
       
       if (redirectToList) {
@@ -247,6 +259,8 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     setSelectedTemplateId,
     clientName,
     setClientName,
+    recipientEmail,
+    setRecipientEmail,
     loading,
     handleSendEmail,
     handleDownloadDocument,
