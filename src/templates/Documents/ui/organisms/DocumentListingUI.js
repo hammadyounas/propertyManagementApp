@@ -130,7 +130,7 @@ export default function DocumentListingUI({
                       </td>
                       <td className="table-td sm:p-4 p-2 text-center">
                         <div className="flex items-center justify-center">
-                          <img src={document.created_by?.avatar || "/assets/images/users/default.jpg"} alt={document.created_by?.name} className="w-8 h-8 rounded-full mr-2" />
+                          {/* <img src={document.created_by?.avatar || "/assets/images/users/default.jpg"} alt={document.created_by?.name} className="w-8 h-8 rounded-full mr-2" /> */}
                           <span className="text-primary-default font-bold cursor-pointer">
                             {document?.created_by?.name}
                           </span>

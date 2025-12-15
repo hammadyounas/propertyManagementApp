@@ -1,39 +1,48 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import html2pdf from 'html2pdf.js'
-import { fetchDocuments, deleteDocument, uploadPdfToCloudinary, sendEmailWithDocument } from '../../../store/features/documents/documentSlice';
-import { selectDocuments, selectLoading, selectTotalCount } from '../../../store/features/documents/documentSelectors';
-import { fetchTemplate } from '../../../store/features/templates/templateSlice';
-import { selectTemplates } from '../../../store/features/templates/templateSelectors';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import html2pdf from "html2pdf.js";
+import {
+  fetchDocuments,
+  deleteDocument,
+  uploadPdfToCloudinary,
+  sendEmailWithDocument,
+} from "../../../store/features/documents/documentSlice";
+import {
+  selectDocuments,
+  selectLoading,
+  selectTotalCount,
+} from "../../../store/features/documents/documentSelectors";
+import { fetchTemplate } from "../../../store/features/templates/templateSlice";
+import { selectTemplates } from "../../../store/features/templates/templateSelectors";
 
 export default function useDesignListing() {
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   // Redux state
   const documents = useSelector(selectDocuments);
   const templates = useSelector(selectTemplates);
   const loading = useSelector(selectLoading);
   const totalCount = useSelector(selectTotalCount);
-  
+
   // Local state
-  const [selectedTemplateId, setSelectedTemplateId] = useState('');
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [showTemplateModal, setShowTemplateModal] = useState(false);
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all documents');
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all documents");
   const [currentItem, setCurrentItem] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
-  
+
   // Upload PDF modal state
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadingDocumentId, setUploadingDocumentId] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
-  
+
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailingDocumentId, setEmailingDocumentId] = useState(null);
@@ -41,7 +50,13 @@ export default function useDesignListing() {
 
   // Fetch documents and templates on component mount
   useEffect(() => {
-    dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+    dispatch(
+      fetchDocuments({
+        page: currentPage,
+        limit: pageSize,
+        search: globalFilter,
+      })
+    );
     dispatch(fetchTemplate({ all: true })); // Fetch all templates for dropdown
   }, [dispatch, currentPage, pageSize, globalFilter]);
 
@@ -64,30 +79,39 @@ export default function useDesignListing() {
     try {
       setDeleteLoading(true);
       const targetId = documentId ?? currentItem;
-      
+
       await dispatch(deleteDocument(targetId)).unwrap();
-      
+
       closeDeleteModal();
-      toast.success('Document deleted successfully.');
-      
+      toast.success("Document deleted successfully.");
+
       // Refresh documents list
-      dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+      dispatch(
+        fetchDocuments({
+          page: currentPage,
+          limit: pageSize,
+          search: globalFilter,
+        })
+      );
     } catch (error) {
-      console.error('Error deleting document:', error);
-      toast.error('Error deleting document!');
+      console.error("Error deleting document:", error);
+      toast.error("Error deleting document!");
     } finally {
       setDeleteLoading(false);
     }
   };
 
-
   const handleSave = (documentData) => {
     if (documentData.id) {
       // Update existing template
-      setDocuments(prev => 
-        prev.map(document => 
-          document.id === documentData.id 
-            ? { ...document, ...documentData, updatedAt: new Date().toISOString() }
+      setDocuments((prev) =>
+        prev.map((document) =>
+          document.id === documentData.id
+            ? {
+                ...document,
+                ...documentData,
+                updatedAt: new Date().toISOString(),
+              }
             : document
         )
       );
@@ -98,14 +122,14 @@ export default function useDesignListing() {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         date: new Date().toISOString(),
-        category: templateData.category || 'uncategorized',
+        category: templateData.category || "uncategorized",
       };
-      setDocuments(prev => [newDocument, ...prev]);
+      setDocuments((prev) => [newDocument, ...prev]);
     }
   };
 
   const handleBack = () => {
-    router.push('/documents');
+    router.push("/documents");
   };
 
   const handleOpenTemplateModal = () => {
@@ -114,12 +138,12 @@ export default function useDesignListing() {
 
   const handleCloseTemplateModal = () => {
     setShowTemplateModal(false);
-    setSelectedTemplateId('');
+    setSelectedTemplateId("");
   };
 
   const handleCreateWithTemplate = (templateId) => {
     if (!templateId) {
-      toast.error('Please select a template first');
+      toast.error("Please select a template first");
       return;
     }
     setShowTemplateModal(false);
@@ -146,12 +170,12 @@ export default function useDesignListing() {
 
   const handleUploadPdf = async (file) => {
     if (!uploadingDocumentId) {
-      toast.error('No document selected for upload');
+      toast.error("No document selected for upload");
       return;
     }
 
     if (!file) {
-      toast.error('No file selected');
+      toast.error("No file selected");
       return;
     }
 
@@ -160,28 +184,37 @@ export default function useDesignListing() {
 
       // Create FormData to send file
       const formData = new FormData();
-      formData.append('pdf_file', file);
-      
-      console.log('Uploading PDF:', {
+      formData.append("pdf_file", file);
+
+      console.log("Uploading PDF:", {
         documentId: uploadingDocumentId,
         fileName: file.name,
         fileSize: file.size,
-        fileType: file.type
+        fileType: file.type,
       });
 
-      await dispatch(uploadPdfToCloudinary({ 
-        id: uploadingDocumentId, 
-        file: formData 
-      })).unwrap();
+      await dispatch(
+        uploadPdfToCloudinary({
+          id: uploadingDocumentId,
+          file: formData,
+        })
+      ).unwrap();
 
-      toast.success('PDF uploaded successfully!');
+      toast.success("PDF uploaded successfully!");
       handleCloseUploadModal();
-      
+
       // Refresh documents list
-      dispatch(fetchDocuments({ page: currentPage, limit: pageSize, search: globalFilter }));
+      dispatch(
+        fetchDocuments({
+          page: currentPage,
+          limit: pageSize,
+          search: globalFilter,
+        })
+      );
     } catch (error) {
-      console.error('Full error uploading PDF:', error);
-      const errorMessage = error?.message || error?.error || error || 'Failed to upload PDF';
+      console.error("Full error uploading PDF:", error);
+      const errorMessage =
+        error?.message || error?.error || error || "Failed to upload PDF";
       toast.error(errorMessage);
     } finally {
       setUploadLoading(false);
@@ -201,16 +234,18 @@ export default function useDesignListing() {
 
   const handleSendEmail = async (emailData) => {
     if (!emailingDocumentId) {
-      toast.error('No document selected for email');
+      toast.error("No document selected for email");
       return;
     }
 
     // Find the document to check if PDF exists
-    const document = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
-    
+    const document = documents.find(
+      (doc) => doc._id === emailingDocumentId || doc.id === emailingDocumentId
+    );
+
     // Check if PDF file exists
-    if (!document?.pdf_file || document.pdf_file.trim() === '') {
-      toast.error('Please upload a PDF file first before sending email');
+    if (!document?.pdf_file || document.pdf_file.trim() === "") {
+      toast.error("Please upload a PDF file first before sending email");
       handleCloseEmailModal();
       return;
     }
@@ -218,22 +253,25 @@ export default function useDesignListing() {
     try {
       setEmailLoading(true);
 
-      console.log('Sending email:', {
+      console.log("Sending email:", {
         documentId: emailingDocumentId,
         emailRecipient: emailData.email_recipient,
-        pdfUrl: document.pdf_file
+        pdfUrl: document.pdf_file,
       });
 
-      await dispatch(sendEmailWithDocument({ 
-        id: emailingDocumentId, 
-        email: emailData 
-      })).unwrap();
+      await dispatch(
+        sendEmailWithDocument({
+          id: emailingDocumentId,
+          email: emailData,
+        })
+      ).unwrap();
 
-      toast.success('Email sent successfully!');
+      toast.success("Email sent successfully!");
       handleCloseEmailModal();
     } catch (error) {
-      console.error('Error sending email:', error);
-      const errorMessage = error?.message || error?.error || error || 'Failed to send email';
+      console.error("Error sending email:", error);
+      const errorMessage =
+        error?.message || error?.error || error || "Failed to send email";
       toast.error(errorMessage);
     } finally {
       setEmailLoading(false);
@@ -241,10 +279,14 @@ export default function useDesignListing() {
   };
 
   // Get the document title for the upload modal
-  const uploadingDocument = documents.find(doc => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId);
-  
+  const uploadingDocument = documents.find(
+    (doc) => doc._id === uploadingDocumentId || doc.id === uploadingDocumentId
+  );
+
   // Get the document for email modal
-  const emailingDocument = documents.find(doc => doc._id === emailingDocumentId || doc.id === emailingDocumentId);
+  const emailingDocument = documents.find(
+    (doc) => doc._id === emailingDocumentId || doc.id === emailingDocumentId
+  );
 
   return {
     documents,
