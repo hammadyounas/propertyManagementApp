@@ -75,6 +75,7 @@ const DashboardTableUI = ({
   setBrokerOptions,
   selectedBroker,
   setSelectedBroker,
+  handleDelete,
 }) => {
   const calculateTotal = (key) => {
     if (key === "commissionAmount") {
@@ -239,9 +240,31 @@ const DashboardTableUI = ({
                   </tr>
                 ) : (
                   dashboardEntries?.map((row, i) => {
+                    // Calculate days elapsed from signature date to today
+                    const signatureDate = row?.signatureDate ? new Date(row.signatureDate) : null;
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    let daysElapsed = 0;
+                    if (signatureDate && !isNaN(signatureDate.getTime())) {
+                      signatureDate.setHours(0, 0, 0, 0);
+                      const diffTime = today - signatureDate;
+                      daysElapsed = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                      // Only subtract if signature date is in the past
+                      if (daysElapsed < 0) daysElapsed = 0;
+                    }
+
+                    console.log('Row data:', {
+                      dd: row?.dd,
+                      ddType: typeof row?.dd,
+                      financingDays: row?.financingDays,
+                      closingDays: row?.closingDays,
+                      daysElapsed: daysElapsed
+                    });
+                    // Calculate remaining days for each counter
                     const ddDays = Number(row?.dd) || 0;
-                    const financingDays = Number(row?.financingDays) || 0;
-                    const closingDays = Number(row?.closingDays) || 0;
+                    const financingDays = Math.max(0, (Number(row?.financingDays) || 0) - daysElapsed);
+                    const closingDays = Math.max(0, (Number(row?.closingDays) || 0) - daysElapsed);
                     const isNonPaid = row?.pmtReceived === "non paid";
 
                     return (
@@ -344,8 +367,19 @@ const DashboardTableUI = ({
                       <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <Icon
                           onClick={() => push(`/dashboard/edit/${row._id}`)}
-                          className="cursor-pointer text-[20px] mx-4"
+                          className="cursor-pointer text-[20px] mx-4 hover:text-blue-600 transition-colors"
                           icon={"heroicons:pencil-square"}
+                          title="Edit"
+                        />
+                        <Icon
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this entry?")) {
+                              handleDelete(row._id);
+                            }
+                          }}
+                          className="cursor-pointer text-[20px] mx-4 hover:text-red-600 transition-colors"
+                          icon={"heroicons-outline:trash"}
+                          title="Delete"
                         />
                       </td>
                       {/* <td className="table-td px-4 py-4">

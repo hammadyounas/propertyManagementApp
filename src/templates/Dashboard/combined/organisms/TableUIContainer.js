@@ -22,6 +22,7 @@ const Table = ({
   setBrokerOptions,
   selectedBroker,
   setSelectedBroker,
+  handleDelete,
 }) => {
   const { columns } = useTable();
   return (
@@ -47,6 +48,7 @@ const Table = ({
       setBrokerOptions={setBrokerOptions}
       selectedBroker={selectedBroker}
       setSelectedBroker={setSelectedBroker}
+      handleDelete={handleDelete}
     />
   );
 };

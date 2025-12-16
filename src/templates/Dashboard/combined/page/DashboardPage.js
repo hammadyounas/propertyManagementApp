@@ -27,6 +27,7 @@ const DashboardPage = () => {
     setBrokerOptions,
     selectedBroker,
     setSelectedBroker,
+    handleDelete,
   } = useDashboard();
 
   return (
@@ -49,6 +50,7 @@ const DashboardPage = () => {
         setBrokerOptions={setBrokerOptions}
         selectedBroker={selectedBroker}
         setSelectedBroker={setSelectedBroker}
+        handleDelete={handleDelete}
       />
       <div
         className={`flex w-full justify-center mt-2 items-center ${

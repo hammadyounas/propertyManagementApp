@@ -171,168 +171,168 @@ export default function useDesignDocument2(initialDocumentId = null, editorRef =
   };
 
   const buildPdfElement = (contentToUse, { width = 850, padding = 40 } = {}) => {
-    let elementToCapture = null;
+      let elementToCapture = null;
     let iframeStyleTag = null;
-
-    if (editorRef?.current) {
-      try {
-        const editor = editorRef.current;
-        const iframe = editor.getContentAreaContainer().querySelector('iframe');
-
-        if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
-          const iframeBody = iframe.contentDocument.body;
-          const clonedBody = iframeBody.cloneNode(true);
-
-          const wrapper = window.document.createElement('div');
-          wrapper.id = 'pdf-export-container';
-          wrapper.style.position = 'absolute';
-          wrapper.style.left = '0';
-          wrapper.style.top = '0';
+      
+      if (editorRef?.current) {
+        try {
+          const editor = editorRef.current;
+          const iframe = editor.getContentAreaContainer().querySelector('iframe');
+          
+          if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+            const iframeBody = iframe.contentDocument.body;
+            const clonedBody = iframeBody.cloneNode(true);
+            
+            const wrapper = window.document.createElement('div');
+            wrapper.id = 'pdf-export-container';
+            wrapper.style.position = 'absolute';
+            wrapper.style.left = '0';
+            wrapper.style.top = '0';
           wrapper.style.width = `${width}px`;
           wrapper.style.maxWidth = `${width}px`;
-          wrapper.style.margin = '40px auto';
+            wrapper.style.margin = '40px auto';
           wrapper.style.padding = `${padding}px`;
-          wrapper.style.backgroundColor = '#ffffff';
-          wrapper.style.fontFamily = 'Calibri, Arial, sans-serif';
-          wrapper.style.fontSize = '14px';
-          wrapper.style.color = '#333';
-          wrapper.style.lineHeight = '2';
-          wrapper.style.boxSizing = 'border-box';
-          wrapper.style.overflow = 'visible';
-          wrapper.style.direction = 'ltr';
-          wrapper.style.boxShadow = '0 0 0 1px #e5e7eb';
-          wrapper.style.pointerEvents = 'none';
-          wrapper.style.zIndex = '-9999';
-
-          wrapper.appendChild(clonedBody);
-
+            wrapper.style.backgroundColor = '#ffffff';
+            wrapper.style.fontFamily = 'Calibri, Arial, sans-serif';
+            wrapper.style.fontSize = '14px';
+            wrapper.style.color = '#333';
+            wrapper.style.lineHeight = '2';
+            wrapper.style.boxSizing = 'border-box';
+            wrapper.style.overflow = 'visible';
+            wrapper.style.direction = 'ltr';
+            wrapper.style.boxShadow = '0 0 0 1px #e5e7eb';
+            wrapper.style.pointerEvents = 'none';
+            wrapper.style.zIndex = '-9999';
+            
+            wrapper.appendChild(clonedBody);
+            
           iframeStyleTag = window.document.createElement('style');
-          iframeStyleTag.id = 'pdf-export-iframe-styles';
-          iframeStyleTag.textContent = `
-            #pdf-export-container ul, 
-            #pdf-export-container ol {
-              list-style-position: outside !important;
-              padding-left: 25px !important;
-              margin-top: 10px !important;
-            }
-            #pdf-export-container ul {
-              list-style-type: circle !important;
-            }
-            #pdf-export-container ol {
-              list-style-type: decimal !important;
-            }
-            #pdf-export-container li {
-              margin-top: 0 !important;
-              padding-left: 0 !important;
-              display: list-item !important;
-              list-style-position: outside !important;
-              line-height: 1.4 !important;
-              vertical-align: baseline !important;
-            }
-          `;
-          window.document.head.appendChild(iframeStyleTag);
-
-          window.document.body.appendChild(wrapper);
-          elementToCapture = wrapper;
+            iframeStyleTag.id = 'pdf-export-iframe-styles';
+            iframeStyleTag.textContent = `
+              #pdf-export-container ul, 
+              #pdf-export-container ol {
+                list-style-position: outside !important;
+                padding-left: 25px !important;
+                margin-top: 10px !important;
+              }
+              #pdf-export-container ul {
+                list-style-type: circle !important;
+              }
+              #pdf-export-container ol {
+                list-style-type: decimal !important;
+              }
+              #pdf-export-container li {
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                display: list-item !important;
+                list-style-position: outside !important;
+                line-height: 1.4 !important;
+                vertical-align: baseline !important;
+              }
+            `;
+            window.document.head.appendChild(iframeStyleTag);
+            
+            window.document.body.appendChild(wrapper);
+            elementToCapture = wrapper;
+          }
+        } catch (e) {
+          console.warn('Could not access TinyMCE iframe, using fallback', e);
         }
-      } catch (e) {
-        console.warn('Could not access TinyMCE iframe, using fallback', e);
       }
-    }
-
-    if (!elementToCapture) {
-      const tempDiv = window.document.createElement('div');
-      tempDiv.id = 'pdf-export-container';
-      tempDiv.style.position = 'fixed';
-      tempDiv.style.left = '-10000px';
-      tempDiv.style.top = '0';
+      
+      if (!elementToCapture) {
+        const tempDiv = window.document.createElement('div');
+        tempDiv.id = 'pdf-export-container';
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-10000px';
+        tempDiv.style.top = '0';
       tempDiv.style.width = `${width}px`;
       tempDiv.style.maxWidth = `${width}px`;
-      tempDiv.style.margin = '40px auto';
+        tempDiv.style.margin = '40px auto';
       tempDiv.style.padding = `${padding}px`;
-      tempDiv.style.backgroundColor = '#ffffff';
-      tempDiv.style.fontFamily = 'Calibri, Arial, sans-serif';
-      tempDiv.style.fontSize = '14px';
-      tempDiv.style.color = '#333';
-      tempDiv.style.lineHeight = '1.6';
-      tempDiv.style.boxSizing = 'border-box';
-      tempDiv.style.overflow = 'visible';
-      tempDiv.style.direction = 'ltr';
-      tempDiv.style.boxShadow = '0 0 0 1px #e5e7eb';
-
-      const styleTag = window.document.createElement('style');
-      styleTag.id = 'pdf-export-styles';
-      styleTag.textContent = `
-        #pdf-export-container {
-          direction: ltr !important;
-          unicode-bidi: normal !important;
-        }
-        #pdf-export-container p {
-          direction: ltr !important;
-          unicode-bidi: normal !important;
-          margin: 0 0 8px 0;
-        }
-        #pdf-export-container p[style*="text-align:center"] {
-          text-align: center !important;
-        }
-        #pdf-export-container p[style*="text-align:right"] {
-          text-align: right !important;
-        }
-        #pdf-export-container p[style*="text-align:justify"] {
-          text-align: justify !important;
-        }
-        #pdf-export-container table {
-          border-collapse: collapse;
-          width: 100%;
-        }
-        #pdf-export-container table, 
-        #pdf-export-container th, 
-        #pdf-export-container td {
-          border: 1px solid #d1d5db;
-        }
-        #pdf-export-container th, 
-        #pdf-export-container td {
-          padding: 6px 8px;
-        }
-        #pdf-export-container ul, 
-        #pdf-export-container ol {
-          margin: 0;
-          margin-top: 10px !important;
-          padding-left: 25px !important;
-          list-style-position: outside !important;
-          list-style-type: circle !important;
-        }
-        #pdf-export-container ul {
-          list-style-type: circle !important;
-        }
-        #pdf-export-container ol {
-          list-style-type: decimal !important;
-        }
-        #pdf-export-container li {
-          margin: 4px 0;
-          margin-top: 0 !important;
-          padding-left: 0 !important;
-          display: list-item !important;
-          list-style-position: outside !important;
-          line-height: 1.4 !important;
-          vertical-align: baseline !important;
-        }
-        #pdf-export-container .page-break {
-          page-break-after: always !important;
-          border-top: 2px dashed #d1d5db;
-          margin: 30px 0;
-          padding: 15px 0;
-          text-align: center;
-          color: #9ca3af;
-          font-size: 12px;
-        }
-      `;
-      window.document.head.appendChild(styleTag);
-
-      tempDiv.innerHTML = contentToUse;
-      window.document.body.appendChild(tempDiv);
-
-      elementToCapture = tempDiv;
+        tempDiv.style.backgroundColor = '#ffffff';
+        tempDiv.style.fontFamily = 'Calibri, Arial, sans-serif';
+        tempDiv.style.fontSize = '14px';
+        tempDiv.style.color = '#333';
+        tempDiv.style.lineHeight = '1.6';
+        tempDiv.style.boxSizing = 'border-box';
+        tempDiv.style.overflow = 'visible';
+        tempDiv.style.direction = 'ltr';
+        tempDiv.style.boxShadow = '0 0 0 1px #e5e7eb';
+        
+        const styleTag = window.document.createElement('style');
+        styleTag.id = 'pdf-export-styles';
+        styleTag.textContent = `
+          #pdf-export-container {
+            direction: ltr !important;
+            unicode-bidi: normal !important;
+          }
+          #pdf-export-container p {
+            direction: ltr !important;
+            unicode-bidi: normal !important;
+            margin: 0 0 8px 0;
+          }
+          #pdf-export-container p[style*="text-align:center"] {
+            text-align: center !important;
+          }
+          #pdf-export-container p[style*="text-align:right"] {
+            text-align: right !important;
+          }
+          #pdf-export-container p[style*="text-align:justify"] {
+            text-align: justify !important;
+          }
+          #pdf-export-container table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          #pdf-export-container table, 
+          #pdf-export-container th, 
+          #pdf-export-container td {
+            border: 1px solid #d1d5db;
+          }
+          #pdf-export-container th, 
+          #pdf-export-container td {
+            padding: 6px 8px;
+          }
+          #pdf-export-container ul, 
+          #pdf-export-container ol {
+            margin: 0;
+            margin-top: 10px !important;
+            padding-left: 25px !important;
+            list-style-position: outside !important;
+            list-style-type: circle !important;
+          }
+          #pdf-export-container ul {
+            list-style-type: circle !important;
+          }
+          #pdf-export-container ol {
+            list-style-type: decimal !important;
+          }
+          #pdf-export-container li {
+            margin: 4px 0;
+            margin-top: 0 !important;
+            padding-left: 0 !important;
+            display: list-item !important;
+            list-style-position: outside !important;
+            line-height: 1.4 !important;
+            vertical-align: baseline !important;
+          }
+          #pdf-export-container .page-break {
+            page-break-after: always !important;
+            border-top: 2px dashed #d1d5db;
+            margin: 30px 0;
+            padding: 15px 0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+          }
+        `;
+        window.document.head.appendChild(styleTag);
+        
+        tempDiv.innerHTML = contentToUse;
+        window.document.body.appendChild(tempDiv);
+        
+        elementToCapture = tempDiv;
     }
 
     return { elementToCapture, iframeStyleTag };
@@ -359,52 +359,76 @@ export default function useDesignDocument2(initialDocumentId = null, editorRef =
       throw new Error('Failed to prepare content for PDF.');
     }
 
-    const height = elementToCapture.offsetHeight;
-    const width = elementToCapture.offsetWidth;
+      const height = elementToCapture.offsetHeight;
+      const width = elementToCapture.offsetWidth;
+      
+      if (!elementToCapture.innerHTML || elementToCapture.innerHTML.trim() === '') {
+        throw new Error('Content is empty after rendering');
+      }
+      if (height === 0 || width === 0) {
+        throw new Error('Element has zero dimensions - cannot generate PDF');
+      }
 
-    if (!elementToCapture.innerHTML || elementToCapture.innerHTML.trim() === '') {
-      throw new Error('Content is empty after rendering');
-    }
-    if (height === 0 || width === 0) {
-      throw new Error('Element has zero dimensions - cannot generate PDF');
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const opt = {
-      margin: [0, 0, 0, 0],
+      const opt = {
+        margin: [0, 0, 0, 0],
       filename: fileNameId ? `Doc_ID_${fileNameId}.pdf` : `${title || 'Document'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        letterRendering: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        allowTaint: true,
-        removeContainer: false,
-        width: width,
-        height: height,
-        windowWidth: width,
-        windowHeight: height,
-      },
-      jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait',
-        compress: true,
-      },
-      pagebreak: {
-        mode: ['css', 'legacy'],
-        before: '.page-break',
-        after: '.page-break',
-        avoid: ['img', '.no-break'],
-      },
-    };
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          allowTaint: true,
+          removeContainer: false,
+          width: width,
+          height: height,
+          windowWidth: width,
+          windowHeight: height,
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait',
+          compress: true,
+        },
+        pagebreak: {
+          mode: ['css', 'legacy'],
+          before: '.page-break',
+          after: '.page-break',
+          avoid: ['img', '.no-break'],
+        },
+      };
 
     const blob = await html2pdf().from(elementToCapture).set(opt).outputPdf('blob');
     cleanupPdfElements();
     return blob;
+  };
+
+  const downloadBlobWithPrompt = async (blob, fileName) => {
+    // Use modern file picker when available (lets user pick folder)
+    if (window.showSaveFilePicker) {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [
+          {
+            description: 'PDF file',
+            accept: { 'application/pdf': ['.pdf'] },
+          },
+        ],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return;
+    }
+
+    // Fallback: traditional browser download (uses default downloads folder)
+    const link = window.document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
 
   const handleDownload = async () => {
@@ -426,29 +450,33 @@ export default function useDesignDocument2(initialDocumentId = null, editorRef =
       return;
     }
 
-    // Ensure document is saved so it appears in list and has an ID
-    const id = await saveDocument({ redirectToList: false });
-    if (!id) return;
-
     try {
-      const blob = await generatePdfBlob(contentToUse, documentId);
-      await uploadPdfForDocument(id, contentToUse, documentId);
-
       const fileName = documentId ? `Doc_ID_${documentId}.pdf` : `${title || 'Document'}.pdf`;
-      const link = window.document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = fileName;
-      link.click();
-      URL.revokeObjectURL(link.href);
-      toast.success('PDF generated, uploaded, and downloaded');
+
+      // Ensure document is saved so it appears in list and has an ID
+      const id = await saveDocument({ redirectToList: false });
+      if (!id) return;
+
+      const blob = await generatePdfBlob(contentToUse, documentId);
+
+      // Download first (user-facing speed)
+      await downloadBlobWithPrompt(blob, fileName);
+
+      // Upload in background using the same blob (no extra render)
+      uploadPdfForDocument(id, contentToUse, documentId, blob).catch((error) => {
+        console.error('Failed to upload PDF after download', error);
+        toast.error('PDF downloaded but upload failed');
+      });
+
+      toast.success('PDF generated and downloaded');
     } catch (err) {
       console.error('Failed to generate/upload PDF', err);
-      toast.error('Failed to generate or upload PDF');
+      toast.error('Failed to generate or download PDF');
     }
   };
 
-  const uploadPdfForDocument = async (docId, contentToUse, docIdForFile = documentId) => {
-    const blob = await generatePdfBlob(contentToUse, docIdForFile);
+  const uploadPdfForDocument = async (docId, contentToUse, docIdForFile = documentId, existingBlob = null) => {
+    const blob = existingBlob || (await generatePdfBlob(contentToUse, docIdForFile));
     const pdfFileName = docIdForFile ? `Doc_ID_${docIdForFile}.pdf` : `${title || 'Document'}.pdf`;
     const formData = new FormData();
     const pdfFile = new File([blob], pdfFileName, { type: 'application/pdf' });

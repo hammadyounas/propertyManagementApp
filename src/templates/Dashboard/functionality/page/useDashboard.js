@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   fetchDashboardEntries,
   setStatusFilter,
@@ -10,6 +11,7 @@ import {
   handleOpenCommentModal,
   handleCloseModal,
   fetchBrokers,
+  deleteDashboardEntry,
 } from "../../../../store/features/dashboard/dashboardSlice";
 
 const useDashboard = () => {
@@ -54,6 +56,30 @@ const useDashboard = () => {
     dispatch(setStatusFilter(filter)); // Dispatch Redux action to update status filter
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteDashboardEntry(id)).unwrap();
+      // Refetch dashboard entries after deletion
+      dispatch(
+        fetchDashboardEntries({
+          currentPage,
+          statusFilter,
+          selectedBroker,
+          globalFilter,
+          pageSize,
+        })
+      );
+      toast.success("Entry deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Error deleting entry!"
+      );
+    }
+  };
+
   return {
     globalFilter,
     setGlobalFilter: (value) => dispatch(setGlobalFilter(value)),
@@ -75,6 +101,7 @@ const useDashboard = () => {
     selectedBroker,
     setSelectedFilter,
     setSelectedBroker: (value) => dispatch(setSelectedBroker(value)),
+    handleDelete,
   };
 };
 

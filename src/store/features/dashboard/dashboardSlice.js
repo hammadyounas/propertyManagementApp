@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getRequest } from "@/libs/utils/request_handler";
+import { getRequest, deleteRequest } from "@/libs/utils/request_handler";
 
 // Async thunk to fetch dashboard entries
 export const fetchDashboardEntries = createAsyncThunk(
@@ -63,6 +63,18 @@ export const fetchBrokers = createAsyncThunk(
         value: user.name,
       })),
     ];
+  }
+);
+
+export const deleteDashboardEntry = createAsyncThunk(
+  "dashboard/deleteEntry",
+  async (id) => {
+    try {
+      const response = await deleteRequest(`dashboard/${id}`);
+      return { id, data: response.data };
+    } catch (error) {
+      throw new Error("Error deleting dashboard entry:", error);
+    }
   }
 );
 
@@ -148,6 +160,20 @@ const dashboardSlice = createSlice({
 
       .addCase(fetchBrokers.fulfilled, (state, action) => {
         state.brokerOptions = action.payload;
+      })
+
+      .addCase(deleteDashboardEntry.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteDashboardEntry.fulfilled, (state, action) => {
+        state.dashboardEntries = state.dashboardEntries.filter(
+          (entry) => entry._id !== action.payload.id
+        );
+        state.totalEntries = Math.max(0, state.totalEntries - 1);
+        state.loading = false;
+      })
+      .addCase(deleteDashboardEntry.rejected, (state) => {
+        state.loading = false;
       });
   },
 });

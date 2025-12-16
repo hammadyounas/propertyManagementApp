@@ -248,8 +248,6 @@ export default function useDesignListing2() {
     const height = tempDiv.offsetHeight;
     const width = tempDiv.offsetWidth;
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
     if (!tempDiv.innerHTML || tempDiv.innerHTML.trim() === '') {
       throw new Error('Content is empty');
     }
