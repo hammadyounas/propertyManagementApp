@@ -10,4 +10,4 @@ const DesignDocuments = () => {
   return <DocumentListing />
 }
 
-export default withAuth(DesignDocuments);
+export default withAuth(DesignDocuments);               

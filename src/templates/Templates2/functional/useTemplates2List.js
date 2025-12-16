@@ -67,9 +67,14 @@ export default function useTemplates2List() {
   };
 
   // Filter templates based on search
-  const filteredTemplates = templates.filter(template => 
-    template.name.toLowerCase().includes(globalFilter.toLowerCase())
-  );
+  const normalizedFilter = (globalFilter || '').toString().toLowerCase().trim();
+  const filteredTemplates = templates.filter((template) => {
+    const name = (template && template.name ? template.name : '').toString().toLowerCase();
+
+    if (!normalizedFilter) return true;
+
+    return name.includes(normalizedFilter);
+  });
 
   // Pagination logic
   const totalCount = filteredTemplates.length;
