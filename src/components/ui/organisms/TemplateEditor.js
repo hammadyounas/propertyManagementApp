@@ -94,6 +94,7 @@ const TemplateEditor = ({
   editorValue,
   setEditorValue,
   onInsertAtCursor,
+  docId, // Document ID to display in footer
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -101,6 +102,8 @@ const TemplateEditor = ({
   const docEditorRef = useRef(null);
   const isInternalUpdate = useRef(false); // Track if update is from editor itself
   const lastLoadedContent = useRef(null); // Track last loaded content to prevent reloads
+  const docIdInserted = useRef(false); // Track if doc_id has been inserted to prevent duplicates
+  const processedDocId = useRef(null); // Track which docId we've already processed
 
   useEffect(() => {
     setMounted(true);
@@ -111,6 +114,171 @@ const TemplateEditor = ({
     console.log('Editor created event fired');
     setEditorCreated(true);
   };
+
+  // Add doc_id at the start of document when editor is ready and docId is provided
+  // This effect should only run once when a new document is created/loaded
+  useEffect(() => {
+    if (!mounted || !docEditorRef.current?.documentEditor || !docId || !editorCreated) return;
+    if (!editorValue || editorValue.trim() === '') return; // Wait for content to load
+
+    // Reset flags when docId changes (new document)
+    if (processedDocId.current !== docId) {
+      docIdInserted.current = false;
+      processedDocId.current = docId;
+    }
+
+    // If we've already processed this exact docId, skip
+    if (docIdInserted.current && processedDocId.current === docId) {
+      console.log(`Doc ID ${docId} already processed, skipping`);
+      return;
+    }
+
+    const addDocIdToStart = () => {
+      // Double-check: if we've already inserted this doc_id, skip
+      if (docIdInserted.current && processedDocId.current === docId) {
+        console.log(`Doc ID ${docId} already inserted, skipping`);
+        return;
+      }
+
+      try {
+        const editor = docEditorRef.current.documentEditor;
+        if (!editor || !editor.documentHelper) {
+          console.log('Editor or documentHelper not available');
+          return;
+        }
+
+        console.log(`Attempting to add doc_id ${docId} at start of document`);
+
+        // Save current cursor position
+        const savedPosition = editor.selection.startOffset;
+        const savedParagraph = editor.selection.startParagraph;
+
+        // STEP 1: Check if doc_id already exists anywhere in document (to avoid duplicates)
+        try {
+          const documentText = editor.editor.getText() || '';
+          
+          // Check if our specific doc_id is already in the document
+          if (documentText.includes(`Doc ID: ${docId}`)) {
+            console.log(`Doc ID ${docId} already exists in document, marking as processed`);
+            docIdInserted.current = true;
+            processedDocId.current = docId;
+            return;
+          }
+          
+          // Also check if any "Doc ID: " pattern exists at the start
+          editor.selection.moveToDocumentStart();
+          const firstParaText = editor.selection.startParagraph?.text || '';
+          
+          if (firstParaText.includes(`Doc ID: ${docId}`) || firstParaText.trim().startsWith('Doc ID:')) {
+            console.log(`Doc ID already at start of document, marking as processed`);
+            docIdInserted.current = true;
+            processedDocId.current = docId;
+            return;
+          }
+        } catch (checkError) {
+          console.log('Error checking for existing doc_id:', checkError);
+          // Continue with insertion
+        }
+
+        // STEP 2: Use the simple, reliable method that works (as shown in logs)
+        try {
+          editor.selection.moveToDocumentStart();
+          
+          // Insert doc_id with newline in one go (this is the method that works)
+          editor.editor.insertText(`Doc ID: ${docId}\n`);
+          
+          // Apply styling for doc_id (small font, blue color, right-aligned)
+          // Move back to select the text we just inserted
+          editor.selection.moveToDocumentStart();
+          
+          // Select the doc_id text by moving right
+          const docIdText = `Doc ID: ${docId}`;
+          for (let i = 0; i < docIdText.length; i++) {
+            try {
+              editor.selection.moveRight();
+            } catch (e) {
+              break;
+            }
+          }
+          
+          // Apply formatting
+          editor.selection.characterFormat.fontSize = 9;
+          editor.selection.characterFormat.fontColor = '#2563EB';
+          editor.selection.characterFormat.bold = false;
+          editor.selection.paragraphFormat.textAlignment = 'Right';
+          editor.selection.paragraphFormat.spaceAfter = 6;
+          editor.selection.paragraphFormat.spaceBefore = 0;
+          
+          // Mark as inserted to prevent duplicates
+          docIdInserted.current = true;
+          processedDocId.current = docId;
+          
+          // IMPORTANT: After inserting doc_id, serialize the content and update lastLoadedContent
+          // This prevents the content loading effect from overwriting the doc_id
+          try {
+            const updatedContent = editor.serialize();
+            if (updatedContent) {
+              lastLoadedContent.current = updatedContent;
+              // Mark as internal update to prevent content reload
+              isInternalUpdate.current = true;
+              
+              // Also update editorValue to include the doc_id so it's saved
+              if (setEditorValue) {
+                setEditorValue(updatedContent);
+              }
+              
+              // Reset the internal update flag after a short delay
+              setTimeout(() => {
+                isInternalUpdate.current = false;
+              }, 500);
+              
+              console.log('Updated lastLoadedContent to preserve doc_id');
+            }
+          } catch (serializeError) {
+            console.log('Could not serialize content after doc_id insertion:', serializeError);
+          }
+          
+          console.log(`✅ Doc ID ${docId} added at start of document (ONCE)`);
+        } catch (insertError) {
+          console.error('Error inserting doc_id at start:', insertError);
+          // Mark as processed anyway to prevent retry loops
+          docIdInserted.current = true;
+          processedDocId.current = docId;
+        }
+
+        // Restore cursor position to avoid disrupting user
+        // Move to a safe position (after doc_id, at start of content)
+        try {
+          editor.selection.moveToDocumentStart();
+          // Move down one line to be at the start of the actual content
+          try {
+            editor.selection.moveDown();
+          } catch (e) {
+            // If can't move down, just move to start - that's fine
+          }
+        } catch (restoreError) {
+          console.log('Could not restore cursor position');
+        }
+
+      } catch (error) {
+        console.error('❌ Error adding doc_id to start of document:', error);
+      }
+    };
+
+    // Wait for editor to be fully initialized and content loaded
+    // Only try once with a delay, the refs will prevent duplicates
+    // Use a longer delay to ensure content is fully loaded
+    const timeout = setTimeout(() => {
+      console.log(`Processing doc_id ${docId} for insertion (one-time)`);
+      addDocIdToStart();
+    }, 3000);
+    
+    return () => {
+      clearTimeout(timeout);
+    };
+    // Only depend on docId and editorCreated - NOT editorValue to avoid re-running on every content change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, editorCreated, docId]);
 
   // Set text direction to LTR (Left-to-Right) for English editing
   useEffect(() => {
@@ -179,6 +347,21 @@ const TemplateEditor = ({
       return;
     }
     
+    // IMPORTANT: If doc_id was inserted, preserve it when loading content
+    // Check if current editor content has doc_id that should be preserved
+    let docIdToPreserve = null;
+    if (processedDocId.current && docIdInserted.current) {
+      try {
+        const currentEditorContent = docEditorRef.current.documentEditor.serialize();
+        if (currentEditorContent && currentEditorContent.includes(`Doc ID: ${processedDocId.current}`)) {
+          docIdToPreserve = processedDocId.current;
+          console.log(`Will preserve doc_id ${docIdToPreserve} when loading content`);
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    }
+    
     const loadContent = async () => {
       try {
         const editor = docEditorRef.current.documentEditor;
@@ -236,6 +419,25 @@ const TemplateEditor = ({
                 console.log('Opening SFDT document...');
                 editor.open(editorValue);
                 console.log('Document opened successfully');
+                
+                // After loading, re-insert doc_id if it was preserved
+                if (docIdToPreserve) {
+                  setTimeout(() => {
+                    try {
+                      editor.selection.moveToDocumentStart();
+                      const firstParaText = editor.selection.startParagraph?.text || '';
+                      if (!firstParaText.includes(`Doc ID: ${docIdToPreserve}`)) {
+                        editor.editor.insertText(`Doc ID: ${docIdToPreserve}\n`);
+                        editor.selection.characterFormat.fontSize = 9;
+                        editor.selection.characterFormat.fontColor = '#2563EB';
+                        editor.selection.paragraphFormat.textAlignment = 'Right';
+                        console.log(`Re-inserted preserved doc_id ${docIdToPreserve} after content load`);
+                      }
+                    } catch (reinsertError) {
+                      console.log('Could not re-insert doc_id:', reinsertError);
+                    }
+                  }, 500);
+                }
                 
               } catch (openError) {
                 console.error('Error loading SFDT document:', openError);
