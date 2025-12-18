@@ -121,6 +121,15 @@ const TemplateEditor = ({
     if (!mounted || !docEditorRef.current?.documentEditor || !docId || !editorCreated) return;
     if (!editorValue || editorValue.trim() === '') return; // Wait for content to load
 
+    // FIRST: Check if Doc ID already exists in the loaded editorValue (serialized content)
+    // This catches cases where the document was saved with a Doc ID
+    if (editorValue.includes(`Doc ID: ${docId}`) || editorValue.includes('Doc ID:')) {
+      console.log(`✓ Doc ID already exists in loaded content, skipping insertion`);
+      docIdInserted.current = true;
+      processedDocId.current = docId;
+      return;
+    }
+
     // Reset flags when docId changes (new document)
     if (processedDocId.current !== docId) {
       docIdInserted.current = false;
@@ -147,7 +156,7 @@ const TemplateEditor = ({
           return;
         }
 
-        console.log(`Attempting to add doc_id ${docId} at start of document`);
+        console.log(`Checking if doc_id ${docId} needs to be added to document`);
 
         // Save current cursor position
         const savedPosition = editor.selection.startOffset;
@@ -159,25 +168,25 @@ const TemplateEditor = ({
           
           // Check if our specific doc_id is already in the document
           if (documentText.includes(`Doc ID: ${docId}`)) {
-            console.log(`Doc ID ${docId} already exists in document, marking as processed`);
+            console.log(`✓ Doc ID ${docId} already exists in document, skipping insertion`);
             docIdInserted.current = true;
             processedDocId.current = docId;
             return;
           }
           
-          // Also check if any "Doc ID: " pattern exists at the start
-          editor.selection.moveToDocumentStart();
-          const firstParaText = editor.selection.startParagraph?.text || '';
-          
-          if (firstParaText.includes(`Doc ID: ${docId}`) || firstParaText.trim().startsWith('Doc ID:')) {
-            console.log(`Doc ID already at start of document, marking as processed`);
+          // Check at the start of the document specifically (first 200 characters)
+          const documentStart = documentText.substring(0, 200);
+          if (documentStart.trim().startsWith('Doc ID:')) {
+            console.log(`✓ A Doc ID already exists at start of document, skipping insertion`);
             docIdInserted.current = true;
             processedDocId.current = docId;
             return;
           }
+          
+          console.log(`No Doc ID found in document, proceeding with insertion`);
         } catch (checkError) {
           console.log('Error checking for existing doc_id:', checkError);
-          // Continue with insertion
+          // Continue with insertion attempt even if check fails
         }
 
         // STEP 2: Use the simple, reliable method that works (as shown in logs)
@@ -267,11 +276,11 @@ const TemplateEditor = ({
 
     // Wait for editor to be fully initialized and content loaded
     // Only try once with a delay, the refs will prevent duplicates
-    // Use a longer delay to ensure content is fully loaded
+    // Use a longer delay to ensure content is fully loaded and rendered
     const timeout = setTimeout(() => {
       console.log(`Processing doc_id ${docId} for insertion (one-time)`);
       addDocIdToStart();
-    }, 3000);
+    }, 4000); // Increased to 4 seconds to ensure content is fully rendered
     
     return () => {
       clearTimeout(timeout);
@@ -584,10 +593,6 @@ const TemplateEditor = ({
       console.log(`${operation}: No content provided`);
       return;
     }
-    
-    console.log(`${operation}: Content length: ${content.length}`);
-    console.log(`${operation}: Content preview: ${content.substring(0, 100)}...`);
-    console.log(`${operation}: Content format: ${detectDocumentFormat(content)}`);
     
     if (content.includes('"sections"')) {
       console.log(`${operation}: Contains sections - likely SFDT format`);
@@ -985,12 +990,12 @@ const TemplateEditor = ({
       printBtn.id = 'rte-print-btn';
       printBtn.type = 'button';
       printBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
-      printBtn.title = 'Print';
+      printBtn.title = 'Download';
       printBtn.style.cssText = 'min-width: 60px; margin: 2px 4px;';
       
       const printSpan = document.createElement('span');
       printSpan.className = 'e-tbar-btn-text';
-      printSpan.textContent = 'Print';
+      printSpan.textContent = 'Download';
       printBtn.appendChild(printSpan);
       printBtn.addEventListener('click', (e) => {
         e.stopPropagation();
