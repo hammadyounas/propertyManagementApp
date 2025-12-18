@@ -142,6 +142,7 @@ export default function CreateDesignDocumentUI({
               <TemplateEditor
                 editorValue={editorValue}
                 setEditorValue={setEditorValue}
+                docId={documentId}
               />
             </div>
           </div>
