@@ -143,6 +143,7 @@ export default function CreateDesignDocumentUI({
                 editorValue={editorValue}
                 setEditorValue={setEditorValue}
                 docId={documentId}
+                docTitle={docTitle}
               />
             </div>
           </div>

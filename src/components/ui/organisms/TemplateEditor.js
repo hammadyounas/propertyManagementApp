@@ -95,6 +95,7 @@ const TemplateEditor = ({
   setEditorValue,
   onInsertAtCursor,
   docId, // Document ID to display in footer
+  docTitle = "", // Document title for PDF filename
   ...props
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -838,14 +839,189 @@ const TemplateEditor = ({
     setContentChangeTimeout(newTimeout);
   };
 
-  // Export helpers
-  const handlePrint = () => {
+  // Export helpers - Export as PDF using Syncfusion's exportAsImage API
+  const handlePrint = async () => {
     try {
       const editor = docEditorRef.current?.documentEditor;
-      if (!editor) return;
-      editor.print();
+      if (!editor) {
+        console.error('Editor not available');
+        return;
+      }
+
+      // Generate PDF filename: {docTitle}_{docId}
+      let pdfFilename = '';
+      if (docTitle && docTitle.trim()) {
+        // Sanitize title: remove invalid filename characters and replace spaces with underscores
+        const sanitizedTitle = docTitle.trim()
+          .replace(/[<>:"/\\|?*\x00-\x1f]/g, '_') // Remove invalid filename characters
+          .replace(/\s+/g, '_') // Replace spaces with underscores
+          .replace(/_+/g, '_') // Replace multiple underscores with single underscore
+          .replace(/^_+|_+$/g, ''); // Remove leading/trailing underscores
+        
+        // Format: {docTitle}_{docId}.pdf
+        if (docId) {
+          pdfFilename = `${sanitizedTitle}_${docId}`;
+        } else {
+          pdfFilename = sanitizedTitle;
+        }
+      } else if (docId) {
+        // If no title, use: Document_{docId}.pdf
+        pdfFilename = `Document_${docId}`;
+      } else {
+        // Fallback: Document.pdf
+        pdfFilename = 'Document';
+      }
+
+      console.log('Exporting PDF with filename:', pdfFilename);
+
+      // Dynamically import PDF export classes
+      const {
+        PdfBitmap,
+        PdfDocument,
+        PdfPageOrientation,
+        PdfPageSettings,
+        PdfSection,
+        SizeF,
+      } = await import('@syncfusion/ej2-pdf-export');
+
+      // Create new PDF document
+      const pdfdocument = new PdfDocument();
+      const count = editor.pageCount;
+      
+      // Get document page settings to preserve styling
+      // Try to get actual page size from document, fallback to A4
+      let pageWidth = 816; // Default A4 width in pixels at 96 DPI
+      let pageHeight = 1056; // Default A4 height in pixels at 96 DPI
+      
+      try {
+        // Get page size from document editor if available
+        if (editor.pageSize) {
+          pageWidth = editor.pageSize.width || pageWidth;
+          pageHeight = editor.pageSize.height || pageHeight;
+        }
+      } catch (e) {
+        console.log('Could not get page size from editor, using defaults');
+      }
+      
+      // Set print device pixel ratio for better quality
+      // Lower ratio (1.5) helps preserve styling better than higher values
+      editor.documentEditorSettings.printDevicePixelRatio = 1.5;
+      
+      let loadedPage = 0;
+
+      // Export each page as image and add to PDF
+      for (let i = 1; i <= count; i++) {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            try {
+              const format = 'image/jpeg';
+              
+              // Get page as image using exportAsImage API
+              const image = editor.exportAsImage(i, format);
+              
+              image.onload = function () {
+                try {
+                  // Get actual image dimensions from the image element
+                  let imageHeight, imageWidth;
+                  
+                  // Use natural dimensions for accurate size
+                  if (image.naturalHeight && image.naturalWidth) {
+                    imageHeight = image.naturalHeight;
+                    imageWidth = image.naturalWidth;
+                  } else if (image.height && image.width) {
+                    imageHeight = image.height;
+                    imageWidth = image.width;
+                  } else if (image.style && image.style.height && image.style.width) {
+                    imageHeight = parseInt(
+                      image.style.height.toString().replace('px', '')
+                    );
+                    imageWidth = parseInt(
+                      image.style.width.toString().replace('px', '')
+                    );
+                  } else {
+                    // Use document page size converted to pixels (assuming 96 DPI)
+                    imageWidth = pageWidth;
+                    imageHeight = pageHeight;
+                  }
+
+                  // Create PDF section and page with proper dimensions
+                  const section = pdfdocument.sections.add();
+                  const settings = new PdfPageSettings(0);
+                  
+                  // Convert pixels to points for PDF
+                  // Standard conversion: 96 DPI screen = 72 points per inch
+                  // 1 pixel at 96 DPI = 0.75 points
+                  const dpi = 96;
+                  const pointsPerInch = 72;
+                  const pixelsToPoints = pointsPerInch / dpi; // 0.75
+                  
+                  // Calculate PDF dimensions in points from image dimensions
+                  // Use exact image dimensions to preserve styling
+                  let pdfWidth = imageWidth * pixelsToPoints;
+                  let pdfHeight = imageHeight * pixelsToPoints;
+                  
+                  // Set orientation based on dimensions
+                  if (pdfWidth > pdfHeight) {
+                    settings.orientation = PdfPageOrientation.Landscape;
+                  } else {
+                    settings.orientation = PdfPageOrientation.Portrait;
+                  }
+                  
+                  // Set PDF page size to match image dimensions exactly
+                  settings.size = new SizeF(pdfWidth, pdfHeight);
+                  section.setPageSettings(settings);
+                  
+                  const page = section.pages.add();
+                  const graphics = page.graphics;
+                  
+                  // Convert image to base64 and create PdfBitmap
+                  const imageStr = image.src.replace('data:image/jpeg;base64,', '');
+                  const pdfImage = new PdfBitmap(imageStr);
+                  
+                  // Draw image on PDF page at exact size (no scaling) to preserve styling
+                  // Use the image's natural dimensions converted to points
+                  graphics.drawImage(pdfImage, 0, 0, pdfWidth, pdfHeight);
+                  
+                  loadedPage++;
+                  
+                  // When all pages are loaded, save the PDF
+                  if (loadedPage === count) {
+                    pdfdocument.save(`${pdfFilename}.pdf`);
+                    console.log('PDF exported successfully:', pdfFilename);
+                    toast.success('PDF exported successfully!');
+                  }
+                  
+                  resolve();
+                } catch (pageError) {
+                  console.error(`Error processing page ${i}:`, pageError);
+                  resolve();
+                }
+              };
+
+              image.onerror = function (error) {
+                console.error(`Error loading image for page ${i}:`, error);
+                resolve();
+              };
+            } catch (exportError) {
+              console.error(`Error exporting page ${i}:`, exportError);
+              resolve();
+            }
+          }, 500 * i); // Stagger the exports to avoid overwhelming the browser
+        });
+      }
     } catch (error) {
-      console.error('Print failed:', error);
+      console.error('PDF export failed:', error);
+      toast.error('Failed to export PDF. Please try again.');
+      
+      // Fallback to regular print if PDF export fails
+      try {
+        const editor = docEditorRef.current?.documentEditor;
+        if (editor) {
+          editor.print();
+        }
+      } catch (printError) {
+        console.error('Print fallback also failed:', printError);
+      }
     }
   };
 
@@ -985,12 +1161,12 @@ const TemplateEditor = ({
       printBtn.id = 'rte-print-btn';
       printBtn.type = 'button';
       printBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
-      printBtn.title = 'Print';
+      printBtn.title = 'Export to PDF';
       printBtn.style.cssText = 'min-width: 60px; margin: 2px 4px;';
       
       const printSpan = document.createElement('span');
       printSpan.className = 'e-tbar-btn-text';
-      printSpan.textContent = 'Print';
+      printSpan.textContent = 'Export to PDF';
       printBtn.appendChild(printSpan);
       printBtn.addEventListener('click', (e) => {
         e.stopPropagation();
