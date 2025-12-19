@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import { fetchTemplate } from '../../../store/features/templates/templateSlice'
 import { selectTemplates, selectTemplateLoading } from '../../../store/features/templates/templateSelectors'
-import { fetchDocumentById, createDocument, updateDocument } from '../../../store/features/documents/documentSlice'
+import { fetchDocumentById, createDocument, updateDocument, uploadPdfToCloudinary, sendEmailWithDocument } from '../../../store/features/documents/documentSlice'
 import { selectDocument } from '../../../store/features/documents/documentSelectors'
 import { addFullScreenChangeListener, toggleFullScreen } from '../../../libs/utils/fullScreenHelper'
 
@@ -144,49 +144,148 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     setShowEmailModal(false)
   }
 
-  const handleSendEmailWithPDF = async (emailData) => {
-    setEmailLoading(true)
-    try {
-      // Generate PDF
-      const pdfBlob = await generatePDFForEmail()
-      
-      // Create FormData for email sending
-      const formData = new FormData()
-      formData.append('email', emailData.email)
-      formData.append('subject', emailData.subject)
-      formData.append('message', emailData.message)
-      formData.append('documentTitle', docTitle || 'Document')
-      formData.append('pdf', pdfBlob, `${docTitle || 'Document'}.pdf`)
-
-      // Here you would typically send to your backend API
-      // For now, we'll simulate the email sending
-      console.log('Email data:', {
-        to: emailData.email,
-        subject: emailData.subject,
-        message: emailData.message,
-        attachment: `${docTitle || 'Document'}.pdf`
-      })
-
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      toast.success(`Email sent successfully to ${emailData.email}`)
-      setShowEmailModal(false)
-    } catch (error) {
-      console.error('Error sending email:', error)
-      toast.error('Failed to send email. Please try again.')
-    } finally {
-      setEmailLoading(false)
+  const handleSendEmailWithPDF = async (emailData, retryCount = 0) => {
+    if (!emailData.pdfFile) {
+      toast.error('Please select a PDF file')
+      return
     }
-  }
 
-  const handleSaveDocument = async (retryCount = 0) => {
     if (!editorValue.trim()) {
       toast.error('Nothing to save. Please edit content first.')
       return
     }
 
-    const MAX_RETRIES = 5 // Maximum retry attempts for duplicate ID
+    const MAX_RETRIES = 5
+
+    setEmailLoading(true)
+    let documentIdForUpload = null
+    let cloudinaryUrl = null
+    
+    try {
+      // Step 1: Create document first to get the document ID
+      const documentData = {
+        templateId: selectedTemplateId || null,
+        title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
+        content: editorValue,
+        clientName: clientName || '',
+        doc_id: documentId || generateDocId(),
+      }
+
+      if (editingId) {
+        documentIdForUpload = editingId
+      } else {
+        // Create new document
+        try {
+          const result = await dispatch(createDocument(documentData)).unwrap()
+          documentIdForUpload = result._id || result.id
+          toast.success('Document created successfully')
+        } catch (createError) {
+          // Check if error is due to duplicate doc_id
+          const isDuplicateError = 
+            createError?.message?.toLowerCase().includes('duplicate') ||
+            createError?.message?.toLowerCase().includes('already exists') ||
+            createError?.message?.toLowerCase().includes('unique')
+          
+          if (isDuplicateError && retryCount < MAX_RETRIES) {
+            console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
+            const newDocId = generateDocId()
+            setDocumentId(newDocId)
+            toast.warning(`Document ID already exists. Trying with new ID: ${newDocId}`)
+            
+            await new Promise(resolve => setTimeout(resolve, 300))
+            
+            // Retry with new ID
+            return handleSendEmailWithPDF(emailData, retryCount + 1)
+          } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
+            throw new Error('Failed to generate unique document ID after multiple attempts. Please try again.')
+          } else {
+            throw createError
+          }
+        }
+      }
+
+      // Close modal and redirect after document creation
+      setShowEmailModal(false)
+      router.push('/documents')
+      setEmailLoading(false)
+
+      // Step 2: Upload PDF to Cloudinary
+      // toast.info('Uploading PDF to Cloudinary...')
+      const formData = new FormData()
+      formData.append('pdf_file', emailData.pdfFile)
+      
+      try {
+        const uploadResult = await dispatch(uploadPdfToCloudinary({ 
+          id: documentIdForUpload, 
+          file: formData 
+        })).unwrap()
+        
+        // Get Cloudinary public URL from response
+        cloudinaryUrl = uploadResult?.pdfUrl || uploadResult?.cloudinaryUrl || uploadResult?.url || uploadResult?.publicUrl || uploadResult?.document?.pdfUrl || uploadResult?.document?.cloudinaryUrl
+        
+        toast.success('PDF uploaded to Cloudinary')
+      } catch (uploadError) {
+        // Check for 413 Content Too Large error
+        if (uploadError?.response?.status === 413 || uploadError?.status === 413 || uploadError?.message?.includes('413') || uploadError?.message?.toLowerCase().includes('too large')) {
+          const fileSizeMB = (emailData.pdfFile.size / 1024 / 1024).toFixed(2)
+          throw new Error(`PDF file is too large (${fileSizeMB}MB). Maximum file size is 10MB. Please export a smaller PDF or compress the file.`)
+        }
+        throw uploadError
+      }
+
+      // Step 3: Send email with document
+      // toast.info('Sending email...')
+      await dispatch(sendEmailWithDocument({ 
+        id: documentIdForUpload, 
+        email: { email_recipient: emailData.email_recipient } 
+      })).unwrap()
+      
+      toast.success(`Email sent successfully to ${emailData.email_recipient}`)
+
+      // Step 4: Update document with Cloudinary public URL and email address
+      const updatedDocumentData = {
+        ...documentData,
+        email_recipient: emailData.email_recipient,
+      }
+      
+      // Add Cloudinary URL if we have it
+      if (cloudinaryUrl) {
+        updatedDocumentData.pdfUrl = cloudinaryUrl
+        updatedDocumentData.cloudinaryUrl = cloudinaryUrl
+      }
+      
+      await dispatch(updateDocument({ 
+        id: documentIdForUpload, 
+        data: updatedDocumentData 
+      })).unwrap()
+      
+      // toast.success('Document updated with Cloudinary URL and email')
+      
+    } catch (error) {
+      console.error('Error in save and send flow:', error)
+      toast.error(error?.message || 'Failed to save and send document. Please try again.')
+      setEmailLoading(false)
+    }
+  }
+
+  const handleSaveDocument = async () => {
+    if (!editorValue.trim()) {
+      toast.error('Nothing to save. Please edit content first.')
+      return
+    }
+
+    // Show email modal instead of directly saving
+    // User will upload PDF and enter email, then we'll save, upload, and send
+    setShowEmailModal(true)
+  }
+
+  const handleSaveOnly = async (retryCount = 0) => {
+    if (!editorValue.trim()) {
+      toast.error('Nothing to save. Please edit content first.')
+      return
+    }
+
+    const MAX_RETRIES = 5
     
     try {
       setLoading(true)
@@ -196,7 +295,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
         content: editorValue,
         clientName: clientName || '',
-        doc_id: documentId || generateDocId(), // Use doc_id for backend
+        doc_id: documentId || generateDocId(),
       }
 
       let result;
@@ -210,42 +309,43 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         toast.success('Document updated successfully')
       } else {
         // Create new document
-        result = await dispatch(createDocument(documentData)).unwrap()
-        toast.success('Document created successfully')
+        try {
+          result = await dispatch(createDocument(documentData)).unwrap()
+          toast.success('Document created successfully')
+        } catch (createError) {
+          // Check if error is due to duplicate doc_id
+          const isDuplicateError = 
+            !editingId && (
+              createError?.message?.toLowerCase().includes('duplicate') ||
+              createError?.message?.toLowerCase().includes('already exists') ||
+              createError?.message?.toLowerCase().includes('unique') ||
+              createError?.toLowerCase().includes('duplicate') ||
+              createError?.toLowerCase().includes('already exists')
+            )
+          
+          if (isDuplicateError && retryCount < MAX_RETRIES) {
+            console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
+            const newDocId = generateDocId()
+            setDocumentId(newDocId)
+            toast.warning(`Document ID already exists. Trying with new ID: ${newDocId}`)
+            
+            await new Promise(resolve => setTimeout(resolve, 300))
+            
+            // Retry with new ID
+            return handleSaveOnly(retryCount + 1)
+          } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
+            toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
+          } else {
+            toast.error(createError?.message || 'Failed to create document')
+          }
+        }
       }
       
       router.push('/documents')
-      return result._id || result.id
+      return result?._id || result?.id
     } catch (error) {
       console.error('Failed to save document', error)
-      
-      // Check if error is due to duplicate doc_id (only for create, not update)
-      const isDuplicateError = 
-        !editingId && (
-          error?.message?.toLowerCase().includes('duplicate') ||
-          error?.message?.toLowerCase().includes('already exists') ||
-          error?.message?.toLowerCase().includes('unique') ||
-          error?.toLowerCase().includes('duplicate') ||
-          error?.toLowerCase().includes('already exists')
-        )
-      
-      if (isDuplicateError && retryCount < MAX_RETRIES) {
-        console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
-        // Generate new ID and retry
-        const newDocId = generateDocId()
-        setDocumentId(newDocId)
-        toast.warning(`Document ID already exists. Trying with new ID: ${newDocId}`)
-        
-        // Wait a bit before retrying
-        await new Promise(resolve => setTimeout(resolve, 300))
-        
-        // Retry with new ID
-        return handleSaveDocument(retryCount + 1)
-      } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
-        toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
-      } else {
-        toast.error(error?.message || `Failed to ${editingId ? 'update' : 'create'} document`)
-      }
+      toast.error(error?.message || `Failed to ${editingId ? 'update' : 'create'} document`)
     } finally {
       if (retryCount === 0) {
         setLoading(false)
@@ -281,6 +381,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     docTitle,
     setDocTitle,
     handleSaveDocument,
+    handleSaveOnly,
     isEditing: !!editingId, // Boolean flag for editing mode
     // Email modal props
     showEmailModal,
@@ -293,4 +394,5 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     handleFullScreen,
   }
 }
+
 

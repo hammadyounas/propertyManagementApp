@@ -17,6 +17,7 @@ export default function CreateDesignDocumentUI({
   docTitle = "",
   setDocTitle = () => {},
   onSave = () => {},
+  onSaveOnly = () => {},
   onBack = () => {},
   isEditing = false, // Track if we're editing existing document
   // Email modal props
@@ -103,12 +104,20 @@ export default function CreateDesignDocumentUI({
               {!isFullScreen && (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full lg:w-auto">
                   <button
-                    onClick={onSave}
+                    onClick={onSaveOnly}
                     disabled={loading}
                     className="px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <Icon icon="mdi:content-save" />
-                    <span>Save Document</span>
+                    <span>Save</span>
+                  </button>
+                  <button
+                    onClick={onSave}
+                    disabled={loading}
+                    className="px-4 py-2 bg-primary-default text-white rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    <Icon icon="mdi:email-send" />
+                    <span>Save & Send Email</span>
                   </button>
                 </div>
               )}
@@ -171,6 +180,7 @@ export default function CreateDesignDocumentUI({
         loading={emailLoading}
         docTitle={docTitle}
         clientName={clientName}
+        hasPdf={false}
       />
     </div>
   );
