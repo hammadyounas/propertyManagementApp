@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import TemplateEditor from "../../../../components/ui/organisms/TemplateEditor";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import EmailModal from "../molecules/EmailModal";
+import SaveOnlyModal from "../molecules/SaveOnlyModal";
 
 export default function CreateDesignDocumentUI({
   clientName = "",
@@ -25,6 +26,11 @@ export default function CreateDesignDocumentUI({
   emailLoading = false,
   onCloseEmailModal = () => {},
   onSendEmailWithPDF = () => {},
+  // Save Only modal props
+  showSaveOnlyModal = false,
+  saveOnlyLoading = false,
+  onCloseSaveOnlyModal = () => {},
+  onSaveOnlyWithPDF = () => {},
   // Full-screen props
   isFullScreen = false,
   fullScreenRef,
@@ -181,6 +187,15 @@ export default function CreateDesignDocumentUI({
         docTitle={docTitle}
         clientName={clientName}
         hasPdf={false}
+      />
+
+      {/* Save Only Modal */}
+      <SaveOnlyModal
+        isOpen={showSaveOnlyModal}
+        onClose={onCloseSaveOnlyModal}
+        onSave={onSaveOnlyWithPDF}
+        loading={saveOnlyLoading}
+        docTitle={docTitle}
       />
     </div>
   );

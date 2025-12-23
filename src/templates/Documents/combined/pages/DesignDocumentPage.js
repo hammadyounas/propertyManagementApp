@@ -30,6 +30,11 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
     emailLoading,
     handleCloseEmailModal,
     handleSendEmailWithPDF,
+    // Save Only modal props
+    showSaveOnlyModal,
+    saveOnlyLoading,
+    handleCloseSaveOnlyModal,
+    handleSaveOnlyWithPDF,
     // Full-screen props
     isFullScreen,
     fullScreenRef,
@@ -56,6 +61,11 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
       emailLoading={emailLoading}
       onCloseEmailModal={handleCloseEmailModal}
       onSendEmailWithPDF={handleSendEmailWithPDF}
+      // Save Only modal props
+      showSaveOnlyModal={showSaveOnlyModal}
+      saveOnlyLoading={saveOnlyLoading}
+      onCloseSaveOnlyModal={handleCloseSaveOnlyModal}
+      onSaveOnlyWithPDF={handleSaveOnlyWithPDF}
       // Full-screen props
       isFullScreen={isFullScreen}
       fullScreenRef={fullScreenRef}

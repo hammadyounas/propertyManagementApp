@@ -42,6 +42,8 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
   const [editingId, setEditingId] = useState('')
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
+  const [showSaveOnlyModal, setShowSaveOnlyModal] = useState(false)
+  const [saveOnlyLoading, setSaveOnlyLoading] = useState(false)
   const [isFullScreen, setIsFullScreen] = useState(false)
 
   // Reset doc_id generation flag when creating a new document (not editing)
@@ -279,17 +281,38 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     setShowEmailModal(true)
   }
 
-  const handleSaveOnly = async (retryCount = 0) => {
+  const handleSaveOnly = () => {
+    if (!editorValue.trim()) {
+      toast.error('Nothing to save. Please edit content first.')
+      return
+    }
+    // Show Save Only modal
+    setShowSaveOnlyModal(true)
+  }
+
+  const handleCloseSaveOnlyModal = () => {
+    setShowSaveOnlyModal(false)
+  }
+
+  const handleSaveOnlyWithPDF = async (saveData, retryCount = 0) => {
+    if (!saveData.pdfFile) {
+      toast.error('Please select a PDF file')
+      return
+    }
+
     if (!editorValue.trim()) {
       toast.error('Nothing to save. Please edit content first.')
       return
     }
 
     const MAX_RETRIES = 5
+
+    setSaveOnlyLoading(true)
+    let documentIdForUpload = null
+    let cloudinaryUrl = null
     
     try {
-      setLoading(true)
-
+      // Step 1: Create or update document first to get the document ID
       const documentData = {
         templateId: selectedTemplateId || null,
         title: docTitle || (selectedTemplate && selectedTemplate.title) || 'Untitled Document',
@@ -298,30 +321,34 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
         doc_id: documentId || generateDocId(),
       }
 
-      let result;
-      
       if (editingId) {
+        documentIdForUpload = editingId
         // Update existing document
-        result = await dispatch(updateDocument({ 
+        await dispatch(updateDocument({ 
           id: editingId, 
           data: documentData 
         })).unwrap()
-        toast.success('Document updated successfully')
+        console.log('Document updated successfully, ID:', documentIdForUpload)
       } else {
         // Create new document
         try {
-          result = await dispatch(createDocument(documentData)).unwrap()
-          toast.success('Document created successfully')
+          const result = await dispatch(createDocument(documentData)).unwrap()
+          documentIdForUpload = result._id || result.id
+          console.log('Document created successfully, ID:', documentIdForUpload)
+          // Close modal and redirect
+      setShowSaveOnlyModal(false)
+      setSaveOnlyLoading(false)
+      router.push('/documents')
+          if (!documentIdForUpload) {
+            throw new Error('Failed to get document ID after creation')
+          }
         } catch (createError) {
+          console.error('Error creating document:', createError)
           // Check if error is due to duplicate doc_id
           const isDuplicateError = 
-            !editingId && (
-              createError?.message?.toLowerCase().includes('duplicate') ||
-              createError?.message?.toLowerCase().includes('already exists') ||
-              createError?.message?.toLowerCase().includes('unique') ||
-              createError?.toLowerCase().includes('duplicate') ||
-              createError?.toLowerCase().includes('already exists')
-            )
+            createError?.message?.toLowerCase().includes('duplicate') ||
+            createError?.message?.toLowerCase().includes('already exists') ||
+            createError?.message?.toLowerCase().includes('unique')
           
           if (isDuplicateError && retryCount < MAX_RETRIES) {
             console.log(`Duplicate doc_id detected. Regenerating... (Attempt ${retryCount + 1}/${MAX_RETRIES})`)
@@ -332,24 +359,145 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
             await new Promise(resolve => setTimeout(resolve, 300))
             
             // Retry with new ID
-            return handleSaveOnly(retryCount + 1)
+            return handleSaveOnlyWithPDF(saveData, retryCount + 1)
           } else if (isDuplicateError && retryCount >= MAX_RETRIES) {
-            toast.error('Failed to generate unique document ID after multiple attempts. Please try again.')
+            throw new Error('Failed to generate unique document ID after multiple attempts. Please try again.')
           } else {
-            toast.error(createError?.message || 'Failed to create document')
+            throw createError
           }
         }
       }
-      
-      router.push('/documents')
-      return result?._id || result?.id
-    } catch (error) {
-      console.error('Failed to save document', error)
-      toast.error(error?.message || `Failed to ${editingId ? 'update' : 'create'} document`)
-    } finally {
-      if (retryCount === 0) {
-        setLoading(false)
+
+      if (!documentIdForUpload) {
+        throw new Error('Document ID is required for PDF upload')
       }
+
+      // Step 2: Upload PDF to Cloudinary
+      console.log('Uploading PDF to Cloudinary for document:', documentIdForUpload)
+      
+      // Validate file before creating FormData
+      if (!saveData.pdfFile || !(saveData.pdfFile instanceof File)) {
+        throw new Error('Invalid PDF file. Please select a valid PDF file.')
+      }
+      
+      // Validate file type
+      if (saveData.pdfFile.type !== 'application/pdf') {
+        throw new Error('Invalid file type. Please select a PDF file.')
+      }
+      
+      // Validate file size (10MB limit)
+      const maxSize = 10 * 1024 * 1024 // 10MB
+      if (saveData.pdfFile.size > maxSize) {
+        const fileSizeMB = (saveData.pdfFile.size / 1024 / 1024).toFixed(2)
+        throw new Error(`PDF file is too large (${fileSizeMB}MB). Maximum file size is 10MB.`)
+      }
+      
+      const formData = new FormData()
+      formData.append('pdf_file', saveData.pdfFile)
+      
+      // Verify FormData was created correctly
+      if (!formData.has('pdf_file')) {
+        throw new Error('Failed to prepare file for upload')
+      }
+      
+      // Log file details for debugging
+      console.log('PDF file details:', {
+        name: saveData.pdfFile.name,
+        size: saveData.pdfFile.size,
+        type: saveData.pdfFile.type,
+        lastModified: saveData.pdfFile.lastModified
+      })
+      
+      try {
+        const uploadResult = await dispatch(uploadPdfToCloudinary({ 
+          id: documentIdForUpload, 
+          file: formData 
+        })).unwrap()
+        
+        console.log('Upload result:', uploadResult)
+        
+        // Get Cloudinary public URL from response
+        cloudinaryUrl = uploadResult?.pdfUrl || uploadResult?.cloudinaryUrl || uploadResult?.url || uploadResult?.publicUrl || uploadResult?.document?.pdfUrl || uploadResult?.document?.cloudinaryUrl
+        
+        if (!cloudinaryUrl) {
+          console.warn('Cloudinary URL not found in response:', uploadResult)
+          // toast.warning('PDF uploaded but URL not found in response')
+        } else {
+          console.log('PDF uploaded successfully, URL:', cloudinaryUrl)
+        }
+      } catch (uploadError) {
+        console.error('Error uploading PDF:', uploadError)
+        console.error('Upload error details:', {
+          message: uploadError?.message,
+          response: uploadError?.response,
+          status: uploadError?.response?.status,
+          data: uploadError?.response?.data
+        })
+        
+        // Check for 413 Content Too Large error
+        if (uploadError?.response?.status === 413 || uploadError?.status === 413 || uploadError?.message?.includes('413') || uploadError?.message?.toLowerCase().includes('too large')) {
+          const fileSizeMB = (saveData.pdfFile.size / 1024 / 1024).toFixed(2)
+          throw new Error(`PDF file is too large (${fileSizeMB}MB). Maximum file size is 10MB. Please export a smaller PDF or compress the file.`)
+        }
+        
+        // Check for network errors (axios uses ERR_NETWORK code)
+        if (uploadError?.message?.toLowerCase().includes('network') || 
+            uploadError?.code === 'NETWORK_ERROR' || 
+            uploadError?.code === 'ERR_NETWORK' ||
+            uploadError?.name === 'NetworkError' ||
+            !uploadError?.response) {
+          const networkErrorMsg = 'Network error. Please check your internet connection and try again. If the problem persists, the server may be unavailable.'
+          console.error('Network error detected:', networkErrorMsg)
+          throw new Error(networkErrorMsg)
+        }
+        
+        // Check for 404 - document not found
+        if (uploadError?.response?.status === 404) {
+          throw new Error('Document not found. Please try saving the document again.')
+        }
+        
+        // Check for 401/403 - authentication errors
+        if (uploadError?.response?.status === 401 || uploadError?.response?.status === 403) {
+          throw new Error('Authentication failed. Please log in again.')
+        }
+        
+        // Re-throw with more context
+        const errorMsg = uploadError?.response?.data?.message || uploadError?.message || 'Failed to upload PDF'
+        throw new Error(errorMsg)
+      }
+
+      // Step 3: Update document with Cloudinary public URL
+      if (cloudinaryUrl) {
+        console.log('Updating document with Cloudinary URL:', cloudinaryUrl)
+        const updatedDocumentData = {
+          ...documentData,
+          pdfUrl: cloudinaryUrl,
+          cloudinaryUrl: cloudinaryUrl
+        }
+        
+        await dispatch(updateDocument({ 
+          id: documentIdForUpload, 
+          data: updatedDocumentData 
+        })).unwrap()
+        
+        console.log('Document updated with PDF URL successfully')
+      }
+      
+      toast.success('Document saved with PDF URL')
+      
+      
+      
+    } catch (error) {
+      console.error('Error in save only flow:', error)
+      console.error('Error details:', {
+        message: error?.message,
+        response: error?.response,
+        stack: error?.stack
+      })
+      
+      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to save document. Please try again.'
+      toast.error(errorMessage)
+      setSaveOnlyLoading(false)
     }
   }
 
@@ -388,6 +536,11 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
     emailLoading,
     handleCloseEmailModal,
     handleSendEmailWithPDF,
+    // Save Only modal props
+    showSaveOnlyModal,
+    saveOnlyLoading,
+    handleCloseSaveOnlyModal,
+    handleSaveOnlyWithPDF,
     // Full-screen props
     isFullScreen,
     fullScreenRef,
