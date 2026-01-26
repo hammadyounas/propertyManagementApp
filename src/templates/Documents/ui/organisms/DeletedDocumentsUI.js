@@ -1,29 +1,25 @@
 "use client";
-import Card from "../../../components/combined/molecules/CardUIContainer";
 import { Icon } from "@iconify/react";
-import GlobalFilter from "../../../components/ui/atoms/GlobalFilter";
-import Button from "../../../components/ui/molecules/Button";
-import LoadingUI from "../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
-import { dateFormat } from "../../../libs/utils/helper";
 import {
   columns,
-  truncateContent,
-} from "../functional/constant";
-import NoDataFound from "../../../components/ui/atoms/NoDataFound";
-import PaginationUI from "../../../components/ui/molecules/PaginationUI";
+} from "../../functional/constant";
+import Card from "../../../../components/combined/molecules/CardUIContainer";
+import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
+import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import Button from "../../../../components/ui/molecules/Button";
+import { dateFormat } from "../../../../libs/utils/helper";
+import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 
-export default function TemplateListUI({
-  templates,
-  onEdit,
-  onDelete,
-  onDuplicate,
+export default function DeletedDocumentsUI({
+  deletedDocuments,
+  onRestore,
   globalFilter,
   setGlobalFilter,
   loading = false,
-  setCategoryFilter,
-  categoryFilter,
   router,
+  handleBack,
   // Pagination props
   currentPage = 0,
   pageSize = 10,
@@ -37,21 +33,13 @@ export default function TemplateListUI({
       <div className="flex max-sm:flex-col sm:justify-between sm:items-center sm:mb-6 mb-2 w-full">
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         <div className="flex flex-wrap items-center justify-end gap-2 max-sm:mt-2">
-          <div className="w-full flex items-center max-sm:justify-end gap-4 whitespace-nowrap text-sm">
+          <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
             <span className="">
               <Button
-                text="Restore Template"
-                icon="heroicons:trash"
-                onClick={() => router.push("/templates/deleted")}
-                className="btn-secondary bg-black-500 dark:bg-slate-700 w-full whitespace-nowrap font-medium max-lg:hidden"
-              />
-            </span>
-            <span className="">
-              <Button
-                text="Add Template"
-                icon="heroicons:plus"
-                onClick={() => router.push("/templates/create")}
-                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium max-lg:hidden"
+                text="Back to Documents"
+                icon="heroicons:arrow-left"
+                onClick={handleBack}
+                className="btn-secondary max-lg:hidden bg-slate-200 dark:bg-slate-700 w-full whitespace-nowrap font-medium"
               />
             </span>
           </div>
@@ -72,74 +60,70 @@ export default function TemplateListUI({
                       {column.label}
                     </th>
                   ))}
+                  <th
+                    scope="col"
+                    className="table-th font-bold px-4 py-4 text-center whitespace-nowrap"
+                  >
+                    Restore
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                 {loading ? (
                   <tr>
-                    <td colSpan={columns.length} className="p-4">
+                    <td colSpan={columns.length + 1} className="p-4">
                       <div className="flex items-center justify-center w-full">
                         <LoadingUI />
                       </div>
                     </td>
                   </tr>
-                ) : templates.length === 0 ? (
+                ) : deletedDocuments.length === 0 ? (
                   <tr>
-                    <td colSpan={columns.length} className="p-4 text-center">
+                    <td colSpan={columns.length + 1} className="p-4 text-center">
                       <NoDataFound />
                     </td>
                   </tr>
                 ) : (
-                  templates?.map((template, i) => (
+                  deletedDocuments?.map((document, i) => (
                     <tr
                       key={i}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex items-center justify-center">
-                          <span className="text-primary-default font-bold cursor-pointer">
-                            {template.title}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="table-td sm:p-4 p-2 text-center">
-                        <div className="flex items-center justify-center">
-                          {/* <img src={template.created_by?.avatar || "/assets/images/users/default.jpg"} alt={template.created_by?.name} className="w-8 h-8 rounded-full mr-2" /> */}
-                          <span className="text-primary-default font-bold cursor-pointer">
-                            {template.created_by.name}
+                          <span className="font-mono font-semibold text-primary-default">
+                            {document.doc_id || 'N/A'}
                           </span>
                         </div>
                       </td>
                       <td className="table-td sm:p-4 p-2">
-                        {dateFormat(template.createdAt || template.date)}
+                        <div className="flex items-center justify-center">
+                          <span className="text-primary-default font-bold">
+                            {document.title}
+                          </span>
+                        </div>
+                      </td>
+                      <td className={`table-td sm:p-4 p-2 ${document.email_recipient ? 'lowercase' : ''}`}>
+                        {document.email_recipient || 'N/A'}
+                      </td>
+                      <td className="table-td sm:p-4 p-2 text-center">
+                        <div className="flex items-center justify-center">
+                          <span className="text-primary-default font-bold">
+                            {document?.created_by?.name || 'N/A'}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="table-td sm:p-4 p-2">
+                        {dateFormat(document.createdAt || document.date)}
                       </td>
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => onEdit(template._id)}
-                            className="cursor-pointer text-[20px] max-lg:hidden"
-                            icon={"heroicons:pencil-square"}
+                            onClick={() => onRestore(document._id || document.id)}
+                            className="cursor-pointer text-[20px] hover:text-green-600 transition-colors"
+                            icon={"heroicons:arrow-path"}
+                            title="Restore Document"
                           />
-                          <Icon
-                            onClick={() => onDuplicate(template)}
-                            className="cursor-pointer text-[20px] mx-4"
-                            icon={"heroicons:document-duplicate"}
-                          />
-                          <div className="relative group inline-block">
-                            <Icon
-                              onClick={() => onDelete(template._id)}
-                              className="cursor-pointer text-[20px]"
-                              icon="heroicons-outline:trash"
-                            />
-                            <span
-                              className="absolute -top-8 left-1/2 -translate-x-1/2 
-                   bg-gray-800 text-white text-xs rounded py-1 px-2 
-                   opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                   pointer-events-none whitespace-nowrap"
-                            >
-                              Delete
-                            </span>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -150,7 +134,7 @@ export default function TemplateListUI({
           </div>
         </div>
       </div>
-
+      
       {/* Pagination */}
       {totalCount > pageSize && (
         <div className="flex w-full justify-end mt-4 items-center">

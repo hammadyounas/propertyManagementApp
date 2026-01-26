@@ -4,3 +4,6 @@ export const selectTemplateLoading = (state) => state.templates.loading;
 export const selectTemplateError = (state) => state.templates.error;
 export const selectTemplateCreateSuccess = (state) => state.templates.createSuccess;
 export const selectTemplatesTotalCount = (state) => state.templates.totalCount;
+export const selectDeletedTemplates = (state) => state.templates.deletedTemplates;
+export const selectDeletedTemplatesTotalCount = (state) => state.templates.deletedTotalCount;
+export const selectTemplateRestoreSuccess = (state) => state.templates.restoreSuccess;

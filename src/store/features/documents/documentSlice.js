@@ -7,6 +7,8 @@ import {
   sendEmailWithDocumentAPI,
   updateDocumentAPI,
   uploadPdfToCloudinaryAPI,
+  fetchDeletedDocumentsAPI,
+  restoreDocumentAPI,
 } from "./documentAPI";
 
 export const fetchDocuments = createAsyncThunk(
@@ -110,6 +112,36 @@ export const sendEmailWithDocument = createAsyncThunk(
   }
 );
 
+export const fetchDeletedDocuments = createAsyncThunk(
+  "documents/fetchDeletedDocuments",
+  async (params, thunkAPI) => {
+    try {
+      return await fetchDeletedDocumentsAPI(params);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "Failed to fetch deleted documents"
+      );
+    }
+  }
+);
+
+export const restoreDocument = createAsyncThunk(
+  "documents/restoreDocument",
+  async (id, thunkAPI) => {
+    try {
+      return await restoreDocumentAPI(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "Failed to restore document"
+      );
+    }
+  }
+);
+
 const documentSlice = createSlice({
   name: "documents",
   initialState: {
@@ -120,6 +152,9 @@ const documentSlice = createSlice({
     error: null,
     createSuccess: false,
     updateSuccess: false,
+    deletedDocuments: [],
+    deletedTotalCount: 0,
+    restoreSuccess: false,
   },
   reducers: {
     clearDocumentError: (state) => {
@@ -241,6 +276,42 @@ const documentSlice = createSlice({
       .addCase(sendEmailWithDocument.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // fetch deleted documents
+      .addCase(fetchDeletedDocuments.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDeletedDocuments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deletedDocuments = action.payload.documents;
+        state.deletedTotalCount = action.payload.totalCount;
+      })
+      .addCase(fetchDeletedDocuments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // restore document
+      .addCase(restoreDocument.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.restoreSuccess = false;
+      })
+      .addCase(restoreDocument.fulfilled, (state, action) => {
+        state.loading = false;
+        state.restoreSuccess = true;
+        // Remove from deleted documents list
+        state.deletedDocuments = state.deletedDocuments.filter(
+          (doc) => doc._id !== action.payload?._id && doc.id !== action.payload?.id
+        );
+        state.deletedTotalCount = Math.max(0, state.deletedTotalCount - 1);
+      })
+      .addCase(restoreDocument.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.restoreSuccess = false;
       });
   },
 });

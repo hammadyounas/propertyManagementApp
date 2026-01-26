@@ -5,6 +5,8 @@ import {
   fetchAllTemplatesAPI,
   fetchTemplateByIdAPI,
   updateTemplateAPI,
+  fetchDeletedTemplatesAPI,
+  restoreTemplateAPI,
 } from "./templateAPI";
 
 export const fetchTemplate = createAsyncThunk(
@@ -82,6 +84,36 @@ export const deleteTemplate = createAsyncThunk(
   }
 );
 
+export const fetchDeletedTemplates = createAsyncThunk(
+  "templates/fetchDeletedTemplates",
+  async (params, thunkAPI) => {
+    try {
+      return await fetchDeletedTemplatesAPI(params);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "Failed to fetch deleted templates"
+      );
+    }
+  }
+);
+
+export const restoreTemplate = createAsyncThunk(
+  "templates/restoreTemplate",
+  async (id, thunkAPI) => {
+    try {
+      return await restoreTemplateAPI(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message ||
+          error.message ||
+          "Failed to restore template"
+      );
+    }
+  }
+);
+
 const templateSlice = createSlice({
   name: "templates",
   initialState: {
@@ -91,6 +123,9 @@ const templateSlice = createSlice({
     loading: false,
     error: null,
     createSuccess: false,
+    deletedTemplates: [],
+    deletedTotalCount: 0,
+    restoreSuccess: false,
   },
 
   reducers: {
@@ -173,6 +208,42 @@ const templateSlice = createSlice({
       .addCase(deleteTemplate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
+      })
+
+      // fetch deleted templates
+      .addCase(fetchDeletedTemplates.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDeletedTemplates.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deletedTemplates = action.payload.templates;
+        state.deletedTotalCount = action.payload.totalCount;
+      })
+      .addCase(fetchDeletedTemplates.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      // restore template
+      .addCase(restoreTemplate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.restoreSuccess = false;
+      })
+      .addCase(restoreTemplate.fulfilled, (state, action) => {
+        state.loading = false;
+        state.restoreSuccess = true;
+        // Remove from deleted templates list
+        state.deletedTemplates = state.deletedTemplates.filter(
+          (template) => template._id !== action.payload?._id && template.id !== action.payload?.id
+        );
+        state.deletedTotalCount = Math.max(0, state.deletedTotalCount - 1);
+      })
+      .addCase(restoreTemplate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+        state.restoreSuccess = false;
       });
   },
 });

@@ -4,3 +4,6 @@ export const selectTotalCount = (state) => state.documents.totalCount;
 export const selectLoading = (state) => state.documents.loading;
 export const selectError = (state) => state.documents.error;
 export const selectCreateSuccess = (state) => state.documents.createSuccess;
+export const selectDeletedDocuments = (state) => state.documents.deletedDocuments;
+export const selectDeletedTotalCount = (state) => state.documents.deletedTotalCount;
+export const selectRestoreSuccess = (state) => state.documents.restoreSuccess;

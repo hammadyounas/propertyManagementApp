@@ -39,3 +39,16 @@ export const sendEmailWithDocumentAPI = async (id, email) => {
     const response = await postRequest(`document/send-email/${id}`, email);
     return response?.data;
 }
+
+export const fetchDeletedDocumentsAPI = async ({ search = "", page, limit }) => {
+  const queryParams = searchParams({ search, page, limit });
+  const response = await getRequest(`document/deleted?${queryParams.toString()}`);
+  const documents = response?.data?.document || [];
+  const totalCount = response?.data?.totalCount || 0;
+  return { documents, totalCount };
+};
+
+export const restoreDocumentAPI = async (id) => {
+  const response = await patchRequest(`document/restore/${id}`, {});
+  return response?.data;
+};
