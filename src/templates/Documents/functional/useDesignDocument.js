@@ -485,8 +485,6 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
       
       toast.success('Document saved with PDF URL')
       
-      
-      
     } catch (error) {
       console.error('Error in save only flow:', error)
       console.error('Error details:', {
