@@ -3,6 +3,7 @@ import useDashboard from "../../functionality/page/useDashboard";
 import { tableFooterData } from "../../functionality/constants/data";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
 import ModalUI from "../../../../components/ui/organisms/ModalUI";
+import ConfirmDeleteModal from "../../../../components/ui/molecules/ConfirmDeleteModal";
 
 const DashboardPage = () => {
   const {
@@ -27,6 +28,13 @@ const DashboardPage = () => {
     setBrokerOptions,
     selectedBroker,
     setSelectedBroker,
+    // Delete props
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    handleDelete,
+    currentItem,
+    deleteLoading,
   } = useDashboard();
 
   return (
@@ -49,6 +57,7 @@ const DashboardPage = () => {
         setBrokerOptions={setBrokerOptions}
         selectedBroker={selectedBroker}
         setSelectedBroker={setSelectedBroker}
+        onDelete={openDeleteModal}
       />
       <div
         className={`flex w-full justify-center mt-2 items-center ${
@@ -74,6 +83,19 @@ const DashboardPage = () => {
           </div>
         </ModalUI>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={() => handleDelete({ entryId: currentItem })}
+        text="Are you sure you want to delete this dashboard entry?"
+        disabled={deleteLoading}
+        confirmText="Delete"
+        cancelText="Cancel"
+        title="Delete Dashboard Entry"
+        iconColor="text-red-600"
+        buttonColor="bg-red-600 hover:bg-red-700"
+      />
     </>
   );
 };

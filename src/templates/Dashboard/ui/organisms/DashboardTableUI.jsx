@@ -8,6 +8,7 @@ import CountdownTimer from "../../../../libs/utils/countdownTimer";
 import { dateFormat } from "../../../../libs/utils/helper";
 import { Icon } from "@iconify/react";
 import ReactSelect from "react-select";
+import { useSelector } from "react-redux";
 
 const getCommissionAmount = (row = {}) => {
   const directKeys = ["commissionAmount", "commission_amount", "commission"];
@@ -75,7 +76,18 @@ const DashboardTableUI = ({
   setBrokerOptions,
   selectedBroker,
   setSelectedBroker,
+  onDelete,
 }) => {
+  // Get current user from Redux state
+  const currentUser = useSelector((state) => state.auth.user);
+
+  // Check if current user is the creator of an entry
+  const isCreator = (entry) => {
+    if (!currentUser || !entry?.created_by) return false;
+    const currentUserId = currentUser._id || currentUser.id;
+    const creatorId = entry.created_by._id || entry.created_by.id;
+    return currentUserId === creatorId;
+  };
   const calculateTotal = (key) => {
     if (key === "commissionAmount") {
       return dashboardEntries.reduce(
@@ -381,8 +393,19 @@ const DashboardTableUI = ({
                       <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <Icon
                           onClick={() => push(`/dashboard/edit/${row._id}`)}
-                          className="cursor-pointer text-[20px] mx-4"
+                          className="cursor-pointer text-[20px] hover:text-blue-600 transition-colors mr-4"
                           icon={"heroicons:pencil-square"}
+                          title="Edit"
+                        />
+                        <Icon
+                          onClick={() => isCreator(row) && onDelete && onDelete(row._id)}
+                          className={`text-[20px] transition-colors ${
+                            isCreator(row)
+                              ? "cursor-pointer hover:text-red-600"
+                              : "cursor-not-allowed opacity-50"
+                          }`}
+                          icon={"heroicons-outline:trash"}
+                          title={isCreator(row) ? "Delete" : "Only the creator can delete this entry"}
                         />
                       </td>
                       {/* <td className="table-td px-4 py-4">
