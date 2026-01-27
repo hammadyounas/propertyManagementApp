@@ -36,7 +36,7 @@ const TableUI = ({
                 text="Add ACM"
                 icon="heroicons:plus"
                 onClick={() => push("/acms/create")}
-                className="btn-primary text-sm bg-primary-default w-full font-normal text-sm"
+                className="btn-primary bg-primary-default w-full font-normal text-sm"
               />
             </span>
           </div>
