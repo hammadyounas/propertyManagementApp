@@ -10,7 +10,7 @@ export const columns = [
     { label: 'Template Name' },
     { label: 'Created By' },
     { label: 'Created Date' },
-    { label: 'Actions' },
+    { label: 'Restore' },
   ];
 
   export const getCategoryColor = (category) => {

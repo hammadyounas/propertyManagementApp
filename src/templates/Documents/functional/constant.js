@@ -12,7 +12,7 @@ export const columns = [
     { label: 'Email Recipient' },
     { label: 'Created By'},
     { label: 'Created Date' },
-    { label: 'Actions' },
+    { label: 'Restore' },
   ];
 
   export const getCategoryColor = (category) => {

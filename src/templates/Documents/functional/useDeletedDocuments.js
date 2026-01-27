@@ -48,7 +48,7 @@ export default function useDeletedDocuments() {
   // Handle success/error states
   useEffect(() => {
     if (restoreSuccess) {
-      toast.success("Document restored successfully!");
+      // toast.success("Document restored successfully!");
       dispatch(clearDocumentError());
       // Refresh deleted documents list
       dispatch(

@@ -39,7 +39,7 @@ export default function DeletedDocumentsUI({
                 text="Back to Documents"
                 icon="heroicons:arrow-left"
                 onClick={handleBack}
-                className="btn-secondary max-lg:hidden bg-slate-200 dark:bg-slate-700 w-full whitespace-nowrap font-medium"
+                className="btn-secondary bg-black-500 max-lg:hidden dark:bg-slate-700 w-full whitespace-nowrap font-medium"
               />
             </span>
           </div>
@@ -60,12 +60,6 @@ export default function DeletedDocumentsUI({
                       {column.label}
                     </th>
                   ))}
-                  <th
-                    scope="col"
-                    className="table-th font-bold px-4 py-4 text-center whitespace-nowrap"
-                  >
-                    Restore
-                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">

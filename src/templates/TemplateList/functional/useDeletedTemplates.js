@@ -48,7 +48,7 @@ export default function useDeletedTemplates() {
   // Handle success/error states
   useEffect(() => {
     if (restoreSuccess) {
-      toast.success("Template restored successfully!");
+      // toast.success("Template restored successfully!");
       dispatch(clearTemplateError());
       // Refresh deleted templates list
       dispatch(
