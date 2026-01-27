@@ -29,11 +29,12 @@ const CalendarUI = ({
         </p>
         <Button
           text="New Meeting"
+          icon="heroicons:plus"
           onClick={() => {
             closeModal();
             openModal();
           }}
-          className="btn-primary bg-primary-default font-normal"
+          className="btn-primary text-sm bg-primary-default font-normal"
         />
       </div>
       <FullCalendar

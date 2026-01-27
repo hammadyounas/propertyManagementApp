@@ -197,8 +197,9 @@ const DashboardTableUI = ({
           <span className="">
             <Button
               text="Add Entry"
+              icon="heroicons:plus"
               onClick={() => push("/dashboard/add")}
-              className="btn-primary bg-primary-default w-full font-normal"
+              className="btn-primary text-sm bg-primary-default w-full font-normal"
             />
           </span>
         </div>

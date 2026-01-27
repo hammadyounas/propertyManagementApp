@@ -23,8 +23,9 @@ const TableUI = ({
           <span className="">
             <Button
               text="Add Client"
+              icon="heroicons:plus"
               onClick={() => push("/clients/create")}
-              className="btn-primary bg-primary-default w-full font-normal"
+              className="btn-primary text-sm bg-primary-default w-full font-normal"
             />
           </span>
         </div>

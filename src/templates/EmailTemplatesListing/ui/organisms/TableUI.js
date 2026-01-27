@@ -12,9 +12,10 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
           <div className="w-full flex items-center">
             <span className="w-full">
               <Button
-                text="Create Template"
+                text="Create Email Template"
+                icon="heroicons:plus"
                 onClick={() => push("/email-templates/create")}
-                className="btn-primary bg-primary-default w-full"
+                className="btn-primary text-sm bg-primary-default w-full"
               />
             </span>
           </div>

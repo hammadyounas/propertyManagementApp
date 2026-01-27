@@ -35,6 +35,7 @@ const TableUI = ({
             <span className="">
               <Button
                 text="Send Email"
+                icon="mingcute:send-line"
                 onClick={() => push("/marketing-emails/send")}
                 className="btn-primary bg-primary-default w-full"
               />
