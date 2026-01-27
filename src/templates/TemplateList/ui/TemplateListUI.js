@@ -40,7 +40,7 @@ export default function TemplateListUI({
           <div className="w-full flex items-center max-sm:justify-end gap-4 whitespace-nowrap text-sm">
             <span className="">
               <Button
-                text="Restore Template"
+                text="Deleted Template"
                 icon="heroicons:trash"
                 onClick={() => router.push("/templates/deleted")}
                 className="btn-secondary bg-black-500 dark:bg-slate-700 w-full whitespace-nowrap font-medium max-lg:hidden"

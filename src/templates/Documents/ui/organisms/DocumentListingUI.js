@@ -64,7 +64,7 @@ export default function DocumentListingUI({
           <div className="w-full flex items-center max-sm:justify-end gap-2 whitespace-nowrap text-sm">
             <span className="">
               <Button
-                text="Restore Documents"
+                text="Deleted Documents"
                 icon="heroicons:trash"
                 onClick={() => router.push("/documents/deleted")}
                 className="btn-secondary max-lg:hidden bg-black-500 dark:bg-slate-700 w-full whitespace-nowrap font-medium"
