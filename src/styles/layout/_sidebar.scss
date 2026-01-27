@@ -91,15 +91,10 @@
     .menu-icon {
       @apply mr-0;
     }
-    
+
+    /* Hide the white tooltip box when hovering collapsed icons */
     .text-box {
-      @apply absolute left-full ml-5 w-[180px] top-0 px-4 py-3 bg-white shadow-dropdown rounded-[4px] dark:bg-slate-800 z-[999] invisible opacity-0 transition-all duration-150;
-    }
-    
-    &:hover {
-      .text-box {
-        @apply visible opacity-100;
-      }
+      @apply hidden;
     }
   }
   
@@ -159,4 +154,14 @@
   .menu-badge {
     @apply bg-slate-100  text-slate-900;
   }
+}
+
+/* Sidebar: disable scrolling and hide SimpleBar scrollbars */
+.sidebar-menu .simplebar-content-wrapper {
+  overflow: visible !important; /* override inline overflow from SimpleBar */
+}
+
+.sidebar-menu .simplebar-track,
+.sidebar-menu .simplebar-scrollbar {
+  display: none !important;
 }
