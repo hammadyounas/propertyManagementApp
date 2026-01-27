@@ -51,8 +51,9 @@ const TableUI = ({
             <span className="">
               <Button
                 text="Add Property"
+                icon="heroicons:plus"
                 onClick={() => push("/properties/create")}
-                className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium"
+                className="btn-primary text-sm bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
           </div>

@@ -34,6 +34,7 @@ const TableUI = ({
             <span className="flex gap-2">
               <Button
                 text="Add ACM"
+                icon="heroicons:plus"
                 onClick={() => push("/acms/create")}
                 className="btn-primary bg-primary-default w-full font-normal text-sm"
               />

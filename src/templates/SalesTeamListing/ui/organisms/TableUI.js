@@ -45,8 +45,9 @@ const TableUI = ({
             <span className="w-full">
               <Button
                 text="Add Broker"
+                icon="heroicons:plus"
                 onClick={() => push("/broker/create")}
-                className="btn-primary bg-primary-default w-full font-normal"
+                className="btn-primary text-sm bg-primary-default w-full font-normal"
               />
             </span>
           </div>

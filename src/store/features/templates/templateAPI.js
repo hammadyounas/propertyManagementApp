@@ -37,3 +37,16 @@ export const deleteTemplateAPI = async (id) => {
   const response = await deleteRequest(`template/${id}`);
   return response?.data;
 };
+
+export const fetchDeletedTemplatesAPI = async ({ search = "", page, limit }) => {
+  const queryParams = searchParams({ search, page, limit });
+  const response = await getRequest(`template/deleted?${queryParams.toString()}`);
+  const templates = response?.data?.template || [];
+  const totalCount = response?.data?.totalCount || 0;
+  return { templates, totalCount };
+};
+
+export const restoreTemplateAPI = async (id) => {
+  const response = await patchRequest(`template/restore/${id}`, {});
+  return response?.data;
+};
