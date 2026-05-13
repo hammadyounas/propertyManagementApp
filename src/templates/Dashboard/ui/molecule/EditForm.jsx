@@ -15,7 +15,6 @@ export default function EditDashboardForm({ register, errors, loading, invoice, 
             register={register}
             error={errors.signature_date}
             placeholder="Signature Date"
-            disabled={true}
             max={new Date().toISOString().split("T")[0]}
           />
         </div>
@@ -100,7 +99,6 @@ export default function EditDashboardForm({ register, errors, loading, invoice, 
             register={register}
             error={errors.value_of_amount}
             placeholder="Value of Amount"
-            disabled={true}
           />
         </div>
 
@@ -126,7 +124,6 @@ export default function EditDashboardForm({ register, errors, loading, invoice, 
             register={register}
             error={errors.comment}
             placeholder="Comment"
-            disabled={true}
             classLabel='my-2 text-sm'
             className={'capitalize'}
           />

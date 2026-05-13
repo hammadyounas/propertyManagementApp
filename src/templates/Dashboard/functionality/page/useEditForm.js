@@ -150,12 +150,15 @@ const useEditForm = () => {
     try {
       setLoading(true);
       const formData = {
+        signatureDate: data.signature_date,
         dd: data.dd,
         closingDays: data.closing_days,
         financingDays: data.financing_days,
         invoice: data.invoice,
         pmtReceived: data.pmtReceived,
         user_id: userId,
+        amount: data.value_of_amount,
+        comment: data.comment,
       };
 
       if (data.commission_percentage !== undefined &&
