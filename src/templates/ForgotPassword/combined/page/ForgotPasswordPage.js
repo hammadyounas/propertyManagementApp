@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AuthBannerUI from "../../../../components/ui/molecules/AuthBannerUI";
 import ForgotPasswordFormContainer from "../organisms/ForgotPasswordFormContainer";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const ForgotPasswordPage = () => {
   return (
@@ -32,7 +33,7 @@ const ForgotPasswordPage = () => {
               <div className="md:max-w-[345px] mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-8 uppercase text-sm">
                 Forget It,{" "}
                 <Link
-                  href="/"
+                  href={AppRoutes.HOME}
                   className="text-slate-900 dark:text-white font-medium hover:underline"
                 >
                   Send me Back{" "}

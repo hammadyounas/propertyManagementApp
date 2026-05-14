@@ -3,6 +3,7 @@ import Textinput from "@/components/ui/atoms/TextInput";
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
 import EmailEditor from "react-email-editor";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const FormUI = ({
   handleSubmit,
@@ -38,7 +39,7 @@ const FormUI = ({
                   className={
                     "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                   }
-                  onClick={() => push("/email-templates")}
+                  onClick={() => push(AppRoutes.EMAIL_TEMPLATES)}
                   loading={loading}
                 />
                 <Button

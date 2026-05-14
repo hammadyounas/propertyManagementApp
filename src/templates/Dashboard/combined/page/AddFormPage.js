@@ -3,6 +3,7 @@ import useAddForm from "../../functionality/page/useAddForm";
 import FormUI from "../../ui/organisms/FormUI";
 import AddForm from "../../ui/molecule/AddForm";
 import Button from "../../../../components/ui/atoms/Button";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const AddFormPage = () => {
   const {
@@ -57,7 +58,7 @@ const AddFormPage = () => {
             className={
               "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
             }
-            onClick={() => push("/dashboard")}
+            onClick={() => push(AppRoutes.DASHBOARD)}
             loading={loading}
           />
           <Button

@@ -7,6 +7,7 @@ import Items from "../molecules/ItemsUIContainer";
 import PropertyDetails from "../molecules/PropertyDetailsUIContainer";
 import SalespersonInformation from "../molecules/SalespersonInformationUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const CreateInvoicePage = () => {
   const {
@@ -104,7 +105,7 @@ const CreateInvoicePage = () => {
           className={
             "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
           }
-          onClick={() => push("/invoices")}
+          onClick={() => push(AppRoutes.INVOICES)}
           loading={loading}
         />
         <Button

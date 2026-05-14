@@ -5,6 +5,7 @@ import Button from "../../../../components/ui/atoms/Button";
 import ReactSelect from "react-select";
 import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const EditFormUI = ({
   handleSubmit,
@@ -191,7 +192,7 @@ const EditFormUI = ({
                   className={
                     "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                   }
-                  onClick={() => push("/clients")}
+                  onClick={() => push(AppRoutes.CLIENTS)}
                   loading={loading}
                 />
                 <Button

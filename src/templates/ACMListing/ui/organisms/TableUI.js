@@ -6,6 +6,7 @@ import { dateFormat } from "../../../../libs/utils/helper";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes, acmEditPath } from "@/constants/appRoutes";
 
 const TableUI = ({
   columns,
@@ -35,7 +36,7 @@ const TableUI = ({
               <Button
                 text="Add ACM"
                 icon="heroicons:plus"
-                onClick={() => push("/acms/create")}
+                onClick={() => push(AppRoutes.ACMS_CREATE)}
                 className="btn-primary bg-primary-default w-full font-normal text-sm"
               />
             </span>
@@ -191,7 +192,7 @@ const TableUI = ({
                           />
                         </div>
                         {/* <DropdownMenu
-                            onEdit={() => push(`/acms/edit/${row._id}`)}
+                            onEdit={() => push(acmEditPath(row._id))}
                             onDelete={() => openDeleteModal(row._id)}
                             showEdit={true}
                             showDelete={true}

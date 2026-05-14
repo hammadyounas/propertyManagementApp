@@ -23,6 +23,13 @@ export const statuses = [
   },
 ];
 
+/** Radio options for meeting location mode (online vs onsite). */
+/** @type {import("../types/meetingModalUI").LabelValueOption[]} */
+export const meetingLocationStatusRadioOptions = [
+  { label: "Online", value: "online" },
+  { label: "Onsite", value: "onsite" },
+];
+
 export const salespersons = [
   {
     value: "salesperson-001",

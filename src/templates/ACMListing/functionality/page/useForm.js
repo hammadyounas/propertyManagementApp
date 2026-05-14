@@ -15,6 +15,7 @@ import {
   createACM,
   clearACMCreateStatus,
 } from "../../../../store/features/acm/acmSlice";
+import { AppRoutes } from "@/constants/appRoutes";
 // import { generateACMPDF } from "../../../../libs/utils/acm_template"; // Moved to dynamic import
 
 const useCreateACM = () => {
@@ -154,14 +155,14 @@ const useCreateACM = () => {
             // Clear status and redirect after PDF generation
             dispatch(clearACMCreateStatus());
             setTimeout(() => {
-              push("/acms");
+              push(AppRoutes.ACMS);
             }, 1000);
           } catch (error) {
             console.error("PDF generation error:", error);
             toast.error("ACM saved but PDF generation failed. Please try again.");
             dispatch(clearACMCreateStatus());
             setTimeout(() => {
-              push("/acms");
+              push(AppRoutes.ACMS);
             }, 2000);
           } finally {
             // Always clear PDF generation loading state

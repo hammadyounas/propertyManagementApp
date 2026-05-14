@@ -2,6 +2,7 @@ import React from 'react'
 import CreateDesignDocumentUI from '../../ui/organisms/CreateDesignDocumentUI'
 import useDesignDocument from '../../functional/useDesignDocument'
 import { useRouter } from 'next/router'
+import { AppRoutes } from '@/constants/appRoutes'
 
 export default function DesignDocumentPage({ documentId: documentIdProp, templateId: templateIdProp }) {
   const router = useRouter()
@@ -54,7 +55,7 @@ export default function DesignDocumentPage({ documentId: documentIdProp, templat
       setDocTitle={setDocTitle}
       onSave={handleSaveDocument}
       onSaveOnly={handleSaveOnly}
-      onBack={() => router.push('/documents')}
+      onBack={() => router.push(AppRoutes.DOCUMENTS)}
       isEditing={isEditing}
       // Email modal props
       showEmailModal={showEmailModal}

@@ -1,22 +1,8 @@
 import Card from "../../../../components/combined/molecules/CardUIContainer";
 import DropdownMenu from "../../../../components/ui/organisms/DropdownMenu";
+import { clientDetailFields } from "../../functional/constants/data";
 
 export default function ViewClientUI({ clientData = {}, handleEdit }) {
-  const clientFields = [
-    { label: "Full name", valueKey: "name" },
-    { label: "Email address", valueKey: "email" },
-    { label: "Phone number", valueKey: "phoneNumber" },
-    { label: "Address", valueKey: "address" },
-    { label: "Client Type", valueKey: "type" },
-    { label: "Status", valueKey: "status" },
-    {
-      label: "Preferred Communication Channel",
-      valueKey: "preferredCommunicationChannel",
-    },
-    { label: "Assigned Salesperson", valueKey: "assignedSalesperson" },
-    { label: "Notes", valueKey: "notes" },
-  ];
-
   return (
     <Card>
       <Card className="sm:p-2 lg:w-[40%] sm:w-[50%] border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2 w-full">
@@ -38,7 +24,7 @@ export default function ViewClientUI({ clientData = {}, handleEdit }) {
         </div>
 
         <div className="mt-10">
-          {clientFields?.map(({ label, valueKey }) => ( 
+          {clientDetailFields?.map(({ label, valueKey }) => ( 
               <div
                     key={valueKey}
                     className={`${
@@ -62,7 +48,7 @@ export default function ViewClientUI({ clientData = {}, handleEdit }) {
           <div className="overflow-hidden">
             <div className="px-4 sm:-py-5 sm:p-0">
               <div className="sm:divide-y sm:divide-gray-200">
-                {clientFields?.map(({ label, valueKey }) => (
+                {clientDetailFields?.map(({ label, valueKey }) => (
                   <div
                     key={valueKey}
                     className={`${

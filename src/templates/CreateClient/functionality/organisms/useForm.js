@@ -16,6 +16,7 @@
   } from "../../../../libs/utils/request_handler";
   import { useDropzone } from "react-dropzone";
   import Papa from 'papaparse';
+  import { AppRoutes } from "@/constants/appRoutes";
 
   const useCreateForm = () => {
     const schema = yup.object({
@@ -157,7 +158,7 @@
   };
   
   const downloadSampleCsv = () => {
-    const sampleFilePath = '/sample-client-data.csv';
+    const sampleFilePath = AppRoutes.SAMPLE_CLIENT_DATA_CSV;
     const link = document.createElement('a');
     link.href = sampleFilePath;
     link.download = 'sample-client-data.csv';
@@ -204,7 +205,7 @@
           }
     
           toast.success("CSV File Uploaded Successfully");
-          push("/clients");
+          push(AppRoutes.CLIENTS);
         } else {
           const formData = {
             name: data.name,
@@ -227,7 +228,7 @@
           const response = await postRequest("clients", formData);
           if (response) {
             toast.success("Client created successfully!");
-            push("/clients");
+            push(AppRoutes.CLIENTS);
           } else {
             toast.error("Client creation failed");
             throw new Error("Client creation failed");

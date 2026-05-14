@@ -4,6 +4,7 @@ import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import { dateFormat } from "../../../../libs/utils/helper";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const TableUIOld = ({ columns, rows, globalFilter, setGlobalFilter, push, acms }) => {
   return (
@@ -15,7 +16,7 @@ const TableUIOld = ({ columns, rows, globalFilter, setGlobalFilter, push, acms }
             <span className="">
               <Button
                 text="Add ACM"
-                onClick={() => push("/acms/create")}
+                onClick={() => push(AppRoutes.ACMS_CREATE)}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>

@@ -6,6 +6,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const TableUI = ({
   columns,
@@ -36,7 +37,7 @@ const TableUI = ({
               <Button
                 text="Send Email"
                 icon="mingcute:send-line"
-                onClick={() => push("/marketing-emails/send")}
+                onClick={() => push(AppRoutes.MARKETING_EMAILS_SEND)}
                 className="btn-primary bg-primary-default w-full"
               />
             </span>

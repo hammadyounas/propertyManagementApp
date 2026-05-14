@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import React from "react";
+import { brokerViewPath } from "@/constants/appRoutes";
 
 function SalespersonUI({ salesperosonDataRows, salespersonColumns }) {
   const router = useRouter();
@@ -33,7 +34,7 @@ function SalespersonUI({ salesperosonDataRows, salespersonColumns }) {
                   >
                     <td
                       className="table-td text-primary-default font-semibold cursor-pointer"
-                      onClick={() => router.push(`/broker/view/${row._id}`)}
+                      onClick={() => router.push(brokerViewPath(row._id))}
                     >
                       {row.name}
                     </td>

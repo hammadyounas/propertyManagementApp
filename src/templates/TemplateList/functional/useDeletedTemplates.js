@@ -14,6 +14,7 @@ import {
   selectTemplateError,
   selectTemplateRestoreSuccess,
 } from "../../../store/features/templates/templateSelectors";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export default function useDeletedTemplates() {
   const router = useRouter();
@@ -106,7 +107,7 @@ export default function useDeletedTemplates() {
   };
 
   const handleBack = () => {
-    router.push("/templates");
+    router.push(AppRoutes.TEMPLATES);
   };
 
   // Pagination logic

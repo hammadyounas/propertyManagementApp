@@ -12,6 +12,7 @@ import {
 } from "../functional/constant";
 import NoDataFound from "../../../components/ui/atoms/NoDataFound";
 import PaginationUI from "../../../components/ui/molecules/PaginationUI";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export default function TemplateListUI({
   templates,
@@ -42,7 +43,7 @@ export default function TemplateListUI({
               <Button
                 text="Deleted Template"
                 icon="heroicons:trash"
-                onClick={() => router.push("/templates/deleted")}
+                onClick={() => router.push(AppRoutes.TEMPLATES_DELETED)}
                 className="btn-secondary bg-black-500 dark:bg-slate-700 w-full whitespace-nowrap font-medium max-lg:hidden"
               />
             </span>
@@ -50,7 +51,7 @@ export default function TemplateListUI({
               <Button
                 text="Add Template"
                 icon="heroicons:plus"
-                onClick={() => router.push("/templates/create")}
+                onClick={() => router.push(AppRoutes.TEMPLATES_CREATE)}
                 className="btn-primary bg-primary-default w-full whitespace-nowrap font-medium max-lg:hidden"
               />
             </span>

@@ -15,6 +15,7 @@ import {
   selectTemplateCreateSuccess
 } from '../../../store/features/templates/templateSelectors'
 import { addFullScreenChangeListener, toggleFullScreen } from '../../../libs/utils/fullScreenHelper'
+import { AppRoutes } from '@/constants/appRoutes'
 
 export default function useTextEditor(templateId = null) {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function useTextEditor(templateId = null) {
     if (createSuccess) {
       toast.success(templateId ? 'Template updated successfully!' : 'Template created successfully!');
       dispatch(clearTemplateError());
-      router.push('/templates');
+      router.push(AppRoutes.TEMPLATES);
     }
   }, [createSuccess, dispatch, router, templateId]);
 
@@ -202,7 +203,7 @@ export default function useTextEditor(templateId = null) {
           data: templateData 
         })).unwrap();
         toast.success('Template updated successfully!');
-        router.push('/templates');
+        router.push(AppRoutes.TEMPLATES);
       } else {
         // Create new template
         await dispatch(createTemplate(templateData)).unwrap();
@@ -214,7 +215,7 @@ export default function useTextEditor(templateId = null) {
   };
 
   const handleBack = () => {
-    router.push('/templates');
+    router.push(AppRoutes.TEMPLATES);
   };
 
   // Full-screen functionality using utility

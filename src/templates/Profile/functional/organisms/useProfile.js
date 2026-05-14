@@ -8,6 +8,7 @@ import { getAllPropertiesByIds } from "../../../../libs/api/properties";
 import { patchRequest } from "../../../../libs/utils/request_handler";
 import { API_URL } from "../../../../configs";
 import { setUser } from "../../../../store/authSlice";
+import { salespersonStatus } from "../constants/data";
 
 export default function useProfile() {
   const { user } = useSelector((state) => state.auth);
@@ -97,11 +98,6 @@ const handleCancel = () => {
       })
     ),
   });
-
-  const salespersonStatus = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-  ];
 
   useEffect(() => {
     if (user?._id) {

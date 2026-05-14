@@ -4,6 +4,7 @@ import Link from "next/link";
 import Button from "@/components/ui/atoms/Button";
 import InputField from "../../../../components/ui/atoms/InputField";
 import { ToastContainer } from "react-toastify";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const FormUI = ({
   email,
@@ -48,7 +49,7 @@ const FormUI = ({
 
       <div className="flex justify-end">
         <Link
-          href="/forgot-password"
+          href={AppRoutes.FORGOT_PASSWORD}
           className="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
         >
           Forgot Password?

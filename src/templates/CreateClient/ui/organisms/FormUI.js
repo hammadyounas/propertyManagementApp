@@ -6,6 +6,7 @@ import ReactSelect from "react-select";
 import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 import { X } from "lucide-react";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const FormUI = ({
   handleSubmit,
@@ -273,7 +274,7 @@ const FormUI = ({
                 className={
                   "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                 }
-                onClick={() => push("/clients")}
+                onClick={() => push(AppRoutes.CLIENTS)}
                 loading={loading}
               />
               <Button

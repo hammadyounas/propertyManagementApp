@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getRequest } from '../../../../libs/utils/request_handler'
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { clientEditPath } from '@/constants/appRoutes';
 
 export default function useClientDetails() {
     const [clientData, setClientData] = useState();
@@ -35,7 +36,7 @@ export default function useClientDetails() {
     };
 
     const handleEdit = () => {
-        router.push(`/clients/edit/${clientId}`);
+        router.push(clientEditPath(clientId));
     }
 
   return (

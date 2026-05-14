@@ -18,6 +18,7 @@ import {
   postRequest,
 } from "../../../../libs/utils/request_handler";
 import { useSelector } from "react-redux";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useCreateInvoice = () => {
   const itemSchema = yup.object({
@@ -354,7 +355,7 @@ const useCreateInvoice = () => {
       const response = await postRequest("invoices", formData);
       if (response) {
         toast.success("Invoice created successfully!");
-        push("/invoices");
+        push(AppRoutes.INVOICES);
       } else {
         toast.error("Invoice creation failed");
         throw new Error("Invoices creation failed");

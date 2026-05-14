@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../../../store/authSlice";
 import { API_URL, API_PREFIX } from "../../../../configs/index";
 import { postRequest } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 
 // Define validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -58,7 +59,7 @@ export const useForm = () => {
         dispatch(setUser(data?.user));
         setFormValues(initialFormValues);
         toast.success("Login Successfully");
-        router.push("/dashboard");
+        router.push(AppRoutes.DASHBOARD);
       }
     } catch (error) {
       setLoading(false);

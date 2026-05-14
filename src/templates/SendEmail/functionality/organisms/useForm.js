@@ -9,6 +9,7 @@ import {
   getRequest,
   postRequest,
 } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -197,7 +198,7 @@ const useCreateForm = () => {
       if (response) {
         closeModal();
         toast.success("Email sent successfully!");
-        push("/marketing-emails");
+        push(AppRoutes.MARKETING_EMAILS);
       } else {
         toast.error("Email creation failed");
         throw new Error("Email creation failed");

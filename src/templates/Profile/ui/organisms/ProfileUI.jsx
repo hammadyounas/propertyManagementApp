@@ -5,7 +5,9 @@ import Textinput from "../../../../components/ui/atoms/TextInput";
 import { ToastContainer } from "react-toastify";
 import RadioButton from "../../../../components/ui/atoms/RadioButtin";
 import ReactSelect from "react-select";
+import { licenceTypeRadioOptions } from "../../functional/constants/data";
 
+/** @param {import("../../functional/types/profileUI").ProfileUIProps} props */
 export default function ProfileUI({
   loading,
   handleSubmit,
@@ -136,11 +138,7 @@ export default function ProfileUI({
                   error={errors.licence_type}
                   placeholder="Licence"
                   disabled={loading || !isEditing}
-                  radioOptions={[
-                    { label: "Residential", value: "residential" },
-                    { label: "Commercial", value: "commercial" },
-                    { label: "Director", value: "director" },
-                  ]}
+                  radioOptions={licenceTypeRadioOptions}
                   className="text-sm"
                 />
               </div>

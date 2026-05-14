@@ -5,6 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getRequest, postRequest } from "../../../../libs/utils/request_handler";
+import { salespersonStatus } from "../constants/data";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -35,17 +37,6 @@ const useCreateForm = () => {
     resolver: yupResolver(schema),
     mode: "all",
   });
-
-  const salespersonStatus = [
-    {
-      value: "active",
-      label: "Active",
-    },
-    {
-      value: "inactive",
-      label: "In Active",
-    },
-  ];
 
   // const availableProperties = [
   //   {
@@ -121,7 +112,7 @@ const useCreateForm = () => {
       if (response) {
         toast.success("User registered successfully!");
         console.log(response.data); // Log the API response if needed
-        push("/broker"); // Redirect after successful registration
+        push(AppRoutes.BROKER); // Redirect after successful registration
       } else {
         toast.error("Registration failed");
         throw new Error("Registration failed");

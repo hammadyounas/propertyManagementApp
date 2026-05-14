@@ -7,6 +7,7 @@ import { selectTemplates, selectTemplateLoading } from '../../../store/features/
 import { fetchDocumentById, createDocument, updateDocument, uploadPdfToCloudinary, sendEmailWithDocument } from '../../../store/features/documents/documentSlice'
 import { selectDocument } from '../../../store/features/documents/documentSelectors'
 import { addFullScreenChangeListener, toggleFullScreen } from '../../../libs/utils/fullScreenHelper'
+import { AppRoutes } from '@/constants/appRoutes'
 
 // Generate a random 6-digit unique ID
 const generateDocId = () => {
@@ -208,7 +209,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
 
       // Close modal and redirect after document creation
       setShowEmailModal(false)
-      router.push('/documents')
+      router.push(AppRoutes.DOCUMENTS)
       setEmailLoading(false)
 
       // Step 2: Upload PDF to Cloudinary
@@ -338,7 +339,7 @@ export default function useDesignDocument(initialDocumentId, templateIdFromQuery
           // Close modal and redirect
       setShowSaveOnlyModal(false)
       setSaveOnlyLoading(false)
-      router.push('/documents')
+      router.push(AppRoutes.DOCUMENTS)
           if (!documentIdForUpload) {
             throw new Error('Failed to get document ID after creation')
           }

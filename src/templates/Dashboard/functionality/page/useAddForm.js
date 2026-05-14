@@ -6,6 +6,7 @@ import { invoiceStatus, pmtReceivedStatus } from "../constants/data";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { postRequest } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useAddForm = () => {
   const schema = yup.object({
@@ -135,7 +136,7 @@ const useAddForm = () => {
       const response = await postRequest("dashboard", formData);
       if (response) {
         toast.success("Dashboard entry added successfully!");
-        push("/dashboard");
+        push(AppRoutes.DASHBOARD);
       } else {
         toast.error("Dashboard entry creation failed");
         throw new Error("Dashboard entry creation failed");

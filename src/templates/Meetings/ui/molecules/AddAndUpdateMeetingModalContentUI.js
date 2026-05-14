@@ -4,6 +4,7 @@ import ReactSelect from "react-select";
 import Button from "../../../../components/ui/atoms/Button";
 import RadioButton from "../../../../components/ui/atoms/RadioButtin";
 import { ToastContainer } from "react-toastify";
+import { meetingLocationStatusRadioOptions } from "../../functionality/constants/data";
 
 const AddAndUpdateMeetingModalContentUI = ({
   register,
@@ -110,10 +111,7 @@ const AddAndUpdateMeetingModalContentUI = ({
               error={errors.location_status}
               placeholder="Location Status"
               disabled={isOtherFieldsDisabled}
-              radioOptions={[
-                { label: "Online", value: "online" },
-                { label: "Onsite", value: "onsite" },
-              ]}
+              radioOptions={meetingLocationStatusRadioOptions}
               className="text-sm"
             />
           </div>

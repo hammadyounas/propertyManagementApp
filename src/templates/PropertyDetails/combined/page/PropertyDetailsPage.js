@@ -15,6 +15,7 @@ import Location from "../molecules/LocationUIContainer";
 import { Edit, Trash2, Plus } from "lucide-react";
 import Comments from "../molecules/CommentsUIContainer";
 import ComprehensivePropertyDetailsUI from "../../ui/molecules/ComprehensivePropertyDetailsUI";
+import { propertyEditPath } from "@/constants/appRoutes";
 
 const PropertyDetailsPage = () => {
   const {
@@ -69,7 +70,7 @@ const PropertyDetailsPage = () => {
         {/* Action Buttons */}
         <div className="flex justify-center md:justify-end mt-12 border-t pt-4">
           <Button
-            onClick={() => push(`/properties/edit/${propertyDetails?._id}`)}
+            onClick={() => push(propertyEditPath(propertyDetails?._id))}
             text={"Edit Property"}
             className={
               "md:!w-40 mx-4 bg-transparent border border-black-default !text-black-default hover:bg-gray-50"

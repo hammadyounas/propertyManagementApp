@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useCreateEmailTemplate = () => {
   const schema = yup.object({
@@ -37,7 +38,7 @@ const useCreateEmailTemplate = () => {
       alert(`Template Created`);
       console.log("Form Data: ", data);
       setLoading(false);
-      push("/email-templates");
+      push(AppRoutes.EMAIL_TEMPLATES);
     }, 1500);
   };
 

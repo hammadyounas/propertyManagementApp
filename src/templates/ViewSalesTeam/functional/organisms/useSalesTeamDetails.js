@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import { brokerEditPath } from "@/constants/appRoutes";
 const { fetchUserById, clearSelectedUser } = require("../../../../store/features/users/userSlice");
 
 export default function useSalesTeamDetails() {
@@ -27,7 +28,7 @@ export default function useSalesTeamDetails() {
   }, [router.isReady, userId, dispatch]);
 
   const handleEdit = () => {
-    router.push(`/broker/edit/${userId}`);
+    router.push(brokerEditPath(userId));
   };
 
   return { salesteamData, handleEdit };

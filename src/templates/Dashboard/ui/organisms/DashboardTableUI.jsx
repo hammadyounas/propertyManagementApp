@@ -9,6 +9,7 @@ import { dateFormat } from "../../../../libs/utils/helper";
 import { Icon } from "@iconify/react";
 import ReactSelect from "react-select";
 import { useSelector } from "react-redux";
+import { AppRoutes, dashboardEditPath } from "@/constants/appRoutes";
 
 const getCommissionAmount = (row = {}) => {
   const directKeys = ["commissionAmount", "commission_amount", "commission"];
@@ -210,7 +211,7 @@ const DashboardTableUI = ({
             <Button
               text="Add Entry"
               icon="heroicons:plus"
-              onClick={() => push("/dashboard/add")}
+              onClick={() => push(AppRoutes.DASHBOARD_ADD)}
               className="btn-primary text-sm bg-primary-default w-full font-normal"
             />
           </span>
@@ -391,7 +392,7 @@ const DashboardTableUI = ({
                       
                       <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <Icon
-                          onClick={() => push(`/dashboard/edit/${row._id}`)}
+                          onClick={() => push(dashboardEditPath(row._id))}
                           className="cursor-pointer text-[20px] hover:text-blue-600 transition-colors mr-4"
                           icon={"heroicons:pencil-square"}
                           title="Edit"

@@ -17,6 +17,7 @@ import {
   selectTemplatesTotalCount,
   selectTemplateById
 } from '../../../store/features/templates/templateSelectors';
+import { AppRoutes, templateEditPath } from '@/constants/appRoutes';
 
 export default function useTemplateList() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function useTemplateList() {
   };
 
   const handleEdit = (id) => {
-    router.push(`/templates/edit/${id}`);
+    router.push(templateEditPath(id));
   };
 
 
@@ -137,7 +138,7 @@ export default function useTemplateList() {
   };
 
   const handleBack = () => {
-    router.push('/templates');
+    router.push(AppRoutes.TEMPLATES);
   };
 
   // No filtering needed - Redux handles search

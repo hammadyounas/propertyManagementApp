@@ -10,6 +10,7 @@ import OwnerDetails from "../molecules/OwnersDetailsUIContainer";
 import SalesInformation from "../molecules/SalesInformationUIContainer";
 import { formSections } from "../../../CreateProperty/functionality/constants/form_data";
 import { FormSection } from "../../../CreateProperty/ui/organisms/FormSections";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const EditPropertyPage = () => {
   const {
@@ -90,7 +91,7 @@ const EditPropertyPage = () => {
           className={
             "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
           }
-          onClick={() => push("/properties")}
+          onClick={() => push(AppRoutes.PROPERTIES)}
           loading={loading}
         />
         <Button

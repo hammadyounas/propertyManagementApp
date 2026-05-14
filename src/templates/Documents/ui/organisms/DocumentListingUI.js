@@ -14,6 +14,7 @@ import EmailModal from "../molecules/EmailModal";
 import { dateFormat } from "../../../../libs/utils/helper";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
 import PaginationUI from "../../../../components/ui/molecules/PaginationUI";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export default function DocumentListingUI({
   documents,
@@ -66,7 +67,7 @@ export default function DocumentListingUI({
               <Button
                 text="Deleted Documents"
                 icon="heroicons:trash"
-                onClick={() => router.push("/documents/deleted")}
+                onClick={() => router.push(AppRoutes.DOCUMENTS_DELETED)}
                 className="btn-secondary max-lg:hidden bg-black-500 dark:bg-slate-700 w-full whitespace-nowrap font-medium"
               />
             </span>

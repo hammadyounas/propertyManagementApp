@@ -19,6 +19,7 @@ import {
   getRequest,
   patchRequest,
 } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
 import { getAllUsersByName } from "../../../../libs/api/users";
 import { formSections } from "../../../CreateProperty/functionality/constants/form_data";
@@ -641,7 +642,7 @@ const useCreateForm = () => {
       if (response) {
         console.log("Response:", response);
         toast.success("Property updated successfully!");
-        push("/properties");
+        push(AppRoutes.PROPERTIES);
       } else {
         throw new Error("Failed to update property");
       }

@@ -2,26 +2,13 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import Card from "../../../components/combined/molecules/CardUIContainer";
 import Link from "next/link";
+import { salesTeamDetailFields } from "../functional/constants/data";
+import { propertyViewPath } from "@/constants/appRoutes";
 
 export default function ViewSalesTeamUIOld({
   salesteamData = {},
   handleEdit,
 }) {
-  const userDataFields = [
-    // { label: "Name", valueKey: "name" },
-    // { label: "Email address", valueKey: "email" },
-    { label: "Phone number", valueKey: "contact_number" },
-    { label: "Address", valueKey: "address" },
-    { label: "Licence Number", valueKey: "licence_number" },
-    { label: "Licence Type", valueKey: "licence_type" },
-    { label: "Status", valueKey: "status" },
-    { label: "Joining Date", valueKey: "joining_date" },
-    { label: "Role", valueKey: "role" },
-    { label: "Client Type", valueKey: "client_type" },
-    { label: "Communication Channel", valueKey: "communication_channel" },
-    { label: "Notes", valueKey: "notes" },
-  ];
-
   return (
     <Card title={salesteamData?.name} subtitle={salesteamData?.email}>
       <div className="flex items-center text-green-700">
@@ -43,7 +30,7 @@ export default function ViewSalesTeamUIOld({
                 <img src={salesteamData?.name} alt="" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-4 capitalize ">
-                {userDataFields?.map(({ label, valueKey }) => (
+                {salesTeamDetailFields?.map(({ label, valueKey }) => (
                   <div
                     key={valueKey}
                     className={`${
@@ -75,7 +62,7 @@ export default function ViewSalesTeamUIOld({
                     {salesteamData?.assigned_properties?.length
                       ? salesteamData.assigned_properties.map((property) => (
                           <p key={property._id}>
-                            <Link href={`/properties/view/${property._id}`}>
+                            <Link href={propertyViewPath(property._id)}>
                               {property.title}
                             </Link>
                           </p>

@@ -5,6 +5,7 @@ import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes, clientEditPath, clientViewPath } from "@/constants/appRoutes";
 const TableUI = ({
   columns,
   rows,
@@ -24,7 +25,7 @@ const TableUI = ({
             <Button
               text="Add Client"
               icon="heroicons:plus"
-              onClick={() => push("/clients/create")}
+              onClick={() => push(AppRoutes.CLIENTS_CREATE)}
               className="btn-primary text-sm bg-primary-default w-full font-normal"
             />
           </span>
@@ -99,12 +100,12 @@ const TableUI = ({
                       <td className="table-td">
                         <div className="flex justify-center items-center">
                           <Icon
-                            onClick={() => push(`/clients/view/${row?._id}`)}
+                            onClick={() => push(clientViewPath(row?._id))}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
                           <Icon
-                            onClick={() => push(`/clients/edit/${row?._id}`)}
+                            onClick={() => push(clientEditPath(row?._id))}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:pencil-square"}
                           />

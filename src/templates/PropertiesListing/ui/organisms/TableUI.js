@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes, propertyEditPath, propertyViewPath } from "@/constants/appRoutes";
 
 const TableUI = ({
   columns,
@@ -52,7 +53,7 @@ const TableUI = ({
               <Button
                 text="Add Property"
                 icon="heroicons:plus"
-                onClick={() => push("/properties/create")}
+                onClick={() => push(AppRoutes.PROPERTIES_CREATE)}
                 className="btn-primary text-sm bg-primary-default w-full whitespace-nowrap font-medium"
               />
             </span>
@@ -171,12 +172,12 @@ const TableUI = ({
                       <td className="table-td sm:p-4 p-2">
                         <div className="flex">
                           <Icon
-                            onClick={() => push(`/properties/view/${row?._id}`)}
+                            onClick={() => push(propertyViewPath(row?._id))}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
                           <Icon
-                            onClick={() => push(`/properties/edit/${row?._id}`)}
+                            onClick={() => push(propertyEditPath(row?._id))}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:pencil-square"}
                           />

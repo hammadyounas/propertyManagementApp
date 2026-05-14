@@ -6,6 +6,7 @@ import PDFPreview from "../../../../components/PDFPreview";
 import PDFGenerator from "../../../../components/PDFGenerator";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export default function FormUI({
   register,
@@ -163,7 +164,7 @@ export default function FormUI({
                 className={
                   "md:!w-36 bg-transparent border border-black-default !text-black-default"
                 }
-                onClick={() => push("/acms")}
+                onClick={() => push(AppRoutes.ACMS)}
                 loading={loading}
               />
               {/* <Button

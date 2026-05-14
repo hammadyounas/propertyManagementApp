@@ -16,6 +16,11 @@ import {
 } from "../../../store/features/documents/documentSelectors";
 import { fetchTemplate } from "../../../store/features/templates/templateSlice";
 import { selectTemplates } from "../../../store/features/templates/templateSelectors";
+import {
+  AppRoutes,
+  documentCreateWithTemplateQuery,
+  documentEditPath,
+} from "@/constants/appRoutes";
 
 export default function useDesignListing() {
   const router = useRouter();
@@ -72,7 +77,7 @@ export default function useDesignListing() {
   };
 
   const handleEdit = (document) => {
-    router.push(`/documents/edit/${document._id || document.id}`);
+    router.push(documentEditPath(String(document._id || document.id)));
   };
 
   const handleDelete = async ({ documentId } = {}) => {
@@ -129,7 +134,7 @@ export default function useDesignListing() {
   };
 
   const handleBack = () => {
-    router.push("/documents");
+    router.push(AppRoutes.DOCUMENTS);
   };
 
   const handleOpenTemplateModal = () => {
@@ -147,7 +152,7 @@ export default function useDesignListing() {
       return;
     }
     setShowTemplateModal(false);
-    router.push(`/documents/create?template=${templateId}`);
+    router.push(documentCreateWithTemplateQuery(templateId));
   };
 
   // Pagination logic

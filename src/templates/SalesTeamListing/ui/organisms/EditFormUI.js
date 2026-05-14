@@ -6,6 +6,8 @@ import ReactSelect from "react-select";
 import Textarea from "../../../../components/combined/molecules/TextareaUIContainer";
 import RadioButton from "../../../../components/ui/atoms/RadioButtin";
 import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
+import { licenceTypeRadioOptions } from "../../functionality/constants/formOptions";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const EditFormUI = ({
   handleSubmit,
@@ -99,11 +101,7 @@ const EditFormUI = ({
                     error={errors.licence_type}
                     placeholder="Licence"
                     disabled={loading}
-                    radioOptions={[
-                      { label: "Residential", value: "residential" },
-                      { label: "Commercial", value: "commercial" },
-                      { label: "Director", value: "director" },
-                    ]}
+                    radioOptions={licenceTypeRadioOptions}
                     className="text-sm"
                   />
                 </div>
@@ -230,7 +228,7 @@ const EditFormUI = ({
                   className={
                     "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                   }
-                  onClick={() => push("/broker")}
+                  onClick={() => push(AppRoutes.BROKER)}
                   loading={loading}
                 />
                 <Button

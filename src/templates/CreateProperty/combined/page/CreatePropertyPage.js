@@ -9,6 +9,7 @@ import PricingAndSize from "../molecules/PricingAndSizeUIContainer";
 import OwnerDetails from "../molecules/OwnersDetailsUIContainer";
 import SalesInformation from "../molecules/SalesInformationUIContainer";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const CreatePropertyPage = () => {
   const {
@@ -208,7 +209,7 @@ const CreatePropertyPage = () => {
           className={
             "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
           }
-          onClick={() => push("/properties")}
+          onClick={() => push(AppRoutes.PROPERTIES)}
           loading={loading}
         />
         <Button

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { csvHeaderMap } from "../constants/data";
 import { useAutoSave } from "../../../../hooks/useAutoSave";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export const usePropertyForm = () => {
   const [formData, setFormData] = useState({});
@@ -933,7 +934,7 @@ export const usePropertyForm = () => {
         console.log('✅ Individual properties submitted successfully:', response);
         setSubmitStatus('success');
         clearAutoSave(); // Clear auto-save data after successful submission
-        router.push('/properties');
+        router.push(AppRoutes.PROPERTIES);
         
         return {
           success: true,
@@ -954,7 +955,7 @@ export const usePropertyForm = () => {
         console.log('✅ Form submitted successfully:', response);
         setSubmitStatus('success');
         clearAutoSave(); // Clear auto-save data after successful submission
-        router.push('/properties');
+        router.push(AppRoutes.PROPERTIES);
         
         return {
           success: true,

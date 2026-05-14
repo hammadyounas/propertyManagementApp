@@ -4,6 +4,8 @@ import Card from "../../../../components/combined/molecules/CardUIContainer";
 import Button from "../../../../components/ui/atoms/Button";
 import ReactSelect from "react-select";
 import RadioButton from "../../../../components/ui/atoms/RadioButtin";
+import { licenceTypeRadioOptions } from "../../functionality/constants/data";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const FormUI = ({
   handleSubmit,
@@ -91,11 +93,7 @@ const FormUI = ({
                   error={errors.licence_type}
                   placeholder="Licence"
                   disabled={loading}
-                  radioOptions={[
-                    { label: "Residential", value: "residential" },
-                    { label: "Commercial", value: "commercial" },
-                    { label: "Director", value: "director" },
-                  ]}
+                  radioOptions={licenceTypeRadioOptions}
                   className="text-sm"
                 />
               </div>
@@ -234,7 +232,7 @@ const FormUI = ({
                 className={
                   "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
                 }
-                onClick={() => push("/broker")}
+                onClick={() => push(AppRoutes.BROKER)}
                 loading={loading}
               />
               <Button

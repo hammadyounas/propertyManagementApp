@@ -14,6 +14,7 @@ import {
   selectError,
   selectRestoreSuccess,
 } from "../../../store/features/documents/documentSelectors";
+import { AppRoutes } from "@/constants/appRoutes";
 
 export default function useDeletedDocuments() {
   const router = useRouter();
@@ -106,7 +107,7 @@ export default function useDeletedDocuments() {
   };
 
   const handleBack = () => {
-    router.push("/documents");
+    router.push(AppRoutes.DOCUMENTS);
   };
 
   // Pagination logic

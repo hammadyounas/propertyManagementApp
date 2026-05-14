@@ -10,6 +10,7 @@ import { dateFormat, getStatusClasses } from "../../../../libs/utils/helper";
 import Dropdown from "../../../../components/ui/organisms/Dropdown";
 import DropdownUINew from "../../../../components/ui/organisms/DropdownUINew";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const TableUI = ({
   columns,
@@ -52,7 +53,7 @@ const TableUI = ({
               <Button
                 text="Create Invoice"
                 icon="heroicons:plus"
-                onClick={() => push("/invoices/create")}
+                onClick={() => push(AppRoutes.INVOICES_CREATE)}
                 className="btn-primary text-sm bg-primary-default w-full font-normal"
               />
             </span>

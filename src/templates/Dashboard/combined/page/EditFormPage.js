@@ -4,6 +4,7 @@ import FormUI from "../../ui/organisms/FormUI";
 import Button from "../../../../components/ui/atoms/Button";
 import EditDashboardForm from "../../ui/molecule/EditForm";
 import useEditForm from "../../functionality/page/useEditForm";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const EditFormPage = () => {
   const {
@@ -51,7 +52,7 @@ const EditFormPage = () => {
             className={
               "md:!w-36 mx-4 bg-transparent border border-black-default !text-black-default"
             }
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(AppRoutes.DASHBOARD)}
             loading={loading}
           />
           <Button

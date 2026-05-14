@@ -11,7 +11,7 @@ import {
   getRequest,
   patchRequest,
 } from "../../../../libs/utils/request_handler";
-import { getAllUsersByName } from "../../../../libs/api/users";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useEditForm = () => {
   const [loading, setLoading] = useState(false);
@@ -131,7 +131,7 @@ const useEditForm = () => {
 
       if (response) {
         toast.success("Client updated successfully!");
-        push("/clients");
+        push(AppRoutes.CLIENTS);
       } else {
         toast.error("Failed to update client.");
         throw new Error("API response was invalid.");

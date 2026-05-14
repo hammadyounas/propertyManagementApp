@@ -9,6 +9,8 @@ import {
   patchRequest,
 } from "../../../../libs/utils/request_handler";
 import { getAllPropertiesByTitle } from "../../../../libs/api/properties";
+import { salespersonStatus } from "../constants/formOptions";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useEditSalesTeam = () => {
   const schema = yup.object({
@@ -39,11 +41,6 @@ const useEditSalesTeam = () => {
   } = useForm({
       resolver: yupResolver(schema),
   });
-
-  const salespersonStatus = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-  ];
 
   const [loading, setLoading] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false)
@@ -146,7 +143,7 @@ const useEditSalesTeam = () => {
       const response = await patchRequest(`user/${userId}`, formData);
       if (response) {
         toast.success("User updated successfully!");
-        push("/broker");
+        push(AppRoutes.BROKER);
       } else {
         throw new Error("Failed to update user.");
       }

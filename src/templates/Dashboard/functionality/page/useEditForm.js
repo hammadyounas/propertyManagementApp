@@ -9,6 +9,7 @@ import {
   getRequest,
   patchRequest,
 } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 
 const useEditForm = () => {
   const schema = yup.object({
@@ -172,7 +173,7 @@ const useEditForm = () => {
       const response = await patchRequest(`dashboard/${id}`, formData);
       if (response) {
         toast.success("Dashboard entry edited successfully!");
-        router.push("/dashboard");
+        router.push(AppRoutes.DASHBOARD);
       } else {
         toast.error("Dashboard entry update failed");
       }

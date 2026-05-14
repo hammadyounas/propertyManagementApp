@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import Tooltip from "../../../../components/ui/atoms/Tooltip";
 import GlobalFilter from "../../../../components/ui/atoms/GlobalFilter";
 import Button from "../../../../components/ui/molecules/Button";
+import { AppRoutes } from "@/constants/appRoutes";
 const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
   return (
     <Card noborder>
@@ -14,7 +15,7 @@ const TableUI = ({ columns, rows, globalFilter, setGlobalFilter, push }) => {
               <Button
                 text="Create Email Template"
                 icon="heroicons:plus"
-                onClick={() => push("/email-templates/create")}
+                onClick={() => push(AppRoutes.EMAIL_TEMPLATES_CREATE)}
                 className="btn-primary text-sm bg-primary-default w-full"
               />
             </span>

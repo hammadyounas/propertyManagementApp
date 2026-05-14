@@ -7,6 +7,7 @@ import LoadingUI from "../../../../components/ui/atoms/LoadingUI";
 import { ToastContainer } from "react-toastify";
 import { dateFormat } from "../../../../libs/utils/helper";
 import NoDataFound from "../../../../components/ui/atoms/NoDataFound";
+import { AppRoutes, brokerEditPath, brokerViewPath } from "@/constants/appRoutes";
 const TableUI = ({
   columns,
   rows,
@@ -46,7 +47,7 @@ const TableUI = ({
               <Button
                 text="Add Broker"
                 icon="heroicons:plus"
-                onClick={() => push("/broker/create")}
+                onClick={() => push(AppRoutes.BROKER_CREATE)}
                 className="btn-primary text-sm bg-primary-default w-full font-normal"
               />
             </span>
@@ -127,12 +128,12 @@ const TableUI = ({
                       <td className="table-td ">
                         <div className="flex justify-center">
                           <Icon
-                            onClick={() => push(`/broker/view/${row._id}`)}
+                            onClick={() => push(brokerViewPath(row._id))}
                             className="cursor-pointer text-[20px]"
                             icon={"heroicons:eye"}
                           />
                           <Icon
-                            onClick={() => push(`/broker/edit/${row._id}`)}
+                            onClick={() => push(brokerEditPath(row._id))}
                             className="cursor-pointer text-[20px] mx-4"
                             icon={"heroicons:pencil-square"}
                           />

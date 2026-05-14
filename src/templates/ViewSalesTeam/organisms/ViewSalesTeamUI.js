@@ -1,25 +1,13 @@
 import Card from "../../../components/combined/molecules/CardUIContainer";
 import Link from "next/link";
 import DropdownMenu from "../../../components/ui/organisms/DropdownMenu";
+import { salesTeamDetailFields } from "../functional/constants/data";
+import { propertyViewPath } from "@/constants/appRoutes";
 
 export default function ViewSalesTeamUI({
   salesteamData = {},
   handleEdit,
 }) {
-  const userDataFields = [
-    // { label: "Name", valueKey: "name" },
-    // { label: "Email address", valueKey: "email" },
-    { label: "Phone number", valueKey: "contact_number" },
-    { label: "Address", valueKey: "address" },
-    { label: "Licence Number", valueKey: "licence_number" },
-    { label: "Licence Type", valueKey: "licence_type" },
-    { label: "Status", valueKey: "status" },
-    { label: "Joining Date", valueKey: "joining_date" },
-    { label: "Role", valueKey: "role" },
-    { label: "Client Type", valueKey: "client_type" },
-    { label: "Communication Channel", valueKey: "communication_channel" },
-    { label: "Notes", valueKey: "notes" },
-  ];
   return (
     <Card>
       <Card className="sm:p-2 lg:w-[40%] sm:w-[50%] border bg-gray-50 rounded-lg shadow-sm text-sm max-sm:mb-2 w-full">
@@ -43,7 +31,7 @@ export default function ViewSalesTeamUI({
 
         {/* user details */}
         <div className="mt-10">
-          {userDataFields?.map(({ label, valueKey }) => (
+          {salesTeamDetailFields?.map(({ label, valueKey }) => (
             <div
               key={valueKey}
               className={`${
@@ -67,7 +55,7 @@ export default function ViewSalesTeamUI({
                 {salesteamData?.assigned_properties?.map((property, index) => (
                   <div key={index}>
                     <Link
-                      href={`/properties/view/${property._id}`}
+                      href={propertyViewPath(property._id)}
                       className=""
                     >
                       <p className="flex items-center gap-2 ">

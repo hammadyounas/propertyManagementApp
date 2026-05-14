@@ -11,6 +11,7 @@ import {
   getRequest,
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
+import { AppRoutes } from "@/constants/appRoutes";
 import { useSelector } from "react-redux";
 
 const usePropertyDetails = () => {
@@ -44,7 +45,7 @@ const usePropertyDetails = () => {
     try {
       await deleteRequest(`properties/${id}`);
       toast.success("Property deleted successfully.");
-      push("/properties");
+      push(AppRoutes.PROPERTIES);
     } catch (error) {
       console.error("Error deleting property:", error);
       toast.error(

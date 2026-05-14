@@ -19,6 +19,7 @@ import {
   getRequest,
   postRequest,
 } from "../../../../libs/utils/request_handler";
+import { AppRoutes } from "@/constants/appRoutes";
 import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
 
@@ -431,7 +432,7 @@ const useCreateForm = () => {
         }
 
         toast.success("Properties from CSV added successfully!");
-        push("/properties");
+        push(AppRoutes.PROPERTIES);
       }
 
       // If manual input
@@ -484,7 +485,7 @@ const useCreateForm = () => {
         }
 
         toast.success("Property added successfully!");
-        push("/properties");
+        push(AppRoutes.PROPERTIES);
       }
     } catch (error) {
       console.error("Error adding property:", error);
