@@ -27,7 +27,7 @@ export default function ViewSalesTeamUI({
         <div className="flex items-center justify-between capitalize">
           <div className="flex items-center gap-4">
             <img
-              src={salesteamData?.avatar || "/assets/images/users/default.jpg"}
+              src={salesteamData?.avatar ? salesteamData?.avatar : "/assets/images/users/default.jpg"}
               alt={salesteamData?.name}
               className="w-12 h-12 object-cover rounded-lg"
             />

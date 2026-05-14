@@ -112,8 +112,7 @@ const TableUI = ({
                         <div className="flex items-center justify-center">
                           <img
                             src={
-                              row?.created_by?.avatar ||
-                              "/assets/images/users/default.jpg"
+                              row?.created_by?.avatar ? row?.created_by?.avatar : "/assets/images/users/default.jpg"
                             }
                             alt={row?.created_by?.name}
                             className="block w-8 h-8 rounded-full mr-4"

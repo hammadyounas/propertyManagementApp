@@ -155,8 +155,7 @@ const TableUI = ({
                               >
                                 <img
                                   src={
-                                    salesperson?.avatar ||
-                                    "/assets/images/users/user-1.jpg"
+                                    salesperson?.avatar ? salesperson?.avatar : "/assets/images/users/default.jpg"
                                   } // Replace with actual avatar URL if available
                                   alt={salesperson.name}
                                   className="block w-8 h-8 object-cover rounded-full mx-auto"

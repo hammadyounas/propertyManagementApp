@@ -359,8 +359,7 @@ const DashboardTableUI = ({
                       <td className="table-td sm:p-4 p-2 flex justify-center items-center">
                         <img
                           src={
-                            row?.created_by?.avatar ||
-                            "/assets/images/users/default.jpg"
+                            row?.created_by?.avatar ? row?.created_by?.avatar : "/assets/images/users/default.jpg"
                           } // Replace with actual avatar URL if available
                           alt={row?.created_by?.name}
                           className="block w-8 h-8 object-cover rounded-full mr-2"

@@ -84,8 +84,7 @@ const TableUI = ({
                         <div className="flex justify-center">
                           <img
                             src={
-                              row.base_property?.images?.[0] ||
-                              "/assets/images/all-img/no-property-img.png"
+                              row.base_property?.images?.[0] ? row.base_property?.images?.[0] : "/assets/images/all-img/no-property-img.png"
                             }
                             alt=""
                             className="block w-8 h-8 object-cover rounded-md mr-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -134,8 +133,7 @@ const TableUI = ({
                                   >
                                     <img
                                       src={
-                                        property?.images[0] ||
-                                        "/assets/images/all-img/no-property-img.png"
+                                        property?.images[0] ? property?.images[0] : "/assets/images/all-img/no-property-img.png"
                                       }
                                       alt={property?.title || "Property"}
                                       className={`w-8 h-8 object-cover rounded-full cursor-pointer hover:opacity-80 transition-opacity ${
