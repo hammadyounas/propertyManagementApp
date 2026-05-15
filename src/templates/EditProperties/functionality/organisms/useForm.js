@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import { File } from "lucide-react";
+import { File as FileIcon } from "lucide-react";
 import {
   getRequest,
   patchRequest,
@@ -139,6 +139,7 @@ const useCreateForm = () => {
 
   const imageInputRef = useRef(null);
   const docInputRef = useRef(null);
+  const formDataRef = useRef({});
 
   const triggerImageFileInput = (inputRef) => {
     if (inputRef.current) {
@@ -194,7 +195,7 @@ const useCreateForm = () => {
             />
           ) : (
             <div className="flex flex-col justify-center items-center w-36 h-28">
-              <File size={50} />
+              <FileIcon size={50} />
               <p className="font-bold mt-2 text-center">
                 {fileName?.length > 16
                   ? `${fileName.slice(0, 8)}...${fileName.slice(-8)}`
@@ -362,11 +363,14 @@ const useCreateForm = () => {
           ) || ""
         );
         setSelectedSalespersons(salespersonDetails); // Correctly formatted for ReactSelect
+        const contractTypeValue = Array.isArray(propertyData.contract_type)
+          ? propertyData.contract_type[0]
+          : propertyData.contract_type;
         setContractType(
-          availableFacilities.filter((channel) =>
-            propertyData.contract_type?.includes(channel.value)
-          )
-        ); // Assuming amenities is being set from a predefined list
+          availableFacilities.find(
+            (channel) => channel.value === contractTypeValue
+          ) || null
+        );
         setOwnerDetails(
           ownerDetailsStatus.find(
             (item) => item.value === propertyData.owner_status
@@ -375,7 +379,7 @@ const useCreateForm = () => {
 
         // Set form values in a loop
         Object.entries(formFields).forEach(([key, value]) =>
-          setValue(key, value || "")
+          setValue(key, value != null && value !== "" ? value : "")
         );
 
         // Set additional states for images and documents
@@ -384,6 +388,7 @@ const useCreateForm = () => {
 
         // Populate formData state for FormSection approach
         setFormData(formFields);
+        formDataRef.current = formFields;
       }
       setGetDataLoading(false)
     } catch (error) {
@@ -520,131 +525,229 @@ const useCreateForm = () => {
     setSelectedClient(e);
   };
 
-  const onSubmit = async (data) => {
+  const isUploadFile = (value) =>
+    typeof window !== "undefined" &&
+    typeof window.File !== "undefined" &&
+    value instanceof window.File;
+
+  const setValueByPath = (obj, path, value) => {
+    const keys = path.split(".");
+    if (keys.length === 1) {
+      return { ...obj, [keys[0]]: value };
+    }
+    const [head, ...rest] = keys;
+    return {
+      ...obj,
+      [head]: setValueByPath(
+        obj[head] && typeof obj[head] === "object" ? obj[head] : {},
+        rest.join("."),
+        value
+      ),
+    };
+  };
+
+  const getValueByPath = (obj, path) => {
+    return path.split(".").reduce((current, key) => {
+      if (current == null) return undefined;
+      return current[key];
+    }, obj);
+  };
+
+  const shouldSendValue = (value) => {
+    if (value === null || value === undefined) return false;
+    if (Array.isArray(value)) return true;
+    if (value === "") return false;
+    if (typeof value === "number" && Number.isNaN(value)) return false;
+    if (value === 0 || value === false) return true;
+    return true;
+  };
+
+  const getFieldMeta = (fieldName) => {
+    for (const section of formSections) {
+      const field = section.fields.find((f) => f.name === fieldName);
+      if (field) return field;
+    }
+    return null;
+  };
+
+  const appendFormData = (data, formDataToSubmit, parentKey = "") => {
+    Object.keys(data).forEach((key) => {
+      if (["images", "documents", "assigned_to"].includes(key) && !parentKey) {
+        return;
+      }
+
+      const value = data[key];
+      const formKey = parentKey ? `${parentKey}.${key}` : key;
+
+      if (value === null || value === undefined) return;
+      if (value === "" && typeof value === "string") return;
+
+      if (isUploadFile(value)) {
+        formDataToSubmit.append(formKey, value);
+      } else if (Array.isArray(value)) {
+        if (value.length === 0) return;
+        if (isUploadFile(value[0])) {
+          value.forEach((file) => formDataToSubmit.append(formKey, file));
+        } else if (typeof value[0] === "object" && value[0]?.value) {
+          value.forEach((item) => formDataToSubmit.append(formKey, item.value));
+        } else {
+          value.forEach((item) => formDataToSubmit.append(formKey, item));
+        }
+      } else if (
+        typeof value === "object" &&
+        !(value instanceof Date) &&
+        value.constructor === Object
+      ) {
+        appendFormData(value, formDataToSubmit, formKey);
+      } else {
+        formDataToSubmit.append(
+          formKey,
+          value instanceof Date ? value.toISOString() : String(value)
+        );
+      }
+    });
+  };
+
+  const resolveFieldValue = (fieldName, sourceFormData) => {
+    const field = getFieldMeta(fieldName);
+    const fromRhf = getValueByPath(getValues(), fieldName);
+    const fromState = getValueByPath(sourceFormData, fieldName);
+
+    const textLike = ["text", "number", "textarea", "tel", "email", "date"].includes(
+      field?.type
+    );
+
+    // Text/number fields: formData is updated directly by FormSection inputs
+    if (textLike) {
+      if (shouldSendValue(fromState)) return fromState;
+      if (shouldSendValue(fromRhf)) return fromRhf;
+      return undefined;
+    }
+
+    if (field?.type === "multiselect") {
+      if (Array.isArray(fromState)) return fromState;
+      if (Array.isArray(fromRhf)) return fromRhf;
+      return undefined;
+    }
+
+    // Single select dropdowns: prefer RHF (synced via setValue on change)
+    if (shouldSendValue(fromRhf)) return fromRhf;
+    if (shouldSendValue(fromState)) return fromState;
+    return undefined;
+  };
+
+  const resolveAssignedTo = (sourceFormData = formDataRef.current) => {
+    const fromState = getValueByPath(sourceFormData, "assigned_to");
+    const fromRhf = getValues().assigned_to;
+
+    if (Array.isArray(fromState)) return fromState;
+    if (Array.isArray(fromRhf)) return fromRhf;
+    if (selectedSalespersons?.length) {
+      return selectedSalespersons.map((person) => person.value);
+    }
+    return [];
+  };
+
+  const buildPayloadFromFormSections = (sourceFormData = formDataRef.current) => {
+    const payload = {};
+    formSections.forEach((section) => {
+      section.fields.forEach((field) => {
+        const value = resolveFieldValue(field.name, sourceFormData);
+        if (value !== undefined) {
+          setValueByPath(payload, field.name, value);
+        }
+      });
+    });
+    return payload;
+  };
+
+  const prepareFormDataForSubmission = () => {
+    const payload = buildPayloadFromFormSections();
+    const formDataToSubmit = new FormData();
+    appendFormData(payload, formDataToSubmit);
+
+    // Always send critical scalars explicitly (avoids stale formData winning over RHF)
+    const forceSendFields = [
+      "title",
+      "description",
+      "property_type",
+      "property_status",
+      "ownership_status",
+      "contract_type",
+      "price",
+      "unit_size",
+      "no_of_units",
+      "address",
+      "street_number",
+      "street_name",
+      "city",
+      "municipality",
+      "cadastral_number",
+      "owner_name",
+      "phone_number",
+      "email",
+      "owner_address",
+    ];
+    forceSendFields.forEach((fieldName) => {
+      const value = resolveFieldValue(fieldName, formDataRef.current);
+      if (value !== undefined) {
+        formDataToSubmit.set(fieldName, String(value));
+      }
+    });
+
+    // All select fields from form sections (utilities, etc.)
+    formSections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.type !== "select") return;
+        if (forceSendFields.includes(field.name)) return;
+        const value = resolveFieldValue(field.name, formDataRef.current);
+        if (value !== undefined) {
+          formDataToSubmit.set(field.name, String(value));
+        }
+      });
+    });
+
+    // Broker multiselect lives in FormSection (assigned_to), not selectedSalespersons state
+    const assignedToValues = resolveAssignedTo();
+    assignedToValues
+      .filter((value) => value && String(value).trim() !== "")
+      .forEach((value) => formDataToSubmit.append("assigned_to", value));
+
+    removedImages?.forEach((img) => {
+      formDataToSubmit.append("removeImages", img);
+    });
+
+    selectedImages?.forEach((image) => {
+      if (isUploadFile(image)) {
+        formDataToSubmit.append("images", image);
+      }
+    });
+
+    selectedDocs?.forEach((doc) => {
+      if (isUploadFile(doc)) {
+        formDataToSubmit.append("documents", doc);
+      }
+    });
+
+    return formDataToSubmit;
+  };
+
+  const onSubmit = async () => {
     setLoading(true);
 
-    // Debug: Log the form data
-    console.log("Form data from react-hook-form:", data);
-    console.log("selectedSalespersons state:", selectedSalespersons);
-
     try {
-      const formData = new FormData();
+      const formDataToSubmit = prepareFormDataForSubmission();
 
-      // Check if 'type' or other fields have values, otherwise default to empty strings
-      formData.append("property_type", type && type.value ? type.value : "");
-      // formData.append(
-      //   "furnishing_status",
-      //   furnishing && furnishing.value ? furnishing.value : ""
-      // );
-      formData.append(
-        "property_status",
-        status && status.value ? status.value : ""
-      );
-      formData.append(
-        "owner_status",
-        ownerDetails && ownerDetails.value ? ownerDetails.value : ""
-      );
-
-      // Append other text fields
-      formData.append("title", data.title);
-      formData.append("ownership_status", data.ownership_status);
-      formData.append("no_of_units", data.no_of_units);
-      formData.append("description", data.description);
-      formData.append("address", data.address);
-      formData.append("street_number", data.street_number);
-      formData.append("street_name", data.street_name);
-      formData.append("cadastral_number", data.cadastral_number || ""); // Ensure no undefined
-      formData.append("city", data.city);
-      formData.append("municipality", data.municipality);
-      formData.append("location_map_url", data.location_map_url);
-      formData.append("price", data.price);
-      formData.append("unit_size", data.unit_size);
-      formData.append("no_of_garages", data.no_of_garages);
-      formData.append("no_of_parking_places", data.no_of_parking_places);
-      formData.append("owner_name", data.owner_name);
-      formData.append("phone_number", data.phone_number);
-      formData.append("email", data.email);
-      formData.append("owner_address", data.owner_address);
-      // formData.append("contract_type", data.contract_type.value);
-
-      // Append amenities and assigned_to arrays
-      if (contract_type?.length) {
-        const validContractTypes = contract_type
-          .filter((amenity) => amenity && amenity.value && amenity.value.trim() !== '');
-        
-        if (validContractTypes.length > 0) {
-          validContractTypes.forEach((amenity) => {
-            formData.append("contract_type", amenity.value);
-          });
-        }
-      }
-      // Don't append contract_type if it's empty - let the backend handle it
-
-      // Debug: Log selectedSalespersons state
-      console.log("selectedSalespersons:", selectedSalespersons);
-      console.log("data.assigned_to from form:", data.assigned_to);
-      
-      // Use the assigned_to value from the form data if available, otherwise use selectedSalespersons
-      const assignedToValues = data.assigned_to || selectedSalespersons?.map(person => person.value) || [];
-      console.log("assignedToValues to be sent:", assignedToValues);
-      
-      if (assignedToValues?.length) {
-        const validSalespersons = assignedToValues
-          .filter((value) => value && value.trim() !== '');
-        
-        console.log("validSalespersons:", validSalespersons);
-        
-        if (validSalespersons.length > 0) {
-          validSalespersons.forEach((value) => {
-            formData.append("assigned_to", value);
-          });
-        }
-      }
-      // Don't append assigned_to if it's empty - let the backend handle it
-
-      if (removedImages?.length) {
-        removedImages.forEach((img) => {
-          formData.append("removeImages", img);
-        });
-      }
-      // Don't append removeImages if it's empty - let the backend handle it
-
-      // Append selected images
-      selectedImages?.forEach((image) => {
-        formData.append("images", image);
-        console.log("Image:", image);
-      });
-
-      // Append selected documents
-      selectedDocs?.forEach((doc) => {
-        formData.append("documents", doc);
-        console.log("Doc:", doc);
-      });
-
-      // Debug: Log FormData entries
-      console.log("=== FormData Debug ===");
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-      console.log("=== End FormData Debug ===");
-
-      // Make PUT request with FormData
       const response = await patchRequest(
         `properties/${propertyId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Ensure correct content type
-          },
-        }
+        formDataToSubmit
       );
 
-      if (response) {
-        console.log("Response:", response);
-        toast.success("Property updated successfully!");
+      if (response?.status) {
+        toast.success(response.message || "Property updated successfully!");
         push(AppRoutes.PROPERTIES);
       } else {
-        throw new Error("Failed to update property");
+        throw new Error(response?.message || "Failed to update property");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -667,61 +770,64 @@ const useCreateForm = () => {
   };
 
   const handleInputChange = (name, value) => {
-    // Handle nested object paths (e.g., "revenue.residential.yearly")
-    const setNestedValue = (obj, path, value) => {
-      const keys = path.split(".");
-      let current = obj;
-
-      for (let i = 0; i < keys.length - 1; i++) {
-        const key = keys[i];
-        if (!current[key] || typeof current[key] !== "object") {
-          current[key] = {};
-        }
-        current = current[key];
-      }
-
-      current[keys[keys.length - 1]] = value;
-      return { ...obj };
-    };
-
-    // Debug: Log assigned_to changes
-    if (name === "assigned_to") {
-      console.log("assigned_to changed:", value);
-    }
-
-    // Special handling for images field
     if (name === "images") {
       setSelectedImages(value || []);
     }
 
-    setFormData((prev) => setNestedValue(prev, name, value));
+    if (name === "property_type") {
+      setType(propertyTypes.find((item) => item.value === value) || null);
+    }
+    if (name === "property_status") {
+      setStatus(propertyStatus.find((item) => item.value === value) || null);
+    }
+    if (name === "ownership_status") {
+      setOwnership(ownershipStatus.find((item) => item.value === value) || null);
+    }
+    if (name === "contract_type") {
+      setContractType(
+        availableFacilities.find((item) => item.value === value) || null
+      );
+    }
+    if (name === "assigned_to") {
+      const ids = Array.isArray(value) ? value : [];
+      setSelectedSalespersons(
+        salesPerson
+          .filter(
+            (person) =>
+              ids.includes(person._id) || ids.includes(String(person._id))
+          )
+          .map((person) => ({
+            label: person.name,
+            value: person._id,
+          }))
+      );
+    }
 
-    // Also update react-hook-form value
-    setValue(name, value);
+    setFormData((prev) => {
+      const next = setValueByPath(prev, name, value);
+      formDataRef.current = next;
+      return next;
+    });
+
+    setValue(name, value, { shouldDirty: true, shouldValidate: true });
   };
 
   const getNestedValue = (obj, path) => {
-    // Special handling for images field - return from selectedImages state
     if (path === "images") {
       return selectedImages;
     }
-    
-    // First try to get value from react-hook-form
-    const formValues = getValues();
-    const formValue = path.split(".").reduce((current, key) => {
-      return current && current[key] !== undefined ? current[key] : "";
-    }, formValues);
-    
-    if (formValue !== "") {
-      return formValue;
+
+    const formDataValue = getValueByPath(obj, path);
+    if (formDataValue !== undefined && formDataValue !== null && formDataValue !== "") {
+      return formDataValue;
     }
-    
-    // Fall back to formData state
-    const formDataValue = path.split(".").reduce((current, key) => {
-      return current && current[key] !== undefined ? current[key] : "";
-    }, obj);
-    
-    return formDataValue;
+    if (formDataValue === 0 || formDataValue === false) {
+      return formDataValue;
+    }
+
+    const formValues = getValues();
+    const formValue = getValueByPath(formValues, path);
+    return formValue !== undefined && formValue !== null ? formValue : "";
   };
 
   const getSectionErrors = (section) => {

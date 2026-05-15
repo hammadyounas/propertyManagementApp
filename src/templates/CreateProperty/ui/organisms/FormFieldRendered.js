@@ -121,7 +121,7 @@ export const FormFieldRenderer = ({
           name={field.name}
           type={field.type}
           placeholder={field.placeholder}
-          value={value || ''}
+          value={value ?? ''}
           onChange={(e) => onChange(field.name, e.target.value)}
           className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm ${
             errorMessage ? 'border-red-500' : ''
@@ -142,7 +142,7 @@ export const FormFieldRenderer = ({
         label={`${field.label}${field.required ? ' *' : ''}`}
         placeholder={field.placeholder}
         name={field.name}
-        value={value || ''}
+        value={value ?? ''}
         onChange={(e) => onChange(field.name, e.target.value)}
         error={errorMessage}
         hasicon={field.type === 'password'}

@@ -27,7 +27,7 @@ const AmenitiesUI = ({
               isDisabled={loading}
               className="text-sm"
             />
-            {errors?.contract_type && contract_type.length == 0 && (
+            {errors?.contract_type && !contract_type && (
               <p className="text-sm text-danger-500 mt-2">
                 {errors?.contract_type?.message}
               </p>
