@@ -1,40 +1,238 @@
-# Property Frontend
+# Property Management System — Frontend
 
-## Getting Started
+Web application for the Property Management System. Built with Next.js and connects to the [property-management-backend](https://github.com/hammadyounas/property-management-backend) REST API.
 
-First, run the development server:
+**Stack:** Next.js 14 · React 18 · Redux Toolkit · Tailwind CSS · TypeScript
+
+---
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Production Build](#production-build)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## Prerequisites
+
+| Requirement | Version |
+|-------------|---------|
+| [Node.js](https://nodejs.org/) | 18+ (20 recommended) |
+| npm | Latest recommended |
+| Backend API | Running at the URL set in `NEXT_PUBLIC_API_URL` |
+
+The backend must be running before you can log in or use API features.
+
+---
+
+## Quick Start
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/hammadyounas/propertyManagementApp.git
+cd propertyManagementApp
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:9000
+NEXT_PUBLIC_API_PREFIX=api/v1.0.0
+NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY=your_license_key
+```
+
+### 3. Start the backend
+
+In the backend repo:
+
+```bash
+cd ../property-management-backend
+npm run dev
+```
+
+Backend runs at **http://localhost:9000**
+
+### 4. Start the frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:3000** in your browser.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Environment Variables
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Copy `.env.example` to `.env` and fill in your values.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_API_URL` | Yes | Backend base URL (no trailing slash) |
+| `NEXT_PUBLIC_API_PREFIX` | Yes | API path prefix (must match backend version) |
+| `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` | Yes* | Syncfusion document editor license |
 
-## Learn More
+\* Required for Syncfusion document editor features. Get a free community license at [syncfusion.com](https://www.syncfusion.com/sales/communitylicense).
 
-To learn more about Next.js, take a look at the following resources:
+### Environment examples
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Local development:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_API_URL=http://localhost:9000
+NEXT_PUBLIC_API_PREFIX=api/v1.0.0
+```
 
-## Deploy on Vercel
+**Production:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+NEXT_PUBLIC_API_PREFIX=api/v1.0.0
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+> Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not put secrets other than the Syncfusion license here.
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server on port 3000 |
+| `npm run build` | Create production build |
+| `npm start` | Run production build |
+| `npm run lint` | Run ESLint |
+
+---
+
+## Project Structure
+
+```
+propertyManagementApp/
+├── src/
+│   ├── components/      # Shared UI components
+│   ├── configs/         # API URL & prefix constants
+│   ├── libs/            # Utilities & API helpers
+│   ├── pages/           # Next.js pages (routing)
+│   ├── store/           # Redux store
+│   └── templates/       # Page-level feature modules
+├── public/
+│   └── lib/webviewer/   # PDFTron WebViewer assets
+├── .env.example         # Environment template
+└── tailwind.config.js
+```
+
+---
+
+## Features
+
+| Module | Description |
+|--------|-------------|
+| Login / Auth | JWT-based authentication |
+| Properties | Create, edit, and manage property listings |
+| Clients | Client management |
+| Dashboard | Deal tracking with commission & closing dates |
+| Meetings | Calendar with FullCalendar |
+| Invoices | Invoice creation and PDF generation |
+| Documents | Document editor (Syncfusion), PDF viewer (PDFTron) |
+| ACM | ACM listing management |
+| Email Marketing | Campaign creation and sending |
+| Sales Team | User / team management |
+
+Authentication tokens are stored in `localStorage` (`auth_token`, `user_id`, `role`).
+
+---
+
+## Production Build
+
+```bash
+npm run build
+npm start
+```
+
+Set production environment variables before building. Next.js bakes `NEXT_PUBLIC_*` values into the build at compile time.
+
+```bash
+# Example for production
+NEXT_PUBLIC_API_URL=https://your-api-domain.com npm run build
+```
+
+Or configure variables in your hosting platform (Vercel, DigitalOcean, etc.) before deploying.
+
+---
+
+## Deployment
+
+### Vercel (recommended for Next.js)
+
+1. Import the GitHub repository in [Vercel](https://vercel.com).
+2. Set environment variables in project settings:
+   - `NEXT_PUBLIC_API_URL`
+   - `NEXT_PUBLIC_API_PREFIX`
+   - `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY`
+3. Deploy.
+
+### DigitalOcean / VPS
+
+```bash
+npm run build
+pm2 start npm --name property-frontend -- start
+pm2 save
+```
+
+Use Nginx to proxy your domain to port 3000.
+
+Ensure the backend `FRONTEND_URL` in its `.env` matches your deployed frontend URL (used for password reset emails).
+
+---
+
+## Troubleshooting
+
+### API requests fail / CORS errors
+
+- Confirm the backend is running at `NEXT_PUBLIC_API_URL`.
+- Check `NEXT_PUBLIC_API_PREFIX` matches the backend (`api/v1.0.0`).
+- Restart the dev server after changing `.env`.
+
+### Login does not work
+
+- Verify backend `MONGO_URI` points to a database with user records.
+- Check browser DevTools → Network for failed `/users/login` requests.
+
+### Syncfusion editor not loading
+
+- Set a valid `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` in `.env`.
+- Restart `npm run dev` after updating env vars.
+
+### Env changes not applied
+
+Next.js reads `.env` at startup. Always restart the dev server after editing `.env`.
+
+---
+
+## Related Repositories
+
+| Repo | Description |
+|------|-------------|
+| [property-management-backend](https://github.com/hammadyounas/property-management-backend) | Express REST API |
+
+---
+
+## License
+
+Private
