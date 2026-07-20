@@ -64,9 +64,9 @@ const TableUI = ({
                     </td>
                   </tr>
                 ) : (
-                  rows?.map((row, i) => (
+                  rows?.map((row) => (
                     <tr
-                      key={i}
+                      key={row?._id}
                       className="even:bg-slate-200 dark:even:bg-slate-700"
                     >
                       <td className="table-td">

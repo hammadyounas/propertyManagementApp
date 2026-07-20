@@ -1,7 +1,7 @@
 import { getRequest, postRequest, searchParams } from "../../../libs/utils/request_handler";
 
-export const fetchClientAPI = async ({ search = "", page, limit, all = true }) => {
-  const queryParams = searchParams({ search, page, limit, all });
+export const fetchClientAPI = async ({ search = "", page, limit, all = false }) => {
+  const queryParams = searchParams({ search, page, limit, all: all ? true : undefined });
 
   const response = await getRequest(`clients?${queryParams.toString()}`);
   const clients = response?.data?.clients.filter((client) => !client.isDeleted);

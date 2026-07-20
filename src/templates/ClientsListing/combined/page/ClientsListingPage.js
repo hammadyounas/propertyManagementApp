@@ -45,7 +45,7 @@ const ClientsListingPage = () => {
           containerClassName={"pagination"}
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
-          initialPage={currentPage - 1}
+          forcePage={currentPage - 1}
         />
       </div>
       <ConfirmDeleteModal

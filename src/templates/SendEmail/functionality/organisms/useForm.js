@@ -67,7 +67,7 @@ const useCreateForm = () => {
 
   const fetchBrokers = async () => {
     try {
-      const response = await getRequest("users");
+      const response = await getRequest("users?all=true");
       if (response) {
         const brokersData = response?.data?.map((broker) => ({
           value: broker.email,
@@ -82,7 +82,7 @@ const useCreateForm = () => {
 
   const fetchClients = async () => {
     try {
-      const response = await getRequest("clients");
+      const response = await getRequest(`clients?all=true`);
       if (response) {
         const clientsData = response?.data?.clients.map((client) => ({
           value: client.email,

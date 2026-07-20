@@ -22,12 +22,20 @@ const useClients = () => {
   const totalCount = useSelector(selectClientsTotalCount);
 
   useEffect(() => {
-    dispatch(fetchClients({ search: globalFilter, page: currentPage, limit: pageSize }));
+    dispatch(
+      fetchClients({
+        search: globalFilter,
+        page: currentPage,
+        limit: pageSize,
+        all: false,
+      })
+    );
   }, [globalFilter, currentPage, dispatch]);
 
-    useEffect(() => {
+  const handleFilterChange = (value) => {
+    setGlobalFilter(value || "");
     setCurrentPage(1);
-  }, [globalFilter]);
+  };
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -48,7 +56,14 @@ const useClients = () => {
       setDeleteLoading(true);
       const response = await deleteRequest(`clients/${currentItem}`);
       if (response) {
-        dispatch(fetchClients());
+        dispatch(
+          fetchClients({
+            search: globalFilter,
+            page: currentPage,
+            limit: pageSize,
+            all: false,
+          })
+        );
         closeDeleteModal();
         console.log(response);
         toast.success("Client deleted successfully!");
@@ -69,7 +84,7 @@ const useClients = () => {
 
   return {
     globalFilter,
-    setGlobalFilter,
+    setGlobalFilter: handleFilterChange,
     users,
     pageSize,
     handlePageChange,
