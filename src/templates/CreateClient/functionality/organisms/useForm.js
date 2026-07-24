@@ -236,7 +236,11 @@
         }
       } catch (error) {
         console.error("Error:", error);
-        toast.error(error.message || "An error occurred while creating client.");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            "An error occurred while creating client."
+        );
       } finally {
         setLoading(false);
       }
