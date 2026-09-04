@@ -58,18 +58,20 @@ const EmailPreviewModal = ({
         <div className="text-center text-md text-[#333] mt-6 border-t p-5 bg-gray-200">
           <p>Follow us</p>
           <div className="flex justify-center gap-4 my-4 items-center">
-            <a href="#">
+            <a href="https://www.facebook.com">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/768px-Facebook_Logo_%282019%29.png"
+                src="https://cdn.jsdelivr.net/gh/gauravghongde/social-icons@master/PNG/Color/Facebook.png"
                 alt="Facebook"
                 width={32}
+                height={32}
               />
             </a>
-            <a href="#">
+            <a href="https://twitter.com">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/1200px-Logo_of_Twitter.svg.png"
+                src="https://cdn.jsdelivr.net/gh/gauravghongde/social-icons@master/PNG/Color/Twitter.png"
                 alt="Twitter"
                 width={32}
+                height={32}
               />
             </a>
           </div>
