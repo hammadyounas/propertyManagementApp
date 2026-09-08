@@ -7,10 +7,9 @@ import PageLayout from "@/components/combined/organisms/PageLayoutUIContainer";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useEffect } from "react";
-import { registerLicense } from '@syncfusion/ej2-base';
+import { applySyncfusionLicense } from "@/libs/syncfusion-license";
 
-const license = process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY;
-registerLicense(license as string);
+applySyncfusionLicense();
 
 export default function App({ Component, pageProps }: AppProps) {
   const token =
