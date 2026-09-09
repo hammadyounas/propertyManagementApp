@@ -17,7 +17,7 @@ function collectKeys(): string[] {
         .filter(Boolean)
     );
 
-  return [...new Set(keys)];
+  return Array.from(new Set(keys));
 }
 
 export function applySyncfusionLicense() {
