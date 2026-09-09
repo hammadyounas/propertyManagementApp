@@ -1438,12 +1438,10 @@ const TemplateEditor = ({
           direction: ltr !important;
         }
 
-        /* Performance optimizations for typing */
+        /* Keep text rendering stable without GPU transforms that flicker on hover */
         .syncfusion-doc-editor .e-de-text,
         .syncfusion-doc-editor .e-content {
           will-change: auto !important;
-          transform: translateZ(0) !important;
-          backface-visibility: hidden !important;
           -webkit-font-smoothing: antialiased !important;
           -moz-osx-font-smoothing: grayscale !important;
         }
@@ -1467,22 +1465,9 @@ const TemplateEditor = ({
           border-radius: 4px !important;
           font-size: 12px !important;
           font-weight: 500 !important;
-          transition: all 0.15s ease !important;
           cursor: pointer !important;
           min-width: 80px !important;
           margin: 2px 4px !important;
-        }
-
-        .syncfusion-doc-editor #rte-print-btn:hover,
-        .syncfusion-doc-editor #rte-import-btn:hover {
-          background-color: #f3f4f6 !important;
-          border-color: #9ca3af !important;
-        }
-
-        .syncfusion-doc-editor #rte-print-btn:active,
-        .syncfusion-doc-editor #rte-import-btn:active {
-          background-color: #e5e7eb !important;
-          transform: translateY(1px) !important;
         }
 
         /* Dark mode for custom buttons */
@@ -1530,7 +1515,6 @@ const TemplateEditor = ({
 
         .syncfusion-doc-editor .e-toolbar .e-btn {
           border-radius: 3px;
-          transition: all 0.15s ease;
         }
 
         /* Force toolbar items to wrap when space is tight */
@@ -1612,10 +1596,6 @@ const TemplateEditor = ({
           .syncfusion-doc-editor .e-toolbar .e-scroll-nav { display: block !important; }
         }
 
-        .syncfusion-doc-editor .e-toolbar .e-btn:hover {
-          background-color: #e5e7eb;
-        }
-
         .syncfusion-doc-editor .e-toolbar .e-btn.e-active {
           background-color: #dbeafe;
           border-color: #3b82f6;
@@ -1646,9 +1626,8 @@ const TemplateEditor = ({
           max-height: calc(100vh - 280px); /* leave room under toolbar */
         }
 
-        /* Prevent outer containers from clipping the pane */
-        .syncfusion-doc-editor, 
-        .syncfusion-doc-editor * { 
+        /* Do not force overflow on every child — that makes hover overlays jump */
+        .syncfusion-doc-editor .e-de-ctn {
           overflow: visible;
         }
 
@@ -1697,10 +1676,6 @@ const TemplateEditor = ({
         /* Dark mode: keep toolbar wrapping consistent */
         .dark .syncfusion-doc-editor .e-toolbar .e-toolbar-items {
           flex-wrap: wrap !important;
-        }
-
-        .dark .syncfusion-doc-editor .e-toolbar .e-btn:hover {
-          background-color: #475569;
         }
 
         .dark .syncfusion-doc-editor .e-toolbar .e-btn.e-active {
