@@ -70,10 +70,6 @@ const PDFPreview = ({ acmData, isOpen, onClose }) => {
 
   // Use provided data or fallback to mock data
   const previewData = acmData && acmData.base_property && acmData.base_property.title ? acmData : mockData;
-  
-  // Debug logging
-  console.log('PDFPreview - acmData:', acmData);
-  console.log('PDFPreview - previewData:', previewData);
 
   if (!isOpen) return null;
 

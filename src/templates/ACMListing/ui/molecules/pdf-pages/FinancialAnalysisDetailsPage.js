@@ -20,7 +20,6 @@ const FinancialAnalysisDetailsPage = ({ acmData }) => {
   };
 
   const TableRow = ({ item, isTotal = false, colorClass = 'text-gray-600', bgClass = '' }) => (
-    console.log(item),
     <div className={`grid grid-cols-3 gap-4 p-1 text-xs uppercase ${bgClass} ${isTotal ? 'font-bold' : 'font-semibold'}`}>
       <div className={`${isTotal ? 'font-bold' : 'text-gray-800 font-semibold whitespace-nowrap'}`}>
         {item.title || item.suggested_market_price}
