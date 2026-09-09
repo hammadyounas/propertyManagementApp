@@ -6,12 +6,8 @@ import toast from "react-hot-toast"
 
 const SyncfusionDocEditor = dynamic(
   async () => {
-    const { registerLicense } = await import("@syncfusion/ej2-base")
-    const raw = process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY
-    const license = raw ? String(raw).replace(/^['"]|['"]$/g, "").trim() : ""
-    if (license) {
-      registerLicense(license)
-    }
+    const { applySyncfusionLicense } = await import("@/libs/syncfusion-license")
+    applySyncfusionLicense()
 
     const { DocumentEditorContainerComponent, Toolbar, Inject, Print } = await import("@syncfusion/ej2-react-documenteditor")
     

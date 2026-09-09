@@ -9,6 +9,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY:
       process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY || "",
+    NEXT_PUBLIC_SYNCFUSION_UI_LICENSE_KEY:
+      process.env.NEXT_PUBLIC_SYNCFUSION_UI_LICENSE_KEY || "",
+    NEXT_PUBLIC_SYNCFUSION_DOCX_LICENSE_KEY:
+      process.env.NEXT_PUBLIC_SYNCFUSION_DOCX_LICENSE_KEY || "",
   },
   webpack: (config, { isServer }) => {
     config.resolve.alias = {

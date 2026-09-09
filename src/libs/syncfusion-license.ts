@@ -1,15 +1,28 @@
 import { registerLicense } from "@syncfusion/ej2-base";
 
+function collectKeys(): string[] {
+  const rawValues = [
+    process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY,
+    process.env.NEXT_PUBLIC_SYNCFUSION_UI_LICENSE_KEY,
+    process.env.NEXT_PUBLIC_SYNCFUSION_DOCX_LICENSE_KEY,
+  ];
+
+  const keys = rawValues
+    .filter((value): value is string => Boolean(value))
+    .flatMap((value) =>
+      String(value)
+        .replace(/^['"]|['"]$/g, "")
+        .split(/[;,]/)
+        .map((part) => part.trim())
+        .filter(Boolean)
+    );
+
+  return [...new Set(keys)];
+}
+
 export function applySyncfusionLicense() {
-  // Direct process.env access so Next.js inlines NEXT_PUBLIC_ at build time.
-  const raw = process.env.NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY;
-  if (!raw) {
-    return;
-  }
-  const license = String(raw)
-    .replace(/^['"]|['"]$/g, "")
-    .trim();
-  if (license) {
-    registerLicense(license);
+  const keys = collectKeys();
+  if (keys.length) {
+    registerLicense(keys.join(";"));
   }
 }
