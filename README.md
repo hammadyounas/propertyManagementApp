@@ -53,7 +53,7 @@ Edit `.env`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:9000
 NEXT_PUBLIC_API_PREFIX=api/v1.0.0
-NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY=your_license_key
+NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY=UI_KEY;DOCX_EDITOR_KEY
 ```
 
 ### 3. Start the backend
@@ -85,9 +85,20 @@ Copy `.env.example` to `.env` and fill in your values.
 |----------|----------|-------------|
 | `NEXT_PUBLIC_API_URL` | Yes | Backend base URL (no trailing slash) |
 | `NEXT_PUBLIC_API_PREFIX` | Yes | API path prefix (must match backend version) |
-| `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` | Yes* | Syncfusion document editor license |
+| `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` | Yes* | Syncfusion **34.x** JavaScript keys (see below) |
 
-\* Required for Syncfusion document editor features. Get a free community license at [syncfusion.com](https://www.syncfusion.com/sales/communitylicense).
+\* Required for the document editor on Templates / Create. Community license: [syncfusion.com/sales/communitylicense](https://www.syncfusion.com/sales/communitylicense).
+
+This app uses **Syncfusion 34.x**. A 31.x key will show “license key is invalid.” The editor needs **two** product keys joined with `;` (no spaces):
+
+1. **UI Edition** → Get License Key (toolbar, buttons, ribbon)
+2. **DOCX Editor** → Get License Key (Word-like editor)
+
+```env
+NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY=UI_KEY;DOCX_EDITOR_KEY
+```
+
+Use **Get License Key**, not Unlock Key. Version **34.x**, platform **JavaScript**. After changing this variable you must **rebuild** (`npm run build`) — `pm2 restart` alone is not enough.
 
 ### Environment examples
 
@@ -98,12 +109,14 @@ NEXT_PUBLIC_API_URL=http://localhost:9000
 NEXT_PUBLIC_API_PREFIX=api/v1.0.0
 ```
 
-**Production:**
+**Production (DigitalOcean, Nginx proxies `/api` to the backend):**
 
 ```env
-NEXT_PUBLIC_API_URL=https://your-api-domain.com
-NEXT_PUBLIC_API_PREFIX=api/v1.0.0
+NEXT_PUBLIC_API_URL=/api
+NEXT_PUBLIC_API_PREFIX=v1.0.0
 ```
+
+Do not point the frontend at `https://property-management-backend.vercel.app` — that deployment is no longer used.
 
 > Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Do not put secrets other than the Syncfusion license here.
 
@@ -214,10 +227,22 @@ Ensure the backend `FRONTEND_URL` in its `.env` matches your deployed frontend U
 - Verify backend `MONGO_URI` points to a database with user records.
 - Check browser DevTools → Network for failed `/users/login` requests.
 
+### Syncfusion license banner on Templates / Create
+
+- Packages are **34.x**. Generate keys for version **34.x**, JavaScript.
+- “Valid only for UI Components” → add the **DOCX Editor** key.
+- “Valid only for Document SDK” → add the **UI Edition** key.
+- Put both in `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` separated by `;`.
+- Restart `npm run dev` locally, or `npm run build` then `pm2 restart property-frontend` on the server.
+
 ### Syncfusion editor not loading
 
-- Set a valid `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` in `.env`.
+- Set a valid `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` in `.env` (see Environment Variables).
 - Restart `npm run dev` after updating env vars.
+
+### Login goes to Vercel and fails (OPTIONS 500)
+
+Local `.env` must use `NEXT_PUBLIC_API_URL=http://localhost:9000` with the backend running. Do not use the old Vercel API URL.
 
 ### Env changes not applied
 
