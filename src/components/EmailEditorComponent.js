@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import EmailEditor from "react-email-editor";
+import toast from "react-hot-toast";
 
 const EmailTemplateManager = () => {
   const emailEditorRef = useRef(null);
@@ -30,14 +31,13 @@ const EmailTemplateManager = () => {
             `template-${templateName}`,
             JSON.stringify(templateData)
           );
-          alert("Template saved locally!");
           setTemplates((prev) => [...prev, templateName]); // Update template list
           setTemplateName(""); // Clear input
 
           // Clear the editor after saving the template
           emailEditorRef.current.editor.loadBlank();
         } else {
-          alert("Please enter a template name.");
+          toast.error("Please enter a template name.");
         }
       });
     }
@@ -77,7 +77,6 @@ const EmailTemplateManager = () => {
     })
       .then(response => response.json())
       .then(data => {
-        alert('Email sent successfully!');
       })
       .catch(error => {
         console.error('Error sending email:', error);

@@ -838,7 +838,6 @@ const TemplateEditor = ({
     try {
       const editor = docEditorRef.current?.documentEditor;
       if (!editor) {
-        toast.error('Editor is not ready yet.');
         return;
       }
       setExportingPdf(true);
@@ -983,7 +982,6 @@ const TemplateEditor = ({
                   // When all pages are loaded, save the PDF
                   if (loadedPage === count) {
                     pdfdocument.save(`${pdfFilename}.pdf`);
-                    toast.success('PDF exported successfully!');
                   }
                   
                   resolve();
@@ -1072,7 +1070,7 @@ const TemplateEditor = ({
         throw new Error('Failed to convert DOCX file');
       }
     } catch (error) {
-      alert('Error importing DOCX file. Please try again or use HTML format.');
+      toast.error('Error importing DOCX file. Please try again or use HTML format.');
     }
   };
 
@@ -1167,7 +1165,7 @@ const TemplateEditor = ({
         }
       }, 600);
     } catch (error) {
-      alert('Error importing document. Please try again.');
+      toast.error('Error importing document. Please try again.');
     }
   };
 
