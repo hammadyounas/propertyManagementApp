@@ -240,6 +240,10 @@ Ensure the backend `FRONTEND_URL` in its `.env` matches your deployed frontend U
 - Set a valid `NEXT_PUBLIC_SYNCFUSION_LICENSE_KEY` in `.env` (see Environment Variables).
 - Restart `npm run dev` after updating env vars.
 
+### Syncfusion Import 404 (`ej2services.syncfusion.com`)
+
+That old demo URL was retired. The editor must use `https://document.syncfusion.com/web-services/docx-editor/api/documenteditor/` (see `TemplateEditor.js`). After changing it, `npm run build` then `pm2 restart property-frontend`. The hosted URL is for evaluation; production can later use your own Document Editor web service.
+
 ### Login goes to Vercel and fails (OPTIONS 500)
 
 Local `.env` must use `NEXT_PUBLIC_API_URL=http://localhost:9000` with the backend running. Do not use the old Vercel API URL.

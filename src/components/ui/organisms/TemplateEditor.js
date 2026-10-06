@@ -1,8 +1,48 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useCallback } from "react"
 import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
+
+// Syncfusion retired ej2services.syncfusion.com (Import 404). Hosted demo URL from v31+.
+const DOCUMENT_EDITOR_SERVICE_URL =
+  "https://document.syncfusion.com/web-services/docx-editor/api/documenteditor/"
+const DOCUMENT_EDITOR_IMPORT_URL = `${DOCUMENT_EDITOR_SERVICE_URL}Import`
+const DOCUMENT_EDITOR_TOOLBAR_ITEMS = [
+  "New",
+  "Open",
+  {
+    id: "import-document",
+    text: "Import",
+    tooltipText: "Import Document",
+    prefixIcon: "e-de-ctnr-open",
+  },
+  {
+    id: "export-pdf",
+    text: "Export to PDF",
+    tooltipText: "Export to PDF",
+    prefixIcon: "e-de-ctnr-download",
+  },
+  "Separator",
+  "Undo",
+  "Redo",
+  "Separator",
+  "Image",
+  "Table",
+  "Hyperlink",
+  "Bookmark",
+  "TableOfContents",
+  "Separator",
+  "Header",
+  "Footer",
+  "PageSetup",
+  "PageNumber",
+  "Break",
+  "InsertFootnote",
+  "InsertEndnote",
+  "Separator",
+  "Find",
+]
 
 const SyncfusionDocEditor = dynamic(
   async () => {
@@ -22,40 +62,21 @@ const SyncfusionDocEditor = dynamic(
     await import("@syncfusion/ej2-dropdowns/styles/material.css")
     await import("@syncfusion/ej2-documenteditor/styles/material.css")
 
-    const DocEditorWrapper = ({ forwardRef, height, showPropertiesPane, contentChange, created, ...otherProps }) => (
+    const DocEditorWrapper = ({ forwardRef, height, showPropertiesPane, contentChange, created, toolbarClick, toolbarItems }) => (
       <DocumentEditorContainerComponent 
         ref={forwardRef}
         width="90%"
         height={height || "700px"}
         enableToolbar={true}
-        enablePrint={true}
         showPropertiesPane={showPropertiesPane}
-        serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
+        serviceUrl={DOCUMENT_EDITOR_SERVICE_URL}
         contentChange={contentChange}
         created={created}
-        // Performance optimizations
-        enableOptimizedTextMeasuring={true}
-        enableSelectionResize={false}
+        toolbarItems={toolbarItems}
+        toolbarClick={toolbarClick}
         enableSpellCheck={false}
         enableAutoFocus={true}
-        // Text direction settings
         locale="en-US"
-        // Disable unnecessary features for better performance
-        enableHyperlinkDialog={false}
-        enableBookmarkDialog={false}
-        enableTableOfContentsDialog={false}
-        enableFootnotesDialog={false}
-        enableTableDialog={false}
-        enableColumnsDialog={false}
-        enablePageSetupDialog={false}
-        enableStyleDialog={false}
-        enableFontDialog={false}
-        enableParagraphDialog={false}
-        enableListDialog={false}
-        enableTableOptionsDialog={false}
-        enableBordersAndShadingDialog={false}
-        enableTableStylesDialog={false}
-        enableTablePropertiesDialog={false}
       >
         <Inject services={[Toolbar, Print]} />
       </DocumentEditorContainerComponent>
@@ -102,6 +123,7 @@ const TemplateEditor = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const [editorCreated, setEditorCreated] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const docEditorRef = useRef(null);
   const isInternalUpdate = useRef(false); // Track if update is from editor itself
   const lastLoadedContent = useRef(null); // Track last loaded content to prevent reloads
@@ -114,9 +136,41 @@ const TemplateEditor = ({
 
   // Handler for when the editor is created
   const handleEditorCreated = () => {
-    console.log('Editor created event fired');
+    const editor = docEditorRef.current?.documentEditor;
+    if (editor) {
+      editor.enablePrint = true;
+      editor.enableOptimizedTextMeasuring = true;
+      editor.enableHyperlinkDialog = false;
+      editor.enableBookmarkDialog = false;
+      editor.enableTableOfContentsDialog = false;
+      editor.enableFootnotesDialog = false;
+      editor.enableTableDialog = false;
+      editor.enableColumnsDialog = false;
+      editor.enablePageSetupDialog = false;
+      editor.enableStyleDialog = false;
+      editor.enableFontDialog = false;
+      editor.enableParagraphDialog = false;
+      editor.enableListDialog = false;
+      editor.enableTableOptionsDialog = false;
+      editor.enableBordersAndShadingDialog = false;
+      editor.enableTableStylesDialog = false;
+      editor.enableTablePropertiesDialog = false;
+    }
     setEditorCreated(true);
   };
+
+  const handleExportPdfRef = useRef(null);
+  const handleImportDocumentRef = useRef(null);
+
+  const handleToolbarClick = useCallback((args) => {
+    const id = args?.item?.id || "";
+    if (id.includes("export-pdf")) {
+      handleExportPdfRef.current?.();
+    }
+    if (id.includes("import-document")) {
+      handleImportDocumentRef.current?.();
+    }
+  }, []);
 
   // Add doc_id at the start of document when editor is ready and docId is provided
   // This effect should only run once when a new document is created/loaded
@@ -127,7 +181,6 @@ const TemplateEditor = ({
     // FIRST: Check if Doc ID already exists in the loaded editorValue (serialized content)
     // This catches cases where the document was saved with a Doc ID
     if (editorValue.includes(`Doc ID: ${docId}`) || editorValue.includes('Doc ID:')) {
-      console.log(`✓ Doc ID already exists in loaded content, skipping insertion`);
       docIdInserted.current = true;
       processedDocId.current = docId;
       return;
@@ -141,25 +194,21 @@ const TemplateEditor = ({
 
     // If we've already processed this exact docId, skip
     if (docIdInserted.current && processedDocId.current === docId) {
-      console.log(`Doc ID ${docId} already processed, skipping`);
       return;
     }
 
     const addDocIdToStart = () => {
       // Double-check: if we've already inserted this doc_id, skip
       if (docIdInserted.current && processedDocId.current === docId) {
-        console.log(`Doc ID ${docId} already inserted, skipping`);
         return;
       }
 
       try {
         const editor = docEditorRef.current.documentEditor;
         if (!editor || !editor.documentHelper) {
-          console.log('Editor or documentHelper not available');
           return;
         }
 
-        console.log(`Checking if doc_id ${docId} needs to be added to document`);
 
         // Save current cursor position
         const savedPosition = editor.selection.startOffset;
@@ -171,7 +220,6 @@ const TemplateEditor = ({
           
           // Check if our specific doc_id is already in the document
           if (documentText.includes(`Doc ID: ${docId}`)) {
-            console.log(`✓ Doc ID ${docId} already exists in document, skipping insertion`);
             docIdInserted.current = true;
             processedDocId.current = docId;
             return;
@@ -180,15 +228,12 @@ const TemplateEditor = ({
           // Check at the start of the document specifically (first 200 characters)
           const documentStart = documentText.substring(0, 200);
           if (documentStart.trim().startsWith('Doc ID:')) {
-            console.log(`✓ A Doc ID already exists at start of document, skipping insertion`);
             docIdInserted.current = true;
             processedDocId.current = docId;
             return;
           }
           
-          console.log(`No Doc ID found in document, proceeding with insertion`);
         } catch (checkError) {
-          console.log('Error checking for existing doc_id:', checkError);
           // Continue with insertion attempt even if check fails
         }
 
@@ -244,15 +289,11 @@ const TemplateEditor = ({
                 isInternalUpdate.current = false;
               }, 500);
               
-              console.log('Updated lastLoadedContent to preserve doc_id');
             }
           } catch (serializeError) {
-            console.log('Could not serialize content after doc_id insertion:', serializeError);
           }
           
-          console.log(`✅ Doc ID ${docId} added at start of document (ONCE)`);
         } catch (insertError) {
-          console.error('Error inserting doc_id at start:', insertError);
           // Mark as processed anyway to prevent retry loops
           docIdInserted.current = true;
           processedDocId.current = docId;
@@ -269,11 +310,9 @@ const TemplateEditor = ({
             // If can't move down, just move to start - that's fine
           }
         } catch (restoreError) {
-          console.log('Could not restore cursor position');
         }
 
       } catch (error) {
-        console.error('❌ Error adding doc_id to start of document:', error);
       }
     };
 
@@ -281,7 +320,6 @@ const TemplateEditor = ({
     // Only try once with a delay, the refs will prevent duplicates
     // Use a longer delay to ensure content is fully loaded and rendered
     const timeout = setTimeout(() => {
-      console.log(`Processing doc_id ${docId} for insertion (one-time)`);
       addDocIdToStart();
     }, 4000); // Increased to 4 seconds to ensure content is fully rendered
     
@@ -317,10 +355,8 @@ const TemplateEditor = ({
           defaultFormat.bidi = false;
           defaultFormat.textAlignment = 'Left';
           
-          console.log('Text direction set to LTR (Left-to-Right)');
         }
       } catch (error) {
-        console.error('Error setting text direction:', error);
       }
     };
     
@@ -349,13 +385,11 @@ const TemplateEditor = ({
     
     // Skip loading if this is an internal update from the editor itself
     if (isInternalUpdate.current) {
-      console.log('Skipping content load - internal update');
       return;
     }
     
     // Skip loading if the content hasn't changed
     if (editorValue === lastLoadedContent.current) {
-      console.log('Skipping content load - content unchanged');
       return;
     }
     
@@ -367,7 +401,6 @@ const TemplateEditor = ({
         const currentEditorContent = docEditorRef.current.documentEditor.serialize();
         if (currentEditorContent && currentEditorContent.includes(`Doc ID: ${processedDocId.current}`)) {
           docIdToPreserve = processedDocId.current;
-          console.log(`Will preserve doc_id ${docIdToPreserve} when loading content`);
         }
       } catch (e) {
         // Ignore errors
@@ -378,9 +411,7 @@ const TemplateEditor = ({
       try {
         const editor = docEditorRef.current.documentEditor;
         if (editorValue && editorValue.trim() !== '') {
-          debugDocumentContent(editorValue, 'Loading content');
           const format = detectDocumentFormat(editorValue);
-          console.log('Detected document format:', format);
           
           // Update the last loaded content
           lastLoadedContent.current = editorValue;
@@ -388,15 +419,11 @@ const TemplateEditor = ({
           switch (format) {
             case 'sfdt':
               // Syncfusion Document Format - load directly to preserve all formatting
-              console.log('Loading SFDT document...');
               try {
                 // Check if document uses abbreviated format (corrupted format)
                 const isAbbreviated = editorValue.includes('"optimizeSfdt":false');
                 
                 if (isAbbreviated) {
-                  console.error('❌ CORRUPTED DOCUMENT: This document uses abbreviated SFDT format (optimizeSfdt: false)');
-                  console.error('This format was created by a buggy contentOptimizer and cannot be loaded.');
-                  console.error('The document must be deleted and recreated.');
                   
                   // Show user-friendly error message
                   editor.openBlank();
@@ -428,9 +455,7 @@ const TemplateEditor = ({
                 }
                 
                 // Try to open the SFDT document (should only reach here if NOT abbreviated)
-                console.log('Opening SFDT document...');
                 editor.open(editorValue);
-                console.log('Document opened successfully');
                 
                 // After loading, re-insert doc_id if it was preserved
                 if (docIdToPreserve) {
@@ -443,16 +468,13 @@ const TemplateEditor = ({
                         editor.selection.characterFormat.fontSize = 9;
                         editor.selection.characterFormat.fontColor = '#2563EB';
                         editor.selection.paragraphFormat.textAlignment = 'Right';
-                        console.log(`Re-inserted preserved doc_id ${docIdToPreserve} after content load`);
                       }
                     } catch (reinsertError) {
-                      console.log('Could not re-insert doc_id:', reinsertError);
                     }
                   }, 500);
                 }
                 
               } catch (openError) {
-                console.error('Error loading SFDT document:', openError);
                 
                 // Show error message to user
                 try {
@@ -465,7 +487,6 @@ const TemplateEditor = ({
                   
                   editor.editor.insertText(errorMsg);
                 } catch (fallbackError) {
-                  console.error('Could not show error message:', fallbackError);
                 }
               }
               break;
@@ -478,7 +499,6 @@ const TemplateEditor = ({
             editor.editor.insertText(editorValue);
               break;
             default:
-              console.warn('Unknown document format, treating as plain text');
               editor.editor.insertText(editorValue);
               break;
           }
@@ -487,23 +507,18 @@ const TemplateEditor = ({
           setTimeout(() => {
             try {
               editor.selection.paragraphFormat.bidi = false;
-              console.log('Text direction set to LTR after content load');
             } catch (dirError) {
-              console.warn('Could not set text direction:', dirError);
             }
           }, 200);
         }
       } catch (error) {
-        console.error('Error loading content:', error);
         // Try fallback loading methods
         try {
-          console.log('Attempting fallback content loading...');
           if (editorValue && typeof editorValue === 'string') {
             const textContent = editorValue.replace(/<[^>]*>/g, '');
             editor.editor.insertText(textContent);
           }
         } catch (fallbackError) {
-          console.error('Fallback loading also failed:', fallbackError);
         }
       }
     };
@@ -520,18 +535,14 @@ const TemplateEditor = ({
       // Method 1: Try using Syncfusion's insertHtml method if available
       try {
         if (editor.editor.insertHtml) {
-          console.log('Using insertHtml method...');
           editor.editor.insertHtml(htmlContent);
-          console.log('HTML inserted successfully with formatting');
           return;
         }
       } catch (insertHtmlError) {
-        console.warn('insertHtml method failed:', insertHtmlError);
       }
       
       // Method 2: Try using Syncfusion's paste functionality
       try {
-        console.log('Attempting to paste HTML content with formatting...');
         // Create a clipboard event with HTML data
         const clipboardData = new DataTransfer();
         clipboardData.setData('text/html', htmlContent);
@@ -539,14 +550,11 @@ const TemplateEditor = ({
         
         // Use the editor's paste method
         editor.editor.paste(htmlContent);
-        console.log('HTML pasted successfully with formatting');
         return;
       } catch (pasteError) {
-        console.warn('Paste method failed, trying alternative approach:', pasteError);
       }
       
       // Method 2: Parse HTML and convert to document format manually
-      console.log('Using manual HTML parsing...');
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlContent, 'text/html');
       
@@ -554,7 +562,6 @@ const TemplateEditor = ({
       await processHtmlElements(editor, doc.body);
       
       } catch (error) {
-      console.error('Error processing HTML content:', error);
       // Fallback: insert as plain text
       const textContent = htmlContent.replace(/<[^>]*>/g, '');
       editor.editor.insertText(textContent);
@@ -588,21 +595,6 @@ const TemplateEditor = ({
 
     // Check for plain text
     return 'text';
-  };
-
-  // Debug function to log document content details
-  const debugDocumentContent = (content, operation) => {
-    if (!content) {
-      console.log(`${operation}: No content provided`);
-      return;
-    }
-    
-    if (content.includes('"sections"')) {
-      console.log(`${operation}: Contains sections - likely SFDT format`);
-    }
-    if (content.includes('<')) {
-      console.log(`${operation}: Contains HTML tags`);
-    }
   };
 
   // Process HTML elements and convert to document format
@@ -789,7 +781,6 @@ const TemplateEditor = ({
       try {
           // Get the document content in SFDT format (Syncfusion Document Format)
         const content = docEditorRef.current.documentEditor.serialize();
-          debugDocumentContent(content, 'Saving content');
           
           // Mark this as an internal update to prevent reload
           isInternalUpdate.current = true;
@@ -810,13 +801,10 @@ const TemplateEditor = ({
             isInternalUpdate.current = false;
           }, 100);
           
-          console.log('Content change handled successfully');
       } catch (error) {
-        console.error('Error getting document content:', error);
           // Fallback: try to get plain text
           try {
             const plainText = docEditorRef.current.documentEditor.editor.getText();
-            console.log('Fallback to plain text:', plainText.substring(0, 100) + '...');
             
             // Mark this as an internal update to prevent reload
             isInternalUpdate.current = true;
@@ -837,7 +825,6 @@ const TemplateEditor = ({
               isInternalUpdate.current = false;
             }, 100);
           } catch (fallbackError) {
-            console.error('Fallback content retrieval also failed:', fallbackError);
           }
         }
       }
@@ -847,13 +834,14 @@ const TemplateEditor = ({
   };
 
   // Export helpers - Export as PDF using Syncfusion's exportAsImage API
-  const handlePrint = async () => {
+  const handleExportPdf = async () => {
     try {
       const editor = docEditorRef.current?.documentEditor;
       if (!editor) {
-        console.error('Editor not available');
+        toast.error('Editor is not ready yet.');
         return;
       }
+      setExportingPdf(true);
 
       // Generate PDF filename: {docTitle}_{docId}
       let pdfFilename = '';
@@ -879,7 +867,6 @@ const TemplateEditor = ({
         pdfFilename = 'Document';
       }
 
-      console.log('Exporting PDF with filename:', pdfFilename);
 
       // Dynamically import PDF export classes
       const {
@@ -887,13 +874,16 @@ const TemplateEditor = ({
         PdfDocument,
         PdfPageOrientation,
         PdfPageSettings,
-        PdfSection,
         SizeF,
       } = await import('@syncfusion/ej2-pdf-export');
 
       // Create new PDF document
       const pdfdocument = new PdfDocument();
       const count = editor.pageCount;
+      if (!count) {
+        toast.error('Nothing to export.');
+        return;
+      }
       
       // Get document page settings to preserve styling
       // Try to get actual page size from document, fallback to A4
@@ -907,7 +897,6 @@ const TemplateEditor = ({
           pageHeight = editor.pageSize.height || pageHeight;
         }
       } catch (e) {
-        console.log('Could not get page size from editor, using defaults');
       }
       
       // Set print device pixel ratio for better quality
@@ -994,43 +983,31 @@ const TemplateEditor = ({
                   // When all pages are loaded, save the PDF
                   if (loadedPage === count) {
                     pdfdocument.save(`${pdfFilename}.pdf`);
-                    console.log('PDF exported successfully:', pdfFilename);
                     toast.success('PDF exported successfully!');
                   }
                   
                   resolve();
                 } catch (pageError) {
-                  console.error(`Error processing page ${i}:`, pageError);
                   resolve();
                 }
               };
 
               image.onerror = function (error) {
-                console.error(`Error loading image for page ${i}:`, error);
                 resolve();
               };
             } catch (exportError) {
-              console.error(`Error exporting page ${i}:`, exportError);
               resolve();
             }
           }, 500 * i); // Stagger the exports to avoid overwhelming the browser
         });
       }
     } catch (error) {
-      console.error('PDF export failed:', error);
       toast.error('Failed to export PDF. Please try again.');
-      
-      // Fallback to regular print if PDF export fails
-      try {
-        const editor = docEditorRef.current?.documentEditor;
-        if (editor) {
-          editor.print();
-        }
-      } catch (printError) {
-        console.error('Print fallback also failed:', printError);
-      }
+    } finally {
+      setExportingPdf(false);
     }
   };
+  handleExportPdfRef.current = handleExportPdf;
 
   const handleImportDocument = () => {
     // Create a file input element
@@ -1044,7 +1021,6 @@ const TemplateEditor = ({
       if (!file) return;
       
       try {
-        console.log('File selected:', file.name, 'Type:', file.type);
         
         // For DOCX files, use Syncfusion's import service
         if (file.name.endsWith('.docx') || file.name.endsWith('.doc') || 
@@ -1056,8 +1032,7 @@ const TemplateEditor = ({
           await importDocument(content);
         }
       } catch (error) {
-        console.error('Error importing file:', error);
-        alert('Error importing file. Please try again.');
+        toast.error('Error importing file. Please try again.');
       }
     });
     
@@ -1065,16 +1040,16 @@ const TemplateEditor = ({
     fileInput.click();
     document.body.removeChild(fileInput);
   };
+  handleImportDocumentRef.current = handleImportDocument;
 
   const importDocxFile = async (file) => {
     try {
       const editor = docEditorRef.current?.documentEditor;
       if (!editor) return;
       
-      console.log('Importing DOCX file using Syncfusion service...');
       
       // Use Syncfusion's import service for DOCX files
-      const serviceUrl = 'https://ej2services.syncfusion.com/production/web-services/api/documenteditor/Import';
+      const serviceUrl = DOCUMENT_EDITOR_IMPORT_URL;
       
       const formData = new FormData();
       formData.append('files', file);
@@ -1086,7 +1061,6 @@ const TemplateEditor = ({
       
       if (response.ok) {
         const sfdt = await response.text();
-        console.log('DOCX converted to SFDT successfully');
         editor.open(sfdt);
         
         // Trigger content change to save the imported content
@@ -1094,12 +1068,10 @@ const TemplateEditor = ({
           handleContentChange();
         }, 500);
         
-        console.log('Document imported successfully');
       } else {
         throw new Error('Failed to convert DOCX file');
       }
     } catch (error) {
-      console.error('Error importing DOCX file:', error);
       alert('Error importing DOCX file. Please try again or use HTML format.');
     }
   };
@@ -1124,151 +1096,6 @@ const TemplateEditor = ({
     });
   };
 
-  // Add Export PDF and Print buttons into Syncfusion toolbar
-  useEffect(() => {
-    if (!mounted || !docEditorRef.current) return;
-    
-    const addButtons = () => {
-      const containerEl = docEditorRef.current?.element;
-      if (!containerEl) return;
-
-      // Look for toolbar in multiple possible locations
-      const toolbarSelectors = [
-        '.e-toolbar .e-toolbar-items',
-        '.e-de-ctn .e-toolbar .e-toolbar-items', 
-        '.e-documenteditorcontainer-toolbar .e-toolbar-items',
-        '.e-toolbar-items'
-      ];
-      
-      let itemsEl = null;
-      for (const selector of toolbarSelectors) {
-        itemsEl = containerEl.querySelector(selector);
-        if (itemsEl) break;
-      }
-      
-      if (!itemsEl) {
-        console.log('Toolbar items container not found, retrying...');
-        return;
-      }
-
-      // Remove any existing custom buttons first to avoid duplicates
-      const existingPrint = containerEl.querySelector('#rte-print-btn');
-      const existingImport = containerEl.querySelector('#rte-import-btn');
-      
-      [existingPrint, existingImport].forEach(btn => {
-        if (btn && btn.parentElement) {
-          btn.parentElement.remove();
-        }
-      });
-
-      console.log('Adding Print and Import buttons to toolbar...');
-
-      // Create Print button
-      const printBtn = document.createElement('button');
-      printBtn.id = 'rte-print-btn';
-      printBtn.type = 'button';
-      printBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
-      printBtn.title = 'Export to PDF';
-      printBtn.style.cssText = 'min-width: 60px; margin: 2px 4px;';
-      
-      const printSpan = document.createElement('span');
-      printSpan.className = 'e-tbar-btn-text';
-      printSpan.textContent = 'Export to PDF';
-      printBtn.appendChild(printSpan);
-      printBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        handlePrint();
-      });
-      
-      const printItem = document.createElement('div');
-      printItem.className = 'e-toolbar-item';
-      printItem.appendChild(printBtn);
-
-      // Create Import Document button
-      const importBtn = document.createElement('button');
-      importBtn.id = 'rte-import-btn';
-      importBtn.type = 'button';
-      importBtn.className = 'e-tbar-btn e-btn e-tbtn-txt e-control';
-      importBtn.title = 'Import Document';
-      importBtn.style.cssText = 'min-width: 100px; margin: 2px 4px;';
-      
-      const importSpan = document.createElement('span');
-      importSpan.className = 'e-tbar-btn-text';
-      importSpan.textContent = 'Import';
-      importBtn.appendChild(importSpan);
-      importBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        handleImportDocument();
-      });
-      
-      const importItem = document.createElement('div');
-      importItem.className = 'e-toolbar-item';
-      importItem.appendChild(importBtn);
-
-      // Try to find a good insertion point
-      const findBtn = Array.from(itemsEl.querySelectorAll('.e-tbar-btn'))
-        .find((n) => (n.getAttribute('title') || '').toLowerCase().includes('find'));
-      
-      if (findBtn && findBtn.parentElement?.classList.contains('e-toolbar-item')) {
-        // Insert before Find button
-        itemsEl.insertBefore(importItem, findBtn.parentElement);
-        itemsEl.insertBefore(printItem, findBtn.parentElement);
-        console.log('Buttons inserted before Find button');
-      } else {
-        // Append at the end
-        itemsEl.appendChild(importItem);
-        itemsEl.appendChild(printItem);
-        console.log('Buttons appended to end of toolbar');
-      }
-    };
-
-    // Multiple attempts with different timing
-    const attempts = [0, 100, 300, 600, 1000, 1500];
-    const timeouts = attempts.map(delay => 
-      setTimeout(() => {
-        console.log(`Attempting to add buttons after ${delay}ms`);
-        addButtons();
-      }, delay)
-    );
-
-    // Also use MutationObserver for dynamic changes
-    const observer = new MutationObserver((mutations) => {
-      let shouldRetry = false;
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          // Check if toolbar was added or modified
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1 && (
-              node.classList?.contains('e-toolbar') || 
-              node.classList?.contains('e-toolbar-items') ||
-              node.querySelector?.('.e-toolbar') ||
-              node.querySelector?.('.e-toolbar-items')
-            )) {
-              shouldRetry = true;
-            }
-          });
-        }
-      });
-      
-      if (shouldRetry) {
-        setTimeout(addButtons, 100);
-        setTimeout(addButtons, 500); // Try again after a longer delay
-      }
-    });
-
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-      observer.disconnect();
-    };
-  }, [mounted, editorCreated]);
-
   // Function to import document with proper formatting
   const importDocument = async (content) => {
     if (!docEditorRef.current?.documentEditor) return;
@@ -1276,20 +1103,17 @@ const TemplateEditor = ({
     try {
       const editor = docEditorRef.current.documentEditor;
       
-      console.log('Importing document...');
-      debugDocumentContent(content, 'Import Document');
       
       // Clear existing content
       editor.editor.clear();
       
       // Check if content is HTML
       if (typeof content === 'string' && content.includes('<')) {
-        console.log('Detected HTML content, converting to SFDT format...');
         
         // Use Syncfusion's built-in HTML import functionality
         try {
           // Convert HTML to SFDT using Syncfusion's service
-          const serviceUrl = 'https://ej2services.syncfusion.com/production/web-services/api/documenteditor/Import';
+          const serviceUrl = DOCUMENT_EDITOR_IMPORT_URL;
           
           const formData = new FormData();
           const blob = new Blob([content], { type: 'text/html' });
@@ -1302,7 +1126,6 @@ const TemplateEditor = ({
           
           if (response.ok) {
             const sfdt = await response.text();
-            console.log('HTML converted to SFDT successfully');
             editor.open(sfdt);
             
             // Trigger content change to save the imported content
@@ -1310,7 +1133,6 @@ const TemplateEditor = ({
               handleContentChange();
             }, 500);
           } else {
-            console.warn('Service conversion failed, using fallback method');
             await loadHtmlContent(editor, content);
             
             // Trigger content change to save the imported content
@@ -1319,7 +1141,6 @@ const TemplateEditor = ({
             }, 500);
           }
         } catch (conversionError) {
-          console.warn('Error using conversion service, using fallback:', conversionError);
           await loadHtmlContent(editor, content);
           
           // Trigger content change to save the imported content
@@ -1337,19 +1158,15 @@ const TemplateEditor = ({
         }, 500);
       }
       
-      console.log('Document imported successfully');
       
       // Ensure text direction is LTR after import
       setTimeout(() => {
         try {
           editor.selection.paragraphFormat.bidi = false;
-          console.log('Text direction set to LTR after import');
         } catch (dirError) {
-          console.warn('Could not set text direction after import:', dirError);
         }
       }, 600);
     } catch (error) {
-      console.error('Error importing document:', error);
       alert('Error importing document. Please try again.');
     }
   };
@@ -1363,7 +1180,6 @@ const TemplateEditor = ({
       try {
         editor.editor.insertText(content);
       } catch (e) {
-        console.error('Failed to insert content:', e);
       }
     };
     onInsertAtCursor(insertAtCursor);
@@ -1406,7 +1222,8 @@ const TemplateEditor = ({
           showPropertiesPane={true}
           contentChange={handleContentChange}
           created={handleEditorCreated}
-          {...props}
+          toolbarItems={DOCUMENT_EDITOR_TOOLBAR_ITEMS}
+          toolbarClick={handleToolbarClick}
         />
       </div>
       {error && (
@@ -1446,42 +1263,23 @@ const TemplateEditor = ({
           -moz-osx-font-smoothing: grayscale !important;
         }
 
+        .syncfusion-doc-editor .e-toolbar-item[data-id="import-document"] .e-tbar-btn,
+        .syncfusion-doc-editor .e-toolbar-item[data-id="export-pdf"] .e-tbar-btn,
+        .syncfusion-doc-editor #import-document,
+        .syncfusion-doc-editor #export-pdf {
+          min-width: auto !important;
+          padding: 0 8px !important;
+        }
+
+        .syncfusion-doc-editor #import-document .e-tbar-btn-text,
+        .syncfusion-doc-editor #export-pdf .e-tbar-btn-text {
+          display: inline-block !important;
+        }
+
         /* Fix for reverse typing issue */
         .syncfusion-doc-editor .e-de-text * {
           unicode-bidi: normal !important;
           direction: ltr !important;
-        }
-
-        /* Custom Print and Import buttons styling */
-        .syncfusion-doc-editor #rte-print-btn,
-        .syncfusion-doc-editor #rte-import-btn {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          padding: 6px 12px !important;
-          border: 1px solid #d1d5db !important;
-          background-color: #ffffff !important;
-          color: #374151 !important;
-          border-radius: 4px !important;
-          font-size: 12px !important;
-          font-weight: 500 !important;
-          cursor: pointer !important;
-          min-width: 80px !important;
-          margin: 2px 4px !important;
-        }
-
-        /* Dark mode for custom buttons */
-        .dark .syncfusion-doc-editor #rte-print-btn,
-        .dark .syncfusion-doc-editor #rte-import-btn {
-          background-color: #374151 !important;
-          border-color: #4b5563 !important;
-          color: #e5e7eb !important;
-        }
-
-        .dark .syncfusion-doc-editor #rte-print-btn:hover,
-        .dark .syncfusion-doc-editor #rte-import-btn:hover {
-          background-color: #4b5563 !important;
-          border-color: #6b7280 !important;
         }
 
         /* On small screens, use full width */
