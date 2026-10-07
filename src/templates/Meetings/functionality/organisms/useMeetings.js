@@ -18,6 +18,7 @@ import {
 } from "../../../../store/features/users/userSlice";
 import { fetchClients } from "../../../../store/features/clients/clientSlice";
 import {
+  getCurrentUserId,
   includeCurrentUser,
   isCurrentUser,
 } from "../../../../libs/utils/includeCurrentUser";
@@ -99,9 +100,10 @@ const useMeetings = () => {
   
 
   const watchedStatus = useWatch({ control, name: "status" });
-  const [salespersons, setSalespersons] = useState();
   const currentUser = useSelector((state) => state.auth.user);
-  const userId = currentUser?._id;
+  const userId =
+    getCurrentUserId(currentUser) ||
+    (typeof window !== "undefined" ? localStorage.getItem("user_id") : "");
   // const userId = localStorage.getItem("user_id");
   const [status, setStatus] = useState("");
   const [selectedSalesPersons, setSelectedSalespersons] = useState(null);
@@ -129,27 +131,48 @@ const useMeetings = () => {
   // });
   // }, [users]);
 
-  const filteredUsers = useMemo(() => {
-    const isAdmin = currentUser?.role?.toUpperCase() === "ADMIN";
-    return includeCurrentUser(users, currentUser).filter((user) => {
-      if (isCurrentUser(user, currentUser)) return true;
-      if (!isAdmin && user.role === "ADMIN") return false;
-      if (isAdmin && user.role === "ADMIN") return true;
-      if (!user.joining_date) return false;
+  const salespersons = useMemo(() => {
+    const loggedInUser = selectedUser || currentUser;
+    const isAdmin =
+      String(loggedInUser?.role || currentUser?.role || "").toUpperCase() ===
+      "ADMIN";
 
-      const joiningDate = moment(user.joining_date, "YYYY-MM-DD").startOf("day");
-      const today = moment().startOf("day");
-
-      return joiningDate.isSameOrBefore(today);
-    });
-  }, [users, currentUser]);
-
-
-  useEffect(() => {
-    if (filteredUsers && filteredUsers.length > 0) {
-      setSalespersons(filteredUsers); // ✅ This is the list for the ReactSelect options
+    let list = includeCurrentUser(users, currentUser);
+    list = includeCurrentUser(list, selectedUser);
+    if (
+      userId &&
+      !list.some((person) => getCurrentUserId(person) === String(userId)) &&
+      loggedInUser
+    ) {
+      list = [loggedInUser, ...list];
     }
-  }, [filteredUsers]);
+
+    const filtered = list.filter((user) => {
+      if (!user) return false;
+      if (isCurrentUser(user, loggedInUser) || isCurrentUser(user, currentUser)) {
+        return true;
+      }
+      if (String(userId) && getCurrentUserId(user) === String(userId)) {
+        return true;
+      }
+      const userIsAdmin = String(user.role || "").toUpperCase() === "ADMIN";
+      if (userIsAdmin) return isAdmin;
+      if (!user.joining_date) return true;
+
+      const joiningDate = moment(user.joining_date);
+      if (!joiningDate.isValid()) return true;
+      return joiningDate.startOf("day").isSameOrBefore(moment().startOf("day"));
+    });
+
+    const current =
+      filtered.find(
+        (user) =>
+          isCurrentUser(user, loggedInUser) ||
+          getCurrentUserId(user) === String(userId)
+      ) || null;
+    const rest = filtered.filter((user) => user !== current);
+    return current ? [current, ...rest] : filtered;
+  }, [users, currentUser, selectedUser, userId]);
 
   useEffect(() => {
     // Skip this logic if we're editing an existing meeting
@@ -181,13 +204,12 @@ const useMeetings = () => {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchClients({all: true}));
-    dispatch(fetchUserById(userId));
-
-    
+    if (userId) {
+      dispatch(fetchUserById(userId));
+    }
   }, [dispatch, userId]);
 
 
-  console.log("filtered users data", filteredUsers);
 
   const onSubmit = async (data) => {
     // setError(null);

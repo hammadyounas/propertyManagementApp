@@ -43,7 +43,10 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload.filter((user) => !user.isDeleted);
+        const payload = Array.isArray(action.payload) ? action.payload : [];
+        state.users = payload.filter(
+          (user) => user && user.isDeleted !== true
+        );
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
