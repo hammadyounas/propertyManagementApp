@@ -7,11 +7,6 @@ import {
 } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
 import { set } from "react-hook-form";
-import { useSelector } from "react-redux";
-import {
-  includeCurrentUser,
-  isCurrentUser,
-} from "../../../../libs/utils/includeCurrentUser";
 
 const useSalesTeam = () => {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -26,7 +21,6 @@ const useSalesTeam = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState("active");
   const [selectedFilter, setSelectedFilter] = useState("Active");
-  const currentUser = useSelector((state) => state.auth.user);
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
@@ -64,11 +58,8 @@ const useSalesTeam = () => {
         }
 
       const response = await getRequest(url);
-      const filteredUsers = includeCurrentUser(
-        (response.data || []).filter(
-          (user) => user.role !== "ADMIN" || isCurrentUser(user, currentUser)
-        ),
-        currentUser
+      const filteredUsers = (response.data || []).filter(
+        (user) => String(user.role || "").toUpperCase() !== "ADMIN"
       );
       setUsers(filteredUsers);
 
@@ -82,7 +73,7 @@ const useSalesTeam = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [statusFilter, globalFilter, currentUser]);
+  }, [statusFilter, globalFilter]);
 
   // Calculate the paginated users
   const paginatedUsers = useMemo(() => {
