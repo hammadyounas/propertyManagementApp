@@ -36,9 +36,64 @@ const FormUI = ({
   inputType,
   setInputType,
   downloadSampleCsv,
+  uploadProgress,
 }) => {
   return (
-    <div className="w-full lg:w-[75%]">
+    <div className="w-full lg:w-[75%] relative">
+      {loading && inputType === "csv" && uploadProgress?.total > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md mx-4 rounded-lg bg-white dark:bg-slate-800 p-6 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <svg
+                className="animate-spin h-6 w-6 text-primary-default"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-100">
+                Uploading CSV
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-3">
+              {uploadProgress.current} of {uploadProgress.total} clients processed
+              {uploadProgress.skipped > 0
+                ? ` (${uploadProgress.skipped} duplicates skipped)`
+                : ""}
+              {uploadProgress.failed > 0
+                ? ` (${uploadProgress.failed} failed)`
+                : ""}
+            </p>
+            <div className="h-2 w-full rounded bg-gray-200 dark:bg-slate-600 overflow-hidden">
+              <div
+                className="h-full bg-primary-default transition-all duration-200"
+                style={{
+                  width: `${Math.round(
+                    (uploadProgress.current / uploadProgress.total) * 100
+                  )}%`,
+                }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-3">
+              Please stay on this page until the upload finishes. Leaving or
+              using Back will stop remaining rows. Clients already saved will stay.
+            </p>
+          </div>
+        </div>
+      )}
       <Card title="Create Client">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
@@ -50,6 +105,7 @@ const FormUI = ({
                   checked={inputType === "manual"}
                   onChange={() => setInputType("manual")}
                   className="mr-2 "
+                  disabled={loading}
                 />
                 Manually
               </label>
@@ -60,6 +116,7 @@ const FormUI = ({
                   checked={inputType === "csv"}
                   onChange={() => setInputType("csv")}
                   className="mr-2 "
+                  disabled={loading}
                 />
                 Upload CSV File
               </label>

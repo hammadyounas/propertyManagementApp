@@ -1,6 +1,6 @@
   import { toast } from "react-toastify";
   import { useForm } from "react-hook-form";
-  import { useState, useEffect } from "react";
+  import { useState, useEffect, useRef } from "react";
   import * as yup from "yup";
   import { yupResolver } from "@hookform/resolvers/yup";
   import { useRouter } from "next/navigation";
@@ -61,7 +61,18 @@
     const [salesPersons, setSalesPersons] = useState([]);
     const [csvData, setCsvData] = useState(null);
     const { push } = useRouter();
-    const [inputType, setInputType] = useState("manual"); 
+    const [inputType, setInputType] = useState("manual");
+    const [uploadProgress, setUploadProgress] = useState({
+      current: 0,
+      total: 0,
+      failed: 0,
+      skipped: 0,
+    });
+    const uploadCancelled = useRef(false);
+
+    const normalizePhoneKey = (phone) => String(phone || "").replace(/\D/g, "");
+    const clientDedupeKey = (name, phone) =>
+      `${String(name || "").trim().toLowerCase()}|${normalizePhoneKey(phone)}`; 
 
     const fetchSalesPersons = async () => {
       try {
@@ -79,8 +90,20 @@
     };
 
     useEffect(() => {
-      console.log("Current Input Type:", inputType);
-    }, [inputType]);
+      return () => {
+        uploadCancelled.current = true;
+      };
+    }, []);
+
+    useEffect(() => {
+      if (!loading) return undefined;
+      const onBeforeUnload = (event) => {
+        event.preventDefault();
+        event.returnValue = "";
+      };
+      window.addEventListener("beforeunload", onBeforeUnload);
+      return () => window.removeEventListener("beforeunload", onBeforeUnload);
+    }, [loading]);
 
     useEffect(() => {
       setValue("assigned_salesperson", salesPersonAssigned);
@@ -178,12 +201,40 @@
             setLoading(false);
             return;
           }
-    
-          for (const row of csvData) {
+
+          uploadCancelled.current = false;
+          const total = csvData.length;
+          let failed = 0;
+          let skipped = 0;
+          setUploadProgress({ current: 0, total, failed: 0, skipped: 0 });
+
+          const seenKeys = new Set();
+          try {
+            const existing = await getRequest("clients?all=true");
+            const existingClients = existing?.data?.clients || existing?.data || [];
+            existingClients.forEach((client) => {
+              const key = clientDedupeKey(client.name, client.phoneNumber);
+              if (key !== "|") seenKeys.add(key);
+            });
+          } catch (error) {
+            // Continue upload; backend still rejects name+phone duplicates
+          }
+
+          for (let i = 0; i < csvData.length; i++) {
+            if (uploadCancelled.current) {
+              setUploadProgress({ current: i, total, failed, skipped });
+              toast.error(
+                `Upload stopped. ${i} of ${total} rows were processed.`
+              );
+              setLoading(false);
+              return;
+            }
+
+            const row = csvData[i];
             const formData = {
               name: row.name || "",
               email: row.email || "",
-              phoneNumber: row["phoneNumber"] || "", // Ensure correct key name
+              phoneNumber: row["phoneNumber"] || "",
               address: row.address || "No address provided",
               type: row.type || "buyer",
               status: row.status || "active",
@@ -193,17 +244,41 @@
                   : ["email"],
               notes: row.notes || "",
             };
-    
-            console.log("Sending data:", formData);
-    
-            try {
-              const response = await postRequest("clients", formData);
-              console.log("Response:", response);
-            } catch (error) {
-              console.error("Error submitting client:", formData.name, error);
+
+            const duplicateKey = clientDedupeKey(
+              formData.name,
+              formData.phoneNumber
+            );
+            if (duplicateKey !== "|" && seenKeys.has(duplicateKey)) {
+              skipped += 1;
+              setUploadProgress({ current: i + 1, total, failed, skipped });
+              continue;
             }
+
+            try {
+              await postRequest("clients", formData);
+              if (duplicateKey !== "|") seenKeys.add(duplicateKey);
+            } catch (error) {
+              const message = error?.response?.data?.message || "";
+              if (
+                message.includes("name and phone") ||
+                message.includes("already exists")
+              ) {
+                skipped += 1;
+                if (duplicateKey !== "|") seenKeys.add(duplicateKey);
+              } else {
+                failed += 1;
+              }
+            }
+
+            setUploadProgress({ current: i + 1, total, failed, skipped });
           }
-    
+
+          if (uploadCancelled.current) {
+            setLoading(false);
+            return;
+          }
+
           toast.success("CSV File Uploaded Successfully");
           push(AppRoutes.CLIENTS);
         } else {
@@ -279,6 +354,7 @@
     inputType,
     setInputType,
     downloadSampleCsv,
+    uploadProgress,
   };
 };
 

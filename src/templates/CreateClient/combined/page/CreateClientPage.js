@@ -30,6 +30,7 @@ const CreateClientPage = () => {
     inputType,
     setInputType,
     downloadSampleCsv,
+    uploadProgress,
   } = useForm();
   return (
     <FormUI
@@ -60,6 +61,7 @@ const CreateClientPage = () => {
       inputType={inputType}
       setInputType={setInputType}
       downloadSampleCsv={downloadSampleCsv}
+      uploadProgress={uploadProgress}
     />
   );
 };

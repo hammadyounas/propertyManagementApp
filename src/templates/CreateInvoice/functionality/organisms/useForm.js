@@ -112,7 +112,7 @@ const useCreateInvoice = () => {
 
   const fetchClients = async () => {
     try {
-      const response = await getRequest("clients");
+      const response = await getRequest("clients?all=true");
       const filteredClients = response?.data?.clients?.filter(
         (client) => !client.isDeleted
       );
@@ -129,17 +129,32 @@ const useCreateInvoice = () => {
     }
   };
 
+  const formatSalesperson = (person) => ({
+    value: person?._id,
+    label: person?.name,
+    address: person?.address,
+    email: person?.email,
+    phone: person?.contact_number || person?.phone,
+  });
+
   const fetchSalespersons = async () => {
     try {
-      const response = await getRequest("users");
-      const filteredUsers = response?.data?.filter((user) => !user.isDeleted);
-      const formattedUsers = filteredUsers?.map((user) => ({
-        value: user?._id,
-        label: user.name,
-        address: user.address,
-        email: user.email,
-        phone: user.contact_number,
-      }));
+      const response = await getRequest("users?all=true");
+      const usersList = Array.isArray(response?.data)
+        ? response.data
+        : response?.data?.users || [];
+      const formattedUsers = usersList
+        .filter((person) => !person.isDeleted)
+        .map(formatSalesperson);
+
+      const currentId = user?._id?.toString();
+      if (
+        currentId &&
+        !formattedUsers.some((person) => person.value?.toString() === currentId)
+      ) {
+        formattedUsers.unshift(formatSalesperson(user));
+      }
+
       setSalesPersons(formattedUsers);
     } catch (error) {
       console.error("Error fetching brokers:", error);
@@ -186,15 +201,19 @@ const useCreateInvoice = () => {
   }, []);
 
   useEffect(() => {
+    if (!user?._id) return;
+
     if (user?.role === "BROKER") {
-      setSalespersonName({
-        value: user?._id,
-        label: user?.name,
-        address: user?.address,
-        email: user?.email,
-        phone: user?.contact_number,
-      });
+      setSalespersonName(formatSalesperson(user));
     }
+
+    setSalesPersons((prev) => {
+      const currentId = user._id.toString();
+      if (prev.some((person) => person.value?.toString() === currentId)) {
+        return prev;
+      }
+      return [formatSalesperson(user), ...prev];
+    });
   }, [user]);
 
   // Sync external state with form values using setValue
