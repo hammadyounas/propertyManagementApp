@@ -53,9 +53,19 @@ export const fetchDashboardEntriesById = createAsyncThunk(
 
 export const fetchBrokers = createAsyncThunk(
   "dashboard/fetchBrokers",
-  async () => {
-    const response = await getRequest("users"); // <- Make sure this endpoint returns [{ name, _id }]
-    const filteredBrokers = response.data.filter((user) => !user.isDeleted);
+  async (_, { getState }) => {
+    const response = await getRequest("users");
+    const currentUser = getState()?.auth?.user;
+    const filteredBrokers = (response.data || []).filter(
+      (user) => !user.isDeleted
+    );
+    const currentId = currentUser?._id?.toString();
+    if (
+      currentId &&
+      !filteredBrokers.some((user) => user._id?.toString() === currentId)
+    ) {
+      filteredBrokers.unshift(currentUser);
+    }
     return [
       { label: "All", value: "all" },
       ...filteredBrokers.map((user) => ({

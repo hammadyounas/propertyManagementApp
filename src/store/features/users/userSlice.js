@@ -2,10 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getRequest } from "../../../libs/utils/request_handler";
 
 // Thunk to fetch all users
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await getRequest("users");
-  return response.data;
-});
+export const fetchUsers = createAsyncThunk(
+  "users/fetchUsers",
+  async (_, { getState }) => {
+    const response = await getRequest("users");
+    const currentUser = getState()?.auth?.user;
+    const users = Array.isArray(response.data) ? [...response.data] : [];
+    const currentId = currentUser?._id?.toString();
+    if (
+      currentId &&
+      !users.some((user) => user._id?.toString() === currentId)
+    ) {
+      users.unshift(currentUser);
+    }
+    return users;
+  }
+);
 
 // Thunk to fetch a single user by ID
 export const fetchUserById = createAsyncThunk(
