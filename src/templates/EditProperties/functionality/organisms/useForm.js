@@ -23,6 +23,8 @@ import { AppRoutes } from "@/constants/appRoutes";
 import { extractFileNameFromBase64 } from "../molecules/renderImagePreview";
 import { getAllUsersByName } from "../../../../libs/api/users";
 import { formSections } from "../../../CreateProperty/functionality/constants/form_data";
+import { useSelector } from "react-redux";
+import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -114,6 +116,7 @@ const useCreateForm = () => {
   const [status, setStatus] = useState("");
   const [ownership, setOwnership] = useState("");
   const [salesPerson, setSalesPerson] = useState([]);
+  const currentUser = useSelector((state) => state.auth.user);
   const [ownerDetails, setOwnerDetails] = useState("");
 
   const [furnishing, setFurnishing] = useState("");
@@ -156,8 +159,9 @@ const useCreateForm = () => {
   const fetchSalesPerson = async () => {
     try {
       const response = await getRequest("users");
-      const filteredResponse = response.data.filter(
-        (salesPerson) => !salesPerson.isDeleted
+      const filteredResponse = includeCurrentUser(
+        (response.data || []).filter((person) => !person.isDeleted),
+        currentUser
       );
       setSalesPerson(filteredResponse);
     } catch (error) {
@@ -400,7 +404,7 @@ const useCreateForm = () => {
   useEffect(() => {
     fetchSalesPerson();
     fetchPropertyData();
-  }, [propertyId, setValue]);
+  }, [propertyId, setValue, currentUser]);
 
   // Sync external state with form values using setValue
   useEffect(() => {

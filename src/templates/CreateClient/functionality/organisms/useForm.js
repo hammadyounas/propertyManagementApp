@@ -17,6 +17,8 @@
   import { useDropzone } from "react-dropzone";
   import Papa from 'papaparse';
   import { AppRoutes } from "@/constants/appRoutes";
+  import { useSelector } from "react-redux";
+  import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
   const useCreateForm = () => {
     const schema = yup.object({
@@ -59,6 +61,7 @@
     const [salesPersonAssigned, setSalespersonAssigned] = useState([]);
     const [communicationChannels, setCommunicationChannels] = useState([]);
     const [salesPersons, setSalesPersons] = useState([]);
+    const currentUser = useSelector((state) => state.auth.user);
     const [csvData, setCsvData] = useState(null);
     const { push } = useRouter();
     const [inputType, setInputType] = useState("manual");
@@ -78,7 +81,10 @@
       try {
         const response = await getRequest("users");
         if (response) {
-          const salesPersonsData = response?.data?.map((salesPerson) => ({
+          const salesPersonsData = includeCurrentUser(
+            response?.data,
+            currentUser
+          ).map((salesPerson) => ({
             value: salesPerson._id,
             label: salesPerson.name,
           }));
@@ -111,7 +117,7 @@
       setValue("type", clientType?.value || "");
       setValue("preferredCommunicationChannel", communicationChannels);
       fetchSalesPersons();
-    }, [salesPersonAssigned, status, clientType, communicationChannels]);
+    }, [salesPersonAssigned, status, clientType, communicationChannels, currentUser]);
 
     const handleSelectStatus = (e) => {
       setStatus(e);

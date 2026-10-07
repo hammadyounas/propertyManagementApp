@@ -22,6 +22,8 @@ import {
 import { AppRoutes } from "@/constants/appRoutes";
 import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
+import { useSelector } from "react-redux";
+import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -146,6 +148,7 @@ const useCreateForm = () => {
     ownerDetailsStatus[0] || null
   );
   const [salesPerson, setSalesPerson] = useState([]);
+  const currentUser = useSelector((state) => state.auth.user);
 
   const [furnishing, setFurnishing] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -233,10 +236,10 @@ const useCreateForm = () => {
   const fetchSalesPerson = async () => {
     try {
       const response = await getRequest("users");
-      const filteredResponse = response.data.filter(
-        (salesPerson) => !salesPerson.isDeleted
+      const filteredResponse = includeCurrentUser(
+        (response.data || []).filter((salesPerson) => !salesPerson.isDeleted),
+        currentUser
       );
-      console.log(filteredResponse);
       setSalesPerson(filteredResponse);
     } catch (error) {
       console.error("Error:", error); // Log errors
@@ -310,7 +313,7 @@ const useCreateForm = () => {
 
   useEffect(() => {
     fetchSalesPerson();
-  }, []);
+  }, [currentUser]);
 
   // Helper function to validate file types
   const validateFileType = (file, type) => {

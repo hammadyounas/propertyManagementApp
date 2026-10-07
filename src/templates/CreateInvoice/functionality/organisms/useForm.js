@@ -19,6 +19,7 @@ import {
 } from "../../../../libs/utils/request_handler";
 import { useSelector } from "react-redux";
 import { AppRoutes } from "@/constants/appRoutes";
+import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
 const useCreateInvoice = () => {
   const itemSchema = yup.object({
@@ -143,17 +144,10 @@ const useCreateInvoice = () => {
       const usersList = Array.isArray(response?.data)
         ? response.data
         : response?.data?.users || [];
-      const formattedUsers = usersList
-        .filter((person) => !person.isDeleted)
-        .map(formatSalesperson);
-
-      const currentId = user?._id?.toString();
-      if (
-        currentId &&
-        !formattedUsers.some((person) => person.value?.toString() === currentId)
-      ) {
-        formattedUsers.unshift(formatSalesperson(user));
-      }
+      const formattedUsers = includeCurrentUser(
+        usersList.filter((person) => !person.isDeleted),
+        user
+      ).map(formatSalesperson);
 
       setSalesPersons(formattedUsers);
     } catch (error) {
@@ -207,13 +201,9 @@ const useCreateInvoice = () => {
       setSalespersonName(formatSalesperson(user));
     }
 
-    setSalesPersons((prev) => {
-      const currentId = user._id.toString();
-      if (prev.some((person) => person.value?.toString() === currentId)) {
-        return prev;
-      }
-      return [formatSalesperson(user), ...prev];
-    });
+    setSalesPersons((prev) =>
+      includeCurrentUser(prev, formatSalesperson(user))
+    );
   }, [user]);
 
   // Sync external state with form values using setValue

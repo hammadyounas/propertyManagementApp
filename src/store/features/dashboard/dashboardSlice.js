@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getRequest, deleteRequest } from "@/libs/utils/request_handler";
+import { includeCurrentUser } from "@/libs/utils/includeCurrentUser";
 
 // Async thunk to fetch dashboard entries
 export const fetchDashboardEntries = createAsyncThunk(
@@ -56,16 +57,10 @@ export const fetchBrokers = createAsyncThunk(
   async (_, { getState }) => {
     const response = await getRequest("users");
     const currentUser = getState()?.auth?.user;
-    const filteredBrokers = (response.data || []).filter(
-      (user) => !user.isDeleted
+    const filteredBrokers = includeCurrentUser(
+      (response.data || []).filter((user) => !user.isDeleted),
+      currentUser
     );
-    const currentId = currentUser?._id?.toString();
-    if (
-      currentId &&
-      !filteredBrokers.some((user) => user._id?.toString() === currentId)
-    ) {
-      filteredBrokers.unshift(currentUser);
-    }
     return [
       { label: "All", value: "all" },
       ...filteredBrokers.map((user) => ({

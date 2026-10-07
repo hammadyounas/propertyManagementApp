@@ -60,10 +60,18 @@ const withAuth = (Component) => {
       const isProtectedPath = protectedRoutes.some(
         (path) => pathname === path || pathname?.startsWith(`${path}/`)
       );
+      const isAdminOnlyPath =
+        pathname === "/broker" || pathname?.startsWith("/broker/");
 
       if (!user && isProtectedPath) {
         router.replace("/");
       } else if (user && publicRoutes.includes(pathname)) {
+        router.replace("/dashboard");
+      } else if (
+        user &&
+        isAdminOnlyPath &&
+        user.role?.toUpperCase() !== "ADMIN"
+      ) {
         router.replace("/dashboard");
       }
     }, [loading, pathname, user, router]);

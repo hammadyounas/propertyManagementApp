@@ -12,6 +12,8 @@ import {
   patchRequest,
 } from "../../../../libs/utils/request_handler";
 import { AppRoutes } from "@/constants/appRoutes";
+import { useSelector } from "react-redux";
+import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
 const useEditForm = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +25,7 @@ const useEditForm = () => {
   const router = useRouter();
   const clientId = router.query.id;
   const [salesPersons, setSalesPersons] = useState([]);
+  const currentUser = useSelector((state) => state.auth.user);
   const [getDataLoading, setGetDataLoading] = useState(false)
 
   const {
@@ -38,11 +41,13 @@ const useEditForm = () => {
     try {
       const response = await getRequest("users");
       if (response) {
-        const salesPersonsData = response?.data?.map((salesPerson) => ({
+        const salesPersonsData = includeCurrentUser(
+          response?.data,
+          currentUser
+        ).map((salesPerson) => ({
           value: salesPerson._id,
           label: salesPerson.name,
         }));
-        console.log(salesPersonsData);
         setSalesPersons(salesPersonsData);
       }
     } catch (error) {
@@ -100,7 +105,7 @@ const useEditForm = () => {
 
     fetchClientData();
     fetchSalesPersons();
-  }, [clientId, setValue]);
+  }, [clientId, setValue, currentUser]);
 
   const handleSelectStatus = (e) => setStatus(e);
   const handleSelectClientType = (e) => setClientType(e);

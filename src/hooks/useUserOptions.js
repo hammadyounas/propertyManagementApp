@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "@/store/features/users/userSlice"; // adjust import as needed
+import { includeCurrentUser } from "@/libs/utils/includeCurrentUser";
 
 export const useUserOptions = () => {
   const dispatch = useDispatch();
@@ -14,21 +15,10 @@ export const useUserOptions = () => {
   }, [dispatch]);
 
   const userOptions = useMemo(() => {
-    const options = (users || []).map((user) => ({
+    return includeCurrentUser(users, currentUser).map((user) => ({
       label: user.name,
       value: user._id,
     }));
-    const currentId = currentUser?._id?.toString();
-    if (
-      currentId &&
-      !options.some((option) => option.value?.toString() === currentId)
-    ) {
-      options.unshift({
-        label: currentUser.name,
-        value: currentUser._id,
-      });
-    }
-    return options;
   }, [users, currentUser]);
 
   return { userOptions, loading, error };

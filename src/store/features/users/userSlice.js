@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getRequest } from "../../../libs/utils/request_handler";
+import { includeCurrentUser } from "../../../libs/utils/includeCurrentUser";
 
 // Thunk to fetch all users
 export const fetchUsers = createAsyncThunk(
@@ -7,15 +8,7 @@ export const fetchUsers = createAsyncThunk(
   async (_, { getState }) => {
     const response = await getRequest("users");
     const currentUser = getState()?.auth?.user;
-    const users = Array.isArray(response.data) ? [...response.data] : [];
-    const currentId = currentUser?._id?.toString();
-    if (
-      currentId &&
-      !users.some((user) => user._id?.toString() === currentId)
-    ) {
-      users.unshift(currentUser);
-    }
-    return users;
+    return includeCurrentUser(response.data, currentUser);
   }
 );
 

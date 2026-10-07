@@ -10,6 +10,8 @@ import {
   postRequest,
 } from "../../../../libs/utils/request_handler";
 import { AppRoutes } from "@/constants/appRoutes";
+import { useSelector } from "react-redux";
+import { includeCurrentUser } from "../../../../libs/utils/includeCurrentUser";
 
 const useCreateForm = () => {
   const schema = yup.object({
@@ -59,6 +61,7 @@ const useCreateForm = () => {
   const [activeModal, setActiveModal] = useState(false);
   const [emailData, setEmailData] = useState({});
   const { push } = useRouter();
+  const currentUser = useSelector((state) => state.auth.user);
 
   const closeModal = () => {
     setActiveModal(false);
@@ -69,7 +72,10 @@ const useCreateForm = () => {
     try {
       const response = await getRequest("users?all=true");
       if (response) {
-        const brokersData = response?.data?.map((broker) => ({
+        const brokersData = includeCurrentUser(
+          response?.data,
+          currentUser
+        ).map((broker) => ({
           value: broker.email,
           label: broker.email,
         }));
@@ -98,7 +104,7 @@ const useCreateForm = () => {
   useEffect(() => {
     fetchBrokers();
     fetchClients();
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     setValue("recipients", recipients);

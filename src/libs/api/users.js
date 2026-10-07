@@ -1,9 +1,13 @@
 import { getRequest } from "../utils/request_handler";
+import { includeCurrentUser } from "../utils/includeCurrentUser";
 
-export const getAllUsersByName = async (assignedToIds) => {
+export const getAllUsersByName = async (assignedToIds, currentUser) => {
   try {
     const salespersonsResponse = await getRequest('users'); // Adjust API endpoint to fetch all users
-    const salespersons = salespersonsResponse?.data || [];
+    const salespersons = includeCurrentUser(
+      salespersonsResponse?.data || [],
+      currentUser
+    );
 
     // Map ID to {label, value}
     const salespersonDetails = assignedToIds?.map((id) => {

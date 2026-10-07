@@ -17,6 +17,10 @@ import {
   fetchUserById,
 } from "../../../../store/features/users/userSlice";
 import { fetchClients } from "../../../../store/features/clients/clientSlice";
+import {
+  includeCurrentUser,
+  isCurrentUser,
+} from "../../../../libs/utils/includeCurrentUser";
 
 const useMeetings = () => {
   const schema = yup.object({
@@ -96,7 +100,8 @@ const useMeetings = () => {
 
   const watchedStatus = useWatch({ control, name: "status" });
   const [salespersons, setSalespersons] = useState();
-  const userId = useSelector((state) => state.auth.user?._id);
+  const currentUser = useSelector((state) => state.auth.user);
+  const userId = currentUser?._id;
   // const userId = localStorage.getItem("user_id");
   const [status, setStatus] = useState("");
   const [selectedSalesPersons, setSelectedSalespersons] = useState(null);
@@ -125,15 +130,19 @@ const useMeetings = () => {
   // }, [users]);
 
   const filteredUsers = useMemo(() => {
-  return users.filter(user => {
-    if (!user.joining_date) return false;
+    const isAdmin = currentUser?.role?.toUpperCase() === "ADMIN";
+    return includeCurrentUser(users, currentUser).filter((user) => {
+      if (isCurrentUser(user, currentUser)) return true;
+      if (!isAdmin && user.role === "ADMIN") return false;
+      if (isAdmin && user.role === "ADMIN") return true;
+      if (!user.joining_date) return false;
 
-    const joiningDate = moment(user.joining_date, "YYYY-MM-DD").startOf("day");
-    const today = moment().startOf("day");
+      const joiningDate = moment(user.joining_date, "YYYY-MM-DD").startOf("day");
+      const today = moment().startOf("day");
 
-    return joiningDate.isSameOrBefore(today);
-  });
-}, [users]);
+      return joiningDate.isSameOrBefore(today);
+    });
+  }, [users, currentUser]);
 
 
   useEffect(() => {
