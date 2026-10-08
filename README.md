@@ -24,7 +24,7 @@ Web application for the Property Management System. Built with Next.js and conne
 
 | Requirement | Version |
 |-------------|---------|
-| [Node.js](https://nodejs.org/) | 18+ (20 recommended) |
+| [Node.js](https://nodejs.org/) | 24.x |
 | npm | Latest recommended |
 | Backend API | Running at the URL set in `NEXT_PUBLIC_API_URL` |
 
