@@ -44,6 +44,66 @@ const DOCUMENT_EDITOR_TOOLBAR_ITEMS = [
   "Find",
 ]
 
+const HEADING_STYLE_NAMES = [
+  "Heading 1",
+  "Heading 2",
+  "Heading 3",
+  "Heading 4",
+  "Heading 5",
+  "Heading 6",
+]
+
+const ensureHeadingStyles = (editor) => {
+  if (!editor?.documentHelper?.styles) return
+  const styles = editor.documentHelper.styles
+  const preDefined = editor.documentHelper.preDefinedStyles
+  HEADING_STYLE_NAMES.forEach((name) => {
+    try {
+      if (styles.findByName(name)) return
+      const predefinedJson = preDefined?.get?.(name)
+      if (predefinedJson && editor.editor?.createStyle) {
+        editor.editor.createStyle(predefinedJson, true)
+      }
+    } catch (error) {
+      // Built-in heading styles are optional until the user applies one
+    }
+  })
+}
+
+const applyParagraphStyle = (editor, styleName) => {
+  if (!editor?.editor || !styleName) return
+  try {
+    ensureHeadingStyles(editor)
+    const resolved = editor.stylesDialogModule?.getStyleName
+      ? editor.stylesDialogModule.getStyleName(styleName)
+      : styleName
+    editor.editor.applyStyle(resolved || styleName, true)
+  } catch (error) {
+    try {
+      editor.editor.applyStyle(styleName, true)
+    } catch (fallbackError) {
+      // Style apply failed; selection change will keep showing Normal
+    }
+  }
+}
+
+const hookPropertiesPaneStyles = (container) => {
+  const paragraph = container?.tableProperties?.tableTextProperties?.paragraph
+  const combo = paragraph?.style
+  if (!combo || combo.__headingStyleHooked) return
+  combo.__headingStyleHooked = true
+  combo.addEventListener("change", (args) => {
+    if (!args?.isInteracted) return
+    const styleName = args?.itemData?.StyleName || args?.value
+    applyParagraphStyle(container.documentEditor, styleName)
+    try {
+      container.documentEditor?.focusIn?.()
+    } catch (error) {
+      // Focus return is best-effort
+    }
+  })
+}
+
 const SyncfusionDocEditor = dynamic(
   async () => {
     const { applySyncfusionLicense } = await import("@/libs/syncfusion-license")
@@ -136,18 +196,21 @@ const TemplateEditor = ({
 
   // Handler for when the editor is created
   const handleEditorCreated = () => {
-    const editor = docEditorRef.current?.documentEditor;
+    const container = docEditorRef.current;
+    const editor = container?.documentEditor;
     if (editor) {
       editor.enablePrint = true;
       editor.enableOptimizedTextMeasuring = true;
+      // Style dialog module is required: the properties pane calls
+      // stylesDialogModule.getStyleName() before applyStyle("Heading 1").
+      editor.enableStyleDialog = true;
+      editor.enableTableOfContentsDialog = true;
       editor.enableHyperlinkDialog = false;
       editor.enableBookmarkDialog = false;
-      editor.enableTableOfContentsDialog = false;
       editor.enableFootnotesDialog = false;
       editor.enableTableDialog = false;
       editor.enableColumnsDialog = false;
       editor.enablePageSetupDialog = false;
-      editor.enableStyleDialog = false;
       editor.enableFontDialog = false;
       editor.enableParagraphDialog = false;
       editor.enableListDialog = false;
@@ -155,6 +218,10 @@ const TemplateEditor = ({
       editor.enableBordersAndShadingDialog = false;
       editor.enableTableStylesDialog = false;
       editor.enableTablePropertiesDialog = false;
+      ensureHeadingStyles(editor);
+      hookPropertiesPaneStyles(container);
+      setTimeout(() => hookPropertiesPaneStyles(container), 100);
+      setTimeout(() => hookPropertiesPaneStyles(container), 500);
     }
     setEditorCreated(true);
   };
@@ -338,32 +405,20 @@ const TemplateEditor = ({
       try {
         const editor = docEditorRef.current.documentEditor;
         if (editor) {
-          // Force LTR text direction
-          editor.selection.paragraphFormat.bidi = false;
-          editor.selection.paragraphFormat.textAlignment = 'Left';
-          
-          // Set document locale to English
-          if (editor.documentEditor) {
-            editor.documentEditor.locale = 'en-US';
+          if (editor.documentHelper) {
+            editor.documentHelper.enableRtlSupport = false;
           }
-          
-          // Disable RTL support completely
-          editor.documentHelper.enableRtlSupport = false;
-          
-          // Set default paragraph format for new content
-          const defaultFormat = editor.selection.paragraphFormat;
-          defaultFormat.bidi = false;
-          defaultFormat.textAlignment = 'Left';
-          
+          // Only force writing direction. Do not reset textAlignment —
+          // that overwrites Heading 1–6 after the user applies them.
+          if (editor.selection?.paragraphFormat) {
+            editor.selection.paragraphFormat.bidi = false;
+          }
         }
       } catch (error) {
       }
     };
     
-    // Set direction with multiple attempts to ensure it sticks
-    setTimeout(setTextDirectionLTR, 500);
-    setTimeout(setTextDirectionLTR, 1000);
-    setTimeout(setTextDirectionLTR, 2000);
+    setTimeout(setTextDirectionLTR, 300);
   }, [mounted]);
 
   // Initialize internal state from value or defaultValue props
@@ -456,6 +511,8 @@ const TemplateEditor = ({
                 
                 // Try to open the SFDT document (should only reach here if NOT abbreviated)
                 editor.open(editorValue);
+                ensureHeadingStyles(editor);
+                hookPropertiesPaneStyles(docEditorRef.current);
                 
                 // After loading, re-insert doc_id if it was preserved
                 if (docIdToPreserve) {
@@ -502,6 +559,9 @@ const TemplateEditor = ({
               editor.editor.insertText(editorValue);
               break;
           }
+
+          ensureHeadingStyles(editor);
+          hookPropertiesPaneStyles(docEditorRef.current);
           
           // After loading content, ensure text direction is LTR
           setTimeout(() => {
@@ -660,7 +720,7 @@ const TemplateEditor = ({
       'h6': 'Heading 6'
     };
     
-    editor.selection.applyFormat('styleName', headingStyle[level]);
+    applyParagraphStyle(editor, headingStyle[level]);
     editor.editor.insertBreak(0); // Insert line break after heading
   };
 
@@ -1287,7 +1347,6 @@ const TemplateEditor = ({
 
         .syncfusion-doc-editor .e-documenteditor-container {
           font-family: Calibri, Segoe UI, Arial, sans-serif;
-          font-size: 14px;
           line-height: 1.5;
         }
 
