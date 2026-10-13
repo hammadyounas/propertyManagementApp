@@ -205,19 +205,33 @@ const TemplateEditor = ({
       // stylesDialogModule.getStyleName() before applyStyle("Heading 1").
       editor.enableStyleDialog = true;
       editor.enableTableOfContentsDialog = true;
-      editor.enableHyperlinkDialog = false;
-      editor.enableBookmarkDialog = false;
+      editor.enableTableDialog = true;
+      editor.enableTablePropertiesDialog = true;
+      editor.enableTableOptionsDialog = true;
+      editor.enableBordersAndShadingDialog = true;
+      editor.enableHyperlinkDialog = true;
+      editor.enableBookmarkDialog = true;
+      editor.enablePageSetupDialog = true;
       editor.enableFootnotesDialog = false;
-      editor.enableTableDialog = false;
       editor.enableColumnsDialog = false;
-      editor.enablePageSetupDialog = false;
       editor.enableFontDialog = false;
       editor.enableParagraphDialog = false;
       editor.enableListDialog = false;
-      editor.enableTableOptionsDialog = false;
-      editor.enableBordersAndShadingDialog = false;
-      editor.enableTableStylesDialog = false;
-      editor.enableTablePropertiesDialog = false;
+      if (typeof editor.showDialog === "function" && !editor.__tableDialogHooked) {
+        editor.__tableDialogHooked = true;
+        const originalShowDialog = editor.showDialog.bind(editor);
+        editor.showDialog = (dialogType) => {
+          try {
+            originalShowDialog(dialogType);
+          } catch (error) {
+            if (dialogType === "Table" && editor.editor?.insertTable) {
+              editor.editor.insertTable(2, 2);
+              return;
+            }
+            throw error;
+          }
+        };
+      }
       ensureHeadingStyles(editor);
       hookPropertiesPaneStyles(container);
       setTimeout(() => hookPropertiesPaneStyles(container), 100);
@@ -1360,7 +1374,7 @@ const TemplateEditor = ({
           border-bottom: 2px solid #d1d5db;
           padding: 8px;
           position: relative;
-          z-index: 3; /* keep toolbar above any side panes */
+          z-index: 6; /* keep wrapped toolbar items above the properties pane */
         }
 
         .syncfusion-doc-editor .e-toolbar .e-toolbar-item {
@@ -1472,8 +1486,15 @@ const TemplateEditor = ({
           border-left: none !important;
           border-right: 1px solid #e5e7eb !important;
           position: relative;
-          z-index: 4; /* below toolbar */
+          z-index: 2; /* below toolbar so Table / Image clicks are not blocked */
           margin-top: 8px; /* avoid overlapping second row of toolbar */
+        }
+
+        /* Insert Table and other editor dialogs must sit above the layout */
+        .e-de-dlg-container,
+        .e-dlg-container,
+        .syncfusion-doc-editor .e-dialog {
+          z-index: 10050 !important;
         }
         .syncfusion-doc-editor .e-de-properties-pane, 
         .syncfusion-doc-editor .e-de-prop-pane { 
