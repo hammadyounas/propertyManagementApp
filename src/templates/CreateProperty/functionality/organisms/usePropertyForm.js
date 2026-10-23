@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { formSections } from "../constants/form_data";
 import { postRequest } from "../../../../libs/utils/request_handler";
 import { toast } from "react-toastify";
@@ -25,7 +25,13 @@ export const usePropertyForm = () => {
   const [csvErrors, setCsvErrors] = useState([]);
   const [csvPreview, setCsvPreview] = useState(null);
   const [csvProcessing, setCsvProcessing] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, message: '' });
+  const [uploadProgress, setUploadProgress] = useState({
+    current: 0,
+    total: 0,
+    failed: 0,
+    message: "",
+  });
+  const uploadCancelled = useRef(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const router = useRouter();
@@ -43,6 +49,22 @@ export const usePropertyForm = () => {
     getAutoSaveStatus,
     isLocalStorageAvailable
   } = useAutoSave(formData, inputType);
+
+  useEffect(() => {
+    return () => {
+      uploadCancelled.current = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!loading || inputType !== "csv") return undefined;
+    const onBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [loading, inputType]);
 
   // Initialize auto-save and restore data on component mount
   useEffect(() => {
@@ -864,21 +886,35 @@ export const usePropertyForm = () => {
         let successCount = 0;
         let failureCount = 0;
         const errors = [];
-        
-        // Initialize progress
-        setUploadProgress({ current: 0, total: csvData.length, message: 'Starting upload...' });
-        
+        const total = csvData.length;
+
+        uploadCancelled.current = false;
+        setUploadProgress({
+          current: 0,
+          total,
+          failed: 0,
+          message: "Starting upload...",
+        });
+
         for (let i = 0; i < csvData.length; i++) {
-          try {
-            // Update progress
-            setUploadProgress({ 
-              current: i + 1, 
-              total: csvData.length, 
-              message: `Uploading property ${i + 1} of ${csvData.length}...` 
+          if (uploadCancelled.current) {
+            setUploadProgress({
+              current: i,
+              total,
+              failed: failureCount,
+              message: "Upload stopped",
             });
-            
-            console.log(`📤 Sending property ${i + 1}/${csvData.length}:`, csvData[i]);
-            
+            toast.error(`Upload stopped. ${i} of ${total} rows were processed.`);
+            setLoading(false);
+            return {
+              success: false,
+              message: `Upload stopped. ${i} of ${total} rows were processed.`,
+            };
+          }
+
+          try {
+            console.log(`📤 Sending property ${i + 1}/${total}:`, csvData[i]);
+
             const propertyResponse = await postRequest(
               'properties',
               csvData[i], // Send individual property
@@ -888,11 +924,10 @@ export const usePropertyForm = () => {
                 },
               }
             );
-            
+
             results.push(propertyResponse);
             successCount++;
             console.log(`✅ Property ${i + 1} sent successfully`);
-            
           } catch (error) {
             console.error(`❌ Failed to send property ${i + 1}:`, error.message);
             failureCount++;
@@ -902,14 +937,23 @@ export const usePropertyForm = () => {
               error: error.message,
               response: error?.response?.data
             });
-            
+
             // Continue with next property instead of stopping
             console.log(`⚠️  Continuing with next property...`);
           }
+
+          setUploadProgress({
+            current: i + 1,
+            total,
+            failed: failureCount,
+            message: `Uploading property ${i + 1} of ${total}...`,
+          });
         }
-        
-                 // Clear progress
-         setUploadProgress({ current: 0, total: 0, message: '' });
+
+        if (uploadCancelled.current) {
+          setLoading(false);
+          return { success: false, message: "Upload stopped" };
+        }
          
          const response = { 
            success: true, 
